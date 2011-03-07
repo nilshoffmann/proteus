@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.unibielefeld.gi.kotte.laborprogramm.firsttestmodule;
 
 import java.util.logging.Logger;
@@ -10,7 +6,9 @@ import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 //import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.util.Lookup;
 
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IGel;
 /**
  * Top component which displays something.
  */
@@ -77,7 +75,7 @@ public final class firsttestmoduleTopComponent extends TopComponent {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTestActionPerformed
-        jLabelTest.setText("Bestanden!");
+        jLabelTest.setText(Lookup.getDefault().lookup(IGel.class).getDescription());
     }//GEN-LAST:event_jButtonTestActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

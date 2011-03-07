@@ -3,6 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api;
 import org.openide.util.Lookup;
 
 /**
+ * Factory for creating microplate wells.
  *
  * @author kotte
  */

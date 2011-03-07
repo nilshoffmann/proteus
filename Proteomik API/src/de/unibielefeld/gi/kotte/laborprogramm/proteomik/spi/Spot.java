@@ -17,50 +17,62 @@ public class Spot implements ISpot{
     String label;
     boolean labelDisplayed;
 
+    @Override
     public String getLabel() {
         return label;
     }
 
+    @Override
     public boolean isLabelDisplayed() {
         return labelDisplayed;
     }
 
+    @Override
     public IGel getParent() {
         return parent;
     }
 
+    @Override
     public int getPosX() {
         return posX;
     }
 
+    @Override
     public int getPosY() {
         return posY;
     }
 
+    @Override
     public SpotStatus getStatus() {
         return status;
     }
 
+    @Override
     public void setLabel(String label) {
         this.label = label;
     }
 
+    @Override
     public void setLabelDisplayed(boolean labelDisplayed) {
         this.labelDisplayed = labelDisplayed;
     }
 
+    @Override
     public void setParent(IGel parent) {
         this.parent = parent;
     }
 
+    @Override
     public void setPosX(int posX) {
         this.posX = posX;
     }
 
+    @Override
     public void setPosY(int posY) {
         this.posY = posY;
     }
 
+    @Override
     public void setStatus(SpotStatus status) {
         this.status = status;
     }

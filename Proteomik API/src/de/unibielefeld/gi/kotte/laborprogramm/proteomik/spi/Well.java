@@ -1,0 +1,17 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
+
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IWell;
+
+/**
+ *
+ * @author kotte
+ */
+@org.openide.util.lookup.ServiceProvider(service=IWell.class)
+public class Well implements IWell{
+
+}

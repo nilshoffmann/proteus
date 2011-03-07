@@ -1,10 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api;
 
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.Plate96;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.Plate384;
 import org.openide.util.Lookup;
 
 /**
@@ -15,6 +12,16 @@ public class PlateFactory {
 
     public static IPlate getDefault() {
         IPlate result = Lookup.getDefault().lookup(IPlate.class);
+        return result;
+    }
+
+    public static IPlate get96WellPlate() {
+        IPlate result = new Plate96();
+        return result;
+    }
+
+    public static IPlate get384WellPlate() {
+        IPlate result = new Plate384();
         return result;
     }
 }

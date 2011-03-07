@@ -6,11 +6,10 @@ import org.openide.util.Lookup;
  *
  * @author kotte
  */
-public class GelFactory {
+public class SpotFactory {
 
-    public static IGel getDefault() {
-        IGel result = Lookup.getDefault().lookup(IGel.class);
+    public static ISpot getDefault() {
+        ISpot result = Lookup.getDefault().lookup(ISpot.class);
         return result;
     }
-
 }

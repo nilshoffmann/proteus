@@ -7,7 +7,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPlate;
  * @author kotte
  */
 @org.openide.util.lookup.ServiceProvider(service=IPlate.class)
-public class Plate implements IPlate{
+public class Plate384 implements IPlate{
 
     @Override
     public String getDescription() {

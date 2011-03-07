@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="Window">
+            <file name="de-unibielefeld-gi-kotte-laborprogramm-gelViewer-GelViewerAction.instance">
+                <attr name="component" methodvalue="de.unibielefeld.gi.kotte.laborprogramm.gelViewer.GelViewerTopComponent.findInstance"/>
+                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.gelViewer.Bundle#CTL_GelViewerAction"/>
+                <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="Window">
+            <file name="GelViewerAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/de-unibielefeld-gi-kotte-laborprogramm-gelViewer-GelViewerAction.instance"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="GelViewerTopComponent.settings" url="GelViewerTopComponentSettings.xml"/>
+        </folder>
+        <folder name="Modes">
+            <folder name="editor">
+                <file name="GelViewerTopComponent.wstcref" url="GelViewerTopComponentWstcref.xml"/>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

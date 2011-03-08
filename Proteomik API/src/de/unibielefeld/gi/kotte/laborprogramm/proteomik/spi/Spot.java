@@ -2,6 +2,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.ISpot;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IWell;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.SpotStatus;
 
 /**
@@ -16,6 +17,7 @@ public class Spot implements ISpot{
     int posX, posY;
     String label;
     boolean labelDisplayed;
+    IWell well;
 
     @Override
     public String getLabel() {
@@ -45,6 +47,16 @@ public class Spot implements ISpot{
     @Override
     public SpotStatus getStatus() {
         return status;
+    }
+
+    @Override
+    public IWell getWell() {
+        return well;
+    }
+
+    @Override
+    public void setWell(IWell well) {
+        this.well = well;
     }
 
     @Override

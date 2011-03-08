@@ -5,6 +5,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.Plate384;
 import org.openide.util.Lookup;
 
 /**
+ * Factory for creating microplates.
  *
  * @author kotte
  */

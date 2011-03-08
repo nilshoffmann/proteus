@@ -1,6 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPlate;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IWell;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IdentificationStatus;
 
@@ -12,6 +13,8 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IdentificationStatus
 public class Well implements IWell{
     IPlate parent;
     IdentificationStatus status;
+    String identification;
+    ISpot spot;
     char posX;
     int posY;
 
@@ -41,6 +44,16 @@ public class Well implements IWell{
     }
 
     @Override
+    public String getIdentification() {
+        return identification;
+    }
+
+    @Override
+    public ISpot getSpot() {
+        return spot;
+    }
+
+    @Override
     public void setParent(IPlate parent) {
         this.parent = parent;
     }
@@ -58,5 +71,15 @@ public class Well implements IWell{
     @Override
     public void setStatus(IdentificationStatus status) {
         this.status = status;
+    }
+
+    @Override
+    public void setIdentification(String identification) {
+        this.identification = identification;
+    }
+
+    @Override
+    public void setSpot(ISpot spot) {
+        this.spot = spot;
     }
 }

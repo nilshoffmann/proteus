@@ -12,8 +12,12 @@ public interface IWell {
     public int getPosY();
     public String getWellPosition();
     public IdentificationStatus getStatus();
+    public String getIdentification();
+    public ISpot getSpot();
     public void setParent(IPlate parent);
     public void setPosX(char posX);
     public void setPosY(int posY);
     public void setStatus(IdentificationStatus status);
+    public void setIdentification(String identification);
+    public void setSpot(ISpot spot);
 }

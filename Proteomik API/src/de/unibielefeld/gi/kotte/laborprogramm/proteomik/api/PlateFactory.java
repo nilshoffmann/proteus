@@ -2,7 +2,6 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.Plate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.Plate384;
-import org.openide.util.Lookup;
 
 /**
  * Factory for creating microplates.
@@ -12,7 +11,7 @@ import org.openide.util.Lookup;
 public class PlateFactory {
 
     public static IPlate getDefault() {
-        IPlate result = Lookup.getDefault().lookup(IPlate.class);
+        IPlate result = new Plate96();
         return result;
     }
 

@@ -54,6 +54,11 @@ public class Well implements IWell{
     }
 
     @Override
+    public String toString() {
+        return "Well{" + "parent=" + parent + "status=" + status + "identification=" + identification + "spot=" + spot + "posX=" + posX + "posY=" + posY + '}';
+    }
+
+    @Override
     public void setParent(IPlate parent) {
         this.parent = parent;
     }

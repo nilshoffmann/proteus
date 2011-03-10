@@ -85,6 +85,7 @@ public class Plate96 implements IPlate{
     }
 
     private static int posToIndex(char posX, int posY) {
+        assert(posY>0 && posY<13);
         //setze x auf 0 fuer A oder a, 1 fuer B oder b, etc.
         int x = posX-65;
         if (x>=32) x-=32;

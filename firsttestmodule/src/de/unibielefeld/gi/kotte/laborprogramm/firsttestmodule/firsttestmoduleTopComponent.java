@@ -1,6 +1,8 @@
 package de.unibielefeld.gi.kotte.laborprogramm.firsttestmodule;
 
+import java.io.IOException;
 import java.util.logging.Logger;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -9,6 +11,15 @@ import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.Lookup;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IGel;
+import java.awt.Dimension;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+
 /**
  * Top component which displays something.
  */
@@ -39,6 +50,7 @@ public final class firsttestmoduleTopComponent extends TopComponent {
 
         jLabelTest = new javax.swing.JLabel();
         jButtonTest = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabelTest, org.openide.util.NbBundle.getMessage(firsttestmoduleTopComponent.class, "firsttestmoduleTopComponent.jLabelTest.text")); // NOI18N
 
@@ -53,35 +65,60 @@ public final class firsttestmoduleTopComponent extends TopComponent {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(134, 134, 134)
-                        .addComponent(jLabelTest))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(107, 107, 107)
-                        .addComponent(jButtonTest)))
-                .addContainerGap(187, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(251, Short.MAX_VALUE)
+                .addComponent(jLabelTest)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonTest))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(114, 114, 114)
-                .addComponent(jLabelTest)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonTest)
-                .addContainerGap(140, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonTest)
+                    .addComponent(jLabelTest)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTestActionPerformed
-        jLabelTest.setText(Lookup.getDefault().lookup(IGel.class).getDescription());
-    }//GEN-LAST:event_jButtonTestActionPerformed
+        //jLabelTest.setText(Lookup.getDefault().lookup(IGel.class).getDescription());
+        IGel testGel = Lookup.getDefault().lookup(IGel.class);
+        testGel.setFilename("/homes/kotte/ProteomikProjekt/b100/80547_255_75_101.jpeg");
+        java.net.URL imgURL = null;
 
+        File f = new File(testGel.getFilename());
+        if (!f.exists()) {
+            throw new RuntimeException("File specified " + f.getAbsolutePath() + " does not exist!");
+        }else{
+            try {
+                //        if (imgURL != null) {
+                BufferedImage myPicture = ImageIO.read(f);
+                ImageIcon icon = new ImageIcon(myPicture);
+                JFrame jf = new JFrame();
+                JLabel jl = new JLabel(icon);
+                jl.setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
+                //remove(jLabelTest);
+                jf.add(new JScrollPane(jl));
+                jf.setVisible(true);
+                jf.pack();
+//                jScrollPane1.add(jl);
+                //            jLabelTest.setIcon(icon);
+                //            jLabelTest.setText("kein Gelbild");
+                //            jLabelTest.setText("kein Gelbild");
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+    }//GEN-LAST:event_jButtonTestActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonTest;
     private javax.swing.JLabel jLabelTest;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
     /**
      * Gets default instance. Do not use directly: reserved for *.settings files only,
      * i.e. deserialization routines; otherwise you could get a non-deserialized instance.

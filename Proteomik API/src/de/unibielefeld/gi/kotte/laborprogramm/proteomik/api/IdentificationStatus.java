@@ -8,5 +8,6 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api;
 public enum IdentificationStatus {
     SELECTED,
     PICKED,
-    IDENTIFIED;
+    IDENTIFIED,
+    ERROR;
 }

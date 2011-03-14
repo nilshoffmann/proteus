@@ -13,7 +13,6 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IdentificationStatus
 public class Well implements IWell{
     IPlate parent;
     IdentificationStatus status;
-    String identification;
     ISpot spot;
     char posX;
     int posY;
@@ -44,18 +43,8 @@ public class Well implements IWell{
     }
 
     @Override
-    public String getIdentification() {
-        return identification;
-    }
-
-    @Override
     public ISpot getSpot() {
         return spot;
-    }
-
-    @Override
-    public String toString() {
-        return "Well{" + "parent=" + parent + "status=" + status + "identification=" + identification + "spot=" + spot + "posX=" + posX + "posY=" + posY + '}';
     }
 
     @Override
@@ -76,11 +65,6 @@ public class Well implements IWell{
     @Override
     public void setStatus(IdentificationStatus status) {
         this.status = status;
-    }
-
-    @Override
-    public void setIdentification(String identification) {
-        this.identification = identification;
     }
 
     @Override

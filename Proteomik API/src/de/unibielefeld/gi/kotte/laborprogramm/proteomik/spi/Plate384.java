@@ -3,6 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPlate;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IWell;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IdentificationStatus;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.WellFactory;
 
 /**
@@ -30,6 +31,7 @@ public class Plate384 implements IPlate{
                 wells[index].setParent(this);
                 wells[index].setPosX(posX);
                 wells[index].setPosY(posY);
+                wells[index].setStatus(IdentificationStatus.SELECTED);
             }
         }
     }
@@ -57,6 +59,16 @@ public class Plate384 implements IPlate{
     @Override
     public IWell getWell(char posX, int posY) {
         return wells[posToIndex(posX, posY)];
+    }
+
+    @Override
+    public int getXdimension() {
+        return 24;
+    }
+
+    @Override
+    public int getYdimension() {
+        return 16;
     }
 
     @Override

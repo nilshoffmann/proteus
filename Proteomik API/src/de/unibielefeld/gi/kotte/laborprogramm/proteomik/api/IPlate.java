@@ -12,6 +12,8 @@ public interface IPlate {
     public IProject getParent();
     public IWell[] getWells();
     public IWell getWell(char posX, int posY);
+    public int getXdimension();
+    public int getYdimension();
     public void setDescription(String description);
     public void setName(String name);
     public void setParent(IProject parent);

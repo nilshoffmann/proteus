@@ -1,9 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.unibielefeld.gi.kotte.laborprogramm.plateViewer;
 
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPlate;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.PlateFactory;
 import java.util.logging.Logger;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
@@ -25,6 +23,7 @@ public final class PlateViewerTopComponent extends TopComponent {
 
     public PlateViewerTopComponent() {
         initComponents();
+        initPlateComponent(); //FIXME Testen, ob man das hier ueberhaupt darf!
         setName(NbBundle.getMessage(PlateViewerTopComponent.class, "CTL_PlateViewerTopComponent"));
         setToolTipText(NbBundle.getMessage(PlateViewerTopComponent.class, "HINT_PlateViewerTopComponent"));
 //        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
@@ -53,6 +52,14 @@ public final class PlateViewerTopComponent extends TopComponent {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
+    private PlatePanel platePanel;
+    
+    private void initPlateComponent() {
+        IPlate plate = PlateFactory.get96WellPlate(); //FIXME Test-dummy Platte
+        platePanel = new PlatePanel(plate);
+        add(platePanel);
+    }
+
     /**
      * Gets default instance. Do not use directly: reserved for *.settings files only,
      * i.e. deserialization routines; otherwise you could get a non-deserialized instance.

@@ -7,6 +7,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPlate;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IWell;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -18,12 +19,12 @@ import javax.swing.JLabel;
 public class PlatePanel extends JPanel {
 
     private class WellAction extends AbstractAction {
+
         @Override
         public void actionPerformed(ActionEvent e) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
     }
-
     private Icon wellEmpty;
     private Icon wellError;
     private Icon wellOkay;
@@ -33,28 +34,36 @@ public class PlatePanel extends JPanel {
         //Icons to display wells on the plate
         wellEmpty = new ImageIcon(resourcePath + "Well01.jpg");
         wellError = new ImageIcon(resourcePath + "Well02.jpg");
-        wellOkay  = new ImageIcon(resourcePath + "Well03.jpg");
+        wellOkay = new ImageIcon(resourcePath + "Well03.jpg");
 
         final int x = plate.getXdimension();
         final int y = plate.getYdimension();
-        this.setLayout(new GridLayout(x+1, y+1));
+        this.setLayout(new GridLayout(y + 1, x + 1));
 
-        //filling the grid
+        Dimension d = new Dimension((x + 1) * 16, (y + 1) * 16);
+        setPreferredSize(d);
+        setMinimumSize(d);
+        setName(plate.getName());
+        Dimension dim16 = new Dimension(16, 16);
+
         add(new JLabel()); //add upper left corner empty JLabel placeholder
-        for(int j = 1; j <= x; j++) {
-            add(new JLabel(""+j)); //add top row label
+
+        for (int j = 1; j <= x; j++) {
+            add(new JLabel("" + j)); //add top row label
         }
-        for(char c = 'A'; c < 'A'+x; c++) {
-            add(new JLabel(""+c)); //add leftmost column label
-            for(int i = 1; i <= y; i++) {
+
+        for (char c = 'A'; c < 'A' + y; c++) {
+            add(new JLabel("" + c)); //add leftmost column label
+
+            for (int i = 1; i <= x; i++) {
                 //create button for the current well on the plate grid
                 IWell currentWell = plate.getWell(c, i);
-                assert(currentWell != null); //FIXME this assertion fails
                 JButton button = new JButton();
                 button.setAction(new WellAction());
                 //button.setName(currentWell.getWellPosition());
-                button.setSize(16, 16);
-                switch(currentWell.getStatus()) {
+                button.setBorderPainted(false);
+                button.setPreferredSize(dim16);
+                switch (currentWell.getStatus()) {
                     case ERROR:
                         button.setIcon(wellError);
                         break;

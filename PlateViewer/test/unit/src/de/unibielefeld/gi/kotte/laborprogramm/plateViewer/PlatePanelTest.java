@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package de.unibielefeld.gi.kotte.laborprogramm.plateViewer;
 
 import java.awt.Component;
@@ -54,10 +53,10 @@ public class PlatePanelTest {
         final String resourcePath = "/homes/kotte/ProteomikProjekt/";
         Icon wellEmpty = new ImageIcon(resourcePath + "Well01.jpg");
         Icon wellError = new ImageIcon(resourcePath + "Well02.jpg");
-        Icon wellOkay  = new ImageIcon(resourcePath + "Well03.jpg");
+        Icon wellOkay = new ImageIcon(resourcePath + "Well03.jpg");
         JLabel labelEmpty = new JLabel(wellEmpty);
-        JLabel labelError = new JLabel(wellEmpty);
-        JLabel labelOkay = new JLabel(wellEmpty);
+        JLabel labelError = new JLabel(wellError);
+        JLabel labelOkay = new JLabel(wellOkay);
         JPanel panel = new JPanel();
         panel.add(labelEmpty);
         panel.add(labelError);
@@ -71,5 +70,4 @@ public class PlatePanelTest {
         dialog.add(platePanel);
         dialog.setVisible(true);
     }
-
 }

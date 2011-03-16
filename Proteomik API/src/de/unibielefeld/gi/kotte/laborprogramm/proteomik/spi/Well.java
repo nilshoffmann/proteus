@@ -9,13 +9,30 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IdentificationStatus
  *
  * @author kotte
  */
-@org.openide.util.lookup.ServiceProvider(service=IWell.class)
-public class Well implements IWell{
+@org.openide.util.lookup.ServiceProvider(service = IWell.class)
+public class Well implements IWell {
+
     IPlate parent;
     IdentificationStatus status;
     ISpot spot;
-    char posX;
-    int posY;
+    char row;
+    int column;
+
+    public Well() {
+        this.parent = null;
+        this.status = IdentificationStatus.SELECTED;
+        this.spot = null;
+        this.row = 'X'; //Well Position X0 fuer ausserhalb einer Platte
+        this.column = 0;
+    }
+
+    public Well(char posX, int posY, IPlate parent) {
+        this.parent = parent;
+        this.status = IdentificationStatus.SELECTED;
+        this.spot = null;
+        this.row = posX;
+        this.column = posY;
+    }
 
     @Override
     public IPlate getParent() {
@@ -23,18 +40,18 @@ public class Well implements IWell{
     }
 
     @Override
-    public char getPosX() {
-        return posX;
+    public char getRow() {
+        return row;
     }
 
     @Override
-    public int getPosY() {
-        return posY;
+    public int getColumn() {
+        return column;
     }
 
     @Override
     public String getWellPosition() {
-        return "" + posX + posY;
+        return "" + row + column;
     }
 
     @Override
@@ -53,13 +70,13 @@ public class Well implements IWell{
     }
 
     @Override
-    public void setPosX(char posX) {
-        this.posX = posX;
+    public void setRow(char posX) {
+        this.row = posX;
     }
 
     @Override
-    public void setPosY(int posY) {
-        this.posY = posY;
+    public void setColumn(int posY) {
+        this.column = posY;
     }
 
     @Override

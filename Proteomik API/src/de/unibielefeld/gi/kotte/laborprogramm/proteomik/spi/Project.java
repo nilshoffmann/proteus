@@ -9,8 +9,8 @@ import java.util.List;
  *
  * @author kotte
  */
-@org.openide.util.lookup.ServiceProvider(service=IProject.class)
-public class Project implements IProject{
+@org.openide.util.lookup.ServiceProvider(service = IProject.class)
+public class Project implements IProject {
 
     String owner;
     String name;

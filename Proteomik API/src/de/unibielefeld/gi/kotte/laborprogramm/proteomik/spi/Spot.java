@@ -9,8 +9,8 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.SpotStatus;
  *
  * @author kotte
  */
-@org.openide.util.lookup.ServiceProvider(service=ISpot.class)
-public class Spot implements ISpot{
+@org.openide.util.lookup.ServiceProvider(service = ISpot.class)
+public class Spot implements ISpot {
 
     SpotStatus status;
     IGel parent;
@@ -88,5 +88,4 @@ public class Spot implements ISpot{
     public void setStatus(SpotStatus status) {
         this.status = status;
     }
-
 }

@@ -10,8 +10,8 @@ import java.util.List;
  *
  * @author kotte
  */
-@org.openide.util.lookup.ServiceProvider(service=IGel.class)
-public class Gel implements IGel{
+@org.openide.util.lookup.ServiceProvider(service = IGel.class)
+public class Gel implements IGel {
 
     IProject parent;
     String name;
@@ -72,5 +72,4 @@ public class Gel implements IGel{
     public void setSpots(List<ISpot> spots) {
         this.spots = spots;
     }
-
 }

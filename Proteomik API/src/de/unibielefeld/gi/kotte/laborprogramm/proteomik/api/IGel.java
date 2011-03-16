@@ -10,13 +10,22 @@ import java.util.List;
 public interface IGel {
 
     public IProject getParent();
+
     public void setParent(IProject parent);
+
     public String getDescription();
+
     public void setDescription(String description);
+
     public String getFilename();
+
     public void setFilename(String filename);
+
     public String getName();
+
     public void setName(String name);
+
     public List<ISpot> getSpots();
+
     public void setSpots(List<ISpot> spots);
 }

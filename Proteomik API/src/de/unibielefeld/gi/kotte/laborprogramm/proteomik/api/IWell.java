@@ -8,14 +8,24 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api;
 public interface IWell {
 
     public IPlate getParent();
-    public char getPosX();
-    public int getPosY();
+
+    public char getRow();
+
+    public int getColumn();
+
     public String getWellPosition();
+
     public IdentificationStatus getStatus();
+
     public ISpot getSpot();
+
     public void setParent(IPlate parent);
-    public void setPosX(char posX);
-    public void setPosY(int posY);
+
+    public void setRow(char row);
+
+    public void setColumn(int column);
+
     public void setStatus(IdentificationStatus status);
+
     public void setSpot(ISpot spot);
 }

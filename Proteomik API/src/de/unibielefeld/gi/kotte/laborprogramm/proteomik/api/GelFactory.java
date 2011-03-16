@@ -13,5 +13,4 @@ public class GelFactory {
         IGel result = Lookup.getDefault().lookup(IGel.class);
         return result;
     }
-
 }

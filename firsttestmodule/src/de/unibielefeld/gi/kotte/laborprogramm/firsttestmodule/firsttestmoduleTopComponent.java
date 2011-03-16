@@ -11,13 +11,17 @@ import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.Lookup;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IGel;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPlate;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.PlateFactory;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 /**
@@ -51,6 +55,7 @@ public final class firsttestmoduleTopComponent extends TopComponent {
         jLabelTest = new javax.swing.JLabel();
         jButtonTest = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
+        jButton1 = new javax.swing.JButton();
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabelTest, org.openide.util.NbBundle.getMessage(firsttestmoduleTopComponent.class, "firsttestmoduleTopComponent.jLabelTest.text")); // NOI18N
 
@@ -61,12 +66,20 @@ public final class firsttestmoduleTopComponent extends TopComponent {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(firsttestmoduleTopComponent.class, "firsttestmoduleTopComponent.jButton1.text")); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(251, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 156, Short.MAX_VALUE)
                 .addComponent(jLabelTest)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonTest))
@@ -79,7 +92,8 @@ public final class firsttestmoduleTopComponent extends TopComponent {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonTest)
-                    .addComponent(jLabelTest)))
+                    .addComponent(jLabelTest)
+                    .addComponent(jButton1)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -113,7 +127,17 @@ public final class firsttestmoduleTopComponent extends TopComponent {
             }
         }
     }//GEN-LAST:event_jButtonTestActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        IPlate plate = PlateFactory.get96WellPlate();
+        JPanel platePanel = new PlatePanelCopycat(plate);
+        JDialog dialog = new JDialog();
+        dialog.add(platePanel);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonTest;
     private javax.swing.JLabel jLabelTest;
     private javax.swing.JScrollPane jScrollPane1;

@@ -134,6 +134,7 @@ public final class firsttestmoduleTopComponent extends TopComponent {
         JDialog dialog = new JDialog();
         dialog.add(platePanel);
         dialog.setVisible(true);
+        dialog.pack();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

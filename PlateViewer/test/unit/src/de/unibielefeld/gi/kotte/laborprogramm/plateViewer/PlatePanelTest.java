@@ -4,21 +4,19 @@
  */
 package de.unibielefeld.gi.kotte.laborprogramm.plateViewer;
 
-import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import java.awt.Dialog;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPlate;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.PlateFactory;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -26,7 +24,7 @@ import static org.junit.Assert.*;
  */
 public class PlatePanelTest {
 
-    IPlate plate;
+    IPlate96 plate;
 
     public PlatePanelTest() {
     }
@@ -41,7 +39,7 @@ public class PlatePanelTest {
 
     @Before
     public void setUp() {
-        plate = PlateFactory.get96WellPlate();
+        plate = Lookup.getDefault().lookup(IPlate96.class);
     }
 
     @After
@@ -65,7 +63,7 @@ public class PlatePanelTest {
 
     @Test
     public void testPlate() {
-        JPanel platePanel = new PlatePanel(plate);
+        JPanel platePanel = new Plate96Panel(plate);
         Dialog dialog = new JDialog();
         dialog.add(platePanel);
         dialog.setVisible(true);

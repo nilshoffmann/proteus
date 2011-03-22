@@ -5,8 +5,9 @@ import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPlate;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IWell;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import javax.swing.JButton;
@@ -16,13 +17,22 @@ import javax.swing.JLabel;
  *
  * @author kotte
  */
-public class PlatePanel extends JPanel {
+public class Plate96Panel extends JPanel {
 
-    private class WellAction extends AbstractAction {
+    private class Well96Action extends AbstractAction {
+
+        IWell96 well;
+        JButton button;
+
+        public Well96Action(IWell96 well, JButton button) {
+            this.well = well;
+            this.button = button;
+        }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            well.setStatus(Well96Status.FILLED);
+            button.setIcon(wellOkay);
         }
     }
     private Icon wellEmpty;
@@ -30,7 +40,7 @@ public class PlatePanel extends JPanel {
     private Icon wellOkay;
     private final static String resourcePath = "/homes/kotte/ProteomikProjekt/";
 
-    public PlatePanel(IPlate plate) {
+    public Plate96Panel(IPlate96 plate) {
         //Icons to display wells on the plate
         wellEmpty = new ImageIcon(resourcePath + "Well01.jpg");
         wellError = new ImageIcon(resourcePath + "Well02.jpg");
@@ -58,9 +68,9 @@ public class PlatePanel extends JPanel {
             Dimension dim16 = new Dimension(16, 16);
             for (int i = 1; i <= x; i++) {
                 //create button for the current well on the plate grid
-                IWell currentWell = plate.getWell(c, i);
+                IWell96 currentWell = plate.getWell(c, i);
                 JButton button = new JButton();
-                button.setAction(new WellAction());
+                button.setAction(new Well96Action(currentWell, button));
                 button.setName(currentWell.getWellPosition());
                 button.setBorderPainted(false);
                 button.setContentAreaFilled(false);
@@ -70,7 +80,7 @@ public class PlatePanel extends JPanel {
                     case ERROR:
                         button.setIcon(wellError);
                         break;
-                    case IDENTIFIED:
+                    case FILLED:
                         button.setIcon(wellOkay);
                         break;
                     default:

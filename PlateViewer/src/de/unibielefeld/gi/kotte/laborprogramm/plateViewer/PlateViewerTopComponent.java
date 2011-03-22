@@ -1,7 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.plateViewer;
 
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPlate;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.PlateFactory;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import java.awt.BorderLayout;
 import java.util.logging.Logger;
 import org.openide.util.NbBundle;
@@ -9,6 +8,7 @@ import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 //import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.util.Lookup;
 
 /**
  * Top component which displays something.
@@ -44,11 +44,11 @@ public final class PlateViewerTopComponent extends TopComponent {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-    private PlatePanel platePanel;
+    private Plate96Panel platePanel;
     
     private void initPlateComponent() {
-        IPlate plate = PlateFactory.get96WellPlate(); //FIXME Test-dummy Platte
-        platePanel = new PlatePanel(plate);
+        IPlate96 plate = Lookup.getDefault().lookup(IPlate96.class); //FIXME Test-dummy Platte
+        platePanel = new Plate96Panel(plate);
         add(platePanel,BorderLayout.CENTER);
     }
 

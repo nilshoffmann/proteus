@@ -3,7 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 
 /**
- * A microplate containing 384 wells.
+ * A 384 well microplate.
  *
  * @author kotte
  */

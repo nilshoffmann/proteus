@@ -6,6 +6,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.Well384Status;
 
 /**
+ * Default implementation for IWell384.
  *
  * @author kotte
  */

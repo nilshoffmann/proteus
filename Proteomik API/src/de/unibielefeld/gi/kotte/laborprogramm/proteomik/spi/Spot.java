@@ -6,6 +6,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
 
 /**
+ * Default implementation for ISpot.
  *
  * @author kotte
  */

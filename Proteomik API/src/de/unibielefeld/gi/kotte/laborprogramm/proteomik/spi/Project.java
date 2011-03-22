@@ -7,6 +7,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import java.util.List;
 
 /**
+ * Default implementation for IProject.
  *
  * @author kotte
  */

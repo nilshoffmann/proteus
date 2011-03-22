@@ -5,6 +5,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 
 /**
+ * Default implementation for IPlate96.
  *
  * @author kotte
  */

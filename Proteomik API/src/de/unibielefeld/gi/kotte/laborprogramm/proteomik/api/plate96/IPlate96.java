@@ -3,7 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 
 /**
- * A microplate containing wells.
+ * A 96 well microplate.
  *
  * @author kotte
  */

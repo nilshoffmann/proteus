@@ -3,7 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.Plate384;
 
 /**
- * Factory for creating microplates.
+ * Factory for creating 384 well microplates.
  *
  * @author kotte
  */

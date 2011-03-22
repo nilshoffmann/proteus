@@ -1,9 +1,11 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
+import java.util.List;
 
 /**
- * A well on a microplate for MS identification experiments.
+ * A well on a 96 well microplate.
  *
  * @author kotte
  */
@@ -20,6 +22,10 @@ public interface IWell96 {
     public Well96Status getStatus();
 
     public ISpot getSpot();
+
+    public List<IWell384> get384Wells();
+
+    public void set384Wells(List<IWell384> wells);
 
     public void setStatus(Well96Status status);
 

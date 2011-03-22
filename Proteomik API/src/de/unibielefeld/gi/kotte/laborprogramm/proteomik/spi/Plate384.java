@@ -5,6 +5,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 
 /**
+ * Default implementation for IPlate384.
  *
  * @author kotte
  */

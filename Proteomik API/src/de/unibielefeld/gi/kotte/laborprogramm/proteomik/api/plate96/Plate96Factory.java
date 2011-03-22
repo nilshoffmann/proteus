@@ -3,7 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.Plate96;
 
 /**
- * Factory for creating microplates.
+ * Factory for creating 96 well microplates.
  *
  * @author kotte
  */

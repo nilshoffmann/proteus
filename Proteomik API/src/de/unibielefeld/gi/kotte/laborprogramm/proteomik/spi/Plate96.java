@@ -23,11 +23,9 @@ public class Plate96 implements IPlate96 {
 
     private void initiateWells() {
         this.wells = new IWell96[96];
-        int index = 0;
         for (char row = 'A'; row <= 'H'; row++) {
             for (int column = 1; column <= 12; column++) {
-                wells[index] = new Well96(row, column, this);
-                index++;
+                wells[posToIndex(row, column)] = new Well96(row, column, this);
             }
         }
     }

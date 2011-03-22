@@ -23,11 +23,9 @@ public class Plate384 implements IPlate384 {
 
     private void initiateWells() {
         this.wells = new IWell384[384];
-        int index = 0;
-        for (char posX = 'A'; posX <= 'P'; posX++) {
-            for (int posY = 1; posY <= 24; posY++) {
-                wells[index] = new Well384(posX, posY, this);
-                index++;
+        for (char row = 'A'; row <= 'P'; row++) {
+            for (int column = 1; column <= 24; column++) {
+                wells[posToIndex(row, column)] = new Well384(row, column, this);
             }
         }
     }

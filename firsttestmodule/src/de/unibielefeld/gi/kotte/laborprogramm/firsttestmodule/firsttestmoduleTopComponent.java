@@ -1,5 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.firsttestmodule;
 
+import de.unibielefeld.gi.kotte.laborprogramm.plateViewer.Plate96Panel;
 import java.io.IOException;
 import java.util.logging.Logger;
 import org.openide.util.Exceptions;
@@ -10,9 +11,8 @@ import org.openide.windows.WindowManager;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.Lookup;
 
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IGel;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPlate;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.PlateFactory;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -129,8 +129,8 @@ public final class firsttestmoduleTopComponent extends TopComponent {
     }//GEN-LAST:event_jButtonTestActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        IPlate plate = PlateFactory.get96WellPlate();
-        JPanel platePanel = new PlatePanelCopycat(plate);
+        IPlate96 plate = Lookup.getDefault().lookup(IPlate96.class);
+        JPanel platePanel = new Plate96Panel(plate);
         JDialog dialog = new JDialog();
         dialog.add(platePanel);
         dialog.setVisible(true);

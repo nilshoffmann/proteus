@@ -99,6 +99,6 @@ public class Plate96 implements IPlate96 {
         }
         assert (x >= 0 && x <= 7);
 
-        return x + column * 8 - 1;
+        return x + (column-1) * 8;
     }
 }

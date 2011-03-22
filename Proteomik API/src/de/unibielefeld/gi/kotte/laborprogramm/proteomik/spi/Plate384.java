@@ -99,6 +99,6 @@ public class Plate384 implements IPlate384 {
         }
         assert (x >= 0 && x <= 15);
 
-        return x + column * 16 - 1;
+        return x + (column-1) * 16;
     }
 }

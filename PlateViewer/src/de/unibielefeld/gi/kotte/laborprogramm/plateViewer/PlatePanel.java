@@ -40,29 +40,32 @@ public class PlatePanel extends JPanel {
         final int y = plate.getYdimension();
         this.setLayout(new GridLayout(y + 1, x + 1));
 
-        Dimension d = new Dimension((x + 1) * 16, (y + 1) * 16);
-        setPreferredSize(d);
-        setMinimumSize(d);
         setName(plate.getName());
-        Dimension dim16 = new Dimension(16, 16);
 
         add(new JLabel()); //add upper left corner empty JLabel placeholder
 
         for (int j = 1; j <= x; j++) {
-            add(new JLabel("" + j)); //add top row label
+            JLabel jl = new JLabel("" + j);
+            jl.setHorizontalAlignment(JLabel.CENTER);
+            add(jl); //add top row label
         }
 
         for (char c = 'A'; c < 'A' + y; c++) {
-            add(new JLabel("" + c)); //add leftmost column label
+            JLabel jl = new JLabel("" + c);
+            jl.setHorizontalAlignment(JLabel.RIGHT);
+            add(jl); //add leftmost column label
 
+            Dimension dim16 = new Dimension(16, 16);
             for (int i = 1; i <= x; i++) {
                 //create button for the current well on the plate grid
                 IWell currentWell = plate.getWell(c, i);
                 JButton button = new JButton();
                 button.setAction(new WellAction());
-                //button.setName(currentWell.getWellPosition());
+                button.setName(currentWell.getWellPosition());
                 button.setBorderPainted(false);
+                button.setContentAreaFilled(false);
                 button.setPreferredSize(dim16);
+                button.setMinimumSize(dim16);
                 switch (currentWell.getStatus()) {
                     case ERROR:
                         button.setIcon(wellError);

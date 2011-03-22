@@ -19,11 +19,11 @@
     </folder>
     <folder name="Windows2">
         <folder name="Components">
-            <file name="PlateViewerTopComponentTopComponent.settings" url="PlateViewerTopComponentTopComponentSettings.xml"/>
+            <file name="PlateViewerTopComponent.settings" url="PlateViewerTopComponentSettings.xml"/>
         </folder>
         <folder name="Modes">
             <folder name="editor">
-                <file name="PlateViewerTopComponentTopComponent.wstcref" url="PlateViewerTopComponentTopComponentWstcref.xml"/>
+                <file name="PlateViewerTopComponent.wstcref" url="PlateViewerTopComponentWstcref.xml"/>
             </folder>
         </folder>
     </folder>

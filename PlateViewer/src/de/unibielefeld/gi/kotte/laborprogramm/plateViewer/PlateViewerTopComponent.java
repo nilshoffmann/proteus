@@ -2,6 +2,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.plateViewer;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPlate;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.PlateFactory;
+import java.awt.BorderLayout;
 import java.util.logging.Logger;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
@@ -38,16 +39,7 @@ public final class PlateViewerTopComponent extends TopComponent {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -57,7 +49,7 @@ public final class PlateViewerTopComponent extends TopComponent {
     private void initPlateComponent() {
         IPlate plate = PlateFactory.get96WellPlate(); //FIXME Test-dummy Platte
         platePanel = new PlatePanel(plate);
-        add(platePanel);
+        add(platePanel,BorderLayout.CENTER);
     }
 
     /**

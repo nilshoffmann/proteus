@@ -65,7 +65,9 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>de.unibielefeld.gi.kotte.laborprogramm.plateViewer</package>
+            </public-packages>
         </data>
     </configuration>
 </project>

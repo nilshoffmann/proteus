@@ -1,8 +1,9 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
 
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IGel;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPlate;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import java.util.List;
 
 /**
@@ -16,7 +17,8 @@ public class Project implements IProject {
     String name;
     String description;
     List<IGel> gels;
-    List<IPlate> plates;
+    List<IPlate96> plates96;
+    List<IPlate384> plates384;
 
     @Override
     public List<IGel> getGels() {
@@ -59,12 +61,22 @@ public class Project implements IProject {
     }
 
     @Override
-    public List<IPlate> getPlates() {
-        return plates;
+    public List<IPlate96> get96Plates() {
+        return plates96;
     }
 
     @Override
-    public void setPlates(List<IPlate> plates) {
-        this.plates = plates;
+    public void set96Plates(List<IPlate96> plates) {
+        this.plates96 = plates;
+    }
+
+    @Override
+    public List<IPlate384> get384Plates() {
+        return plates384;
+    }
+
+    @Override
+    public void set384Plates(List<IPlate384> plates) {
+        this.plates384 = plates;
     }
 }

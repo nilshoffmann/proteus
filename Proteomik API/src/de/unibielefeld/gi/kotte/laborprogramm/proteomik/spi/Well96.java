@@ -1,41 +1,41 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
 
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPlate;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.ISpot;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IWell;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IdentificationStatus;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
 
 /**
  *
  * @author kotte
  */
-@org.openide.util.lookup.ServiceProvider(service = IWell.class)
-public class Well implements IWell {
+@org.openide.util.lookup.ServiceProvider(service = IWell96.class)
+public class Well96 implements IWell96 {
 
-    IPlate parent;
-    IdentificationStatus status;
+    IPlate96 parent;
+    Well96Status status;
     ISpot spot;
     char row;
     int column;
 
-    public Well() {
+    public Well96() {
         this.parent = null;
-        this.status = IdentificationStatus.SELECTED;
+        this.status = Well96Status.EMPTY;
         this.spot = null;
-        this.row = 'X'; //Well Position X0 fuer ausserhalb einer Platte
+        this.row = 'X'; //Well96 Position X0 fuer ausserhalb einer Platte
         this.column = 0;
     }
 
-    public Well(char posX, int posY, IPlate parent) {
+    public Well96(char posX, int posY, IPlate96 parent) {
         this.parent = parent;
-        this.status = IdentificationStatus.SELECTED;
+        this.status = Well96Status.EMPTY;
         this.spot = null;
         this.row = posX;
         this.column = posY;
     }
 
     @Override
-    public IPlate getParent() {
+    public IPlate96 getParent() {
         return parent;
     }
 
@@ -55,7 +55,7 @@ public class Well implements IWell {
     }
 
     @Override
-    public IdentificationStatus getStatus() {
+    public Well96Status getStatus() {
         return status;
     }
 
@@ -65,7 +65,7 @@ public class Well implements IWell {
     }
 
     @Override
-    public void setParent(IPlate parent) {
+    public void setParent(IPlate96 parent) {
         this.parent = parent;
     }
 
@@ -80,8 +80,11 @@ public class Well implements IWell {
     }
 
     @Override
-    public void setStatus(IdentificationStatus status) {
+    public void setStatus(Well96Status status) {
         this.status = status;
+        //Testausgabe fuer GUI
+        System.out.println("I am Well " + row + column +
+                " and my status has just been set to " + status);
     }
 
     @Override

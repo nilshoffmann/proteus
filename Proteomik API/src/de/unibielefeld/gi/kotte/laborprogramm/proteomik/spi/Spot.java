@@ -1,9 +1,9 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
 
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IGel;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.ISpot;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IWell;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.SpotStatus;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
 
 /**
  *
@@ -16,8 +16,8 @@ public class Spot implements ISpot {
     IGel parent;
     int posX, posY;
     String label;
-    boolean labelDisplayed;
-    IWell well;
+    int number;
+    IWell96 well;
 
     @Override
     public String getLabel() {
@@ -25,8 +25,8 @@ public class Spot implements ISpot {
     }
 
     @Override
-    public boolean isLabelDisplayed() {
-        return labelDisplayed;
+    public int getNumber() {
+        return number;
     }
 
     @Override
@@ -50,12 +50,12 @@ public class Spot implements ISpot {
     }
 
     @Override
-    public IWell getWell() {
+    public IWell96 getWell() {
         return well;
     }
 
     @Override
-    public void setWell(IWell well) {
+    public void setWell(IWell96 well) {
         this.well = well;
     }
 
@@ -65,8 +65,8 @@ public class Spot implements ISpot {
     }
 
     @Override
-    public void setLabelDisplayed(boolean labelDisplayed) {
-        this.labelDisplayed = labelDisplayed;
+    public void setNumber(int number) {
+        this.number = number;
     }
 
     @Override

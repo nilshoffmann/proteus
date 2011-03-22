@@ -26,6 +26,9 @@
             </test-dependencies>
             <public-packages>
                 <package>de.unibielefeld.gi.kotte.laborprogramm.proteomik.api</package>
+                <package>de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel</package>
+                <package>de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384</package>
+                <package>de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96</package>
             </public-packages>
         </data>
     </configuration>

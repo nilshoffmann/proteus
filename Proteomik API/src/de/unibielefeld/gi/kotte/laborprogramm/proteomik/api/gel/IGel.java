@@ -1,5 +1,6 @@
-package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api;
+package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel;
 
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import java.util.List;
 
 /**

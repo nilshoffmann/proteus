@@ -1,11 +1,13 @@
-package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api;
+package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96;
+
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 
 /**
  * A microplate containing wells.
  *
  * @author kotte
  */
-public interface IPlate {
+public interface IPlate96 {
 
     public String getDescription();
 
@@ -13,9 +15,9 @@ public interface IPlate {
 
     public IProject getParent();
 
-    public IWell[] getWells();
+    public IWell96[] getWells();
 
-    public IWell getWell(char row, int column);
+    public IWell96 getWell(char row, int column);
 
     public int getXdimension();
 
@@ -27,7 +29,7 @@ public interface IPlate {
 
     public void setParent(IProject parent);
 
-    public void setWells(IWell[] wells);
+    public void setWells(IWell96[] wells);
 
-    public void setWell(IWell well, char row, int column);
+    public void setWell(IWell96 well, char row, int column);
 }

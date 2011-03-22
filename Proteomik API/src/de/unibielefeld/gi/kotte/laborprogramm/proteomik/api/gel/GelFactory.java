@@ -1,4 +1,4 @@
-package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api;
+package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel;
 
 import org.openide.util.Lookup;
 

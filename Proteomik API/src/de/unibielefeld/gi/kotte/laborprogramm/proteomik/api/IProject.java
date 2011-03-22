@@ -1,5 +1,8 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api;
 
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import java.util.List;
 
 /**
@@ -25,7 +28,11 @@ public interface IProject {
 
     public void setDescription(String description);
 
-    public List<IPlate> getPlates();
+    public List<IPlate96> get96Plates();
 
-    public void setPlates(List<IPlate> plates);
+    public void set96Plates(List<IPlate96> plates);
+
+    public List<IPlate384> get384Plates();
+
+    public void set384Plates(List<IPlate384> plates);
 }

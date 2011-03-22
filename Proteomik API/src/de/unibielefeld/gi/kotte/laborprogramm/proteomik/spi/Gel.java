@@ -1,8 +1,8 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
 
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IGel;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.ISpot;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import java.util.ArrayList;
 import java.util.List;
 

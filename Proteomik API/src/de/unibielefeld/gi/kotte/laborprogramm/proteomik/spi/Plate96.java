@@ -1,19 +1,19 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
 
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPlate;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IWell;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 
 /**
  *
  * @author kotte
  */
-@org.openide.util.lookup.ServiceProvider(service = IPlate.class)
-public class Plate96 implements IPlate {
+@org.openide.util.lookup.ServiceProvider(service = IPlate96.class)
+public class Plate96 implements IPlate96 {
 
     String name;
     String description;
-    IWell[] wells;
+    IWell96[] wells;
     IProject parent;
 
     public Plate96() {
@@ -21,16 +21,11 @@ public class Plate96 implements IPlate {
     }
 
     private void initiateWells() {
-        this.wells = new IWell[96];
+        this.wells = new IWell96[96];
         int index = 0;
         for (char row = 'A'; row <= 'H'; row++) {
             for (int column = 1; column <= 12; column++) {
-                wells[index] = new Well(row, column, this);
-//                wells[index] = WellFactory.getDefault();
-//                wells[index].setParent(this);
-//                wells[index].setRow(row);
-//                wells[index].setColumn(column);
-//                wells[index].setStatus(IdentificationStatus.SELECTED);
+                wells[index] = new Well96(row, column, this);
                 index++;
             }
         }
@@ -52,12 +47,12 @@ public class Plate96 implements IPlate {
     }
 
     @Override
-    public IWell[] getWells() {
+    public IWell96[] getWells() {
         return wells;
     }
 
     @Override
-    public IWell getWell(char row, int column) {
+    public IWell96 getWell(char row, int column) {
         return wells[posToIndex(row, column)];
     }
 
@@ -87,12 +82,12 @@ public class Plate96 implements IPlate {
     }
 
     @Override
-    public void setWells(IWell[] wells) {
+    public void setWells(IWell96[] wells) {
         this.wells = wells;
     }
 
     @Override
-    public void setWell(IWell well, char row, int column) {
+    public void setWell(IWell96 well, char row, int column) {
         this.wells[posToIndex(row, column)] = well;
     }
 

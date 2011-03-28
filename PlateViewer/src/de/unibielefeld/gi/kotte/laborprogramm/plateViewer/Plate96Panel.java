@@ -1,6 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.plateViewer;
 
 import java.awt.event.ActionEvent;
+import java.net.URL;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -38,13 +39,17 @@ public class Plate96Panel extends JPanel {
     private Icon wellEmpty;
     private Icon wellError;
     private Icon wellOkay;
-    private final static String resourcePath = "/homes/kotte/ProteomikProjekt/";
+    //private final static String resourcePath = "resources/";
+    //de/unibielefeld/gi/kotte/laborprogramm/plateViewer/
 
     public Plate96Panel(IPlate96 plate) {
         //Icons to display wells on the plate
-        wellEmpty = new ImageIcon(resourcePath + "Well01.jpg");
-        wellError = new ImageIcon(resourcePath + "Well02.jpg");
-        wellOkay = new ImageIcon(resourcePath + "Well03.jpg");
+        URL emptyURL = Plate96Panel.class.getResource("resources/Well01.jpg");
+        URL errorURL = Plate96Panel.class.getResource("resources/Well02.jpg");
+        URL  okayURL = Plate96Panel.class.getResource("resources/Well03.jpg");
+        wellEmpty = new ImageIcon(emptyURL);//resourcePath + "Well01.jpg");
+        wellError = new ImageIcon(errorURL);//resourcePath + "Well02.jpg");
+        wellOkay  = new ImageIcon(okayURL); //resourcePath + "Well03.jpg");
 
         final int x = plate.getXdimension();
         final int y = plate.getYdimension();

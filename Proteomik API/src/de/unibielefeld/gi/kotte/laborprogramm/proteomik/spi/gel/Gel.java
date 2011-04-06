@@ -1,8 +1,8 @@
-package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
+package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ITechRepGelGroup;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,23 +14,26 @@ import java.util.List;
 @org.openide.util.lookup.ServiceProvider(service = IGel.class)
 public class Gel implements IGel {
 
-    IProject parent;
+    ITechRepGelGroup parent;
     String name;
     String description;
     String filename;
     List<ISpot> spots;
 
     public Gel() {
+        this.name = "";
+        this.description = "";
+        this.filename = "";
         this.spots = new ArrayList<ISpot>();
     }
 
     @Override
-    public IProject getParent() {
+    public ITechRepGelGroup getParent() {
         return parent;
     }
 
     @Override
-    public void setParent(IProject parent) {
+    public void setParent(ITechRepGelGroup parent) {
         this.parent = parent;
     }
 
@@ -67,6 +70,11 @@ public class Gel implements IGel {
     @Override
     public List<ISpot> getSpots() {
         return spots;
+    }
+
+    @Override
+    public void addSpot(ISpot spot) {
+        this.spots.add(spot);
     }
 
     @Override

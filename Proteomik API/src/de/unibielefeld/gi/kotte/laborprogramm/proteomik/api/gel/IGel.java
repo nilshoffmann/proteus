@@ -1,6 +1,5 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel;
 
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import java.util.List;
 
 /**
@@ -10,9 +9,9 @@ import java.util.List;
  */
 public interface IGel {
 
-    public IProject getParent();
+    public ITechRepGelGroup getParent();
 
-    public void setParent(IProject parent);
+    public void setParent(ITechRepGelGroup parent);
 
     public String getDescription();
 
@@ -27,6 +26,8 @@ public interface IGel {
     public void setName(String name);
 
     public List<ISpot> getSpots();
+
+    public void addSpot(ISpot spot);
 
     public void setSpots(List<ISpot> spots);
 }

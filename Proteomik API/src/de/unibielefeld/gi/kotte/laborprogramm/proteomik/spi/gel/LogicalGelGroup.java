@@ -11,6 +11,7 @@ import java.util.ArrayList;
  *
  * @author kotte
  */
+@org.openide.util.lookup.ServiceProvider(service = ILogicalGelGroup.class)
 public class LogicalGelGroup implements ILogicalGelGroup {
 
     IProject parent;

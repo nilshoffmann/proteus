@@ -13,7 +13,9 @@ public interface ISpot {
 
     public int getNumber();
 
-    public IGel getParent();
+    public IGel getGel();
+
+    public ISpotGroup getGroup();
 
     public int getPosX();
 
@@ -29,7 +31,9 @@ public interface ISpot {
 
     public void setNumber(int number);
 
-    public void setParent(IGel parent);
+    public void setGel(IGel gel);
+
+    public void setGroup(ISpotGroup group);
 
     public void setPosX(int posX);
 

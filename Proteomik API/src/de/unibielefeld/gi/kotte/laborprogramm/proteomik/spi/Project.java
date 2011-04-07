@@ -1,9 +1,10 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
 
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ILogicalGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,18 +18,32 @@ public class Project implements IProject {
     String owner;
     String name;
     String description;
-    List<IGel> gels;
+    List<ILogicalGelGroup> groups;
     List<IPlate96> plates96;
     List<IPlate384> plates384;
 
-    @Override
-    public List<IGel> getGels() {
-        return gels;
+    public Project() {
+        this.name = "";
+        this.description = "";
+        this.owner = "";
+        this.groups = new ArrayList<ILogicalGelGroup>();
+        this.plates96 = new ArrayList<IPlate96>();
+        this.plates384 = new ArrayList<IPlate384>();
     }
 
     @Override
-    public void setGels(List<IGel> gels) {
-        this.gels = gels;
+    public List<ILogicalGelGroup> getGelGroups() {
+        return groups;
+    }
+
+    @Override
+    public void setGelGroups(List<ILogicalGelGroup> groups) {
+        this.groups = groups;
+    }
+
+    @Override
+    public void addGelGroup(ILogicalGelGroup group) {
+        this.groups.add(group);
     }
 
     @Override
@@ -79,5 +94,15 @@ public class Project implements IProject {
     @Override
     public void set384Plates(List<IPlate384> plates) {
         this.plates384 = plates;
+    }
+
+    @Override
+    public void add96Plate(IPlate96 plate) {
+        this.plates96.add(plate);
+    }
+
+    @Override
+    public void add384Plate(IPlate384 plate) {
+        this.plates384.add(plate);
     }
 }

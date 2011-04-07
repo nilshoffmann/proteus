@@ -11,6 +11,7 @@ import java.util.ArrayList;
  *
  * @author kotte
  */
+@org.openide.util.lookup.ServiceProvider(service = ITechRepGelGroup.class)
 public class TechRepGelGroup implements ITechRepGelGroup {
 
     IBioRepGelGroup parent;

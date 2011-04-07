@@ -2,6 +2,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpotGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
 
@@ -14,7 +15,8 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
 public class Spot implements ISpot {
 
     SpotStatus status;
-    IGel parent;
+    IGel gel;
+    ISpotGroup group;
     int posX, posY;
     String label;
     int number;
@@ -31,8 +33,8 @@ public class Spot implements ISpot {
     }
 
     @Override
-    public IGel getParent() {
-        return parent;
+    public IGel getGel() {
+        return gel;
     }
 
     @Override
@@ -71,8 +73,8 @@ public class Spot implements ISpot {
     }
 
     @Override
-    public void setParent(IGel parent) {
-        this.parent = parent;
+    public void setGel(IGel parent) {
+        this.gel = parent;
     }
 
     @Override
@@ -88,5 +90,15 @@ public class Spot implements ISpot {
     @Override
     public void setStatus(SpotStatus status) {
         this.status = status;
+    }
+
+    @Override
+    public ISpotGroup getGroup() {
+        return this.group;
+    }
+
+    @Override
+    public void setGroup(ISpotGroup group) {
+        this.group = group;
     }
 }

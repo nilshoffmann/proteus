@@ -1,7 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ILogicalGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import java.util.List;
 
@@ -12,9 +12,11 @@ import java.util.List;
  */
 public interface IProject {
 
-    public List<IGel> getGels();
+    public List<ILogicalGelGroup> getGelGroups();
 
-    public void setGels(List<IGel> gels);
+    public void setGelGroups(List<ILogicalGelGroup> groups);
+
+    public void addGelGroup(ILogicalGelGroup group);
 
     public String getName();
 
@@ -35,4 +37,8 @@ public interface IProject {
     public List<IPlate384> get384Plates();
 
     public void set384Plates(List<IPlate384> plates);
+
+    public void add96Plate(IPlate96 plate);
+
+    public void add384Plate(IPlate384 plate);
 }

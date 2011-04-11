@@ -9,7 +9,6 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
  *
  * @author kotte
  */
-@org.openide.util.lookup.ServiceProvider(service = IPlate96.class)
 public class Plate96 implements IPlate96 {
 
     String name;

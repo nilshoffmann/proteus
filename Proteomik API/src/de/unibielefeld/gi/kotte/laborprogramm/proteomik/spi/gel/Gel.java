@@ -2,7 +2,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ITechRepGelGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroup;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +11,6 @@ import java.util.List;
  *
  * @author kotte
  */
-@org.openide.util.lookup.ServiceProvider(service = IGel.class)
 public class Gel implements IGel {
 
     ITechRepGelGroup parent;

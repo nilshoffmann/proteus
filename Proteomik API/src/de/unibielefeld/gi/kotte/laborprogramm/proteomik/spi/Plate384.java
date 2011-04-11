@@ -9,7 +9,6 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
  *
  * @author kotte
  */
-@org.openide.util.lookup.ServiceProvider(service = IPlate384.class)
 public class Plate384 implements IPlate384 {
 
     String name;

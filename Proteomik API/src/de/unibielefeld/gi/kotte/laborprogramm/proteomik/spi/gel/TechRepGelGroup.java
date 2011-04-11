@@ -1,9 +1,9 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel;
 
 import java.util.List;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IBioRepGelGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ITechRepGelGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroup;
 import java.util.ArrayList;
 
 /**
@@ -11,7 +11,6 @@ import java.util.ArrayList;
  *
  * @author kotte
  */
-@org.openide.util.lookup.ServiceProvider(service = ITechRepGelGroup.class)
 public class TechRepGelGroup implements ITechRepGelGroup {
 
     IBioRepGelGroup parent;

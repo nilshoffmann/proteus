@@ -13,7 +13,6 @@ import java.util.List;
  *
  * @author kotte
  */
-@org.openide.util.lookup.ServiceProvider(service = IWell96.class)
 public class Well96 implements IWell96 {
 
     IPlate96 parent;
@@ -107,5 +106,40 @@ public class Well96 implements IWell96 {
     @Override
     public void set384Wells(List<IWell384> wells) {
         this.wells384 = wells;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Well96 other = (Well96) obj;
+        if (this.parent != other.parent && (this.parent == null || !this.parent.equals(other.parent))) {
+            return false;
+        }
+        if (this.row != other.row) {
+            return false;
+        }
+        if (this.column != other.column) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Well96{" + "parent=" + parent + "status=" + status + "row=" + row + "column=" + column + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 11 * hash + (this.parent != null ? this.parent.hashCode() : 0);
+        hash = 11 * hash + this.row;
+        hash = 11 * hash + this.column;
+        return hash;
     }
 }

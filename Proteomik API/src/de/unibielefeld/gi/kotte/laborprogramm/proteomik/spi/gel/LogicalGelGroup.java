@@ -2,8 +2,8 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import java.util.List;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ILogicalGelGroup;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IBioRepGelGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroup;
 import java.util.ArrayList;
 
 /**
@@ -11,7 +11,6 @@ import java.util.ArrayList;
  *
  * @author kotte
  */
-@org.openide.util.lookup.ServiceProvider(service = ILogicalGelGroup.class)
 public class LogicalGelGroup implements ILogicalGelGroup {
 
     IProject parent;

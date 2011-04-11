@@ -1,7 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ILogicalGelGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import java.util.List;
 

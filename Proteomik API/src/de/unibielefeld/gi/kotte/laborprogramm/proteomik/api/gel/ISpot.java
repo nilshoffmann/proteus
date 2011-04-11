@@ -1,5 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel;
 
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 
 /**
@@ -17,9 +18,9 @@ public interface ISpot {
 
     public ISpotGroup getGroup();
 
-    public int getPosX();
+    public double getPosX();
 
-    public int getPosY();
+    public double getPosY();
 
     public SpotStatus getStatus();
 
@@ -35,9 +36,9 @@ public interface ISpot {
 
     public void setGroup(ISpotGroup group);
 
-    public void setPosX(int posX);
+    public void setPosX(double posX);
 
-    public void setPosY(int posY);
+    public void setPosY(double posY);
 
     public void setStatus(SpotStatus status);
 }

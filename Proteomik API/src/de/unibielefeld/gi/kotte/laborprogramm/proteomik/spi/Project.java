@@ -1,6 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
 
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ILogicalGelGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
@@ -12,7 +12,6 @@ import java.util.List;
  *
  * @author kotte
  */
-@org.openide.util.lookup.ServiceProvider(service = IProject.class)
 public class Project implements IProject {
 
     String owner;

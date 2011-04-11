@@ -2,7 +2,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel;
 
 import java.util.List;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpotGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import java.util.ArrayList;
 
 /**
@@ -10,7 +10,6 @@ import java.util.ArrayList;
  *
  * @author kotte
  */
-@org.openide.util.lookup.ServiceProvider(service = ISpotGroup.class)
 public class SpotGroup implements ISpotGroup {
 
     String label;

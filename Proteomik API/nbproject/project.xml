@@ -27,6 +27,7 @@
             <public-packages>
                 <package>de.unibielefeld.gi.kotte.laborprogramm.proteomik.api</package>
                 <package>de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel</package>
+                <package>de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group</package>
                 <package>de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384</package>
                 <package>de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96</package>
             </public-packages>

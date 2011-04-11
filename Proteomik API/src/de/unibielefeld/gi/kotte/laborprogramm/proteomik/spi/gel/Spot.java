@@ -2,7 +2,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpotGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
 
@@ -11,13 +11,12 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
  *
  * @author kotte
  */
-@org.openide.util.lookup.ServiceProvider(service = ISpot.class)
 public class Spot implements ISpot {
 
     SpotStatus status;
     IGel gel;
     ISpotGroup group;
-    int posX, posY;
+    double posX, posY;
     String label;
     int number;
     IWell96 well;
@@ -38,12 +37,12 @@ public class Spot implements ISpot {
     }
 
     @Override
-    public int getPosX() {
+    public double getPosX() {
         return posX;
     }
 
     @Override
-    public int getPosY() {
+    public double getPosY() {
         return posY;
     }
 
@@ -78,12 +77,12 @@ public class Spot implements ISpot {
     }
 
     @Override
-    public void setPosX(int posX) {
+    public void setPosX(double posX) {
         this.posX = posX;
     }
 
     @Override
-    public void setPosY(int posY) {
+    public void setPosY(double posY) {
         this.posY = posY;
     }
 

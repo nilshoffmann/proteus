@@ -10,7 +10,6 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.Well384Stat
  *
  * @author kotte
  */
-@org.openide.util.lookup.ServiceProvider(service = IWell384.class)
 public class Well384 implements IWell384 {
 
     IPlate384 parent;

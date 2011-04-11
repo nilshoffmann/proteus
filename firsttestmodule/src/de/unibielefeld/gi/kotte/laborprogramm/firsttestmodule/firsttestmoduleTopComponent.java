@@ -12,7 +12,9 @@ import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.Lookup;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGelFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96Factory;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -99,7 +101,7 @@ public final class firsttestmoduleTopComponent extends TopComponent {
 
     private void jButtonTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTestActionPerformed
         //jLabelTest.setText(Lookup.getDefault().lookup(IGel.class).getDescription());
-        IGel testGel = Lookup.getDefault().lookup(IGel.class);
+        IGel testGel = Lookup.getDefault().lookup(IGelFactory.class).createGel();
         testGel.setFilename("/homes/kotte/ProteomikProjekt/b100/80547_255_75_101.jpeg");
         java.net.URL imgURL = null;
 
@@ -129,7 +131,7 @@ public final class firsttestmoduleTopComponent extends TopComponent {
     }//GEN-LAST:event_jButtonTestActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        IPlate96 plate = Lookup.getDefault().lookup(IPlate96.class);
+        IPlate96 plate = Lookup.getDefault().lookup(IPlate96Factory.class).createPlate96();
         JPanel platePanel = new Plate96Panel(plate);
         JDialog dialog = new JDialog();
         dialog.add(platePanel);

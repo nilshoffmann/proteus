@@ -142,4 +142,9 @@ public class Well96 implements IWell96 {
         hash = 11 * hash + this.column;
         return hash;
     }
+
+    @Override
+    public void add384Well(IWell384 well) {
+        this.wells384.add(well);
+    }
 }

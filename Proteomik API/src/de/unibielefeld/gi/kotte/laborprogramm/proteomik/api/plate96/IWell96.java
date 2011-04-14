@@ -27,6 +27,8 @@ public interface IWell96 {
 
     public void set384Wells(List<IWell384> wells);
 
+    public void add384Well(IWell384 well);
+
     public void setStatus(Well96Status status);
 
     public void setSpot(ISpot spot);

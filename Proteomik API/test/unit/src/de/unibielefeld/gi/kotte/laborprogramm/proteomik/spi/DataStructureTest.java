@@ -14,6 +14,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test der von der Proteomik API zur Verfuegung gestellten Datenstrukturen.
  *
  * @author kotte
  */

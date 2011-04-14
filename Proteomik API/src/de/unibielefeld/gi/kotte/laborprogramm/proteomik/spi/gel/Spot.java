@@ -100,4 +100,9 @@ public class Spot implements ISpot {
     public void setGroup(ISpotGroup group) {
         this.group = group;
     }
+
+    @Override
+    public String toString() {
+        return "spot #" + number + " labeled '" + label + "' at position " + posX + "/" + posY + " is " + status;
+    }
 }

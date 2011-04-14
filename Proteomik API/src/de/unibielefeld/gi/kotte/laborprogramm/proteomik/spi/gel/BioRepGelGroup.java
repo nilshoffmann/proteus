@@ -5,6 +5,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGe
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroup;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Default implementation for IBioRepGelGroup.
@@ -67,5 +68,20 @@ public class BioRepGelGroup implements IBioRepGelGroup {
     @Override
     public void addGelGroup(ITechRepGelGroup group) {
         this.groups.add(group);
+    }
+
+    @Override
+    public String toString() {
+        String str = "bio rep gel group '" + name + "': " + description;
+        if (!groups.isEmpty()) {
+            ITechRepGelGroup group = null;
+            for (Iterator<ITechRepGelGroup> it = groups.iterator(); it.hasNext();) {
+                group = it.next();
+                str += "\n      > " + group.toString();
+            }
+        } else {
+            str += "      no tech rep gel groups";
+        }
+        return str;
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroup;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Default implementation for ILogicalGelGroup.
@@ -67,5 +68,20 @@ public class LogicalGelGroup implements ILogicalGelGroup {
     @Override
     public void addGelGroup(IBioRepGelGroup group) {
         this.groups.add(group);
+    }
+
+    @Override
+    public String toString() {
+        String str = "logical gel group '" + name + "': " + description;
+        if (!groups.isEmpty()) {
+            IBioRepGelGroup group = null;
+            for (Iterator<IBioRepGelGroup> it = groups.iterator(); it.hasNext();) {
+                group = it.next();
+                str += "\n    > " + group.toString();
+            }
+        } else {
+            str += "    no bio rep gel groups";
+        }
+        return str;
     }
 }

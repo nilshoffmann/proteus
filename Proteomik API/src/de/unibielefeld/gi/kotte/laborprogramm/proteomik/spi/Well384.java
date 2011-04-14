@@ -88,4 +88,9 @@ public class Well384 implements IWell384 {
     public void setWell96(IWell96 well96) {
         this.well96 = well96;
     }
+
+    @Override
+    public String toString() {
+        return "well " + row + column + " is " + status;
+    }
 }

@@ -1,5 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group;
 
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import java.util.List;
 
@@ -9,9 +10,14 @@ import java.util.List;
  * @author kotte
  */
 public interface ISpotGroup {
+
     public String getLabel();
 
     public int getNumber();
+
+    public IProject getParent();
+
+    public void setParent(IProject parent);
 
     public void setLabel(String label);
 

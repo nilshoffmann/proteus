@@ -89,6 +89,15 @@ public class Plate384 implements IPlate384 {
         this.wells[posToIndex(row, column)] = well;
     }
 
+    @Override
+    public String toString() {
+        String str = "384 well plate '" + name + "': " + description;
+        for (int i = 0; i < wells.length; i++) {
+            str += "\n    > " + wells[i].toString();
+        }
+        return str;
+    }
+
     private static int posToIndex(char row, int column) {
         assert (column >= 1 && column <= 24);
         //setze x auf 0 fuer A oder a, 1 fuer B oder b, etc.
@@ -98,6 +107,6 @@ public class Plate384 implements IPlate384 {
         }
         assert (x >= 0 && x <= 15);
 
-        return x + (column-1) * 16;
+        return x + (column - 1) * 16;
     }
 }

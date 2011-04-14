@@ -2,6 +2,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import java.util.List;
 
@@ -17,6 +18,12 @@ public interface IProject {
     public void setGelGroups(List<ILogicalGelGroup> groups);
 
     public void addGelGroup(ILogicalGelGroup group);
+
+    public List<ISpotGroup> getSpotGroups();
+
+    public void setSpotGroups(List<ISpotGroup> groups);
+
+    public void addSpotGroup(ISpotGroup group);
 
     public String getName();
 

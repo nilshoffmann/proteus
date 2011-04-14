@@ -3,8 +3,10 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -17,32 +19,49 @@ public class Project implements IProject {
     String owner;
     String name;
     String description;
-    List<ILogicalGelGroup> groups;
+    List<ILogicalGelGroup> gelgroups;
     List<IPlate96> plates96;
     List<IPlate384> plates384;
+    List<ISpotGroup> spotgroups;
 
     public Project() {
         this.name = "";
         this.description = "";
         this.owner = "";
-        this.groups = new ArrayList<ILogicalGelGroup>();
+        this.gelgroups = new ArrayList<ILogicalGelGroup>();
         this.plates96 = new ArrayList<IPlate96>();
         this.plates384 = new ArrayList<IPlate384>();
+        this.spotgroups = new ArrayList<ISpotGroup>();
     }
 
     @Override
     public List<ILogicalGelGroup> getGelGroups() {
-        return groups;
+        return gelgroups;
     }
 
     @Override
     public void setGelGroups(List<ILogicalGelGroup> groups) {
-        this.groups = groups;
+        this.gelgroups = groups;
     }
 
     @Override
     public void addGelGroup(ILogicalGelGroup group) {
-        this.groups.add(group);
+        this.gelgroups.add(group);
+    }
+
+    @Override
+    public List<ISpotGroup> getSpotGroups() {
+        return spotgroups;
+    }
+
+    @Override
+    public void setSpotGroups(List<ISpotGroup> groups) {
+        this.spotgroups = groups;
+    }
+
+    @Override
+    public void addSpotGroup(ISpotGroup group) {
+        this.spotgroups.add(group);
     }
 
     @Override
@@ -103,5 +122,47 @@ public class Project implements IProject {
     @Override
     public void add384Plate(IPlate384 plate) {
         this.plates384.add(plate);
+    }
+
+    @Override
+    public String toString() {
+        String str = "project '" + name + "' from " + owner + ": " + description;
+        if (!gelgroups.isEmpty()) {
+            ILogicalGelGroup group = null;
+            for (Iterator<ILogicalGelGroup> it = gelgroups.iterator(); it.hasNext();) {
+                group = it.next();
+                str += "\n  > " + group.toString();
+            }
+        } else {
+            str += "  no logical gel groups";
+        }
+        if (!plates384.isEmpty()) {
+            IPlate384 plate = null;
+            for (Iterator<IPlate384> it = plates384.iterator(); it.hasNext();) {
+                plate = it.next();
+                str += "\n  > " + plate.toString();
+            }
+        } else {
+            str += "  no 384 well plates";
+        }
+        if (!plates96.isEmpty()) {
+            IPlate96 plate = null;
+            for (Iterator<IPlate96> it = plates96.iterator(); it.hasNext();) {
+                plate = it.next();
+                str += "\n  > " + plate.toString();
+            }
+        } else {
+            str += "  no 96 well plates";
+        }
+        if (!spotgroups.isEmpty()) {
+            ISpotGroup group = null;
+            for (Iterator<ISpotGroup> it = spotgroups.iterator(); it.hasNext();) {
+                group = it.next();
+                str += "\n  > " + group.toString();
+            }
+        } else {
+            str += "  no spot groups";
+        }
+        return str;
     }
 }

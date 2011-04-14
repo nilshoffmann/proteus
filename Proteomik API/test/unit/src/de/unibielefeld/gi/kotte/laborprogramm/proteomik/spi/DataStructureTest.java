@@ -8,8 +8,6 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.*;
 
 import org.openide.util.Lookup;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -81,25 +79,25 @@ public class DataStructureTest {
         spot11.setGel(gel1);
         gel1.addSpot(spot11);
         ISpot spot12 = Lookup.getDefault().lookup(ISpotFactory.class).createSpot();
-        spot11.setNumber(2);
-        spot11.setPosX(200);
-        spot11.setPosY(100);
-        spot11.setLabel("Spot #2 on gel #1");
-        spot11.setGel(gel1);
+        spot12.setNumber(2);
+        spot12.setPosX(200);
+        spot12.setPosY(100);
+        spot12.setLabel("Spot #2 on gel #1");
+        spot12.setGel(gel1);
         gel1.addSpot(spot12);
         ISpot spot21 = Lookup.getDefault().lookup(ISpotFactory.class).createSpot();
-        spot11.setNumber(1);
-        spot11.setPosX(99);
-        spot11.setPosY(200);
-        spot11.setLabel("Spot #1 on gel #2");
-        spot11.setGel(gel2);
+        spot21.setNumber(1);
+        spot21.setPosX(99);
+        spot21.setPosY(200);
+        spot21.setLabel("Spot #1 on gel #2");
+        spot21.setGel(gel2);
         gel2.addSpot(spot21);
         ISpot spot22 = Lookup.getDefault().lookup(ISpotFactory.class).createSpot();
-        spot11.setNumber(2);
-        spot11.setPosX(199);
-        spot11.setPosY(99);
-        spot11.setLabel("Spot #2 on gel #2");
-        spot11.setGel(gel1);
+        spot22.setNumber(2);
+        spot22.setPosX(199);
+        spot22.setPosY(99);
+        spot22.setLabel("Spot #2 on gel #2");
+        spot22.setGel(gel1);
         gel2.addSpot(spot22);
 
         //set up groups of spots
@@ -110,6 +108,7 @@ public class DataStructureTest {
         spot11.setGroup(spotgroup1);
         spotgroup1.addSpot(spot21);
         spot21.setGroup(spotgroup1);
+        this.project.addSpotGroup(spotgroup1);
         ISpotGroup spotgroup2 = Lookup.getDefault().lookup(ISpotGroupFactory.class).createSpotGroup();
         spotgroup2.setLabel("Spot #2");
         spotgroup2.setNumber(2);
@@ -117,6 +116,7 @@ public class DataStructureTest {
         spot12.setGroup(spotgroup2);
         spotgroup2.addSpot(spot22);
         spot22.setGroup(spotgroup2);
+        this.project.addSpotGroup(spotgroup2);
 
         //set up a 96 well microplate
         IPlate96 plate96 = Lookup.getDefault().lookup(IPlate96Factory.class).createPlate96();
@@ -132,7 +132,6 @@ public class DataStructureTest {
         IWell96 wellB2 = plate96.getWell('B', 2);
 
         //provide picking information
-        System.out.println("filling spots:");
         wellA1.setSpot(spot11);
         wellA1.setStatus(Well96Status.FILLED);
         spot11.setWell(wellA1);
@@ -163,39 +162,36 @@ public class DataStructureTest {
         wellA1.setStatus(Well96Status.PROCESSED);
         well384_1.setWell96(wellA1);
         well384_1.setStatus(Well384Status.FILLED);
-
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Test
-    public void testToString() {
-        System.out.println(this.project);
-    }
 
     @Test
     public void testTunneling() {
+        //test tunneling of gels
         ILogicalGelGroup logical = this.project.getGelGroups().iterator().next();
         IBioRepGelGroup biorep = logical.getGelGroups().iterator().next();
         ITechRepGelGroup techrep = biorep.getGelGroups().iterator().next();
         IGel gel = techrep.getGels().iterator().next();
         assertEquals(this.project, gel.getParent().getParent().getParent().getParent());
 
+        //test tunneling of 96 well plates
         IPlate96 plate96 = this.project.get96Plates().iterator().next();
         IWell96 well96 = plate96.getWell('A', 1);
         ISpot spot = well96.getSpot();
         assert (gel.getSpots().contains(spot));
 
+        //test tunneling of 384 well plates
         IPlate384 plate384 = this.project.get384Plates().iterator().next();
         IWell384 well384 = plate384.getWell('F', 10);
         assertEquals(Well384Status.FILLED, well384.getStatus());
         assertEquals(well384.getWell96(), well96);
         assert (well96.get384Wells().contains(well384));
+
+        //test tunneling of spot groups
+        ISpotGroup spotgroup = this.project.getSpotGroups().iterator().next();
+        assert (spotgroup.getSpots().contains(spot));
+
+        //print out project test object
+        System.out.println(this.project);
     }
 }

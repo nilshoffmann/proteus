@@ -89,6 +89,15 @@ public class Plate96 implements IPlate96 {
         this.wells[posToIndex(row, column)] = well;
     }
 
+    @Override
+    public String toString() {
+        String str = "96 well plate '" + name + "': " + description;
+        for (int i = 0; i < wells.length; i++) {
+            str += "\n    > " + wells[i].toString();
+        }
+        return str;
+    }
+
     private static int posToIndex(char row, int column) {
         assert (column >= 1 && column <= 12);
         //setze x auf 0 fuer A oder a, 1 fuer B oder b, etc.

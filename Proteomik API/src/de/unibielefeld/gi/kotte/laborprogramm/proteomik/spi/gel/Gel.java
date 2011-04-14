@@ -4,6 +4,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroup;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -79,5 +80,20 @@ public class Gel implements IGel {
     @Override
     public void setSpots(List<ISpot> spots) {
         this.spots = spots;
+    }
+
+    @Override
+    public String toString() {
+        String str = "gel '" + name + "' from file '" + filename + "': " + description;
+        if (!spots.isEmpty()) {
+            ISpot spot = null;
+            for (Iterator<ISpot> it = spots.iterator(); it.hasNext();) {
+                spot = it.next();
+                str += "\n          > " + spot.toString();
+            }
+        } else {
+            str += "          no spots";
+        }
+        return str;
     }
 }

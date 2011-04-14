@@ -32,6 +32,7 @@ public class Plate96Panel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            //TODO aktuellen Well im LookUp anmelden
             well.setStatus(Well96Status.FILLED);
             button.setIcon(wellOkay);
         }

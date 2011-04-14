@@ -1,6 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.plateViewer;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96Factory;
 import java.awt.BorderLayout;
 import java.util.logging.Logger;
 import org.openide.util.NbBundle;
@@ -47,7 +48,7 @@ public final class PlateViewerTopComponent extends TopComponent {
     private Plate96Panel platePanel;
     
     private void initPlateComponent() {
-        IPlate96 plate = Lookup.getDefault().lookup(IPlate96.class); //FIXME Test-dummy Platte
+        IPlate96 plate = Lookup.getDefault().lookup(IPlate96Factory.class).createPlate96(); //FIXME Test-dummy Platte
         platePanel = new Plate96Panel(plate);
         add(platePanel,BorderLayout.CENTER);
     }

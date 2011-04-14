@@ -130,8 +130,6 @@ public class DataStructureTest {
         IWell96 wellA2 = plate96.getWell('A', 2);
         IWell96 wellB1 = plate96.getWell('B', 1);
         IWell96 wellB2 = plate96.getWell('B', 2);
-        assertNotSame(wellA1, wellA2);
-        assertNotSame(wellB1, wellB2);
 
         //provide picking information
         System.out.println("filling spots:");
@@ -151,6 +149,21 @@ public class DataStructureTest {
         wellB2.setStatus(Well96Status.FILLED);
         spot22.setWell(wellB2);
         spot22.setStatus(SpotStatus.PICKED);
+
+        //create 384 well plate
+        IPlate384 plate384 = Lookup.getDefault().lookup(IPlate384Factory.class).createPlate384();
+        plate384.setParent(this.project);
+        this.project.add384Plate(plate384);
+        plate384.setName("grosse Testplatte");
+        plate384.setDescription("Mock Objekt zum Test der Datenstruktur");
+
+        //provide processing information
+        IWell384 well384_1 = plate384.getWell('F', 10);
+        wellA1.add384Well(well384_1);
+        wellA1.setStatus(Well96Status.PROCESSED);
+        well384_1.setWell96(wellA1);
+        well384_1.setStatus(Well384Status.FILLED);
+
     }
 
     @BeforeClass
@@ -178,5 +191,11 @@ public class DataStructureTest {
         IWell96 well96 = plate96.getWell('A', 1);
         ISpot spot = well96.getSpot();
         assert (gel.getSpots().contains(spot));
+
+        IPlate384 plate384 = this.project.get384Plates().iterator().next();
+        IWell384 well384 = plate384.getWell('F', 10);
+        assertEquals(Well384Status.FILLED, well384.getStatus());
+        assertEquals(well384.getWell96(), well96);
+        assert (well96.get384Wells().contains(well384));
     }
 }

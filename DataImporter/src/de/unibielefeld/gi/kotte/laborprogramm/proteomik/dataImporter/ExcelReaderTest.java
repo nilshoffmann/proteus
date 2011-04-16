@@ -8,6 +8,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.File;
 import java.io.FileOutputStream;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 //import org.junit.Test;
 
 /**
@@ -23,7 +26,7 @@ public class ExcelReaderTest {
     //@Test
     public void testStuff() {
         try {
-//            Workbook workbook = null;
+            Workbook workbook = null;
             File f = new File("Export_1.xlsx");
             //f.deleteOnExit();
             BufferedOutputStream bos;
@@ -40,15 +43,16 @@ public class ExcelReaderTest {
                 }
                 bos.flush();
                 bos.close();
-                //bis.close();
-//                try {
-//                    workbook = Workbook.getWorkbook(f);
-//                } catch (Exception e) {
-//                    System.out.println("MAU " + e.getMessage());
-//                    e.printStackTrace();
-//                }
-//                assert (workbook != null);
-//                System.out.printf("Succesfully read workbook with %i sheets", workbook.getNumberOfSheets());
+
+                try {
+                    workbook = WorkbookFactory.create(bis);
+                } catch (InvalidFormatException ex) {
+                    Logger.getLogger(ExcelReaderTest.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                assert (workbook != null);
+
+                System.out.printf("Succesfully read workbook with %i sheets", workbook.getNumberOfSheets());
 
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(ExcelReaderTest.class.getName()).log(Level.SEVERE, null, ex);

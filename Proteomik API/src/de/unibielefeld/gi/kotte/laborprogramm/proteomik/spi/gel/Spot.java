@@ -21,6 +21,10 @@ public class Spot implements ISpot {
     int number;
     IWell96 well;
 
+    Spot() {
+        status = SpotStatus.UNPICKED;
+    }
+
     @Override
     public String getLabel() {
         return label;

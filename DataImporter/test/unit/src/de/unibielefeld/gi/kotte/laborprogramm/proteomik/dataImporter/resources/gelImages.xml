@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE GelData SYSTEM "http://decodon.com/dtd/Delta2D/3.1/GelData.dtd">
+
+<gelData>
+  <gelImages>
+    <gelImage name="Konstantin B100 Prodmedium stat2 80562 255 75 100" imageFormat="image/tiff" sourceImage="E:\b100\Konstantin B100 Prodmedium stat2 80562 255 75 100.tif">
+      <description>
+Remove Black Speckles [6] (09.09.2010)</description>
+      <creationDate>September 9, 2010 11:16 AM</creationDate>
+      <gelImageId id="1284023789651"/>
+      <quantitation xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="gelImages/quantitations/1284023789651.xml"/>
+      <properties histogramScale="1.0" histogramOffset="0.0" spotLayerVisibility="true" labelLayerVisibility="true"/></gelImage>
+    <gelImage name="Konstantin B100 Prodmedium log 80547 255 75 101" imageFormat="image/tiff" sourceImage="E:\b100\Konstantin B100 Prodmedium log 80547 255 75 101.tif">
+      <description>
+Remove Black Speckles [6] (09.09.2010)</description>
+      <creationDate>September 9, 2010 11:13 AM</creationDate>
+      <gelImageId id="1284023623027"/>
+      <quantitation xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="gelImages/quantitations/1284023623027.xml"/>
+      <label xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="gelImages/labels/1284023623027.xml"/>
+      <properties histogramScale="1.0" histogramOffset="0.0" spotLayerVisibility="true" labelLayerVisibility="true"/></gelImage>
+    <gelImage name="Konstantin B100 Prodmedium stat 80550 255 75 103" imageFormat="image/tiff" sourceImage="E:\b100\Konstantin B100 Prodmedium stat 80550 255 75 103.tif">
+      <description>
+Remove Black Speckles [6] (09.09.2010)</description>
+      <creationDate>September 9, 2010 11:15 AM</creationDate>
+      <gelImageId id="1284023753419"/>
+      <quantitation xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="gelImages/quantitations/1284023753419.xml"/>
+      <properties histogramScale="1.0" histogramOffset="0.0" spotLayerVisibility="true" labelLayerVisibility="true"/></gelImage>
+    <gelImage name="Fused Image using Union at 09_09_2010 11_29_18_574" author="Delta2D" imageFormat="image/tiff" sourceImage="C:\Users\guest\AppData\Local\Temp\temp2402447347909180930.tif">
+      <description>Fused Image
+Input:	Konstantin B100 Prodmedium stat2 80562 255 75 100, Konstantin B100 Prodmedium log 80547 255 75 101, Konstantin B100 Prodmedium stat 80550 255 75 103, Konstantin B100 Prodmedium log 2 80548 255 75 100
+Function:	Union
+Image Size:	Common Region
+Warped to:	Konstantin B100 Prodmedium log 80547 255 75 101</description>
+      <creationDate>September 9, 2010 11:29 AM</creationDate>
+      <gelImageId id="1284024558626"/>
+      <quantitation xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="gelImages/quantitations/1284024558626.xml"/>
+      <label xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="gelImages/labels/1284024558626.xml"/>
+      <properties histogramScale="1.0" histogramOffset="0.0" spotLayerVisibility="true" labelLayerVisibility="true"/></gelImage>
+    <gelImage name="Konstantin B100 Prodmedium log 2 80548 255 75 100" imageFormat="image/tiff" sourceImage="E:\b100\Konstantin B100 Prodmedium log 2 80548 255 75 100.tif">
+      <description>
+Remove Black Speckles [6] (09.09.2010)</description>
+      <creationDate>September 9, 2010 11:15 AM</creationDate>
+      <gelImageId id="1284023715787"/>
+      <quantitation xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="gelImages/quantitations/1284023715787.xml"/>
+      <properties histogramScale="1.0" histogramOffset="0.0" spotLayerVisibility="true" labelLayerVisibility="true"/></gelImage></gelImages></gelData>

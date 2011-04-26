@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE ProjectData SYSTEM "http://decodon.com/dtd/Delta2D/3.1/ProjectData.dtd">
+
+<projectData>
+  <projects>
+    <project name="Konstantin Xcc B100 Prodmedium">
+      <description>Vergleich von Xcc B100 in Produktionsmedium - logarithmische und stationäre Phase</description>
+      <creationDate>September 9, 2010 11:12 AM</creationDate>
+      <projectId id="1284023597387"/>
+      <gelgroups>
+        <gelpointer gelid="1284023623027"/>
+        <gelpointer gelid="1284023753419"/>
+        <gelpointer gelid="1284023715787"/>
+        <gelpointer gelid="1284023789651"/>
+        <gelpointer gelid="1284024558626"/></gelgroups>
+      <groups>
+        <group id="1284023597388" name="Group 1">
+          <gels>
+            <gel gelid="1284023623027"/>
+            <gel gelid="1284023715787"/></gels>
+          <color coloralpha="255" colorred="255" colorgreen="56" colorblue="56"/></group>
+        <group id="1284023597389" name="Group 2">
+          <gels>
+            <gel gelid="1284023753419"/>
+            <gel gelid="1284023789651"/></gels>
+          <color coloralpha="255" colorred="56" colorgreen="255" colorblue="56"/></group>
+        <group id="1284024560198" name="Fused Images">
+          <gels>
+            <gel gelid="1284024558626"/></gels>
+          <color coloralpha="255" colorred="255" colorgreen="56" colorblue="231"/></group></groups></project></projects></projectData>

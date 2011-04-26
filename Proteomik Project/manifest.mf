@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: de.unibielefeld.gi.kotte.laborprogramm.project
+OpenIDE-Module-Layer: de/unibielefeld/gi/kotte/laborprogramm/project/layer.xml
+OpenIDE-Module-Localizing-Bundle: de/unibielefeld/gi/kotte/laborprogramm/project/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

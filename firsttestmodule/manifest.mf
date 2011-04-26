@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
 OpenIDE-Module: de.unibielefeld.gi.kotte.firsttestmodule
 OpenIDE-Module-Layer: de/unibielefeld/gi/kotte/firsttestmodule/layer.xml
 OpenIDE-Module-Localizing-Bundle: de/unibielefeld/gi/kotte/firsttestmodule/Bundle.properties

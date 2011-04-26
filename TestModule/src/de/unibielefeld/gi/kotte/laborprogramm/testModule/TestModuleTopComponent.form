@@ -16,10 +16,13 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="plateViewerTestButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="271" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                  <Component id="plate96TestButton" alignment="0" max="32767" attributes="1"/>
+                  <Component id="plate384TestButton" alignment="0" max="32767" attributes="1"/>
+              </Group>
+              <EmptySpace pref="261" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -27,21 +30,33 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="plateViewerTestButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="266" max="32767" attributes="0"/>
+              <Component id="plate96TestButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="plate384TestButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="237" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JButton" name="plateViewerTestButton">
+    <Component class="javax.swing.JButton" name="plate96TestButton">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/testModule/Bundle.properties" key="TestModuleTopComponent.plateViewerTestButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/testModule/Bundle.properties" key="TestModuleTopComponent.plate96TestButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="plateViewerTestButtonActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="plate96TestButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="plate384TestButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/testModule/Bundle.properties" key="TestModuleTopComponent.plate384TestButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="plate384TestButtonActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

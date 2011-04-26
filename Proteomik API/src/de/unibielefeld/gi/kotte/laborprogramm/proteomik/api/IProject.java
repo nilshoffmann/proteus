@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author kotte
  */
-public interface IProject {
+public interface IProject{
 
     public List<ILogicalGelGroup> getGelGroups();
 

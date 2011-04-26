@@ -22,7 +22,7 @@ public class DataStructureTest {
 
     public DataStructureTest() {
         //set up project
-        this.project = Lookup.getDefault().lookup(IProjectFactory.class).createProject();
+        this.project = Lookup.getDefault().lookup(IProjectFactory.class).createEmptyProject();
         this.project.setName("Dummy Projekt");
         this.project.setDescription("Testprojekt zum testen der Proteomik API Datenstrukturen");
         this.project.setOwner("kotte");

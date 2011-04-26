@@ -12,8 +12,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProjectFactory;
 public class ProjectFactory implements IProjectFactory {
 
     @Override
-    public IProject createProject() {
-        IProject result = new Project();
-        return result;
+    public IProject createEmptyProject() {
+        return new Project();
     }
 }

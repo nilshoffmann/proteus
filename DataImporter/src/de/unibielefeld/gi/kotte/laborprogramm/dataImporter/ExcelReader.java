@@ -1,13 +1,12 @@
 package de.unibielefeld.gi.kotte.laborprogramm.dataImporter;
 
+import de.unibielefeld.gi.kotte.laborprogramm.dataImporter.resourceHandler.ResourceHandler;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGelFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpotFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroupFactory;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -15,7 +14,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -49,27 +47,6 @@ public class ExcelReader {
     public ExcelReader() {
         gelnames = new ArrayList<String>();
         data = new ArrayList<SpotDatum>();
-    }
-
-    private static void writeResourceToDisk(String resource, File target) {
-        BufferedInputStream bin = new BufferedInputStream(ExcelReader.class.getResourceAsStream(resource), 2048);
-
-        BufferedOutputStream bout;
-        try {
-            bout = new BufferedOutputStream(new FileOutputStream(target));
-            byte[] buffer = new byte[2048];
-            int bytesRead = 0;
-            while (true) {
-                bytesRead = bin.read(buffer, 0, 2048);
-                if (bytesRead == -1) {
-                    break;
-                }
-                bout.write(buffer, 0, bytesRead);
-            }
-            bout.flush();
-        } catch (IOException ex) {
-            Logger.getLogger(ExcelReader.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     private void parseHeader(Row header) {
@@ -135,9 +112,9 @@ public class ExcelReader {
 
             File f = new File("Export_1.xlsx");
             //f.deleteOnExit();
-            BufferedWriter bos;
+            //BufferedWriter bos;
             try {
-                writeResourceToDisk("/resources/Export_1.xlsx", f);
+                ResourceHandler.writeResourceToDisk("/resources/Export_1.xlsx", f);
 
                 try {
                     workbook = WorkbookFactory.create(new FileInputStream(f));

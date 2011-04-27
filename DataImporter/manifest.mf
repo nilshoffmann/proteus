@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-OpenIDE-Module: de.unibielefeld.gi.kotte.laborprogramm.proteomik.dataImporter
-OpenIDE-Module-Localizing-Bundle: de/unibielefeld/gi/kotte/laborprogramm/proteomik/dataImporter/Bundle.properties
+OpenIDE-Module: de.unibielefeld.gi.kotte.laborprogramm.dataImporter
+OpenIDE-Module-Localizing-Bundle: de/unibielefeld/gi/kotte/laborprogramm/dataImporter/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.0
 

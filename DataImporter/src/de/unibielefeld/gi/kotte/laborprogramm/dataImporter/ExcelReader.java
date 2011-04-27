@@ -1,4 +1,4 @@
-package de.unibielefeld.gi.kotte.laborprogramm.proteomik.dataImporter;
+package de.unibielefeld.gi.kotte.laborprogramm.dataImporter;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;

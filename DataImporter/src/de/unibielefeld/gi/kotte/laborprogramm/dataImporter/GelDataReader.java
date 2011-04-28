@@ -23,15 +23,16 @@ import org.openide.util.Lookup;
  * @author kotte
  */
 public class GelDataReader {
+
     public List<IGel> getGels(File f) {
         try {
             JAXBContext jc = JAXBContext.newInstance("de.unibielefeld.gi.kotte.laborprogramm.xml.gelData");
             Unmarshaller u = jc.createUnmarshaller();
-            GelData gd = (GelData)u.unmarshal(
+            GelData gd = (GelData) u.unmarshal(
                     new FileInputStream(f));
             System.out.println(gd);
             List<IGel> gels = new ArrayList<IGel>();
-            for(GelImage gi : gd.getGelImages().getGelImage()) {
+            for (GelImage gi : gd.getGelImages().getGelImage()) {
                 //System.out.println("Name: "+gi.getName()+" source image: "+gi.getSourceImage());
                 IGel gel = Lookup.getDefault().lookup(IGelFactory.class).createGel();
                 gel.setName(gi.getName());

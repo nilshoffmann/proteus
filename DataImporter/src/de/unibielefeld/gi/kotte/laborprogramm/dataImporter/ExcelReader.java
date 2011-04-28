@@ -106,29 +106,15 @@ public class ExcelReader {
         return (Lookup.getDefault().lookup(IGelFactory.class)).createGel();
     }
 
-    public void testStuff() {
+    public void parseExport(File f) {
         Workbook workbook = null;
         try {
-
-            File f = new File("Export_1.xlsx");
-            //f.deleteOnExit();
-            //BufferedWriter bos;
-            try {
-                ResourceHandler.writeResourceToDisk("/resources/Export_1.xlsx", f);
-
-                try {
-                    workbook = WorkbookFactory.create(new FileInputStream(f));
-                } catch (InvalidFormatException ex) {
-                    Logger.getLogger(ExcelReader.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(ExcelReader.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            workbook = WorkbookFactory.create(new FileInputStream(f));
         } catch (IOException ex) {
             Logger.getLogger(ExcelReader.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidFormatException ex) {
+            Logger.getLogger(ExcelReader.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         assert (workbook != null);
 
         Sheet sheet = workbook.getSheetAt(0);

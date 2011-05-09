@@ -80,7 +80,7 @@ public class BioRepGelGroup implements IBioRepGelGroup {
                 str += "\n      > " + group.toString();
             }
         } else {
-            str += "      no tech rep gel groups";
+            str += "\n      no tech rep gel groups";
         }
         return str;
     }

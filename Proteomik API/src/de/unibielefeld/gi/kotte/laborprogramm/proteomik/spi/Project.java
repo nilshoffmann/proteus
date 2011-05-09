@@ -134,7 +134,7 @@ public class Project implements IProject {
                 str += "\n  > " + group.toString();
             }
         } else {
-            str += "  no logical gel groups";
+            str += "\n  no logical gel groups";
         }
         if (!plates384.isEmpty()) {
             IPlate384 plate = null;
@@ -143,7 +143,7 @@ public class Project implements IProject {
                 str += "\n  > " + plate.toString();
             }
         } else {
-            str += "  no 384 well plates";
+            str += "\n  no 384 well plates";
         }
         if (!plates96.isEmpty()) {
             IPlate96 plate = null;
@@ -152,7 +152,7 @@ public class Project implements IProject {
                 str += "\n  > " + plate.toString();
             }
         } else {
-            str += "  no 96 well plates";
+            str += "\n  no 96 well plates";
         }
         if (!spotgroups.isEmpty()) {
             ISpotGroup group = null;
@@ -161,7 +161,7 @@ public class Project implements IProject {
                 str += "\n  > " + group.toString();
             }
         } else {
-            str += "  no spot groups";
+            str += "\n  no spot groups";
         }
         return str;
     }

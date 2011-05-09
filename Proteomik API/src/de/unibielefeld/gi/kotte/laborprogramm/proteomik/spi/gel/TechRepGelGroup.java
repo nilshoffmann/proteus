@@ -80,7 +80,7 @@ public class TechRepGelGroup implements ITechRepGelGroup {
                 str += "\n        > " + gel.toString();
             }
         } else {
-            str += "        no gels";
+            str += "\n        no gels";
         }
         return str;
     }

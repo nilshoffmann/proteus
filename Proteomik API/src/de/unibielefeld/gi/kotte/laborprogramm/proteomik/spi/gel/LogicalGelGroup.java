@@ -80,7 +80,7 @@ public class LogicalGelGroup implements ILogicalGelGroup {
                 str += "\n    > " + group.toString();
             }
         } else {
-            str += "    no bio rep gel groups";
+            str += "\n    no bio rep gel groups";
         }
         return str;
     }

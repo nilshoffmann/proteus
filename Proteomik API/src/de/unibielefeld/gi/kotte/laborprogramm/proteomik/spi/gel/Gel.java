@@ -92,7 +92,7 @@ public class Gel implements IGel {
                 str += "\n          > " + spot.toString();
             }
         } else {
-            str += "          no spots";
+            str += "\n          no spots";
         }
         return str;
     }

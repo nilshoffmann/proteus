@@ -79,7 +79,7 @@ public class SpotGroup implements ISpotGroup {
                 str += "\n    > " + spot.toString();
             }
         } else {
-            str += "    no spots";
+            str += "\n    no spots";
         }
         return str;
     }

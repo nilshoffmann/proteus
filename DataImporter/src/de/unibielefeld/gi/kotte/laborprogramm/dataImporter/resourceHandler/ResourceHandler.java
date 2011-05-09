@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,7 +17,11 @@ import java.util.logging.Logger;
 public class ResourceHandler {
 
     public static void writeResourceToDisk(String resource, File target) {
-        BufferedInputStream bin = new BufferedInputStream(ResourceHandler.class.getResourceAsStream(resource), 2048);
+        InputStream istream = ResourceHandler.class.getResourceAsStream(resource);
+        if(istream==null) {
+            throw new IllegalArgumentException("Could not find resource for path "+resource+"! Check path!");
+        }
+        BufferedInputStream bin = new BufferedInputStream(istream, 2048);
 
         BufferedOutputStream bout;
         try {

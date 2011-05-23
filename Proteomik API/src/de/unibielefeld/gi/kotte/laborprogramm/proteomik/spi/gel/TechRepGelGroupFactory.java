@@ -12,7 +12,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGe
 public class TechRepGelGroupFactory implements ITechRepGelGroupFactory{
 
     @Override
-    public ITechRepGelGroup createTechRepGelGroupFactory() {
+    public ITechRepGelGroup createTechRepGelGroup() {
         ITechRepGelGroup result = new TechRepGelGroup();
         return result;
     }

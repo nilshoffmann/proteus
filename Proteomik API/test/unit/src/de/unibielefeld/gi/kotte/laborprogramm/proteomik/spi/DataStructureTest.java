@@ -47,12 +47,12 @@ public class DataStructureTest {
         logical.addGelGroup(biorep2);
 
         //set up two tech rep gel groups (one for each bio rep gel group)
-        ITechRepGelGroup techrep1 = Lookup.getDefault().lookup(ITechRepGelGroupFactory.class).createTechRepGelGroupFactory();
+        ITechRepGelGroup techrep1 = Lookup.getDefault().lookup(ITechRepGelGroupFactory.class).createTechRepGelGroup();
         techrep1.setName("Testgruppe #1 low level");
         techrep1.setDescription("Mock Objekt zum Test der Datenstruktur");
         techrep1.setParent(biorep1);
         biorep1.addGelGroup(techrep1);
-        ITechRepGelGroup techrep2 = Lookup.getDefault().lookup(ITechRepGelGroupFactory.class).createTechRepGelGroupFactory();
+        ITechRepGelGroup techrep2 = Lookup.getDefault().lookup(ITechRepGelGroupFactory.class).createTechRepGelGroup();
         techrep2.setName("Testgruppe #2 low level");
         techrep2.setDescription("Mock Objekt zum Test der Datenstruktur");
         techrep2.setParent(biorep2);

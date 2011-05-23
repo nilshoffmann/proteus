@@ -7,5 +7,5 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group;
  */
 public interface ITechRepGelGroupFactory {
 
-    public ITechRepGelGroup createTechRepGelGroupFactory();
+    public ITechRepGelGroup createTechRepGelGroup();
 }

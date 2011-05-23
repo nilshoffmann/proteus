@@ -1,6 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.project.factory.spi;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.factory.api.IProteomicProject;
+import de.unibielefeld.gi.kotte.laborprogramm.project.factory.api.IProteomicProjectFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -16,7 +17,8 @@ import org.openide.util.Exceptions;
  * @author kotte
  */
 @org.openide.util.lookup.ServiceProvider(service=ProjectFactory.class)
-public class ProteomikProjectFactory implements ProjectFactory{
+//@org.openide.util.lookup.ServiceProvider(service=IProteomicProjectFactory.class)
+public class ProteomikProjectFactory implements IProteomicProjectFactory{
 
     public static final String PROJECT_FILE = "plop.ppr";
 
@@ -50,6 +52,7 @@ public class ProteomikProjectFactory implements ProjectFactory{
 //        cp.getCrudProvider().
     }
 
+    @Override
     public IProteomicProject createProject(File projdir) {
         try {
             IProteomicProject project = new ProteomicProject();
@@ -60,6 +63,7 @@ public class ProteomikProjectFactory implements ProjectFactory{
         return null;
     }
 
+    @Override
     public IProteomicProject createProject(Map<String, Object> props, File projdir) {
         IProteomicProject project = createProject(projdir);
         if(project != null) {

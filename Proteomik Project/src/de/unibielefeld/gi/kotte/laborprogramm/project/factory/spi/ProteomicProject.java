@@ -30,6 +30,7 @@ public class ProteomicProject implements IProteomicProject{
 
     ICrudProvider icp = null;
     FileObject projectDatabaseFile = null;
+    IProject myProject = null;
 
     private IProject persist(IProject project) {
         IProject activeProject = project;
@@ -97,77 +98,77 @@ public class ProteomicProject implements IProteomicProject{
 
     @Override
     public List<ISpotGroup> getSpotGroups() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return this.myProject.getSpotGroups();
     }
 
     @Override
     public void setSpotGroups(List<ISpotGroup> groups) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.myProject.setSpotGroups(groups);
     }
 
     @Override
     public void addSpotGroup(ISpotGroup group) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.myProject.addSpotGroup(group);
     }
 
     @Override
     public String getName() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return this.myProject.getName();
     }
 
     @Override
     public void setName(String name) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.myProject.setName(name);
     }
 
     @Override
     public String getOwner() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return this.myProject.getOwner();
     }
 
     @Override
     public void setOwner(String owner) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.myProject.setOwner(owner);
     }
 
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return this.myProject.getDescription();
     }
 
     @Override
     public void setDescription(String description) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.myProject.setDescription(description);
     }
 
     @Override
     public List<IPlate96> get96Plates() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return this.myProject.get96Plates();
     }
 
     @Override
     public void set96Plates(List<IPlate96> plates) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.myProject.set96Plates(plates);
     }
 
     @Override
     public List<IPlate384> get384Plates() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return this.myProject.get384Plates();
     }
 
     @Override
     public void set384Plates(List<IPlate384> plates) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.myProject.set384Plates(plates);
     }
 
     @Override
     public void add96Plate(IPlate96 plate) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.myProject.add96Plate(plate);
     }
 
     @Override
     public void add384Plate(IPlate384 plate) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.myProject.add384Plate(plate);
     }
 
 }

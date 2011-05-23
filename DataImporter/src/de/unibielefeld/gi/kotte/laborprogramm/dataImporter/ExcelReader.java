@@ -1,14 +1,18 @@
 package de.unibielefeld.gi.kotte.laborprogramm.dataImporter;
 
-import de.unibielefeld.gi.kotte.laborprogramm.dataImporter.resourceHandler.ResourceHandler;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGelFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpotFactory;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroupFactory;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroupFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroupFactory;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroupFactory;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,11 +40,14 @@ import org.openide.util.Lookup;
  */
 public class ExcelReader {
 
-    List<String> gelnames;
-    List<SpotDatum> data;
+    List<String> gelnames = null;
+    List<SpotDatum> data = null;
+    boolean dummiesInitialized = false;
+    ITechRepGelGroup trggDummy = null;
+    IBioRepGelGroup brggDummy = null;
+    ILogicalGelGroup lggDummy = null;
 
     private static enum SpotDatum {
-
         NORM_VOLUME, GREY_VOLUME, SPOTID, LABEL, XPOS, YPOS;
     }
 
@@ -49,13 +56,56 @@ public class ExcelReader {
         data = new ArrayList<SpotDatum>();
     }
 
+    private IGel getGelByName(String gelname, IProject project) {
+        for (ILogicalGelGroup lgg : project.getGelGroups()) {
+            for (IBioRepGelGroup brgg : lgg.getGelGroups()) {
+                for (ITechRepGelGroup trgg : brgg.getGelGroups()) {
+                    for (IGel gel : trgg.getGels()) {
+                        if (gel.getName().equals(gelname)) {
+                            return gel;
+                        }
+                    }
+                }
+            }
+        }
+        //by now we should have found the gel
+        Logger.getLogger(ExcelReader.class.getName()).log(Level.WARNING, "ExcelReader creates gel ''{0}''.", gelname);
+        //if not, set up a new gel
+        IGel gel = Lookup.getDefault().lookup(IGelFactory.class).createGel();
+        gel.setName(gelname);
+        //add new gel to project using dummy gel groups
+        initDummies();
+        if (!project.getGelGroups().contains(this.lggDummy)) {
+            project.addGelGroup(this.lggDummy);
+        }
+        this.trggDummy.addGel(gel);
+        return gel;
+    }
+
+    private void initDummies() {
+        if (!this.dummiesInitialized) {
+            trggDummy = Lookup.getDefault().lookup(ITechRepGelGroupFactory.class).createTechRepGelGroup();
+            trggDummy.setDescription("Dummy gel group created by the ExcelReader");
+            brggDummy = Lookup.getDefault().lookup(IBioRepGelGroupFactory.class).createBioRepGelGroup();
+            brggDummy.addGelGroup(trggDummy);
+            trggDummy.setParent(brggDummy);
+            brggDummy.setDescription("Dummy gel group created by the ExcelReader");
+            lggDummy = Lookup.getDefault().lookup(ILogicalGelGroupFactory.class).createLogicalGelGroup();
+            lggDummy.addGelGroup(brggDummy);
+            brggDummy.setParent(lggDummy);
+            lggDummy.setDescription("Dummy gel group created by the ExcelReader");
+
+            this.dummiesInitialized = true;
+        }
+    }
+
     private void parseHeader(Row header) {
         //Pattern definition (re-usable)
         Pattern normVolPattern = Pattern.compile("normalized volume '(.*)'");
         Pattern greyVolPattern = Pattern.compile("integrated grey volume without background '(.*)'");
         Pattern spotIDPattern = Pattern.compile("'(.*)' spot ID given by Delta2D");
         Pattern labelPattern = Pattern.compile("user defined label '(.*)'");
-        //TODO potentiell noch Koordinatenursprung auslesen
+        //Koordinatenursprung top left
         Pattern xPosPattern = Pattern.compile("horizontal position on gel image \\(left = 0\\) of center '(.*)'");
         Pattern yPosPattern = Pattern.compile("vertical position on gel image \\(top = 0\\) of center '(.*)'");
 
@@ -91,7 +141,7 @@ public class ExcelReader {
                     registerColumnInformation(column, yPosMatcher.group(1), SpotDatum.YPOS);
                 }
             } else {
-                System.out.println("Header Zelle " + c.getColumnIndex() + " ohne String Datentyp");
+                Logger.getLogger(ExcelReader.class.getName()).log(Level.WARNING, "Header Zelle {0} ohne String Datentyp", c.getColumnIndex());
             }
         }
     }
@@ -101,12 +151,14 @@ public class ExcelReader {
         data.add(column, datum);
     }
 
-    private IGel getGelByName(String gelname) {
-        //TODO richtiges Gel aus der Datenbank holen
-        return (Lookup.getDefault().lookup(IGelFactory.class)).createGel();
-    }
-
-    public void parseExport(File f) {
+    /**
+     * Parses Excel file f and writes spot group and spot informations to the project.
+     *
+     * @param f Excel file
+     * @param project Project data object to fill with informations
+     */
+    public void parseExport(File f, IProject project) {
+        //open Excel file as workbook
         Workbook workbook = null;
         try {
             workbook = WorkbookFactory.create(new FileInputStream(f));
@@ -119,7 +171,9 @@ public class ExcelReader {
 
         Sheet sheet = workbook.getSheetAt(0);
         Iterator<Row> iterR = sheet.iterator();
-        parseHeader(iterR.next()); //read row 0 as header row
+        //read row 0 as header row
+        parseHeader(iterR.next());
+
         while (iterR.hasNext()) { //read rows
             //create the spot group for the current row
             ISpotGroup group = (Lookup.getDefault().lookup(ISpotGroupFactory.class)).createSpotGroup();
@@ -127,7 +181,6 @@ public class ExcelReader {
             Iterator<Cell> iterC = iterR.next().iterator();
             while (iterC.hasNext()) { //read cells in row
                 Cell cell = iterC.next();
-//                System.out.println("Zelle " + cell.getColumnIndex() + "/" + cell.getRowIndex());
                 SpotDatum datum = data.get(cell.getColumnIndex());
 
                 //get spot from hash or create new one if it's not there
@@ -140,7 +193,7 @@ public class ExcelReader {
                     spot.setGroup(group);
                     group.addSpot(spot);
                     //add spot to gel
-                    IGel gel = getGelByName(gelnames.get(cell.getColumnIndex()));
+                    IGel gel = getGelByName(gelnames.get(cell.getColumnIndex()), project);
                     gel.addSpot(spot);
                     spot.setGel(gel);
                 }
@@ -174,7 +227,8 @@ public class ExcelReader {
             }
             //set spot group number to spot ID of first member
             group.setNumber(group.getSpots().iterator().next().getNumber());
-            System.out.println(group);
+            //add spot group to project
+            project.addSpotGroup(group);
         }
     }
 }

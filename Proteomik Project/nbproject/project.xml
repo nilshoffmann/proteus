@@ -181,6 +181,7 @@
                 <package>com.db4o.typehandlers</package>
                 <package>com.db4o.typehandlers.internal</package>
                 <package>com.db4o.types</package>
+                <package>de.unibielefeld.gi.kotte.laborprogramm.project.api</package>
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/db4o-7.12-java5.jar</runtime-relative-path>

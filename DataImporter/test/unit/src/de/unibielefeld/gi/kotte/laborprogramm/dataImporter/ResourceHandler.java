@@ -1,4 +1,4 @@
-package de.unibielefeld.gi.kotte.laborprogramm.dataImporter.resourceHandler;
+package de.unibielefeld.gi.kotte.laborprogramm.dataImporter;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -18,8 +18,8 @@ public class ResourceHandler {
 
     public static void writeResourceToDisk(String resource, File target) {
         InputStream istream = ResourceHandler.class.getResourceAsStream(resource);
-        if(istream==null) {
-            throw new IllegalArgumentException("Could not find resource for path "+resource+"! Check path!");
+        if (istream == null) {
+            throw new IllegalArgumentException("Could not find resource for path " + resource + "! Check path!");
         }
         BufferedInputStream bin = new BufferedInputStream(istream, 2048);
 

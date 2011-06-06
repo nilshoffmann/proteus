@@ -1,6 +1,5 @@
 package de.unibielefeld.gi.kotte.laborprogramm.dataImporter;
 
-import de.unibielefeld.gi.kotte.laborprogramm.dataImporter.resourceHandler.ResourceHandler;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProjectFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
@@ -89,7 +88,7 @@ public class ProjectBuilder {
             //read gelData
             for (GelImage gi : gd.getGelImages().getGelImage()) {
                 IGel gel = gelMap.get(gi.getGelImageId().getId());
-                assert(gel != null);
+                assert (gel != null);
                 gel.setName(gi.getName());
                 gel.setFilename(gi.getSourceImage());
             }

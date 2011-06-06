@@ -1,6 +1,5 @@
 package de.unibielefeld.gi.kotte.laborprogramm.dataImporter;
 
-import de.unibielefeld.gi.kotte.laborprogramm.dataImporter.resourceHandler.ResourceHandler;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProjectFactory;
 import java.io.File;

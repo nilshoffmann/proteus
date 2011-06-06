@@ -48,6 +48,7 @@ public class ExcelReader {
     ILogicalGelGroup lggDummy = null;
 
     private static enum SpotDatum {
+
         NORM_VOLUME, GREY_VOLUME, SPOTID, LABEL, XPOS, YPOS;
     }
 

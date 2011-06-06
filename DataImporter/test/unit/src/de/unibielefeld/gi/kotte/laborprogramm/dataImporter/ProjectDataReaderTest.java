@@ -1,6 +1,5 @@
 package de.unibielefeld.gi.kotte.laborprogramm.dataImporter;
 
-import de.unibielefeld.gi.kotte.laborprogramm.dataImporter.resourceHandler.ResourceHandler;
 import de.unibielefeld.gi.kotte.laborprogramm.xml.projectData.Gel;
 import de.unibielefeld.gi.kotte.laborprogramm.xml.projectData.Group;
 import de.unibielefeld.gi.kotte.laborprogramm.xml.projectData.Project;
@@ -9,7 +8,7 @@ import java.io.File;
 
 /**
  *
- * @author kotte
+ * @author kotteF
  */
 public class ProjectDataReaderTest {
 

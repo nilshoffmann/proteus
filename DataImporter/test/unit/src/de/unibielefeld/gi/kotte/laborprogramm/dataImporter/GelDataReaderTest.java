@@ -1,6 +1,5 @@
 package de.unibielefeld.gi.kotte.laborprogramm.dataImporter;
 
-import de.unibielefeld.gi.kotte.laborprogramm.dataImporter.resourceHandler.ResourceHandler;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGelFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.xml.gelData.GelData;

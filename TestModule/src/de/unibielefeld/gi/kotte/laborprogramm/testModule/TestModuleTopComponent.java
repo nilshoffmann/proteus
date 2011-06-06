@@ -1,5 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.testModule;
 
+import de.unibielefeld.gi.kotte.laborprogramm.ImportWizard.ImportWizardAction;
 import de.unibielefeld.gi.kotte.laborprogramm.plateViewer.Plate384Panel;
 import de.unibielefeld.gi.kotte.laborprogramm.plateViewer.Plate96Panel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
@@ -46,6 +47,7 @@ public final class TestModuleTopComponent extends TopComponent {
 
         plate96TestButton = new javax.swing.JButton();
         plate384TestButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         org.openide.awt.Mnemonics.setLocalizedText(plate96TestButton, org.openide.util.NbBundle.getMessage(TestModuleTopComponent.class, "TestModuleTopComponent.plate96TestButton.text")); // NOI18N
         plate96TestButton.addActionListener(new java.awt.event.ActionListener() {
@@ -61,6 +63,13 @@ public final class TestModuleTopComponent extends TopComponent {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(TestModuleTopComponent.class, "TestModuleTopComponent.jButton1.text")); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -68,6 +77,7 @@ public final class TestModuleTopComponent extends TopComponent {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(plate96TestButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(plate384TestButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(261, Short.MAX_VALUE))
@@ -79,7 +89,9 @@ public final class TestModuleTopComponent extends TopComponent {
                 .addComponent(plate96TestButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(plate384TestButton)
-                .addContainerGap(237, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addContainerGap(206, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -101,7 +113,12 @@ public final class TestModuleTopComponent extends TopComponent {
         dialog.setVisible(true);
     }//GEN-LAST:event_plate384TestButtonActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        new ImportWizardAction().performAction();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton plate384TestButton;
     private javax.swing.JButton plate96TestButton;
     // End of variables declaration//GEN-END:variables

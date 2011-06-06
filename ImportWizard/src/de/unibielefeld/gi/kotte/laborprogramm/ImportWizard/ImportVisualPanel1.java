@@ -1,5 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.ImportWizard;
 
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
 public final class ImportVisualPanel1 extends JPanel {
@@ -22,17 +23,242 @@ public final class ImportVisualPanel1 extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        baseDirectoryButton3 = new javax.swing.JButton();
+        baseDirectoryButton2 = new javax.swing.JButton();
+        projectNameLabel = new javax.swing.JLabel();
+        projectNameTextField = new javax.swing.JTextField();
+        baseDirectoryLabel = new javax.swing.JLabel();
+        baseDirectoryTextField = new javax.swing.JTextField();
+        baseDirectoryButton = new javax.swing.JButton();
+        projectDirectoryLabel = new javax.swing.JLabel();
+        projectDirectoryTextField = new javax.swing.JTextField();
+        gelDataLabel = new javax.swing.JLabel();
+        gelDataTextField = new javax.swing.JTextField();
+        gelDataButton = new javax.swing.JButton();
+        projectDataLabel = new javax.swing.JLabel();
+        projectDataTextField = new javax.swing.JTextField();
+        excelDataLabel = new javax.swing.JLabel();
+        excelDataTextField = new javax.swing.JTextField();
+        excelDataButton = new javax.swing.JButton();
+        projectDataButton = new javax.swing.JButton();
+
+        org.openide.awt.Mnemonics.setLocalizedText(baseDirectoryButton3, org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.baseDirectoryButton3.text")); // NOI18N
+        baseDirectoryButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                baseDirectoryButton3ActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(baseDirectoryButton2, org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.baseDirectoryButton2.text")); // NOI18N
+        baseDirectoryButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                baseDirectoryButton2ActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(projectNameLabel, org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.projectNameLabel.text")); // NOI18N
+
+        projectNameTextField.setText(org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.projectNameTextField.text")); // NOI18N
+        projectNameTextField.setPreferredSize(new java.awt.Dimension(200, 20));
+
+        org.openide.awt.Mnemonics.setLocalizedText(baseDirectoryLabel, org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.baseDirectoryLabel.text")); // NOI18N
+
+        baseDirectoryTextField.setText(org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.baseDirectoryTextField.text")); // NOI18N
+        baseDirectoryTextField.setEnabled(false);
+
+        org.openide.awt.Mnemonics.setLocalizedText(baseDirectoryButton, org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.baseDirectoryButton.text")); // NOI18N
+        baseDirectoryButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                baseDirectoryButtonActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(projectDirectoryLabel, org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.projectDirectoryLabel.text")); // NOI18N
+
+        projectDirectoryTextField.setText(org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.projectDirectoryTextField.text")); // NOI18N
+        projectDirectoryTextField.setEnabled(false);
+        projectDirectoryTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                projectDirectoryTextFieldActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(gelDataLabel, org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.gelDataLabel.text")); // NOI18N
+
+        gelDataTextField.setText(org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.gelDataTextField.text")); // NOI18N
+        gelDataTextField.setEnabled(false);
+
+        org.openide.awt.Mnemonics.setLocalizedText(gelDataButton, org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.gelDataButton.text")); // NOI18N
+        gelDataButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gelDataButtonActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(projectDataLabel, org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.projectDataLabel.text")); // NOI18N
+
+        projectDataTextField.setText(org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.projectDataTextField.text")); // NOI18N
+        projectDataTextField.setEnabled(false);
+
+        org.openide.awt.Mnemonics.setLocalizedText(excelDataLabel, org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.excelDataLabel.text")); // NOI18N
+
+        excelDataTextField.setText(org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.excelDataTextField.text")); // NOI18N
+        excelDataTextField.setEnabled(false);
+
+        org.openide.awt.Mnemonics.setLocalizedText(excelDataButton, org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.excelDataButton.text")); // NOI18N
+        excelDataButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                excelDataButtonActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(projectDataButton, org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.projectDataButton.text")); // NOI18N
+        projectDataButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                projectDataButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(projectNameLabel)
+                            .addComponent(baseDirectoryLabel)
+                            .addComponent(projectNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(projectDirectoryLabel)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(projectDirectoryTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                                    .addComponent(baseDirectoryTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                                    .addComponent(gelDataTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                                    .addComponent(projectDataTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                                    .addComponent(excelDataTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(projectDataButton)
+                                    .addComponent(excelDataButton)
+                                    .addComponent(gelDataButton)
+                                    .addComponent(baseDirectoryButton))))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(gelDataLabel)
+                        .addContainerGap(366, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(projectDataLabel)
+                        .addGap(347, 347, 347))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(excelDataLabel)
+                        .addGap(349, 349, 349))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(projectNameLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(projectNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(baseDirectoryLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(baseDirectoryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(baseDirectoryButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(projectDirectoryLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(projectDirectoryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(gelDataLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(gelDataTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(gelDataButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(projectDataLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(projectDataTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(projectDataButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(excelDataLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(excelDataTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(excelDataButton))
+                .addGap(6, 6, 6))
         );
+
+        projectNameLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.jLabel1.AccessibleContext.accessibleName")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
+
+    private void baseDirectoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_baseDirectoryButtonActionPerformed
+        JFileChooser jfc = new JFileChooser();
+        int status = jfc.showOpenDialog(null);
+        if(status == JFileChooser.APPROVE_OPTION) {
+            //TODO do stuff
+        }
+    }//GEN-LAST:event_baseDirectoryButtonActionPerformed
+
+    private void gelDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gelDataButtonActionPerformed
+        JFileChooser jfc = new JFileChooser();
+        int status = jfc.showOpenDialog(null);
+        if(status == JFileChooser.APPROVE_OPTION) {
+            //TODO do stuff
+        }
+    }//GEN-LAST:event_gelDataButtonActionPerformed
+
+    private void baseDirectoryButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_baseDirectoryButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_baseDirectoryButton2ActionPerformed
+
+    private void baseDirectoryButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_baseDirectoryButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_baseDirectoryButton3ActionPerformed
+
+    private void excelDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excelDataButtonActionPerformed
+        JFileChooser jfc = new JFileChooser();
+        int status = jfc.showOpenDialog(null);
+        if(status == JFileChooser.APPROVE_OPTION) {
+            //TODO do stuff
+        }
+    }//GEN-LAST:event_excelDataButtonActionPerformed
+
+    private void projectDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_projectDataButtonActionPerformed
+        JFileChooser jfc = new JFileChooser();
+        int status = jfc.showOpenDialog(null);
+        if(status == JFileChooser.APPROVE_OPTION) {
+            //TODO do stuff
+        }
+    }//GEN-LAST:event_projectDataButtonActionPerformed
+
+    private void projectDirectoryTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_projectDirectoryTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_projectDirectoryTextFieldActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton baseDirectoryButton;
+    private javax.swing.JButton baseDirectoryButton2;
+    private javax.swing.JButton baseDirectoryButton3;
+    private javax.swing.JLabel baseDirectoryLabel;
+    private javax.swing.JTextField baseDirectoryTextField;
+    private javax.swing.JButton excelDataButton;
+    private javax.swing.JLabel excelDataLabel;
+    private javax.swing.JTextField excelDataTextField;
+    private javax.swing.JButton gelDataButton;
+    private javax.swing.JLabel gelDataLabel;
+    private javax.swing.JTextField gelDataTextField;
+    private javax.swing.JButton projectDataButton;
+    private javax.swing.JLabel projectDataLabel;
+    private javax.swing.JTextField projectDataTextField;
+    private javax.swing.JLabel projectDirectoryLabel;
+    private javax.swing.JTextField projectDirectoryTextField;
+    private javax.swing.JLabel projectNameLabel;
+    private javax.swing.JTextField projectNameTextField;
     // End of variables declaration//GEN-END:variables
 }

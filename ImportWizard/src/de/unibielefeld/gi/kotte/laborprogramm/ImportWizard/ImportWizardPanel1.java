@@ -46,7 +46,7 @@ public class ImportWizardPanel1 implements WizardDescriptor.ValidatingPanel, Pro
         if (descriptor == null) {
             return false;
         }
-        if(component.getProjectName().isEmpty()) {
+        if (component.getProjectName().isEmpty()) {
             descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Projektnamen angeben.");
             return false;
         }
@@ -61,8 +61,12 @@ public class ImportWizardPanel1 implements WizardDescriptor.ValidatingPanel, Pro
             descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Basisverzeichnis auswaehlen.");
             return false;
         }
-        if (projectDirectoryFile == null) {
-            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Projektverzeichnis auswaehlen.");
+//        if (projectDirectoryFile == null) {
+//            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Projektverzeichnis auswaehlen.");
+//            return false;
+//        }
+        if (gelDataFile == null) {
+            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Gel XML-Datei auswaehlen.");
             return false;
         }
         if (projectDataFile == null) {
@@ -73,40 +77,35 @@ public class ImportWizardPanel1 implements WizardDescriptor.ValidatingPanel, Pro
             descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Excel Export Datei auswaehlen.");
             return false;
         }
-        if (gelDataFile == null) {
-            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Gel XML-Datei auswaehlen.");
-            return false;
-        }
         //wenn kein Fehler mehr auftritt, Fehlermeldung zuruecksetzen
         descriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, null);
         return true;
     }
 
-    
-    
     @Override
     public final void addChangeListener(ChangeListener l) {
-    synchronized (listeners) {
-    listeners.add(l);
+        synchronized (listeners) {
+            listeners.add(l);
+        }
     }
-    }
+
     @Override
     public final void removeChangeListener(ChangeListener l) {
-    synchronized (listeners) {
-    listeners.remove(l);
+        synchronized (listeners) {
+            listeners.remove(l);
+        }
     }
-    }
+
     protected final void fireChangeEvent() {
-    Iterator<ChangeListener> it;
-    synchronized (listeners) {
-    it = new HashSet<ChangeListener>(listeners).iterator();
+        Iterator<ChangeListener> it;
+        synchronized (listeners) {
+            it = new HashSet<ChangeListener>(listeners).iterator();
+        }
+        ChangeEvent ev = new ChangeEvent(this);
+        while (it.hasNext()) {
+            it.next().stateChanged(ev);
+        }
     }
-    ChangeEvent ev = new ChangeEvent(this);
-    while (it.hasNext()) {
-    it.next().stateChanged(ev);
-    }
-    }
-    
 
     @Override
     public void readSettings(Object settings) {

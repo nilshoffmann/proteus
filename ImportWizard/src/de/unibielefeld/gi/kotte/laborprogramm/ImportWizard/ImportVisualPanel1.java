@@ -13,7 +13,6 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
     public static final String PROPERTY_PROJECT_DATA_FILE = "projectData";
     public static final String PROPERTY_EXCEL_DATA_FILE = "excelData";
     public static final String PROPERTY_GEL_DATA_FILE = "gelData";
-
     private File baseDirectoryFile;
     private File projectDirectoryFile;
     private File projectDataFile;
@@ -218,7 +217,7 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
     private void baseDirectoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_baseDirectoryButtonActionPerformed
         JFileChooser jfc = new JFileChooser();
         int status = jfc.showOpenDialog(null);
-        if(status == JFileChooser.APPROVE_OPTION) {
+        if (status == JFileChooser.APPROVE_OPTION) {
             File oldFile = baseDirectoryFile;
             baseDirectoryFile = jfc.getCurrentDirectory();
             baseDirectoryTextField.setText(baseDirectoryFile.getAbsolutePath());
@@ -230,7 +229,7 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
     private void gelDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gelDataButtonActionPerformed
         JFileChooser jfc = new JFileChooser();
         int status = jfc.showOpenDialog(null);
-        if(status == JFileChooser.APPROVE_OPTION) {
+        if (status == JFileChooser.APPROVE_OPTION) {
             File oldFile = gelDataFile;
             gelDataFile = jfc.getSelectedFile();
             gelDataTextField.setText(gelDataFile.getAbsolutePath());
@@ -241,7 +240,7 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
     private void excelDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excelDataButtonActionPerformed
         JFileChooser jfc = new JFileChooser();
         int status = jfc.showOpenDialog(null);
-        if(status == JFileChooser.APPROVE_OPTION) {
+        if (status == JFileChooser.APPROVE_OPTION) {
             File oldFile = excelDataFile;
             excelDataFile = jfc.getSelectedFile();
             excelDataTextField.setText(excelDataFile.getAbsolutePath());
@@ -252,14 +251,13 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
     private void projectDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_projectDataButtonActionPerformed
         JFileChooser jfc = new JFileChooser();
         int status = jfc.showOpenDialog(null);
-        if(status == JFileChooser.APPROVE_OPTION) {
+        if (status == JFileChooser.APPROVE_OPTION) {
             File oldFile = projectDataFile;
             projectDataFile = jfc.getSelectedFile();
             projectDataTextField.setText(projectDataFile.getAbsolutePath());
             firePropertyChange(PROPERTY_PROJECT_DATA_FILE, oldFile, projectDataFile);
         }
     }//GEN-LAST:event_projectDataButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton baseDirectoryButton;
     private javax.swing.JLabel baseDirectoryLabel;
@@ -278,8 +276,6 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
     private javax.swing.JLabel projectNameLabel;
     private javax.swing.JTextField projectNameTextField;
     // End of variables declaration//GEN-END:variables
-
-
 
     @Override
     public void insertUpdate(DocumentEvent e) {

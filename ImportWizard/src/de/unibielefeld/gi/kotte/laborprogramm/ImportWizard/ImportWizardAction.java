@@ -35,16 +35,20 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
         boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
         if (!cancelled) {
             //get files from descriptor...
-            File baseDirectoryFile = (File)wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_BASE_DIRECTORY);
-            File projectDirectoryFile = (File)wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_PROJECT_DIRECTORY);
-            File projectDataFile = (File)wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_PROJECT_DATA_FILE);
-            File excelDataFile = (File)wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_EXCEL_DATA_FILE);
-            File gelDataFile = (File)wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_GEL_DATA_FILE);
+            File baseDirectoryFile = (File) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_BASE_DIRECTORY);
+            File projectDirectoryFile = (File) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_PROJECT_DIRECTORY);
+            File projectDataFile = (File) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_PROJECT_DATA_FILE);
+            File excelDataFile = (File) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_EXCEL_DATA_FILE);
+            File gelDataFile = (File) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_GEL_DATA_FILE);
 
             //build project structure
             ProjectBuilder pb = new ProjectBuilder();
             List<IProject> l = pb.buildProject(projectDataFile, gelDataFile, excelDataFile);
             IProject p = l.iterator().next();
+
+            //TEST:
+            System.out.println(p);
+            
             //FIXME: cannot access org.netbeans.spi.project.ProjectFactory
 //            IProteomicProject pp = Lookup.getDefault().lookup(IProteomicProjectFactory.class).createProject(projectDirectoryFile);
 //            try {

@@ -1,17 +1,25 @@
 package de.unibielefeld.gi.kotte.laborprogramm.ImportWizard;
 
+import de.unibielefeld.gi.kotte.laborprogramm.dataImporter.ProjectBuilder;
+import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
+import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProjectFactory;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import java.awt.Component;
 import java.awt.Dialog;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.net.MalformedURLException;
 import java.text.MessageFormat;
+import java.util.List;
 import javax.swing.JComponent;
 import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;
+import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
 import org.openide.util.actions.CallableSystemAction;
 
-// An example action demonstrating how the wizard could be called from within
-// your code. You can copy-paste the code below wherever you need.
-public final class ImportWizardAction extends CallableSystemAction {
+public final class ImportWizardAction extends CallableSystemAction implements ActionListener {
 
     private WizardDescriptor.Panel[] panels;
 
@@ -20,13 +28,31 @@ public final class ImportWizardAction extends CallableSystemAction {
         WizardDescriptor wizardDescriptor = new WizardDescriptor(getPanels());
         // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
         wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
-        wizardDescriptor.setTitle("Your wizard dialog title here");
+        wizardDescriptor.setTitle("Datei Import fuer neues Proteomik Projekt");
         Dialog dialog = DialogDisplayer.getDefault().createDialog(wizardDescriptor);
         dialog.setVisible(true);
         dialog.toFront();
         boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
         if (!cancelled) {
-            // do something
+            //get files from descriptor...
+            File baseDirectoryFile = (File)wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_BASE_DIRECTORY);
+            File projectDirectoryFile = (File)wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_PROJECT_DIRECTORY);
+            File projectDataFile = (File)wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_PROJECT_DATA_FILE);
+            File excelDataFile = (File)wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_EXCEL_DATA_FILE);
+            File gelDataFile = (File)wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_GEL_DATA_FILE);
+
+            //build project structure
+            ProjectBuilder pb = new ProjectBuilder();
+            List<IProject> l = pb.buildProject(projectDataFile, gelDataFile, excelDataFile);
+            IProject p = l.iterator().next();
+            //FIXME: cannot access org.netbeans.spi.project.ProjectFactory
+//            IProteomicProject pp = Lookup.getDefault().lookup(IProteomicProjectFactory.class).createProject(projectDirectoryFile);
+//            try {
+//                pp.activate(baseDirectoryFile.toURI().toURL());
+//            } catch (MalformedURLException ex) {
+//                Exceptions.printStackTrace(ex);
+//                //TODO Fehlerbehandlung
+//            }
         }
     }
 
@@ -67,7 +93,7 @@ public final class ImportWizardAction extends CallableSystemAction {
 
     @Override
     public String getName() {
-        return "Start Sample Wizard";
+        return "Starte Proteomik Projekt Wizard";
     }
 
     @Override

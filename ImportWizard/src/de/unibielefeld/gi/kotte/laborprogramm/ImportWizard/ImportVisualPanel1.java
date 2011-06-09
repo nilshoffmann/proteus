@@ -1,9 +1,48 @@
 package de.unibielefeld.gi.kotte.laborprogramm.ImportWizard;
 
+import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
-public final class ImportVisualPanel1 extends JPanel {
+public final class ImportVisualPanel1 extends JPanel implements DocumentListener {
+
+    public static final String PROPERTY_BASE_DIRECTORY = "baseDirectory";
+    public static final String PROPERTY_PROJECT_DIRECTORY = "projectDirectory";
+    public static final String PROPERTY_PROJECT_DATA_FILE = "projectData";
+    public static final String PROPERTY_EXCEL_DATA_FILE = "excelData";
+    public static final String PROPERTY_GEL_DATA_FILE = "gelData";
+
+    private File baseDirectoryFile;
+    private File projectDirectoryFile;
+    private File projectDataFile;
+    private File excelDataFile;
+    private File gelDataFile;
+
+    public String getProjectName() {
+        return projectNameTextField.getText();
+    }
+
+    public File getBaseDirectoryFile() {
+        return baseDirectoryFile;
+    }
+
+    public File getExcelDataFile() {
+        return excelDataFile;
+    }
+
+    public File getGelDataFile() {
+        return gelDataFile;
+    }
+
+    public File getProjectDataFile() {
+        return projectDataFile;
+    }
+
+    public File getProjectDirectoryFile() {
+        return projectDirectoryFile;
+    }
 
     /** Creates new form ImportVisualPanel1 */
     public ImportVisualPanel1() {
@@ -61,11 +100,6 @@ public final class ImportVisualPanel1 extends JPanel {
 
         projectDirectoryTextField.setText(org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.projectDirectoryTextField.text")); // NOI18N
         projectDirectoryTextField.setEnabled(false);
-        projectDirectoryTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                projectDirectoryTextFieldActionPerformed(evt);
-            }
-        });
 
         org.openide.awt.Mnemonics.setLocalizedText(gelDataLabel, org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.gelDataLabel.text")); // NOI18N
 
@@ -185,7 +219,11 @@ public final class ImportVisualPanel1 extends JPanel {
         JFileChooser jfc = new JFileChooser();
         int status = jfc.showOpenDialog(null);
         if(status == JFileChooser.APPROVE_OPTION) {
-            //TODO do stuff
+            File oldFile = baseDirectoryFile;
+            baseDirectoryFile = jfc.getCurrentDirectory();
+            baseDirectoryTextField.setText(baseDirectoryFile.getAbsolutePath());
+            projectDirectoryTextField.setText(baseDirectoryFile.getAbsolutePath() + "/" + projectNameTextField.getText());
+            firePropertyChange(PROPERTY_BASE_DIRECTORY, oldFile, baseDirectoryFile);
         }
     }//GEN-LAST:event_baseDirectoryButtonActionPerformed
 
@@ -193,7 +231,10 @@ public final class ImportVisualPanel1 extends JPanel {
         JFileChooser jfc = new JFileChooser();
         int status = jfc.showOpenDialog(null);
         if(status == JFileChooser.APPROVE_OPTION) {
-            //TODO do stuff
+            File oldFile = gelDataFile;
+            gelDataFile = jfc.getSelectedFile();
+            gelDataTextField.setText(gelDataFile.getAbsolutePath());
+            firePropertyChange(PROPERTY_GEL_DATA_FILE, oldFile, gelDataFile);
         }
     }//GEN-LAST:event_gelDataButtonActionPerformed
 
@@ -201,7 +242,10 @@ public final class ImportVisualPanel1 extends JPanel {
         JFileChooser jfc = new JFileChooser();
         int status = jfc.showOpenDialog(null);
         if(status == JFileChooser.APPROVE_OPTION) {
-            //TODO do stuff
+            File oldFile = excelDataFile;
+            excelDataFile = jfc.getSelectedFile();
+            excelDataTextField.setText(excelDataFile.getAbsolutePath());
+            firePropertyChange(PROPERTY_EXCEL_DATA_FILE, oldFile, excelDataFile);
         }
     }//GEN-LAST:event_excelDataButtonActionPerformed
 
@@ -209,13 +253,12 @@ public final class ImportVisualPanel1 extends JPanel {
         JFileChooser jfc = new JFileChooser();
         int status = jfc.showOpenDialog(null);
         if(status == JFileChooser.APPROVE_OPTION) {
-            //TODO do stuff
+            File oldFile = projectDataFile;
+            projectDataFile = jfc.getSelectedFile();
+            projectDataTextField.setText(projectDataFile.getAbsolutePath());
+            firePropertyChange(PROPERTY_PROJECT_DATA_FILE, oldFile, projectDataFile);
         }
     }//GEN-LAST:event_projectDataButtonActionPerformed
-
-    private void projectDirectoryTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_projectDirectoryTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_projectDirectoryTextFieldActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton baseDirectoryButton;
@@ -235,4 +278,21 @@ public final class ImportVisualPanel1 extends JPanel {
     private javax.swing.JLabel projectNameLabel;
     private javax.swing.JTextField projectNameTextField;
     // End of variables declaration//GEN-END:variables
+
+
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        firePropertyChange("fileChange", 0, 1);
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        firePropertyChange("fileChange", 0, 1);
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        firePropertyChange("fileChange", 0, 1);
+    }
 }

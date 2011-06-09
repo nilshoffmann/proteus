@@ -5,6 +5,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.xml.projectData.Group;
 import de.unibielefeld.gi.kotte.laborprogramm.xml.projectData.Project;
 import de.unibielefeld.gi.kotte.laborprogramm.xml.projectData.ProjectData;
 import java.io.File;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -12,11 +13,22 @@ import java.io.File;
  */
 public class ProjectDataReaderTest {
 
+    private final static boolean FILECHOOSER = true;
+
     public static void main(String[] args) {
-        File f = new File("projects.xml");
-        f.deleteOnExit();
-        String path = "/de/unibielefeld/gi/kotte/laborprogramm/dataImporter/resources/projects.xml";
-        ResourceHandler.writeResourceToDisk(path, f);
+        File f = null;
+        if (!FILECHOOSER) {
+            f = new File("Export_1.xlsx");
+            f.deleteOnExit();
+            String path = "/de/unibielefeld/gi/kotte/laborprogramm/dataImporter/resources/projects.xml";
+            ResourceHandler.writeResourceToDisk(path, f);
+        } else {
+            JFileChooser jfc = new JFileChooser();
+            int status = jfc.showOpenDialog(null);
+            if (status == JFileChooser.APPROVE_OPTION) {
+                f = jfc.getSelectedFile();
+            }
+        }
         ProjectDataReader pdr = new ProjectDataReader();
         ProjectData pd = pdr.parseProject(f);
         for (Project proj : pd.getProjects().getProject()) {

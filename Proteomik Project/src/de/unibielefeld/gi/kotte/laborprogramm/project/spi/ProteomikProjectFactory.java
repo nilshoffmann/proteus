@@ -54,13 +54,14 @@ public class ProteomikProjectFactory implements IProteomicProjectFactory{
 
     @Override
     public IProteomicProject createProject(File projdir) {
+        IProteomicProject project = null;
         try {
-            IProteomicProject project = new ProteomicProject();
+            project = new ProteomicProject();
             project.activate(new File(projdir, PROJECT_FILE).toURI().toURL());
         } catch (MalformedURLException ex) {
             Exceptions.printStackTrace(ex);
         }
-        return null;
+        return project;
     }
 
     @Override

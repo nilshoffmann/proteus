@@ -2,6 +2,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.project;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProjectFactory;
+import de.unibielefeld.gi.kotte.laborprogramm.project.spi.ProteomikProjectFactory;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,22 +32,26 @@ public class ProjectTest {
 
     @Test
     public void testProject() {
-        IProteomicProjectFactory ippf = Lookup.getDefault().lookup(IProteomicProjectFactory.class);
+        //set up project in test directory
+        //IProteomicProjectFactory ippf = Lookup.getDefault().lookup(IProteomicProjectFactory.class);
+        IProteomicProjectFactory ippf = new ProteomikProjectFactory();
         assertNotNull(ippf);
-        String path = "/de/unibielefeld/gi/kotte/laborprogramm/project/testDirectory";
         File dir = new File("testDirectory");
         dir.deleteOnExit();
         dir.mkdir();
         System.out.println(dir.getAbsolutePath());
         assert (dir.isDirectory());
         IProteomicProject pp = ippf.createProject(dir);
-        URL url = null;
-        try {
-            url = new URL(path);
-        } catch (MalformedURLException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        assertNotNull(url);
-        pp.activate(url);
+
+        //activate Database
+//        String path = "/de/unibielefeld/gi/kotte/laborprogramm/project/testDirectory";
+//        URL url = null;
+//        try {
+//            url = new URL(path);
+//        } catch (MalformedURLException ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
+//        assertNotNull(url);
+//        pp.activate(url);
     }
 }

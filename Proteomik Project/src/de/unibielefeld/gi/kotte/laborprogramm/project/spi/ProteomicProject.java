@@ -16,10 +16,12 @@ import java.util.Collection;
 import java.util.List;
 import net.sf.maltcms.chromaui.db.api.ICrudProvider;
 import net.sf.maltcms.chromaui.db.api.NoAuthCredentials;
+import org.netbeans.spi.project.ProjectState;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -31,6 +33,8 @@ public class ProteomicProject implements IProteomicProject{
     ICrudProvider icp = null;
     FileObject projectDatabaseFile = null;
     IProject myProject = null;
+    ProjectState state;
+    Lookup lookup;
 
     private IProject persist(IProject project) {
         IProject activeProject = project;
@@ -74,7 +78,17 @@ public class ProteomicProject implements IProteomicProject{
 
     @Override
     public Lookup getLookup() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (lookup == null) {
+//            lookup = Lookups.fixed(new Object[]{
+//                        state, //allow outside code to mark the project as needing saving
+//                        new ActionProviderImpl(), //Provides standard actions like Build and Clean
+//                        new DemoDeleteOperation(),
+//                        new DemoCopyOperation(this),
+//                        new Info(), //Project information implementation
+//                        new DemoProjectLogicalView(this), //Logical view of project implementation
+//                    });
+        }
+        return lookup;
     }
 
     @Override

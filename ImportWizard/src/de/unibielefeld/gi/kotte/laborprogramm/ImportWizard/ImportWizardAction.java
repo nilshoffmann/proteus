@@ -41,6 +41,9 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
             File excelDataFile = (File) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_EXCEL_DATA_FILE);
             File gelDataFile = (File) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_GEL_DATA_FILE);
 
+            //create project directory
+            projectDirectoryFile.mkdirs();
+
             //build project structure
             ProjectBuilder pb = new ProjectBuilder();
             List<IProject> l = pb.buildProject(projectDataFile, gelDataFile, excelDataFile);
@@ -51,12 +54,14 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
             
             IProteomicProjectFactory ippf = Lookup.getDefault().lookup(IProteomicProjectFactory.class);
             IProteomicProject pp = ippf.createProject(projectDirectoryFile);
-            try {
-                pp.activate(baseDirectoryFile.toURI().toURL());
-            } catch (MalformedURLException ex) {
-                Exceptions.printStackTrace(ex);
-                //TODO Fehlerbehandlung
-            }
+//            //activate database
+//            try {
+//                //FIXME: java.lang.IllegalArgumentException: Project database file is a directory!
+//                pp.activate(baseDirectoryFile.toURI().toURL());
+//            } catch (MalformedURLException ex) {
+//                Exceptions.printStackTrace(ex);
+//                //TODO Fehlerbehandlung
+//            }
         }
     }
 

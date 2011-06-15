@@ -40,6 +40,9 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
     }
 
     public File getProjectDirectoryFile() {
+        //if(projectDirectoryFile == null) {
+            projectDirectoryFile = new File(baseDirectoryFile, projectNameTextField.getText());
+        //}
         return projectDirectoryFile;
     }
 
@@ -223,7 +226,7 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
         int status = jfc.showOpenDialog(null);
         if (status == JFileChooser.APPROVE_OPTION) {
             File oldFile = baseDirectoryFile;
-            baseDirectoryFile = jfc.getCurrentDirectory();
+            baseDirectoryFile = jfc.getSelectedFile();
             baseDirectoryTextField.setText(baseDirectoryFile.getAbsolutePath());
             projectDirectoryTextField.setText(baseDirectoryFile.getAbsolutePath() + "/" + projectNameTextField.getText());
             firePropertyChange(PROPERTY_BASE_DIRECTORY, oldFile, baseDirectoryFile);

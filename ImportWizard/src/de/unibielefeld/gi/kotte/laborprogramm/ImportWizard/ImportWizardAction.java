@@ -49,14 +49,14 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
             //TEST:
             System.out.println(p);
             
-            //FIXME: cannot access org.netbeans.spi.project.ProjectFactory
-//            IProteomicProject pp = Lookup.getDefault().lookup(IProteomicProjectFactory.class).createProject(projectDirectoryFile);
-//            try {
-//                pp.activate(baseDirectoryFile.toURI().toURL());
-//            } catch (MalformedURLException ex) {
-//                Exceptions.printStackTrace(ex);
-//                //TODO Fehlerbehandlung
-//            }
+            IProteomicProjectFactory ippf = Lookup.getDefault().lookup(IProteomicProjectFactory.class);
+            IProteomicProject pp = ippf.createProject(projectDirectoryFile);
+            try {
+                pp.activate(baseDirectoryFile.toURI().toURL());
+            } catch (MalformedURLException ex) {
+                Exceptions.printStackTrace(ex);
+                //TODO Fehlerbehandlung
+            }
         }
     }
 
@@ -86,7 +86,7 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
                     // Turn on subtitle creation on each step
                     jc.putClientProperty("WizardPanel_autoWizardStyle", Boolean.TRUE);
                     // Show steps on the left side with the image on the background
-                    jc.putClientProperty("WizardPanel_contentDisplayed", Boolean.TRUE);
+                    jc.putClientProperty("WizardPanel_contentDisplayed", Boolean.FALSE);
                     // Turn on numbering of all steps
                     jc.putClientProperty("WizardPanel_contentNumbered", Boolean.TRUE);
                 }

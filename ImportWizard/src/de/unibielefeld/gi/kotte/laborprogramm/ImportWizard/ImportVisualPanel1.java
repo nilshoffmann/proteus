@@ -216,6 +216,10 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
 
     private void baseDirectoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_baseDirectoryButtonActionPerformed
         JFileChooser jfc = new JFileChooser();
+        jfc.setCurrentDirectory(new java.io.File("."));
+        jfc.setDialogTitle("Basisverzeichnis auswählen");
+        jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        jfc.setAcceptAllFileFilterUsed(false);
         int status = jfc.showOpenDialog(null);
         if (status == JFileChooser.APPROVE_OPTION) {
             File oldFile = baseDirectoryFile;
@@ -228,6 +232,8 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
 
     private void gelDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gelDataButtonActionPerformed
         JFileChooser jfc = new JFileChooser();
+        jfc.setCurrentDirectory(new java.io.File("."));
+        jfc.setDialogTitle("Delta2D Gel Bilder XML Datei auswählen");
         int status = jfc.showOpenDialog(null);
         if (status == JFileChooser.APPROVE_OPTION) {
             File oldFile = gelDataFile;
@@ -239,6 +245,8 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
 
     private void excelDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excelDataButtonActionPerformed
         JFileChooser jfc = new JFileChooser();
+        jfc.setCurrentDirectory(new java.io.File("."));
+        jfc.setDialogTitle("Delta2d Excel Export auswählen");
         int status = jfc.showOpenDialog(null);
         if (status == JFileChooser.APPROVE_OPTION) {
             File oldFile = excelDataFile;
@@ -250,6 +258,8 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
 
     private void projectDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_projectDataButtonActionPerformed
         JFileChooser jfc = new JFileChooser();
+        jfc.setCurrentDirectory(new java.io.File("."));
+        jfc.setDialogTitle("Delta2D Projekt XML Datei auswählen");
         int status = jfc.showOpenDialog(null);
         if (status == JFileChooser.APPROVE_OPTION) {
             File oldFile = projectDataFile;

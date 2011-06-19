@@ -12,6 +12,8 @@ import java.net.MalformedURLException;
 import java.text.MessageFormat;
 import java.util.List;
 import javax.swing.JComponent;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ui.OpenProjects;
 import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;
 import org.openide.util.Exceptions;
@@ -50,7 +52,7 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
             IProject p = l.iterator().next();
 
             //TEST:
-            System.out.println(p);
+            //System.out.println(p);
             
             IProteomicProjectFactory ippf = Lookup.getDefault().lookup(IProteomicProjectFactory.class);
             IProteomicProject pp = ippf.createProject(projectDirectoryFile);
@@ -62,6 +64,10 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
 //                Exceptions.printStackTrace(ex);
 //                //TODO Fehlerbehandlung
 //            }
+            
+            //Projekt öffnen
+            OpenProjects op = OpenProjects.getDefault();
+            op.open(new Project[]{pp},false,true);
         }
     }
 

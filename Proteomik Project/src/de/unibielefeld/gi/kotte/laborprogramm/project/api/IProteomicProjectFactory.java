@@ -10,5 +10,4 @@ import org.netbeans.spi.project.ProjectFactory;
  */
 public interface IProteomicProjectFactory extends ProjectFactory {
     public IProteomicProject createProject(File projdir);
-    public IProteomicProject createProject(Map<String, Object> props, File projdir);
 }

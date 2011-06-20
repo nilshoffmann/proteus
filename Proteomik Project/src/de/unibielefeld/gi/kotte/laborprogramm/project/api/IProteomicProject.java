@@ -12,5 +12,7 @@ import org.netbeans.api.project.Project;
 public interface IProteomicProject extends Project, IProject{
 
     public void activate(URL url);
+
+    public void setProjectData(IProject project);
     
 }

@@ -64,13 +64,4 @@ public class ProteomikProjectFactory implements IProteomicProjectFactory{
         return project;
     }
 
-    @Override
-    public IProteomicProject createProject(Map<String, Object> props, File projdir) {
-        IProteomicProject project = createProject(projdir);
-        if(project != null) {
-            //TODO set properties from wizard
-        }
-        return project;
-    }
-
 }

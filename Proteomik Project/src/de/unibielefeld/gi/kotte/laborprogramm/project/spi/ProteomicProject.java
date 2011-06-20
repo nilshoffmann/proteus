@@ -32,7 +32,7 @@ public class ProteomicProject implements IProteomicProject{
 
     ICrudProvider icp = null;
     FileObject projectDatabaseFile = null;
-    IProject myProject = null;
+    //IProject myProject = null;
     ProjectState state;
     Lookup lookup;
 
@@ -50,7 +50,11 @@ public class ProteomicProject implements IProteomicProject{
     private IProject getFromDB() {
         if(icp!=null) {
             Collection<IProject> projects = icp.createSession().retrieve(IProject.class);
+            if(projects.size()>1) {
+                throw new IllegalArgumentException("Found more than one instance of IProject in project database!");
+            }
             return projects.iterator().next();
+//            return myProject;
         }
         return null;
     }
@@ -112,77 +116,100 @@ public class ProteomicProject implements IProteomicProject{
 
     @Override
     public List<ISpotGroup> getSpotGroups() {
-        return this.myProject.getSpotGroups();
+        return getFromDB().getSpotGroups();
     }
 
     @Override
     public void setSpotGroups(List<ISpotGroup> groups) {
-        this.myProject.setSpotGroups(groups);
+        IProject project = getFromDB();
+        project.setSpotGroups(groups);
+        persist(project);
     }
 
     @Override
     public void addSpotGroup(ISpotGroup group) {
-        this.myProject.addSpotGroup(group);
+        IProject project = getFromDB();
+        project.addSpotGroup(group);
+        persist(project);
     }
 
     @Override
     public String getName() {
-        return this.myProject.getName();
+        return getFromDB().getName();
     }
 
     @Override
     public void setName(String name) {
-        this.myProject.setName(name);
+        IProject project = getFromDB();
+        project.setName(name);
+        persist(project);
     }
 
     @Override
     public String getOwner() {
-        return this.myProject.getOwner();
+        return getFromDB().getOwner();
     }
 
     @Override
     public void setOwner(String owner) {
-        this.myProject.setOwner(owner);
+        IProject project = getFromDB();
+        project.setOwner(owner);
+        persist(project);
     }
 
     @Override
     public String getDescription() {
-        return this.myProject.getDescription();
+        return getFromDB().getDescription();
     }
 
     @Override
     public void setDescription(String description) {
-        this.myProject.setDescription(description);
+        IProject project = getFromDB();
+        project.setDescription(description);
+        persist(project);
     }
 
     @Override
     public List<IPlate96> get96Plates() {
-        return this.myProject.get96Plates();
+        return getFromDB().get96Plates();
     }
 
     @Override
     public void set96Plates(List<IPlate96> plates) {
-        this.myProject.set96Plates(plates);
+        IProject project = getFromDB();
+        project.set96Plates(plates);
+        persist(project);
     }
 
     @Override
     public List<IPlate384> get384Plates() {
-        return this.myProject.get384Plates();
+        return getFromDB().get384Plates();
     }
 
     @Override
     public void set384Plates(List<IPlate384> plates) {
-        this.myProject.set384Plates(plates);
+        IProject project = getFromDB();
+        project.set384Plates(plates);
+        persist(project);
     }
 
     @Override
     public void add96Plate(IPlate96 plate) {
-        this.myProject.add96Plate(plate);
+        IProject project = getFromDB();
+        project.add96Plate(plate);
+        persist(project);
     }
 
     @Override
     public void add384Plate(IPlate384 plate) {
-        this.myProject.add384Plate(plate);
+        IProject project = getFromDB();
+        project.add384Plate(plate);
+        persist(project);
+    }
+
+    @Override
+    public void setProjectData(IProject project) {
+        persist(project);
     }
 
 }

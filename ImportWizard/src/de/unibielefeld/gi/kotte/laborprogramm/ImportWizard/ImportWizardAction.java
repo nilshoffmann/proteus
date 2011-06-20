@@ -8,14 +8,19 @@ import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Set;
 import javax.swing.JComponent;
+import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;
+import org.openide.WizardDescriptor.Panel;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
@@ -34,6 +39,13 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
         Dialog dialog = DialogDisplayer.getDefault().createDialog(wizardDescriptor);
         dialog.setVisible(true);
         dialog.toFront();
+        File parent = createProject(wizardDescriptor);
+        if (parent != null && parent.exists()) {
+            ProjectChooser.setProjectsFolder(parent);
+        }
+    }
+
+    protected File createProject(WizardDescriptor wizardDescriptor) {
         boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
         if (!cancelled) {
             //get files from descriptor...
@@ -42,40 +54,38 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
             File projectDataFile = (File) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_PROJECT_DATA_FILE);
             File excelDataFile = (File) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_EXCEL_DATA_FILE);
             File gelDataFile = (File) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_GEL_DATA_FILE);
-
             //create project directory
             projectDirectoryFile.mkdirs();
-
             //build project structure
             ProjectBuilder pb = new ProjectBuilder();
             List<IProject> l = pb.buildProject(projectDataFile, gelDataFile, excelDataFile);
             IProject p = l.iterator().next();
-
             //TEST:
             //System.out.println(p);
-            
+            System.out.println("Creating project in "+projectDirectoryFile);
             IProteomicProjectFactory ippf = Lookup.getDefault().lookup(IProteomicProjectFactory.class);
             IProteomicProject pp = ippf.createProject(projectDirectoryFile);
-//            //activate database
-//            try {
-//                //FIXME: java.lang.IllegalArgumentException: Project database file is a directory!
-//                pp.activate(baseDirectoryFile.toURI().toURL());
-//            } catch (MalformedURLException ex) {
-//                Exceptions.printStackTrace(ex);
-//                //TODO Fehlerbehandlung
-//            }
-            
+            //            //activate database
+            //            try {
+            //                //FIXME: java.lang.IllegalArgumentException: Project database file is a directory!
+            //                pp.activate(baseDirectoryFile.toURI().toURL());
+            //            } catch (MalformedURLException ex) {
+            //                Exceptions.printStackTrace(ex);
+            //                //TODO Fehlerbehandlung
+            //            }
             //Projekt öffnen
-            OpenProjects op = OpenProjects.getDefault();
-            op.open(new Project[]{pp},false,true);
+//            OpenProjects op = OpenProjects.getDefault();
+//            op.open(new Project[]{pp}, false, true);
+            return projectDirectoryFile;
         }
+        return null;
     }
 
     /**
      * Initialize panels representing individual wizard's steps and sets
      * various properties for them influencing wizard appearance.
      */
-    private WizardDescriptor.Panel[] getPanels() {
+    protected WizardDescriptor.Panel[] getPanels() {
         if (panels == null) {
             panels = new WizardDescriptor.Panel[]{
                         new ImportWizardPanel1()
@@ -125,4 +135,5 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
     protected boolean asynchronous() {
         return false;
     }
+
 }

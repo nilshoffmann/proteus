@@ -42,16 +42,5 @@ public class ProjectTest {
         System.out.println(dir.getAbsolutePath());
         assert (dir.isDirectory());
         IProteomicProject pp = ippf.createProject(dir);
-
-        //activate Database
-//        String path = "/de/unibielefeld/gi/kotte/laborprogramm/project/testDirectory";
-//        URL url = null;
-//        try {
-//            url = new URL(path);
-//        } catch (MalformedURLException ex) {
-//            Exceptions.printStackTrace(ex);
-//        }
-//        assertNotNull(url);
-//        pp.activate(url);
     }
 }

@@ -1,7 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
-import de.unibielefeld.gi.kotte.laborprogramm.project.spi.db.DB4oCrudProvider;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProjectFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
@@ -15,6 +14,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import net.sf.maltcms.chromaui.db.api.ICrudProvider;
+import net.sf.maltcms.chromaui.db.api.ICrudProviderFactory;
+import net.sf.maltcms.chromaui.db.api.ICrudSession;
 import net.sf.maltcms.chromaui.db.api.NoAuthCredentials;
 import org.netbeans.spi.project.ProjectState;
 import org.openide.filesystems.FileObject;
@@ -42,18 +43,23 @@ public class ProteomicProject implements IProteomicProject{
             activeProject = Lookup.getDefault().lookup(IProjectFactory.class).createEmptyProject();
         }
         if(icp!=null) {
-            icp.createSession().update(Arrays.asList(activeProject));
+            ICrudSession ics = icp.createSession();
+            ics.update(Arrays.asList(activeProject));
+            ics.close();
         }
         return getFromDB();
     }
 
     private IProject getFromDB() {
         if(icp!=null) {
-            Collection<IProject> projects = icp.createSession().retrieve(IProject.class);
+            ICrudSession ics = icp.createSession();
+            Collection<IProject> projects = ics.retrieve(IProject.class);
             if(projects.size()>1) {
                 throw new IllegalArgumentException("Found more than one instance of IProject in project database!");
             }
-            return projects.iterator().next();
+            IProject project = projects.iterator().next();
+            ics.close();
+            return project;
 //            return myProject;
         }
         return null;
@@ -67,7 +73,7 @@ public class ProteomicProject implements IProteomicProject{
         File pdbf;
         try {
             pdbf = new File(url.toURI());
-            this.icp = new DB4oCrudProvider(pdbf, new NoAuthCredentials(), this.getClass().getClassLoader());
+            this.icp = Lookup.getDefault().lookup(ICrudProviderFactory.class).getCrudProvider(url, new NoAuthCredentials());//new DB4oCrudProvider(pdbf, new NoAuthCredentials(), this.getClass().getClassLoader());
             this.icp.open();
             this.projectDatabaseFile = FileUtil.toFileObject(pdbf);
         } catch (URISyntaxException ex) {

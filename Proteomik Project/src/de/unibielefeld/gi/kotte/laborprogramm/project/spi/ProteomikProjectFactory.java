@@ -16,7 +16,7 @@ import org.openide.util.Exceptions;
  *
  * @author kotte
  */
-@org.openide.util.lookup.ServiceProvider(service=ProjectFactory.class)
+@org.openide.util.lookup.ServiceProvider(service=IProteomicProjectFactory.class)
 //@org.openide.util.lookup.ServiceProvider(service=IProteomicProjectFactory.class)
 public class ProteomikProjectFactory implements IProteomicProjectFactory{
 

@@ -9,7 +9,6 @@ import java.awt.Dialog;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Set;
@@ -60,19 +59,10 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
             ProjectBuilder pb = new ProjectBuilder();
             List<IProject> l = pb.buildProject(projectDataFile, gelDataFile, excelDataFile);
             IProject p = l.iterator().next();
-            //TEST:
-            //System.out.println(p);
             System.out.println("Creating project in "+projectDirectoryFile);
             IProteomicProjectFactory ippf = Lookup.getDefault().lookup(IProteomicProjectFactory.class);
             IProteomicProject pp = ippf.createProject(projectDirectoryFile);
-            //            //activate database
-            //            try {
-            //                //FIXME: java.lang.IllegalArgumentException: Project database file is a directory!
-            //                pp.activate(baseDirectoryFile.toURI().toURL());
-            //            } catch (MalformedURLException ex) {
-            //                Exceptions.printStackTrace(ex);
-            //                //TODO Fehlerbehandlung
-            //            }
+            pp.setProjectData(p);
             //Projekt öffnen
 //            OpenProjects op = OpenProjects.getDefault();
 //            op.open(new Project[]{pp}, false, true);

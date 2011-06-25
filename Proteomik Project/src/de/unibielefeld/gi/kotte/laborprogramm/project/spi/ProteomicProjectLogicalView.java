@@ -76,7 +76,7 @@ class ProteomicProjectLogicalView implements LogicalViewProvider {
 
         @Override
         public Image getIcon(int type) {
-            return ImageUtilities.loadImage("org/demo/project/icon1.png");
+            return ImageUtilities.loadImage("de/unibielefeld/gi/kotte/laborprogramm/project/resources/projectIcon.png");
         }
 
         @Override

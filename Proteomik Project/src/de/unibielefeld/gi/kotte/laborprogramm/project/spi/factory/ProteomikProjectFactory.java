@@ -1,7 +1,9 @@
-package de.unibielefeld.gi.kotte.laborprogramm.project.spi;
+package de.unibielefeld.gi.kotte.laborprogramm.project.spi.factory;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProjectFactory;
+import de.unibielefeld.gi.kotte.laborprogramm.project.spi.ProteomicProject;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -16,9 +18,9 @@ import org.openide.util.Exceptions;
  *
  * @author kotte
  */
-@org.openide.util.lookup.ServiceProvider(service=IProteomicProjectFactory.class)
+@org.openide.util.lookup.ServiceProvider(service = IProteomicProjectFactory.class)
 //@org.openide.util.lookup.ServiceProvider(service=IProteomicProjectFactory.class)
-public class ProteomikProjectFactory implements IProteomicProjectFactory{
+public class ProteomikProjectFactory implements IProteomicProjectFactory {
 
     public static final String PROJECT_FILE = "plop.ppr";
 
@@ -31,17 +33,22 @@ public class ProteomikProjectFactory implements IProteomicProjectFactory{
     @Override
     public org.netbeans.api.project.Project loadProject(FileObject fo, ProjectState ps) throws IOException {
 
-        if(isProject(fo)) {
-            System.out.println("Loading project from "+fo.getPath());
+        if (isProject(fo)) {
+            System.out.println("Loading project from " + fo.getPath());
             //IProteomicProject ipf = Lookup.getDefault().lookup(IProteomicProject.class);
-            IProteomicProject project = createProject(FileUtil.toFile(fo));
+            IProteomicProject project = null;
+            project = new ProteomicProject();
+            project.setProjectState(ps);
+            project.activate(fo.getFileObject(ProteomikProjectFactory.PROJECT_FILE).getURL());
+
+            //IProteomicProject project = createProject(FileUtil.toFile(fo));
             //project.setState(ps);
             /**
             project.setState(ps);
             project.activate(FileUtil.toFile(fo.getFileObject(DBProjectFactory.PROJECT_FILE)).toURI().toURL());
-            */
+             */
             return project;
-        }else{
+        } else {
             return null;
         }
     }
@@ -53,15 +60,20 @@ public class ProteomikProjectFactory implements IProteomicProjectFactory{
     }
 
     @Override
-    public IProteomicProject createProject(File projdir) {
-        IProteomicProject project = null;
+    public IProteomicProject createProject(File projdir, IProject project) {
+        ProteomicProject proproject = null;
         try {
-            project = new ProteomicProject();
-            project.activate(new File(projdir, PROJECT_FILE).toURI().toURL());
+            proproject = new ProteomicProject();
+            proproject.activate(new File(projdir, PROJECT_FILE).toURI().toURL());
+           // proproject.store(project);
+            //IProject ipr = proproject.retrieve(IProject.class);
+            //System.out.println("My funky Project: "+ipr.toString());
+            proproject.setProjectData(project);
+            System.out.println("Gel groups: " + proproject.getGelGroups());
+            proproject.close();
         } catch (MalformedURLException ex) {
             Exceptions.printStackTrace(ex);
         }
-        return project;
+        return proproject;
     }
-
 }

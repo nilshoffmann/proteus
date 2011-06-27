@@ -37,26 +37,54 @@ import org.openide.util.lookup.Lookups;
  *
  * @author kotte
  */
-@org.openide.util.lookup.ServiceProvider(service = IProteomicProject.class)
+@org.openide.util.lookup.ServiceProvider(service = Project.class)
 public class ProteomicProject implements IProteomicProject {
 
     ICrudProvider icp = null;
     FileObject projectDatabaseFile = null;
-    //IProject myProject = null;
+    IProject activeProject = null;
     ProjectState state;
     Lookup lookup;
 
-    private IProject persist(IProject project) {
-        IProject activeProject = project;
-        if (activeProject == null) {
-            activeProject = Lookup.getDefault().lookup(IProjectFactory.class).createEmptyProject();
-        }
+    private synchronized IProject persist(IProject project) {
+//        IProject activeProject = project;
+////        if (activeProject == null) {
+////            activeProject = Lookup.getDefault().lookup(IProjectFactory.class).createEmptyProject();
+////            if (icp != null) {
+////                ICrudSession ics = icp.createSession();
+////                ics.create(Arrays.asList(activeProject));
+////                ics.close();
+////            }
+////        } else {
+//        if (activeProject == null) {
+//            throw new NullPointerException("IProject instance was null!");
+//        }
         if (icp != null) {
             ICrudSession ics = icp.createSession();
-            ics.update(Arrays.asList(activeProject));
+            ics.update(Arrays.asList(project));
             ics.close();
         }
+        //}
         return getFromDB();
+    }
+
+    public synchronized void store(Object obj) {
+        if (icp != null) {
+            ICrudSession ics = icp.createSession();
+            ics.update(Arrays.asList(obj));
+            ics.close();
+        }
+    }
+
+    public synchronized <T> T retrieve(Class<T> c) {
+        if (icp != null) {
+            ICrudSession ics = icp.createSession();
+            Collection<T> coll = ics.retrieve(c);
+            T t = coll.iterator().next();
+            ics.close();
+            return t;
+        }
+        return null;
     }
 
     private IProject getFromDB() {
@@ -66,9 +94,12 @@ public class ProteomicProject implements IProteomicProject {
             if (projects.size() > 1) {
                 throw new IllegalArgumentException("Found more than one instance of IProject in project database!");
             }
-            IProject project = projects.iterator().next();
-            ics.close();
-            return project;
+            try {
+                IProject project = projects.iterator().next();
+                ics.close();
+                return project;
+            } catch (Exception e) {
+            }
 //            return myProject;
         }
         return null;
@@ -76,9 +107,9 @@ public class ProteomicProject implements IProteomicProject {
 
     @Override
     public void activate(URL url) {
-        if (this.icp != null) {
-            this.icp.close();
-        }
+//        if (this.icp != null) {
+//            this.icp.close();
+//        }
         File pdbf;
         try {
             pdbf = new File(url.toURI());
@@ -98,16 +129,26 @@ public class ProteomicProject implements IProteomicProject {
     @Override
     public Lookup getLookup() {
         if (lookup == null) {
-            lookup = Lookups.fixed(new Object[]{
-                        state, //allow outside code to mark the project as needing saving
-                        new ActionProviderImpl(), //Provides standard actions like Build and Clean
-                        //                        new DemoDeleteOperation(),
-                        //                        new DemoCopyOperation(this),
-                        new Info(), //Project information implementation
-                        new ProteomicProjectLogicalView(this), //Logical view of project implementation
-                    });
+            lookup = Lookups.fixed(
+                    state, //allow outside code to mark the project as needing saving
+                    new ActionProviderImpl(), //Provides standard actions like Build and Clean
+                    //                        new DemoDeleteOperation(),
+                    //                        new DemoCopyOperation(this),
+                    new Info(), //Project information implementation
+                    new ProteomicProjectLogicalView(this) //Logical view of project implementation
+                    );
         }
         return lookup;
+    }
+
+    @Override
+    public void close() {
+        this.icp.close();
+    }
+
+    @Override
+    public void setProjectState(ProjectState ps) {
+        this.state = ps;
     }
 
     private final class ActionProviderImpl implements ActionProvider {
@@ -294,5 +335,6 @@ public class ProteomicProject implements IProteomicProject {
     @Override
     public void setProjectData(IProject project) {
         persist(project);
+        //activeProject = retrieve(IProject.class);
     }
 }

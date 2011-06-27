@@ -59,11 +59,11 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
             ProjectBuilder pb = new ProjectBuilder();
             List<IProject> l = pb.buildProject(projectDataFile, gelDataFile, excelDataFile);
             IProject p = l.iterator().next();
-            //System.out.println(p);//TEST: komplette Projekt Daten ausgeben (langsam)
+            System.out.println(p);//TEST: komplette Projekt Daten ausgeben (langsam)
             System.out.println("Creating project in "+projectDirectoryFile);
             IProteomicProjectFactory ippf = Lookup.getDefault().lookup(IProteomicProjectFactory.class);
-            IProteomicProject pp = ippf.createProject(projectDirectoryFile);
-            pp.setProjectData(p);
+            IProteomicProject pp = ippf.createProject(projectDirectoryFile,p);
+            //pp.setProjectData(p);
             //Projekt öffnen
 //            OpenProjects op = OpenProjects.getDefault();
 //            op.open(new Project[]{pp}, false, true);

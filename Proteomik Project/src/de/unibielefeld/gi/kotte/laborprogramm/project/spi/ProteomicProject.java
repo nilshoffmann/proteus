@@ -2,7 +2,6 @@ package de.unibielefeld.gi.kotte.laborprogramm.project.spi;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProjectFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
@@ -45,6 +44,7 @@ public class ProteomicProject implements IProteomicProject {
     IProject activeProject = null;
     ProjectState state;
     Lookup lookup;
+    private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/ProjectIcon.png";
 
     private synchronized IProject persist(IProject project) {
 //        IProject activeProject = project;
@@ -190,8 +190,7 @@ public class ProteomicProject implements IProteomicProject {
 
         @Override
         public Icon getIcon() {
-            return new ImageIcon(ImageUtilities.loadImage(
-                    "de/unibielefeld/gi/kotte/laborprogramm/project/resources/projectIcon.png"));
+            return new ImageIcon(ImageUtilities.loadImage(ICON_PATH));
         }
 
         @Override

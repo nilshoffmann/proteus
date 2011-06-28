@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
@@ -25,6 +20,7 @@ import org.openide.util.lookup.Lookups;
 public class ProjectNode extends AbstractNode{
 
     private IProteomicProject ipp;
+    private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/ProjectIcon.png";
 
     public ProjectNode(IProteomicProject ipp, Lookup lkp) {
         super(Children.create(new ProjectChildNodeFactory(ipp),true),lkp);
@@ -52,7 +48,7 @@ public class ProjectNode extends AbstractNode{
 
         @Override
         public Image getIcon(int type) {
-            return ImageUtilities.loadImage("de/unibielefeld/gi/kotte/laborprogramm/project/resources/projectIcon.png");
+            return ImageUtilities.loadImage(ICON_PATH);
         }
 
         @Override

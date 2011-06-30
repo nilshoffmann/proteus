@@ -19,6 +19,8 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
     private File excelDataFile;
     private File gelDataFile;
 
+    private File lastActiveDirectory;
+
     public String getProjectName() {
         return projectNameTextField.getText();
     }
@@ -80,6 +82,7 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
         excelDataTextField = new javax.swing.JTextField();
         excelDataButton = new javax.swing.JButton();
         projectDataButton = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
 
         org.openide.awt.Mnemonics.setLocalizedText(projectNameLabel, org.openide.util.NbBundle.getMessage(ImportVisualPanel1.class, "ImportVisualPanel1.projectNameLabel.text")); // NOI18N
 
@@ -147,39 +150,54 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(excelDataTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(excelDataButton)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(excelDataLabel)
+                        .addGap(349, 349, 349))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(projectDataLabel)
+                                .addGap(335, 335, 335))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(projectDataTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(projectDataButton)))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(gelDataTextField)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(gelDataButton))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(gelDataLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 359, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(projectNameLabel)
                             .addComponent(baseDirectoryLabel)
-                            .addComponent(projectNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(projectDirectoryLabel)
-                            .addGroup(layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(projectNameTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
                                     .addComponent(projectDirectoryTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
-                                    .addComponent(baseDirectoryTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
-                                    .addComponent(gelDataTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
-                                    .addComponent(projectDataTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
-                                    .addComponent(excelDataTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE))
+                                    .addComponent(baseDirectoryTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(projectDataButton)
-                                    .addComponent(excelDataButton)
-                                    .addComponent(gelDataButton)
-                                    .addComponent(baseDirectoryButton))))
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(gelDataLabel)
-                        .addContainerGap(371, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(projectDataLabel)
-                        .addGap(347, 347, 347))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(excelDataLabel)
-                        .addGap(349, 349, 349))))
+                                .addComponent(baseDirectoryButton)))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(projectNameLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(projectNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -194,17 +212,19 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(projectDirectoryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(gelDataLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(gelDataTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(gelDataButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(projectDataLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(projectDataTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(projectDataButton))
+                .addGap(12, 12, 12)
+                .addComponent(gelDataLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(gelDataTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(gelDataButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(excelDataLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -218,7 +238,7 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
     }// </editor-fold>//GEN-END:initComponents
 
     private void baseDirectoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_baseDirectoryButtonActionPerformed
-        JFileChooser jfc = new JFileChooser();
+        JFileChooser jfc = new JFileChooser(lastActiveDirectory);
         jfc.setCurrentDirectory(new java.io.File("."));
         jfc.setDialogTitle("Basisverzeichnis auswählen");
         jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -234,39 +254,42 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
     }//GEN-LAST:event_baseDirectoryButtonActionPerformed
 
     private void gelDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gelDataButtonActionPerformed
-        JFileChooser jfc = new JFileChooser();
+        JFileChooser jfc = new JFileChooser(lastActiveDirectory);
         jfc.setCurrentDirectory(new java.io.File("."));
         jfc.setDialogTitle("Delta2D Gel Bilder XML Datei auswählen");
         int status = jfc.showOpenDialog(null);
         if (status == JFileChooser.APPROVE_OPTION) {
             File oldFile = gelDataFile;
             gelDataFile = jfc.getSelectedFile();
+            lastActiveDirectory = gelDataFile.getParentFile();
             gelDataTextField.setText(gelDataFile.getAbsolutePath());
             firePropertyChange(PROPERTY_GEL_DATA_FILE, oldFile, gelDataFile);
         }
     }//GEN-LAST:event_gelDataButtonActionPerformed
 
     private void excelDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excelDataButtonActionPerformed
-        JFileChooser jfc = new JFileChooser();
+        JFileChooser jfc = new JFileChooser(lastActiveDirectory);
         jfc.setCurrentDirectory(new java.io.File("."));
         jfc.setDialogTitle("Delta2d Excel Export auswählen");
         int status = jfc.showOpenDialog(null);
         if (status == JFileChooser.APPROVE_OPTION) {
             File oldFile = excelDataFile;
             excelDataFile = jfc.getSelectedFile();
+            lastActiveDirectory = excelDataFile.getParentFile();
             excelDataTextField.setText(excelDataFile.getAbsolutePath());
             firePropertyChange(PROPERTY_EXCEL_DATA_FILE, oldFile, excelDataFile);
         }
     }//GEN-LAST:event_excelDataButtonActionPerformed
 
     private void projectDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_projectDataButtonActionPerformed
-        JFileChooser jfc = new JFileChooser();
+        JFileChooser jfc = new JFileChooser(lastActiveDirectory);
         jfc.setCurrentDirectory(new java.io.File("."));
         jfc.setDialogTitle("Delta2D Projekt XML Datei auswählen");
         int status = jfc.showOpenDialog(null);
         if (status == JFileChooser.APPROVE_OPTION) {
             File oldFile = projectDataFile;
             projectDataFile = jfc.getSelectedFile();
+            lastActiveDirectory = projectDataFile.getParentFile();
             projectDataTextField.setText(projectDataFile.getAbsolutePath());
             firePropertyChange(PROPERTY_PROJECT_DATA_FILE, oldFile, projectDataFile);
         }
@@ -281,6 +304,7 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
     private javax.swing.JButton gelDataButton;
     private javax.swing.JLabel gelDataLabel;
     private javax.swing.JTextField gelDataTextField;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JButton projectDataButton;
     private javax.swing.JLabel projectDataLabel;
     private javax.swing.JTextField projectDataTextField;

@@ -16,45 +16,67 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jSeparator1" pref="414" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
                   <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="projectNameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="baseDirectoryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="projectNameTextField" alignment="0" min="-2" pref="87" max="-2" attributes="1"/>
-                          <Component id="projectDirectoryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="projectDirectoryTextField" alignment="0" pref="329" max="32767" attributes="1"/>
-                                  <Component id="baseDirectoryTextField" alignment="0" pref="329" max="32767" attributes="1"/>
-                                  <Component id="gelDataTextField" alignment="0" pref="329" max="32767" attributes="1"/>
-                                  <Component id="projectDataTextField" alignment="0" pref="329" max="32767" attributes="1"/>
-                                  <Component id="excelDataTextField" alignment="0" pref="329" max="32767" attributes="1"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="projectDataButton" min="-2" max="-2" attributes="0"/>
-                                  <Component id="excelDataButton" min="-2" max="-2" attributes="0"/>
-                                  <Component id="gelDataButton" min="-2" max="-2" attributes="0"/>
-                                  <Component id="baseDirectoryButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                      </Group>
+                      <Component id="excelDataTextField" pref="329" max="32767" attributes="1"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="excelDataButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="gelDataLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="371" max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="projectDataLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="347" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="excelDataLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="349" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="projectDataLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="335" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="projectDataTextField" pref="329" max="32767" attributes="1"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="projectDataButton" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" alignment="1" attributes="1">
+                              <Component id="gelDataTextField" max="32767" attributes="1"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="gelDataButton" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="gelDataLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="359" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="projectNameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="baseDirectoryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="projectDirectoryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="projectNameTextField" alignment="0" pref="329" max="32767" attributes="1"/>
+                                  <Component id="projectDirectoryTextField" alignment="0" pref="329" max="32767" attributes="1"/>
+                                  <Component id="baseDirectoryTextField" alignment="0" pref="329" max="32767" attributes="1"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="baseDirectoryButton" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -62,8 +84,8 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="projectNameLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="projectNameTextField" min="-2" max="-2" attributes="0"/>
@@ -79,18 +101,20 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="projectDirectoryTextField" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="gelDataLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="gelDataTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="gelDataButton" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Component id="projectDataLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="projectDataTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="projectDataButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+              <Component id="gelDataLabel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="gelDataTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="gelDataButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="excelDataLabel" min="-2" max="-2" attributes="0"/>
@@ -241,6 +265,8 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="projectDataButtonActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JSeparator" name="jSeparator1">
     </Component>
   </SubComponents>
 </Form>

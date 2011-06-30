@@ -36,10 +36,11 @@ public class ProteomikProjectFactory implements IProteomicProjectFactory {
         if (isProject(fo)) {
             System.out.println("Loading project from " + fo.getPath());
             //IProteomicProject ipf = Lookup.getDefault().lookup(IProteomicProject.class);
-            IProteomicProject project = null;
+            ProteomicProject project = null;
             project = new ProteomicProject();
+            project.setDBLocation(fo.getFileObject(PROJECT_FILE).getURL());
             project.setProjectState(ps);
-            project.activate(fo.getFileObject(PROJECT_FILE).getURL());
+            
 
             //IProteomicProject project = createProject(FileUtil.toFile(fo));
             //project.setState(ps);

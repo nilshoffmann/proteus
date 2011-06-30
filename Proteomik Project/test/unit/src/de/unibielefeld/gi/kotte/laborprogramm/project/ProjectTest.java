@@ -1,6 +1,14 @@
 package de.unibielefeld.gi.kotte.laborprogramm.project;
 
+import java.util.Arrays;
 import java.net.MalformedURLException;
+import net.sf.maltcms.chromaui.db.api.ICrudProviderFactory;
+import net.sf.maltcms.chromaui.db.api.ICrudProvider;
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.sf.maltcms.chromaui.db.api.ICrudSession;
+import net.sf.maltcms.chromaui.db.spi.db4o.DB4oCrudProvider;
 import junit.framework.TestCase;
 import java.io.IOException;
 import org.netbeans.junit.NbModuleSuite;
@@ -33,6 +41,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProjectFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.project.spi.factory.ProteomikProjectFactory;
 import java.io.File;
+import net.sf.maltcms.chromaui.db.api.NoAuthCredentials;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.junit.AfterClass;
@@ -62,6 +71,55 @@ public class ProjectTest extends TestCase {
     }
 
     @Test
+    public void testDB4oPersistence() {
+        File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+        File tmpProjectDir = new File(tmpDir, "testDB4oProject");
+        if(tmpProjectDir.exists()) {
+            deleteChildren(tmpProjectDir);
+        }
+        File databaseFile = new File(tmpProjectDir,"plopp.ppr");
+        //tmpProjectDir.deleteOnExit();
+        tmpProjectDir.mkdirs();
+        ICrudProvider icp;
+        IProject ipr1 = null;
+        try {
+            icp = Lookup.getDefault().lookup(ICrudProviderFactory.class).getCrudProvider(databaseFile.toURI().toURL(), new NoAuthCredentials(),Thread.currentThread().getContextClassLoader());
+            icp.open();
+            ICrudSession ics = icp.createSession();
+            ics.open();
+            ipr1 = createTestProject();
+            ics.create(Arrays.asList(ipr1));
+            //test retrieval in same session
+            Collection<IProject> coll = ics.retrieve(IProject.class);
+            assertEquals(1,coll.size());
+            IProject ipr = coll.iterator().next();
+            assertNotNull(ipr);
+            ics.close();
+            icp.close();
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        //test retrieval in new session
+        try {
+            icp = Lookup.getDefault().lookup(ICrudProviderFactory.class).getCrudProvider(databaseFile.toURI().toURL(), new NoAuthCredentials(),Thread.currentThread().getContextClassLoader());
+            icp.open();
+            ICrudSession ics = icp.createSession();
+            ics.open();
+            IProject ipr2 = ics.retrieve(IProject.class).iterator().next();
+            assertNotNull(ipr2);
+            assertEquals(ipr1.toString(),ipr2.toString());
+            ics.close();
+            icp.close();
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        deleteChildren(tmpProjectDir);
+        tmpProjectDir.delete();
+    }
+
+    //@Test
     public void testProject() {
         //set up project in test directory
         //IProteomicProjectFactory ippf = Lookup.getDefault().lookup(IProteomicProjectFactory.class);
@@ -100,6 +158,16 @@ public class ProjectTest extends TestCase {
 //        } catch (MalformedURLException ex) {
 //            Exceptions.printStackTrace(ex);
 //        }
+        DB4oCrudProvider instance = new DB4oCrudProvider(new File(tmpProjectDir,ProteomikProjectFactory.PROJECT_FILE), new NoAuthCredentials(), this.getClass().getClassLoader());
+        ICrudSession ics = instance.createSession();
+        ics.open();
+        Collection<IProject> projects = ics.retrieve(IProject.class);
+        Logger.getLogger(getClass().getName()).log(Level.INFO,"Retrieved {0} projects",projects.size());
+        assertEquals(1, projects.size());
+        for(IProject proj:projects) {
+            Logger.getLogger(getClass().getName()).log(Level.INFO,"Retrieved project {0}",proj);
+        }
+        ics.close();
         try {
             IProteomicProject ipp2 = (IProteomicProject) ippf.loadProject(FileUtil.toFileObject(tmpProjectDir), new ProjectState() {
 

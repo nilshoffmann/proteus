@@ -18,7 +18,7 @@ import org.openide.util.Exceptions;
  *
  * @author kotte
  */
-@org.openide.util.lookup.ServiceProvider(service = IProteomicProjectFactory.class)
+@org.openide.util.lookup.ServiceProvider(service = ProjectFactory.class)
 //@org.openide.util.lookup.ServiceProvider(service=IProteomicProjectFactory.class)
 public class ProteomikProjectFactory implements IProteomicProjectFactory {
 
@@ -26,7 +26,7 @@ public class ProteomikProjectFactory implements IProteomicProjectFactory {
 
     @Override
     public boolean isProject(FileObject fo) {
-        //System.out.println("Checking if "+fo.getPath()+" is a valid project!");
+        System.out.println("Checking if "+fo.getPath()+" contains a valid project file: "+fo.getFileObject(ProteomikProjectFactory.PROJECT_FILE));
         return fo.getFileObject(ProteomikProjectFactory.PROJECT_FILE) != null;
     }
 
@@ -39,7 +39,7 @@ public class ProteomikProjectFactory implements IProteomicProjectFactory {
             IProteomicProject project = null;
             project = new ProteomicProject();
             project.setProjectState(ps);
-            project.activate(fo.getFileObject(ProteomikProjectFactory.PROJECT_FILE).getURL());
+            project.activate(fo.getFileObject(PROJECT_FILE).getURL());
 
             //IProteomicProject project = createProject(FileUtil.toFile(fo));
             //project.setState(ps);

@@ -14,6 +14,8 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import net.sf.maltcms.chromaui.db.api.ICrudProvider;
@@ -40,7 +42,8 @@ import org.openide.util.lookup.Lookups;
 public class ProteomicProject implements IProteomicProject {
 
     ICrudProvider icp = null;
-    FileObject projectDatabaseFile = null;
+    ICrudSession ics = null;
+    File projectDatabaseFile = null;
     IProject activeProject = null;
     ProjectState state;
     Lookup lookup;
@@ -60,9 +63,8 @@ public class ProteomicProject implements IProteomicProject {
 //            throw new NullPointerException("IProject instance was null!");
 //        }
         if (icp != null) {
-            ICrudSession ics = icp.createSession();
             ics.update(Arrays.asList(project));
-            ics.close();
+            //ics.close();
         }
         //}
         return getFromDB();
@@ -70,38 +72,44 @@ public class ProteomicProject implements IProteomicProject {
 
     public synchronized void store(Object obj) {
         if (icp != null) {
-            ICrudSession ics = icp.createSession();
+            //ICrudSession ics = icp.createSession();
             ics.update(Arrays.asList(obj));
-            ics.close();
+            //ics.close();
         }
     }
 
     public synchronized <T> T retrieve(Class<T> c) {
         if (icp != null) {
-            ICrudSession ics = icp.createSession();
+            //ICrudSession ics = icp.createSession();
             Collection<T> coll = ics.retrieve(c);
             T t = coll.iterator().next();
-            ics.close();
+            //ics.close();
             return t;
         }
         return null;
     }
 
     private IProject getFromDB() {
-        if (icp != null) {
-            ICrudSession ics = icp.createSession();
+        //Logger.getLogger(getClass().getName()).log(Level.INFO, "CrudProvider: {0}",icp);
+        if (icp != null && ics !=null) {
+            //ICrudSession ics = icp.createSession();
             Collection<IProject> projects = ics.retrieve(IProject.class);
             if (projects.size() > 1) {
+                //ics.close();
                 throw new IllegalArgumentException("Found more than one instance of IProject in project database!");
             }
             try {
                 IProject project = projects.iterator().next();
-                ics.close();
+                //ics.close();
                 return project;
             } catch (Exception e) {
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Exception: {0}",e.getLocalizedMessage());
+            } finally {
+                //ics.close();
             }
 //            return myProject;
         }
+        Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Could not retrieve Project instance from database");
         return null;
     }
 
@@ -113,9 +121,12 @@ public class ProteomicProject implements IProteomicProject {
         File pdbf;
         try {
             pdbf = new File(url.toURI());
-            this.icp = Lookup.getDefault().lookup(ICrudProviderFactory.class).getCrudProvider(url, new NoAuthCredentials());//new DB4oCrudProvider(pdbf, new NoAuthCredentials(), this.getClass().getClassLoader());
+            this.icp = Lookup.getDefault().lookup(ICrudProviderFactory.class).getCrudProvider(url, new NoAuthCredentials(),Thread.currentThread().getContextClassLoader());//new DB4oCrudProvider(pdbf, new NoAuthCredentials(), this.getClass().getClassLoader());
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "Using {0} as CRUD provider", this.icp.getClass().getName());
             this.icp.open();
-            this.projectDatabaseFile = FileUtil.toFileObject(pdbf);
+            this.ics = icp.createSession();
+            this.ics.open();
+            this.projectDatabaseFile = pdbf;
         } catch (URISyntaxException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -123,7 +134,7 @@ public class ProteomicProject implements IProteomicProject {
 
     @Override
     public FileObject getProjectDirectory() {
-        return projectDatabaseFile.getParent();
+        return FileUtil.toFileObject(projectDatabaseFile.getParentFile());
     }
 
     @Override
@@ -143,6 +154,7 @@ public class ProteomicProject implements IProteomicProject {
 
     @Override
     public void close() {
+        this.ics.close();
         this.icp.close();
     }
 
@@ -335,5 +347,10 @@ public class ProteomicProject implements IProteomicProject {
     public void setProjectData(IProject project) {
         persist(project);
         //activeProject = retrieve(IProject.class);
+    }
+
+    @Override
+    public String toString() {
+        return getFromDB().toString();
     }
 }

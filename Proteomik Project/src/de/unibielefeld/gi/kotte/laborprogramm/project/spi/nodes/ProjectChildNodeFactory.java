@@ -47,10 +47,10 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> {
         int i = 0;
         switch (keyVal) {
             case GELGROUPS:
-                List<ILogicalGelGroup> gels = ipp.getGelGroups();
-                nodes = new Node[gels.size()];
+                List<ILogicalGelGroup> illgs = ipp.getGelGroups();
+                nodes = new Node[illgs.size()];
                 i = 0;
-                for (ILogicalGelGroup ilgg : gels) {
+                for (ILogicalGelGroup ilgg : illgs) {
                     nodes[i++] = new LogicalGelGroupNode(ilgg);
                 }
                 return nodes;
@@ -58,9 +58,9 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> {
                 List<IPlate384> plates384 = ipp.get384Plates();
                 nodes = new Node[plates384.size()];
                 i = 0;
-                for (IPlate384 ilgg : plates384) {
+                for (IPlate384 plate : plates384) {
                     try {
-                        nodes[i++] = new BeanNode(ilgg);
+                        nodes[i++] = new BeanNode(plate);
                     } catch (IntrospectionException ex) {
                         Exceptions.printStackTrace(ex);
                     }
@@ -71,9 +71,9 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> {
                 List<IPlate96> plates96 = ipp.get96Plates();
                 nodes = new Node[plates96.size()];
                 i = 0;
-                for (IPlate96 ilgg : plates96) {
+                for (IPlate96 plate : plates96) {
                     try {
-                        nodes[i++] = new BeanNode(ilgg);
+                        nodes[i++] = new BeanNode(plate);
                     } catch (IntrospectionException ex) {
                         Exceptions.printStackTrace(ex);
                     }
@@ -112,7 +112,7 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> {
 //            //--> custom AbstractNode mit eigener ChildFactory
 //            try {
 //                return new BeanNode(key);
-//            } catch (IntrospectionException ex) {
+//            } catch (IntrospeFctionException ex) {
 //                Exceptions.printStackTrace(ex);
 //            }
 //        }

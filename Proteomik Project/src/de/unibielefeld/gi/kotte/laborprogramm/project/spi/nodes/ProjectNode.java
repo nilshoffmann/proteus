@@ -17,48 +17,47 @@ import org.openide.util.lookup.Lookups;
  *
  * @author kotte
  */
-public class ProjectNode extends AbstractNode{
+public class ProjectNode extends AbstractNode {
 
     private IProteomicProject ipp;
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/ProjectIcon.png";
 
     public ProjectNode(IProteomicProject ipp, Lookup lkp) {
-        super(Children.create(new ProjectChildNodeFactory(ipp),true),lkp);
+        super(Children.create(new ProjectChildNodeFactory(ipp), true), lkp);
         this.ipp = ipp;
     }
 
     public ProjectNode(IProteomicProject ipp) {
-        super(Children.create(new ProjectChildNodeFactory(ipp),true),Lookups.singleton(ipp));
+        super(Children.create(new ProjectChildNodeFactory(ipp), true), Lookups.singleton(ipp));
         this.ipp = ipp;
     }
 
     @Override
-        public Action[] getActions(boolean arg0) {
-            Action[] nodeActions = new Action[7];
-            nodeActions[0] = CommonProjectActions.newFileAction();
-            nodeActions[1] = CommonProjectActions.copyProjectAction();
-            nodeActions[2] = CommonProjectActions.deleteProjectAction();
-            nodeActions[5] = CommonProjectActions.setAsMainProjectAction();
-            nodeActions[6] = CommonProjectActions.closeProjectAction();
-            List<? extends Action> actions = Utilities.actionsForPath("/Projects/ProteomikLaborProgramm/");
-            List<Action> allActions = Arrays.asList(nodeActions);
-            allActions.addAll(actions);
-            return allActions.toArray(new Action[allActions.size()]);
-        }
+    public Action[] getActions(boolean arg0) {
+        Action[] nodeActions = new Action[7];
+        nodeActions[0] = CommonProjectActions.newFileAction();
+        nodeActions[1] = CommonProjectActions.copyProjectAction();
+        nodeActions[2] = CommonProjectActions.deleteProjectAction();
+        nodeActions[5] = CommonProjectActions.setAsMainProjectAction();
+        nodeActions[6] = CommonProjectActions.closeProjectAction();
+        List<? extends Action> actions = Utilities.actionsForPath("/Projects/ProteomikLaborProgramm/");
+        List<Action> allActions = Arrays.asList(nodeActions);
+        allActions.addAll(actions);
+        return allActions.toArray(new Action[allActions.size()]);
+    }
 
-        @Override
-        public Image getIcon(int type) {
-            return ImageUtilities.loadImage(ICON_PATH);
-        }
+    @Override
+    public Image getIcon(int type) {
+        return ImageUtilities.loadImage(ICON_PATH);
+    }
 
-        @Override
-        public Image getOpenedIcon(int type) {
-            return getIcon(type);
-        }
+    @Override
+    public Image getOpenedIcon(int type) {
+        return getIcon(type);
+    }
 
-        @Override
-        public String getDisplayName() {
-            return ipp.getProjectDirectory().getName();
-        }
-
+    @Override
+    public String getDisplayName() {
+        return ipp.getProjectDirectory().getName();
+    }
 }

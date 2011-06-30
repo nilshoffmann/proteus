@@ -1,15 +1,10 @@
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroup;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
-import java.beans.IntrospectionException;
 import java.util.Collection;
 import java.util.List;
-import org.openide.nodes.BeanNode;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -17,15 +12,15 @@ import org.openide.util.Exceptions;
  */
 class SpotGroupFolderChildNodeFactory extends ChildFactory<ISpotGroup> {
 
-    private Collection<ISpotGroup> illg;
+    private Collection<ISpotGroup> isgs;
 
-    public SpotGroupFolderChildNodeFactory(Collection<ISpotGroup> illg) {
-        this.illg = illg;
+    public SpotGroupFolderChildNodeFactory(Collection<ISpotGroup> isgs) {
+        this.isgs = isgs;
     }
 
     @Override
     protected boolean createKeys(List<ISpotGroup> toPopulate) {
-        for (ISpotGroup isg : illg) {
+        for (ISpotGroup isg : isgs) {
             if (Thread.interrupted()) {
                 return true;
             } else {
@@ -38,13 +33,7 @@ class SpotGroupFolderChildNodeFactory extends ChildFactory<ISpotGroup> {
 
     @Override
     protected Node createNodeForKey(ISpotGroup key) {
-
-        //TODO anpassen
-        try {
-            return new BeanNode(key);
-        } catch (IntrospectionException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        return Node.EMPTY;
+        assert (key.getClass() == ISpotGroup.class);
+        return new SpotGroupNode((ISpotGroup) key);
     }
 }

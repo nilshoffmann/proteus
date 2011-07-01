@@ -90,7 +90,10 @@ public class ProjectBuilder {
                 IGel gel = gelMap.get(gi.getGelImageId().getId());
                 assert (gel != null);
                 gel.setName(gi.getName());
-                gel.setFilename(gi.getSourceImage());
+
+                //don't use SourceImage attribute (absolute windows path)
+                //don't set filename here / filename is set by the Project
+                //gel.setFilename(gi.getSourceImage());
             }
 
             //add spot and spot group information from excel file

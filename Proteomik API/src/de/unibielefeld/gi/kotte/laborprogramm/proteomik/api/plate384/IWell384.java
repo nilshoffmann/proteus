@@ -21,6 +21,10 @@ public interface IWell384 {
 
     public IWell96 getWell96();
 
+    public String getIdentification();
+
+    public void setIdentification(String identification);
+
     public void setParent(IPlate384 parent);
 
     public void setRow(char row);

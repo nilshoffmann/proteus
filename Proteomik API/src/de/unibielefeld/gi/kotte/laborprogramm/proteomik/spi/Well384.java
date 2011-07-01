@@ -15,6 +15,7 @@ public class Well384 implements IWell384 {
     IPlate384 parent;
     Well384Status status;
     IWell96 well96;
+    String identification;
     char row;
     int column;
 
@@ -22,6 +23,7 @@ public class Well384 implements IWell384 {
         this.parent = null;
         this.status = Well384Status.EMPTY;
         this.well96 = null;
+        this.identification = "";
         this.row = 'X'; //Well96 Position X0 fuer ausserhalb einer Platte
         this.column = 0;
     }
@@ -30,6 +32,7 @@ public class Well384 implements IWell384 {
         this.parent = parent;
         this.status = Well384Status.EMPTY;
         this.well96 = null;
+        this.identification = "";
         this.row = posX;
         this.column = posY;
     }
@@ -62,6 +65,14 @@ public class Well384 implements IWell384 {
     @Override
     public IWell96 getWell96() {
         return well96;
+    }
+
+    public String getIdentification() {
+        return identification;
+    }
+
+    public void setIdentification(String identification) {
+        this.identification = identification;
     }
 
     @Override

@@ -25,12 +25,11 @@ public class GelNode extends AbstractNode {
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/GelIcon.png";
 
     public GelNode(IGel gel, Lookup lkp) {
-        super(Children.LEAF,new ProxyLookup(lkp,Lookups.fixed(gel)));
-        getCookieSet().add(Lookup.getDefault().lookup(IGelOpenCookie.class));
+        super(Children.LEAF,new ProxyLookup(lkp,Lookups.fixed(gel,Lookup.getDefault().lookup(IGelOpenCookie.class))));
     }
 
     public GelNode(IGel gel) {
-        super(Children.LEAF,Lookups.fixed(gel));
+        super(Children.LEAF,Lookups.fixed(gel,Lookup.getDefault().lookup(IGelOpenCookie.class)));
     }
 
     @Override
@@ -50,11 +49,12 @@ public class GelNode extends AbstractNode {
 
     @Override
     public Action[] getActions(boolean arg0) {
-        Action[] nodeActions = new Action[7];
-        nodeActions[0] = CommonProjectActions.newFileAction();
-        List<? extends Action> actions = Utilities.actionsForPath("/Actions/ProteomikLaborProgramm/"+getClass().getSimpleName()+"/");
+        //Action[] nodeActions = new Action[7];
+        //nodeActions[0] = CommonProjectActions.newFileAction();
+        List<? extends Action> actions = Utilities.actionsForPath("/Actions/GelNode");
+        System.out.println("Retrieved actions for path :"+"/Actions/GelNode/:"+actions);
         List<Action> allActions = new LinkedList<Action>(actions);
-        allActions.addAll(Arrays.asList(nodeActions));
+        //allActions.addAll(Arrays.asList(nodeActions));
         return allActions.toArray(new Action[allActions.size()]);
     }
 }

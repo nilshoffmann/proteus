@@ -2,15 +2,25 @@
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
     <folder name="Actions">
-        <folder name="Gel">
+<!--        <folder name="GelNode">
             <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-GelViewOpenAction.instance">
-                <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
+                <attr name="delegate" newvalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.GelViewOpenAction"/>
                 <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.Bundle#CTL_GelViewOpenAction"/>
-                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.GelViewOpenAction"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
                 <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
-                <attr name="type" stringvalue="IGelOpenCookie"/>
+                <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel"/>
+            </file>
+        </folder>-->
+        <folder name="GelNode">
+            <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-GelViewerOpenAction.instance">
+                <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
+                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.Bundle#CTL_GelViewerOpenAction"/>
+                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.GelViewerOpenAction"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+                <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
+                <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel"/><!--org.openide.cookies.OpenCookie"/>-->
             </file>
         </folder>
     </folder>

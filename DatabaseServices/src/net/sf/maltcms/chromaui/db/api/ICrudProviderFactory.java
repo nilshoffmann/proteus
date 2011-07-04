@@ -12,4 +12,5 @@ import java.net.URL;
  */
 public interface ICrudProviderFactory {
     ICrudProvider getCrudProvider(URL databaseLocation, ICredentials ic, ClassLoader cl);
+    ICrudProvider getCrudProvider(URL databaseLocation, ICredentials ic);
 }

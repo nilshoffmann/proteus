@@ -1,11 +1,13 @@
 package de.unibielefeld.gi.kotte.laborprogramm.gelViewer;
 
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import java.util.logging.Logger;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 //import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.util.Utilities;
 import org.openide.windows.CloneableTopComponent;
 
 /**
@@ -19,8 +21,10 @@ public final class GelViewerTopComponent extends CloneableTopComponent {
     /** path to the icon used by the component and its open action */
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
     private static final String PREFERRED_ID = "GelViewerTopComponent";
+    private IGel gel = null;
 
     public GelViewerTopComponent() {
+        this.gel = Utilities.actionsGlobalContext().lookup(IGel.class);
         initComponents();
         setName(NbBundle.getMessage(GelViewerTopComponent.class, "CTL_GelViewerTopComponent"));
         setToolTipText(NbBundle.getMessage(GelViewerTopComponent.class, "HINT_GelViewerTopComponent"));

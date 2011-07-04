@@ -12,6 +12,7 @@ import java.util.List;
 import javax.swing.JComponent;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
@@ -49,41 +50,23 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
             projectDirectoryFile.mkdirs();
             //build project structure
             ProjectBuilder pb = new ProjectBuilder();
-            List<IProject> l = pb.buildProject(projectDataFile, gelDataFile, excelDataFile);
-            IProject p = l.iterator().next();
-            //System.out.println(p);//TEST: komplette Projekt Daten ausgeben (langsam)
-            System.out.println("Creating project in "+projectDirectoryFile);
-            IProteomicProjectFactory ippf = Lookup.getDefault().lookup(IProteomicProjectFactory.class);
-//            assert ippf!=null;
-//            assert projectDirectoryFile!=null;
-//            assert p!=null;
-            ippf.createProject(projectDirectoryFile,p);
-//            createProject(projectDirectoryFile,p);
-            //pp.setProjectData(p);
-            //Projekt öffnen
-//            OpenProjects op = OpenProjects.getDefault();
-//            op.open(new Project[]{pp}, false, true);
+            try {
+                List<IProject> l = pb.buildProject(projectDataFile, gelDataFile, excelDataFile);
+                IProject p = l.iterator().next();
+                //System.out.println(p);//TEST: komplette Projekt Daten ausgeben (langsam)
+                System.out.println("Creating project in " + projectDirectoryFile);
+                IProteomicProjectFactory ippf = Lookup.getDefault().lookup(IProteomicProjectFactory.class);
+                ippf.createProject(projectDirectoryFile, p);
+            } catch (IllegalArgumentException iae) {
+                NotifyDescriptor.Exception e = new NotifyDescriptor.Exception(iae,iae.getMessage());
+                DialogDisplayer.getDefault().notify(e);
+                projectDirectoryFile.delete();
+                return null;
+            }
             return projectDirectoryFile;
         }
         return null;
     }
-
-//    private IProteomicProject createProject(File projdir, IProject project) {
-//        ProteomicProject proproject = null;
-//        try {
-//            proproject = new ProteomicProject();
-//            proproject.activate(new File(projdir, ProteomikProjectFactory.PROJECT_FILE).toURI().toURL());
-//           // proproject.store(project);
-//            //IProject ipr = proproject.retrieve(IProject.class);
-//            //System.out.println("My funky Project: "+ipr.toString());
-//            proproject.setProjectData(project);
-////            System.out.println("Gel groups: " + proproject.getGelGroups());
-//            proproject.close();
-//        } catch (MalformedURLException ex) {
-//            Exceptions.printStackTrace(ex);
-//        }
-//        return proproject;
-//    }
 
     /**
      * Initialize panels representing individual wizard's steps and sets
@@ -139,5 +122,4 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
     protected boolean asynchronous() {
         return false;
     }
-
 }

@@ -64,7 +64,9 @@ public class SampleProjectWizardIterator implements WizardDescriptor./*Progress*
 //        }
 
         File parentFile = iwa.createProject(wiz);
-        resultSet.add(FileUtil.toFileObject(parentFile));
+        if(parentFile!=null) {
+            resultSet.add(FileUtil.toFileObject(parentFile));
+        }
 
         return resultSet;
     }

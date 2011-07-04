@@ -171,14 +171,11 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
                                 .addComponent(projectDataButton)))
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(gelDataTextField)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(gelDataButton))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(gelDataLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 359, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(gelDataLabel)
+                            .addComponent(gelDataTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(gelDataButton)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -255,7 +252,7 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
 
     private void gelDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gelDataButtonActionPerformed
         JFileChooser jfc = new JFileChooser(lastActiveDirectory);
-        jfc.setCurrentDirectory(new java.io.File("."));
+        //jfc.setCurrentDirectory(new java.io.File("."));
         jfc.setDialogTitle("Delta2D Gel Bilder XML Datei auswählen");
         int status = jfc.showOpenDialog(null);
         if (status == JFileChooser.APPROVE_OPTION) {
@@ -269,7 +266,7 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
 
     private void excelDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excelDataButtonActionPerformed
         JFileChooser jfc = new JFileChooser(lastActiveDirectory);
-        jfc.setCurrentDirectory(new java.io.File("."));
+        //jfc.setCurrentDirectory(new java.io.File("."));
         jfc.setDialogTitle("Delta2d Excel Export auswählen");
         int status = jfc.showOpenDialog(null);
         if (status == JFileChooser.APPROVE_OPTION) {
@@ -283,7 +280,7 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
 
     private void projectDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_projectDataButtonActionPerformed
         JFileChooser jfc = new JFileChooser(lastActiveDirectory);
-        jfc.setCurrentDirectory(new java.io.File("."));
+        //jfc.setCurrentDirectory(new java.io.File("."));
         jfc.setDialogTitle("Delta2D Projekt XML Datei auswählen");
         int status = jfc.showOpenDialog(null);
         if (status == JFileChooser.APPROVE_OPTION) {

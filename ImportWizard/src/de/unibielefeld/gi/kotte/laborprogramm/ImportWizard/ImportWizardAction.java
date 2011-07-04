@@ -1,26 +1,18 @@
 package de.unibielefeld.gi.kotte.laborprogramm.ImportWizard;
 
 import de.unibielefeld.gi.kotte.laborprogramm.dataImporter.ProjectBuilder;
-import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProjectFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Set;
 import javax.swing.JComponent;
-import javax.swing.event.ChangeListener;
-import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;
-import org.openide.WizardDescriptor.Panel;
-import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.actions.CallableSystemAction;
@@ -59,10 +51,14 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
             ProjectBuilder pb = new ProjectBuilder();
             List<IProject> l = pb.buildProject(projectDataFile, gelDataFile, excelDataFile);
             IProject p = l.iterator().next();
-            System.out.println(p);//TEST: komplette Projekt Daten ausgeben (langsam)
+            //System.out.println(p);//TEST: komplette Projekt Daten ausgeben (langsam)
             System.out.println("Creating project in "+projectDirectoryFile);
             IProteomicProjectFactory ippf = Lookup.getDefault().lookup(IProteomicProjectFactory.class);
-            IProteomicProject pp = ippf.createProject(projectDirectoryFile,p);
+//            assert ippf!=null;
+//            assert projectDirectoryFile!=null;
+//            assert p!=null;
+            ippf.createProject(projectDirectoryFile,p);
+//            createProject(projectDirectoryFile,p);
             //pp.setProjectData(p);
             //Projekt öffnen
 //            OpenProjects op = OpenProjects.getDefault();
@@ -71,6 +67,23 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
         }
         return null;
     }
+
+//    private IProteomicProject createProject(File projdir, IProject project) {
+//        ProteomicProject proproject = null;
+//        try {
+//            proproject = new ProteomicProject();
+//            proproject.activate(new File(projdir, ProteomikProjectFactory.PROJECT_FILE).toURI().toURL());
+//           // proproject.store(project);
+//            //IProject ipr = proproject.retrieve(IProject.class);
+//            //System.out.println("My funky Project: "+ipr.toString());
+//            proproject.setProjectData(project);
+////            System.out.println("Gel groups: " + proproject.getGelGroups());
+//            proproject.close();
+//        } catch (MalformedURLException ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
+//        return proproject;
+//    }
 
     /**
      * Initialize panels representing individual wizard's steps and sets

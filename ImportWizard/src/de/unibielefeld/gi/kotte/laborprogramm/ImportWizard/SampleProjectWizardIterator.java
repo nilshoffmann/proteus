@@ -1,45 +1,26 @@
 package de.unibielefeld.gi.kotte.laborprogramm.ImportWizard;
 
-import java.awt.Component;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.MessageFormat;
-import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
-import org.netbeans.api.project.ProjectManager;
-import org.netbeans.spi.project.ui.support.ProjectChooser;
-import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
-import org.openide.util.NbBundle;
-import org.openide.xml.XMLUtil;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
 public class SampleProjectWizardIterator implements WizardDescriptor./*Progress*/InstantiatingIterator {
 
     private int index;
     private WizardDescriptor.Panel[] panels;
     private WizardDescriptor wiz;
-    private ImportWizardAction iwa;
+    private static final ImportWizardAction iwa = new ImportWizardAction();
 
-    public SampleProjectWizardIterator() {
-        iwa = new ImportWizardAction();
-    }
+//    public SampleProjectWizardIterator() {
+//        iwa = new ImportWizardAction();
+//    }
 
     public static SampleProjectWizardIterator createIterator() {
         return new SampleProjectWizardIterator();

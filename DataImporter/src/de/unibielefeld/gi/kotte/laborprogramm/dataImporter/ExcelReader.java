@@ -18,10 +18,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,8 +39,8 @@ import org.openide.util.Lookup;
  */
 public class ExcelReader {
 
-    List<String> gelnames = null;
-    List<SpotDatum> data = null;
+    Map<Integer, String> gelnames = null;
+    Map<Integer, SpotDatum> data = null;
     boolean dummiesInitialized = false;
     ITechRepGelGroup trggDummy = null;
     IBioRepGelGroup brggDummy = null;
@@ -53,8 +52,8 @@ public class ExcelReader {
     }
 
     public ExcelReader() {
-        gelnames = new ArrayList<String>();
-        data = new ArrayList<SpotDatum>();
+        gelnames = new LinkedHashMap<Integer, String>();
+        data = new LinkedHashMap<Integer, SpotDatum>();
     }
 
     private IGel getGelByName(String gelname, IProject project) {
@@ -69,18 +68,19 @@ public class ExcelReader {
                 }
             }
         }
-        //by now we should have found the gel
-        Logger.getLogger(ExcelReader.class.getName()).log(Level.WARNING, "ExcelReader creates gel ''{0}''.", gelname);
-        //if not, set up a new gel
-        IGel gel = Lookup.getDefault().lookup(IGelFactory.class).createGel();
-        gel.setName(gelname);
-        //add new gel to project using dummy gel groups
-        initDummies();
-        if (!project.getGelGroups().contains(this.lggDummy)) {
-            project.addGelGroup(this.lggDummy);
-        }
-        this.trggDummy.addGel(gel);
-        return gel;
+        throw new IllegalArgumentException("Mismatch of gel name defined in project! Please check for missing/extraneous gels in Delta2D project and spot export (.xlsx)!");
+//        //by now we should have found the gel
+//        Logger.getLogger(ExcelReader.class.getName()).log(Level.WARNING, "ExcelReader creates gel ''{0}''.", gelname);
+//        //if not, set up a new gel
+//        IGel gel = Lookup.getDefault().lookup(IGelFactory.class).createGel();
+//        gel.setName(gelname);
+//        //add new gel to project using dummy gel groups
+//        initDummies();
+//        if (!project.getGelGroups().contains(this.lggDummy)) {
+//            project.addGelGroup(this.lggDummy);
+//        }
+//        this.trggDummy.addGel(gel);
+//        return gel;
     }
 
     private void initDummies() {
@@ -148,8 +148,12 @@ public class ExcelReader {
     }
 
     private void registerColumnInformation(int column, String gelname, SpotDatum datum) {
-        gelnames.add(column, gelname);
-        data.add(column, datum);
+        assert gelname != null;
+        assert datum != null;
+//        Integer idx = column;
+        System.err.println("Adding column info. idx:" + column + " gel:" + gelname + " type:" + datum);
+        gelnames.put(column, gelname);
+        data.put(column, datum);
     }
 
     /**
@@ -182,48 +186,50 @@ public class ExcelReader {
             Iterator<Cell> iterC = iterR.next().iterator();
             while (iterC.hasNext()) { //read cells in row
                 Cell cell = iterC.next();
-                SpotDatum datum = data.get(cell.getColumnIndex());
+                if (data.containsKey(cell.getColumnIndex())) {
+                    SpotDatum datum = data.get(cell.getColumnIndex());
 
-                //get spot from hash or create new one if it's not there
-                ISpot spot = spotMap.get(gelnames.get(cell.getColumnIndex()));
-                if (spot == null) {
-                    //create spot
-                    spot = (Lookup.getDefault().lookup(ISpotFactory.class)).createSpot();
-                    spotMap.put(gelnames.get(cell.getColumnIndex()), spot);
-                    //add spot to group
-                    spot.setGroup(group);
-                    group.addSpot(spot);
-                    //add spot to gel
-                    IGel gel = getGelByName(gelnames.get(cell.getColumnIndex()), project);
-                    gel.addSpot(spot);
-                    spot.setGel(gel);
-                }
-                assert (spot != null);
+                    //get spot from hash or create new one if it's not there
+                    ISpot spot = spotMap.get(gelnames.get(cell.getColumnIndex()));
+                    if (spot == null) {
+                        //create spot
+                        spot = (Lookup.getDefault().lookup(ISpotFactory.class)).createSpot();
+                        spotMap.put(gelnames.get(cell.getColumnIndex()), spot);
+                        //add spot to group
+                        spot.setGroup(group);
+                        group.addSpot(spot);
+                        //add spot to gel
+                        IGel gel = getGelByName(gelnames.get(cell.getColumnIndex()), project);
+                        gel.addSpot(spot);
+                        spot.setGel(gel);
+                    }
+                    assert (spot != null);
 
-                switch (datum) {
-                    case NORM_VOLUME: //don't read volumes
-                        break;
-                    case GREY_VOLUME: //don't read volumes
-                        break;
-                    case SPOTID:
-                        assert (cell.getCellType() == Cell.CELL_TYPE_NUMERIC);
-                        spot.setNumber((int) cell.getNumericCellValue());
-                        break;
-                    case LABEL:
-                        assert (cell.getCellType() == Cell.CELL_TYPE_STRING);
-                        spot.setLabel(cell.getStringCellValue());
-                        break;
-                    case XPOS:
-                        assert (cell.getCellType() == Cell.CELL_TYPE_NUMERIC);
-                        spot.setPosX(cell.getNumericCellValue());
-                        break;
-                    case YPOS:
-                        assert (cell.getCellType() == Cell.CELL_TYPE_NUMERIC);
-                        spot.setPosY(cell.getNumericCellValue());
-                        break;
-                    default:
+                    switch (datum) {
+                        case NORM_VOLUME: //don't read volumes
+                            break;
+                        case GREY_VOLUME: //don't read volumes
+                            break;
+                        case SPOTID:
+                            assert (cell.getCellType() == Cell.CELL_TYPE_NUMERIC);
+                            spot.setNumber((int) cell.getNumericCellValue());
+                            break;
+                        case LABEL:
+                            assert (cell.getCellType() == Cell.CELL_TYPE_STRING);
+                            spot.setLabel(cell.getStringCellValue());
+                            break;
+                        case XPOS:
+                            assert (cell.getCellType() == Cell.CELL_TYPE_NUMERIC);
+                            spot.setPosX(cell.getNumericCellValue());
+                            break;
+                        case YPOS:
+                            assert (cell.getCellType() == Cell.CELL_TYPE_NUMERIC);
+                            spot.setPosY(cell.getNumericCellValue());
+                            break;
+                        default:
 
-                        break;
+                            break;
+                    }
                 }
             }
             //set spot group number to spot ID of first member

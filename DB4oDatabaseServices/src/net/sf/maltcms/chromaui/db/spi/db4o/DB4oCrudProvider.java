@@ -9,6 +9,9 @@ import com.db4o.EmbeddedObjectContainer;
 import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.reflect.jdk.JdkReflector;
 import java.io.File;
+import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.sf.maltcms.chromaui.db.api.ICredentials;
 import net.sf.maltcms.chromaui.db.api.ICrudProvider;
 import net.sf.maltcms.chromaui.db.api.ICrudSession;
@@ -24,6 +27,7 @@ public final class DB4oCrudProvider implements ICrudProvider {
     private final File projectDBLocation;
     private final ICredentials ic;
     private final ClassLoader domainClassLoader;
+    private HashSet<ICrudSession> sessionCache;
 
     /**
      * Throws IllegalArgumentException if either projectDBFile or ic are null.
@@ -44,7 +48,7 @@ public final class DB4oCrudProvider implements ICrudProvider {
         this.ic = ic;
         System.out.println("Using crud provider on database file: " + projectDBFile.getAbsolutePath());
         projectDBLocation = projectDBFile;
-        System.out.println("Using class loader: "+domainClassLoader);
+        System.out.println("Using class loader: " + domainClassLoader);
         this.domainClassLoader = domainClassLoader;
     }
 
@@ -56,15 +60,26 @@ public final class DB4oCrudProvider implements ICrudProvider {
             EmbeddedConfiguration ec = com.db4o.Db4oEmbedded.newConfiguration();
             ec.common().activationDepth(Integer.MAX_VALUE);
             ec.common().reflectWith(new JdkReflector(this.domainClassLoader));
-            eoc = Db4oEmbedded.openFile(ec,projectDBLocation.getAbsolutePath());
+//            ec.common().add(new TransparentActivationSupport());
+            eoc = Db4oEmbedded.openFile(ec, projectDBLocation.getAbsolutePath());
+            sessionCache = new HashSet<ICrudSession>();
         }
     }
 
     @Override
     public void close() {
         authenticate();
+        for (ICrudSession ics : sessionCache) {
+            try {
+                ics.close();
+            } catch (Exception e) {
+                Logger.getLogger(getClass().getName()).log(Level.WARNING, "Caught exception while trying to close crud session: {0}", e);
+            }
+        }
+        sessionCache = new HashSet<ICrudSession>();
         if (eoc != null) {
             eoc.close();
+            eoc = null;
         }
     }
 
@@ -76,7 +91,9 @@ public final class DB4oCrudProvider implements ICrudProvider {
 
     @Override
     public final ICrudSession createSession() {
-        authenticate();
-        return new DB4oCrudSession(ic, eoc);
+        open();
+        ICrudSession ics = new DB4oCrudSession(ic, eoc);
+        sessionCache.add(ics);
+        return ics;
     }
 }

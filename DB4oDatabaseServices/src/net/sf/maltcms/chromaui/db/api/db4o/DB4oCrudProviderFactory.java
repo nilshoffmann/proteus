@@ -13,6 +13,7 @@ import net.sf.maltcms.chromaui.db.api.ICredentials;
 import net.sf.maltcms.chromaui.db.api.ICrudProvider;
 import net.sf.maltcms.chromaui.db.api.ICrudProviderFactory;
 import net.sf.maltcms.chromaui.db.spi.db4o.DB4oCrudProvider;
+import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -34,6 +35,11 @@ public class DB4oCrudProviderFactory implements ICrudProviderFactory {
                     log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    @Override
+    public ICrudProvider getCrudProvider(URL databaseLocation, ICredentials ic) {
+        return getCrudProvider(databaseLocation, ic, Lookup.getDefault().lookup(ClassLoader.class));
     }
     
 }

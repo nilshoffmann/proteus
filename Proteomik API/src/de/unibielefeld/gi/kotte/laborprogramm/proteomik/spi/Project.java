@@ -127,42 +127,42 @@ public class Project implements IProject {
     @Override
     public String toString() {
         String str = "project '" + name + "' from " + owner + ": " + description;
-        if (!gelgroups.isEmpty()) {
-            ILogicalGelGroup group = null;
-            for (Iterator<ILogicalGelGroup> it = gelgroups.iterator(); it.hasNext();) {
-                group = it.next();
-                str += "\n  > " + group.toString();
-            }
-        } else {
-            str += "\n  no logical gel groups";
-        }
-        if (!plates384.isEmpty()) {
-            IPlate384 plate = null;
-            for (Iterator<IPlate384> it = plates384.iterator(); it.hasNext();) {
-                plate = it.next();
-                str += "\n  > " + plate.toString();
-            }
-        } else {
-            str += "\n  no 384 well plates";
-        }
-        if (!plates96.isEmpty()) {
-            IPlate96 plate = null;
-            for (Iterator<IPlate96> it = plates96.iterator(); it.hasNext();) {
-                plate = it.next();
-                str += "\n  > " + plate.toString();
-            }
-        } else {
-            str += "\n  no 96 well plates";
-        }
-        if (!spotgroups.isEmpty()) {
-            ISpotGroup group = null;
-            for (Iterator<ISpotGroup> it = spotgroups.iterator(); it.hasNext();) {
-                group = it.next();
-                str += "\n  > " + group.toString();
-            }
-        } else {
-            str += "\n  no spot groups";
-        }
+//        if (!gelgroups.isEmpty()) {
+//            ILogicalGelGroup group = null;
+//            for (Iterator<ILogicalGelGroup> it = gelgroups.iterator(); it.hasNext();) {
+//                group = it.next();
+//                str += "\n  > " + group.toString();
+//            }
+//        } else {
+//            str += "\n  no logical gel groups";
+//        }
+//        if (!plates384.isEmpty()) {
+//            IPlate384 plate = null;
+//            for (Iterator<IPlate384> it = plates384.iterator(); it.hasNext();) {
+//                plate = it.next();
+//                str += "\n  > " + plate.toString();
+//            }
+//        } else {
+//            str += "\n  no 384 well plates";
+//        }
+//        if (!plates96.isEmpty()) {
+//            IPlate96 plate = null;
+//            for (Iterator<IPlate96> it = plates96.iterator(); it.hasNext();) {
+//                plate = it.next();
+//                str += "\n  > " + plate.toString();
+//            }
+//        } else {
+//            str += "\n  no 96 well plates";
+//        }
+//        if (!spotgroups.isEmpty()) {
+//            ISpotGroup group = null;
+//            for (Iterator<ISpotGroup> it = spotgroups.iterator(); it.hasNext();) {
+//                group = it.next();
+//                str += "\n  > " + group.toString();
+//            }
+//        } else {
+//            str += "\n  no spot groups";
+//        }
         return str;
     }
 }

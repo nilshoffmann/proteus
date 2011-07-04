@@ -85,15 +85,15 @@ public class Gel implements IGel {
     @Override
     public String toString() {
         String str = "gel '" + name + "' from file '" + filename + "': " + description;
-        if (!spots.isEmpty()) {
-            ISpot spot = null;
-            for (Iterator<ISpot> it = spots.iterator(); it.hasNext();) {
-                spot = it.next();
-                str += "\n          > " + spot.toString();
-            }
-        } else {
-            str += "\n          no spots";
-        }
+//        if (!spots.isEmpty()) {
+//            ISpot spot = null;
+//            for (Iterator<ISpot> it = spots.iterator(); it.hasNext();) {
+//                spot = it.next();
+//                str += "\n          > " + spot.toString();
+//            }
+//        } else {
+//            str += "\n          no spots";
+//        }
         return str;
     }
 }

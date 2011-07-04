@@ -3,6 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
 import java.util.List;
+import java.util.logging.Logger;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
 
@@ -34,7 +35,10 @@ class LogicalGelGroupChildNodeFactory extends ChildFactory<Object> {
 
     @Override
     protected Node createNodeForKey(Object key) {
-        assert (key.getClass() == IBioRepGelGroup.class);
-        return new BioRepGelGroupNode((IBioRepGelGroup) key);
+        //Logger.getLogger(LogicalGelGroupChildNodeFactory.class.getName()).info("Creating node for key " + key.getClass().getName());
+        if (key instanceof IBioRepGelGroup) {
+            return new BioRepGelGroupNode((IBioRepGelGroup) key);
+        }
+        return Node.EMPTY;
     }
 }

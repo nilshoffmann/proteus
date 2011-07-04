@@ -11,7 +11,9 @@ import org.openide.nodes.Children;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
-import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -19,17 +21,37 @@ import org.openide.util.lookup.Lookups;
  */
 public class ProjectNode extends AbstractNode {
 
-    private IProteomicProject ipp;
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/ProjectIcon.png";
+    private final InstanceContent lookupContents;
 
-    public ProjectNode(IProteomicProject ipp, Lookup lkp) {
-        super(Children.create(new ProjectChildNodeFactory(ipp), true), lkp);
-        this.ipp = ipp;
+    public ProjectNode() {
+        this(new InstanceContent());
     }
 
+    private ProjectNode(Lookup lkp) {
+        this(new InstanceContent(),lkp);
+    }
+
+    private ProjectNode(InstanceContent ic) {
+        super(Children.LEAF, new AbstractLookup(ic));
+        this.lookupContents = ic;
+    }
+
+    private ProjectNode(InstanceContent ic, Lookup lkp) {
+        super(Children.LEAF, new ProxyLookup(lkp,new AbstractLookup(ic)));
+        this.lookupContents = ic;
+    }
+
+    public ProjectNode(IProteomicProject ipp, Lookup lkp) {
+        this(lkp);
+        setChildren(Children.create(new ProjectChildNodeFactory(ipp), true));
+        lookupContents.add(ipp);
+    }
+    
     public ProjectNode(IProteomicProject ipp) {
-        super(Children.create(new ProjectChildNodeFactory(ipp), true), Lookups.singleton(ipp));
-        this.ipp = ipp;
+        this();
+        setChildren(Children.create(new ProjectChildNodeFactory(ipp), true));
+        lookupContents.add(ipp);
     }
 
     @Override
@@ -58,6 +80,6 @@ public class ProjectNode extends AbstractNode {
 
     @Override
     public String getDisplayName() {
-        return ipp.getProjectDirectory().getName();
+        return getLookup().lookup(IProteomicProject.class).getProjectDirectory().getName();
     }
 }

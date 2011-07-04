@@ -1,11 +1,20 @@
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 
+import de.unibielefeld.gi.kotte.laborprogramm.project.api.cookies.IGelOpenCookie;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import java.awt.Image;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import javax.swing.Action;
+import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.Utilities;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -13,17 +22,15 @@ import org.openide.util.Lookup;
  */
 public class GelNode extends AbstractNode {
 
-    private IGel gel;
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/GelIcon.png";
 
     public GelNode(IGel gel, Lookup lkp) {
-        super(Children.LEAF);
-        this.gel = gel;
+        super(Children.LEAF,new ProxyLookup(lkp,Lookups.fixed(gel)));
+        getCookieSet().add(Lookup.getDefault().lookup(IGelOpenCookie.class));
     }
 
     public GelNode(IGel gel) {
-        super(Children.LEAF);
-        this.gel = gel;
+        super(Children.LEAF,Lookups.fixed(gel));
     }
 
     @Override
@@ -38,6 +45,16 @@ public class GelNode extends AbstractNode {
 
     @Override
     public String getDisplayName() {
-        return gel.getName();
+        return getLookup().lookup(IGel.class).getName();
+    }
+
+    @Override
+    public Action[] getActions(boolean arg0) {
+        Action[] nodeActions = new Action[7];
+        nodeActions[0] = CommonProjectActions.newFileAction();
+        List<? extends Action> actions = Utilities.actionsForPath("/Actions/ProteomikLaborProgramm/"+getClass().getSimpleName()+"/");
+        List<Action> allActions = new LinkedList<Action>(actions);
+        allActions.addAll(Arrays.asList(nodeActions));
+        return allActions.toArray(new Action[allActions.size()]);
     }
 }

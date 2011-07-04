@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
+    <folder name="Actions">
+        <folder name="Gel">
+            <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-GelViewOpenAction.instance">
+                <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
+                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.Bundle#CTL_GelViewOpenAction"/>
+                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.GelViewOpenAction"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+                <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
+                <attr name="type" stringvalue="IGelOpenCookie"/>
+            </file>
+        </folder>
+    </folder>
     <folder name="Projects">
         <folder name="ProteomikLaborProgramm">
             <folder name="Actions"/>

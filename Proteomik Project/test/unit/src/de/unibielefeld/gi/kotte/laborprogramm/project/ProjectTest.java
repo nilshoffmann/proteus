@@ -1,5 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.project;
 
+import org.netbeans.spi.project.ProjectFactory;
 import java.util.Arrays;
 import java.net.MalformedURLException;
 import net.sf.maltcms.chromaui.db.api.ICrudProviderFactory;
@@ -39,6 +40,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96Fact
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProjectFactory;
+import de.unibielefeld.gi.kotte.laborprogramm.project.spi.factory.ProteomicProjectFactory2;
 import de.unibielefeld.gi.kotte.laborprogramm.project.spi.factory.ProteomikProjectFactory;
 import java.io.File;
 import net.sf.maltcms.chromaui.db.api.NoAuthCredentials;
@@ -123,7 +125,7 @@ public class ProjectTest extends TestCase {
     public void testProject() {
         //set up project in test directory
         //IProteomicProjectFactory ippf = Lookup.getDefault().lookup(IProteomicProjectFactory.class);
-        IProteomicProjectFactory ippf = new ProteomikProjectFactory();
+        ProjectFactory ippf = new ProteomikProjectFactory();
         assertNotNull(ippf);
         IProject testProject = createTestProject();
         File tmpDir = new File(System.getProperty("java.io.tmpdir"));
@@ -133,7 +135,8 @@ public class ProjectTest extends TestCase {
         }
         //tmpProjectDir.deleteOnExit();
         tmpProjectDir.mkdirs();
-        IProteomicProject ipp = ippf.createProject(tmpProjectDir, testProject);
+        IProteomicProjectFactory ippf2 = new ProteomicProjectFactory2();
+        IProteomicProject ipp = ippf2.createProject(tmpProjectDir, testProject);
         String str1 = null;
         try {
             ipp = (IProteomicProject) ippf.loadProject(FileUtil.toFileObject(tmpProjectDir), new ProjectState() {
@@ -158,7 +161,8 @@ public class ProjectTest extends TestCase {
 //        } catch (MalformedURLException ex) {
 //            Exceptions.printStackTrace(ex);
 //        }
-        DB4oCrudProvider instance = new DB4oCrudProvider(new File(tmpProjectDir,ProteomikProjectFactory.PROJECT_FILE), new NoAuthCredentials(), this.getClass().getClassLoader());
+        DB4oCrudProvider instance = new DB4oCrudProvider(new File(tmpProjectDir,ProteomikProjectFactory.PROJECT_FILE), new NoAuthCredentials(),Thread.currentThread().getContextClassLoader());
+        instance.open();
         ICrudSession ics = instance.createSession();
         ics.open();
         Collection<IProject> projects = ics.retrieve(IProject.class);
@@ -168,6 +172,7 @@ public class ProjectTest extends TestCase {
             Logger.getLogger(getClass().getName()).log(Level.INFO,"Retrieved project {0}",proj);
         }
         ics.close();
+        instance.close();
         try {
             IProteomicProject ipp2 = (IProteomicProject) ippf.loadProject(FileUtil.toFileObject(tmpProjectDir), new ProjectState() {
 

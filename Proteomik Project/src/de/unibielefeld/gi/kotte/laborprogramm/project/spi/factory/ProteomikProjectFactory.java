@@ -20,7 +20,7 @@ import org.openide.util.Exceptions;
  */
 @org.openide.util.lookup.ServiceProvider(service = ProjectFactory.class)
 //@org.openide.util.lookup.ServiceProvider(service=IProteomicProjectFactory.class)
-public class ProteomikProjectFactory implements IProteomicProjectFactory {
+public class ProteomikProjectFactory implements ProjectFactory {
 
     public static final String PROJECT_FILE = "plop.ppr";
 
@@ -38,10 +38,9 @@ public class ProteomikProjectFactory implements IProteomicProjectFactory {
             //IProteomicProject ipf = Lookup.getDefault().lookup(IProteomicProject.class);
             ProteomicProject project = null;
             project = new ProteomicProject();
-            project.setDBLocation(fo.getFileObject(PROJECT_FILE).getURL());
             project.setProjectState(ps);
+            project.activate(fo.getFileObject(PROJECT_FILE).getURL());
             
-
             //IProteomicProject project = createProject(FileUtil.toFile(fo));
             //project.setState(ps);
             /**
@@ -60,21 +59,4 @@ public class ProteomikProjectFactory implements IProteomicProjectFactory {
 //        cp.getCrudProvider().
     }
 
-    @Override
-    public IProteomicProject createProject(File projdir, IProject project) {
-        ProteomicProject proproject = null;
-        try {
-            proproject = new ProteomicProject();
-            proproject.activate(new File(projdir, PROJECT_FILE).toURI().toURL());
-           // proproject.store(project);
-            //IProject ipr = proproject.retrieve(IProject.class);
-            //System.out.println("My funky Project: "+ipr.toString());
-            proproject.setProjectData(project);
-            System.out.println("Gel groups: " + proproject.getGelGroups());
-            proproject.close();
-        } catch (MalformedURLException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        return proproject;
-    }
 }

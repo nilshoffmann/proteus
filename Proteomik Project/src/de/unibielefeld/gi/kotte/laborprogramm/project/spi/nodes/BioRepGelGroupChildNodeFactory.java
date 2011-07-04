@@ -34,7 +34,9 @@ class BioRepGelGroupChildNodeFactory extends ChildFactory<Object> {
 
     @Override
     protected Node createNodeForKey(Object key) {
-        assert (key.getClass() == ITechRepGelGroup.class);
-        return new TechRepGelGroupNode((ITechRepGelGroup)key);
+        if (key instanceof ITechRepGelGroup) {
+            return new TechRepGelGroupNode((ITechRepGelGroup) key);
+        }
+        return Node.EMPTY;
     }
 }

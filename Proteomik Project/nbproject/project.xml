@@ -121,6 +121,7 @@
             </test-dependencies>
             <public-packages>
                 <package>de.unibielefeld.gi.kotte.laborprogramm.project.api</package>
+                <package>de.unibielefeld.gi.kotte.laborprogramm.project.api.cookies</package>
                 <package>de.unibielefeld.gi.kotte.laborprogramm.project.spi.factory</package>
             </public-packages>
         </data>

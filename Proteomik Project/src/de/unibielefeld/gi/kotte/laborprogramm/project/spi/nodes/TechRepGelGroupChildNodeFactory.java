@@ -34,7 +34,9 @@ class TechRepGelGroupChildNodeFactory extends ChildFactory<Object> {
 
     @Override
     protected Node createNodeForKey(Object key) {
-        assert (key.getClass() == IGel.class);
-        return new GelNode((IGel) key);
+        if (key instanceof IGel) {
+            return new GelNode((IGel) key);
+        }
+        return Node.EMPTY;
     }
 }

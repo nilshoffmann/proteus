@@ -33,7 +33,9 @@ class SpotGroupFolderChildNodeFactory extends ChildFactory<ISpotGroup> {
 
     @Override
     protected Node createNodeForKey(ISpotGroup key) {
-        assert (key.getClass() == ISpotGroup.class);
-        return new SpotGroupNode((ISpotGroup) key);
+        if (key instanceof ISpotGroup) {
+            return new SpotGroupNode((ISpotGroup) key);
+        }
+        return Node.EMPTY;
     }
 }

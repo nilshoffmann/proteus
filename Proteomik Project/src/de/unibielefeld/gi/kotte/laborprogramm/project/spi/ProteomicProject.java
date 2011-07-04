@@ -26,14 +26,13 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectState;
+import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
-import org.openide.util.RequestProcessor;
-import org.openide.util.RequestProcessor.Task;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -45,21 +44,14 @@ public class ProteomicProject implements IProteomicProject {
 
     ICrudProvider icp = null;
     ICrudSession ics = null;
-    File projectDatabaseFile = null;
     IProject activeProject = null;
     ProjectState state;
     Lookup lookup;
     URL dblocation = null;
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/ProjectIcon.png";
 
-    public void setDBLocation(URL dblocation) {
-        this.dblocation = dblocation;
-    }
-
     private ICrudSession getCrudSession() {
-        if(ics == null || icp == null) {
-            activate(this.dblocation);
-        }
+        openSession();
         return ics;
     }
 
@@ -76,36 +68,42 @@ public class ProteomicProject implements IProteomicProject {
 //        if (activeProject == null) {
 //            throw new NullPointerException("IProject instance was null!");
 //        }
-        if (icp != null) {
+//        if (icp != null) {
             getCrudSession().update(Arrays.asList(project));
-            //ics.close();
-        }
+//            //ics.close();
+//        }else{
+//            try{
+//                openSession();
+//            }catch(Exception e) {
+//                Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Exception: {0}", e.getLocalizedMessage());
+//            }
+//        }
         //}
         return getFromDB();
     }
 
     public synchronized void store(Object obj) {
-        if (icp != null) {
+        //if (icp != null) {
             //ICrudSession ics = icp.createSession();
             getCrudSession().update(Arrays.asList(obj));
             //ics.close();
-        }
+        //}
     }
 
     public synchronized <T> T retrieve(Class<T> c) {
-        if (icp != null) {
+        //if (icp != null) {
             //ICrudSession ics = icp.createSession();
             Collection<T> coll = getCrudSession().retrieve(c);
             T t = coll.iterator().next();
             //ics.close();
             return t;
-        }
-        return null;
+        //}
+        //return null;
     }
 
     private IProject getFromDB() {
         //Logger.getLogger(getClass().getName()).log(Level.INFO, "CrudProvider: {0}",icp);
-        if (icp != null && ics != null) {
+        //if (icp != null && ics != null) {
             //ICrudSession ics = icp.createSession();
             Collection<IProject> projects = getCrudSession().retrieve(IProject.class);
             if (projects.size() > 1) {
@@ -124,7 +122,7 @@ public class ProteomicProject implements IProteomicProject {
                 //ics.close();
             }
 //            return myProject;
-        }
+        //}
         Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Could not retrieve Project instance from database");
         return null;
     }
@@ -134,33 +132,22 @@ public class ProteomicProject implements IProteomicProject {
 //        if (this.icp != null) {
 //            this.icp.close();
 //        }
-        
-        try {
-            final File pdbf = new File(url.toURI());
-            this.projectDatabaseFile = pdbf;
-
-            Runnable r = new Runnable() {
-
-                @Override
-                public void run() {
-                    icp = Lookup.getDefault().lookup(ICrudProviderFactory.class).getCrudProvider(url, new NoAuthCredentials(), Thread.currentThread().getContextClassLoader());//new DB4oCrudProvider(pdbf, new NoAuthCredentials(), this.getClass().getClassLoader());
-                    Logger.getLogger(getClass().getName()).log(Level.INFO, "Using {0} as CRUD provider", icp.getClass().getName());
-                    icp.open();
-                    ics = icp.createSession();
-                    ics.open();
-                }
-            };
-            RequestProcessor rp = new RequestProcessor("Project Opener");
-            Task t = rp.post(r);
-            t.waitFinished();
-        } catch (URISyntaxException ex) {
-            Exceptions.printStackTrace(ex);
+        if (this.dblocation != null) {
+            closeSession();
+            //throw new IllegalArgumentException("Activate already called! DB location is: " + this.dblocation);
+        } else {
+            this.dblocation = url;
         }
     }
 
     @Override
     public FileObject getProjectDirectory() {
-        return FileUtil.toFileObject(projectDatabaseFile.getParentFile());
+        try {
+            return FileUtil.toFileObject(new File(dblocation.toURI()).getParentFile());
+        } catch (URISyntaxException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return null;
     }
 
     @Override
@@ -171,6 +158,7 @@ public class ProteomicProject implements IProteomicProject {
                     new ActionProviderImpl(), //Provides standard actions like Build and Clean
                     //                        new DemoDeleteOperation(),
                     //                        new DemoCopyOperation(this),
+                    new OpenCloseHook(),
                     new Info(), //Project information implementation
                     new ProteomicProjectLogicalView(this) //Logical view of project implementation
                     );
@@ -180,13 +168,50 @@ public class ProteomicProject implements IProteomicProject {
 
     @Override
     public void close() {
-        if(ics!=null)this.ics.close();
-        if(icp!=null)this.icp.close();
+        closeSession();
     }
 
     @Override
     public void setProjectState(ProjectState ps) {
         this.state = ps;
+    }
+
+    private void openSession() {
+        //closeSession();
+        if(icp==null) {
+            icp = Lookup.getDefault().lookup(ICrudProviderFactory.class).getCrudProvider(dblocation, new NoAuthCredentials());//new DB4oCrudProvider(pdbf, new NoAuthCredentials(), this.getClass().getClassLoader());
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "Using {0} as CRUD provider", icp.getClass().getName());
+//            icp.open();
+            ics = icp.createSession();
+            ics.open();
+        }
+        
+        
+    }
+
+    private void closeSession() {
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "Closing database for project ", dblocation);
+        if (ics != null) {
+            ics.close();
+            ics = null;
+        }
+        if (icp != null) {
+            icp.close();
+            icp = null;
+        }
+    }
+
+    private final class OpenCloseHook extends ProjectOpenedHook {
+
+        @Override
+        protected void projectOpened() {
+            openSession();
+        }
+
+        @Override
+        protected void projectClosed() {
+            closeSession();
+        }
     }
 
     private final class ActionProviderImpl implements ActionProvider {
@@ -375,8 +400,8 @@ public class ProteomicProject implements IProteomicProject {
         //activeProject = retrieve(IProject.class);
     }
 
-//    @Override
-//    public String toString() {
-//        return getFromDB().toString();
-//    }
+    @Override
+    public String toString() {
+        return getFromDB().toString();
+    }
 }

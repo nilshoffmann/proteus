@@ -3,10 +3,15 @@ package de.unibielefeld.gi.kotte.laborprogramm.ImportWizard;
 import de.unibielefeld.gi.kotte.laborprogramm.dataImporter.ProjectBuilder;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProjectFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroup;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
 import javax.swing.JComponent;
@@ -14,6 +19,9 @@ import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.WizardDescriptor;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.actions.CallableSystemAction;
@@ -52,11 +60,29 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
 
             //build project structure
             ProjectBuilder pb = new ProjectBuilder();
+            IProject p = null;
             try {
                 List<IProject> l = pb.buildProject(projectDataFile, gelDataFile, excelDataFile);
-                IProject p = l.iterator().next();
+                p = l.iterator().next();
                 //System.out.println(p);//TEST: komplette Projekt Daten ausgeben (langsam)
                 System.out.println("Creating project in " + projectDirectoryFile);
+                
+                //copy gel images
+                File gelDirectoryFile = new File(projectDirectoryFile.getAbsolutePath() + File.separator + "gels");
+                gelDirectoryFile.mkdir();
+                for (ILogicalGelGroup illgg : p.getGelGroups()) {
+                    for (IBioRepGelGroup ibrgg : illgg.getGelGroups()) {
+                        for (ITechRepGelGroup itrgg : ibrgg.getGelGroups()) {
+                            for (IGel gel : itrgg.getGels()) {
+                                String oldPath = baseDirectoryFile.getAbsolutePath() + File.separator + "gelImages" + File.separator + gel.getFilename();
+                                FileObject originalFileObject = FileUtil.toFileObject(new File(oldPath));
+                                FileObject gelFileObject = FileUtil.copyFile(originalFileObject, FileUtil.toFileObject(gelDirectoryFile), gel.getName());
+                                gel.setFilename(gelFileObject.getPath());
+                            }
+                        }
+                    }
+                }
+                //create Project
                 IProteomicProjectFactory ippf = Lookup.getDefault().lookup(IProteomicProjectFactory.class);
                 ippf.createProject(projectDirectoryFile, p);
             } catch (IllegalArgumentException iae) {
@@ -64,6 +90,10 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
                 DialogDisplayer.getDefault().notify(e);
                 projectDirectoryFile.delete();
                 return null;
+            } catch (IOException ioe) {
+                //FIXME Fehlerbehandlung
+                //die IOException wird geworfen von FileUtil.copyFile()
+                ioe.printStackTrace();
             }
             return projectDirectoryFile;
         }

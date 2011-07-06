@@ -40,14 +40,16 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
     protected File createProject(WizardDescriptor wizardDescriptor) {
         boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
         if (!cancelled) {
-            //get files from descriptor...
+            //get files
+            File projectParentDirectoryFile = (File) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_PROJECT_PARENT_DIRECTORY);
+            String projectName = (String) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_PROJECT_NAME);
+            File projectDirectoryFile = new File(projectParentDirectoryFile, projectName);
+            projectDirectoryFile.mkdir();
             File baseDirectoryFile = (File) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_BASE_DIRECTORY);
-            File projectDirectoryFile = (File) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_PROJECT_DIRECTORY);
-            File projectDataFile = (File) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_PROJECT_DATA_FILE);
+            File projectDataFile = new File(baseDirectoryFile.getAbsolutePath() + File.separator + "projects" + File.separator + "projects.xml");
+            File gelDataFile = new File(baseDirectoryFile.getAbsolutePath() + File.separator + "gelImages" + File.separator + "gelImages.xml");
             File excelDataFile = (File) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_EXCEL_DATA_FILE);
-            File gelDataFile = (File) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_GEL_DATA_FILE);
-            //create project directory
-            projectDirectoryFile.mkdirs();
+
             //build project structure
             ProjectBuilder pb = new ProjectBuilder();
             try {

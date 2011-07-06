@@ -15,11 +15,6 @@ import org.openide.util.HelpCtx;
 
 public class ImportWizardPanel1 implements WizardDescriptor.ValidatingPanel, PropertyChangeListener {
 
-    private File baseDirectoryFile;
-    private File projectDirectoryFile;
-    private File projectDataFile;
-    private File excelDataFile;
-    private File gelDataFile;
     private WizardDescriptor descriptor;
     private ImportVisualPanel1 component;
     private final Set<ChangeListener> listeners = new HashSet<ChangeListener>(1);
@@ -46,38 +41,37 @@ public class ImportWizardPanel1 implements WizardDescriptor.ValidatingPanel, Pro
         if (descriptor == null) {
             return false;
         }
+        //Infomeldungen setzen fuer noch nicht eingegebene Werte
         if (component.getProjectName().isEmpty()) {
             descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Projektnamen angeben.");
             return false;
         }
-
-        baseDirectoryFile = component.getBaseDirectoryFile();
-        projectDirectoryFile = component.getProjectDirectoryFile();
-        projectDataFile = component.getProjectDataFile();
-        excelDataFile = component.getExcelDataFile();
-        gelDataFile = component.getGelDataFile();
-
+        if (component.getProjectParentDirectoryFile() == null) {
+            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Verzeichnis zum anlegen des Projekts auswählen.");
+            return false;
+        }
+        File baseDirectoryFile = component.getBaseDirectoryFile();
         if (baseDirectoryFile == null) {
-            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Basisverzeichnis auswaehlen.");
+            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Basisverzeichnis auswählen.");
             return false;
         }
-//        if (projectDirectoryFile == null) {
-//            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Projektverzeichnis auswaehlen.");
-//            return false;
-//        }
-        if (gelDataFile == null) {
-            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Gel XML-Datei auswaehlen.");
+        String projectDataPath = baseDirectoryFile.getAbsolutePath() + File.separator + "projects" + File.separator + "projects.xml";
+        File projectDataFile = new File(projectDataPath);
+        if (!projectDataFile.exists()) {
+            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, projectDataPath + " existiert nicht.");
             return false;
         }
-        if (projectDataFile == null) {
-            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Projekt XML-Datei auswaehlen.");
+        String gelDataPath = baseDirectoryFile.getAbsolutePath() + File.separator + "gelImages" + File.separator + "gelImages.xml";
+        File gelDataFile = new File(gelDataPath);
+        if (!gelDataFile.exists()) {
+            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, gelDataPath + " existiert nicht.");
             return false;
         }
-        if (excelDataFile == null) {
-            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Excel Export Datei auswaehlen.");
+        if (component.getExcelDataFile() == null) {
+            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Excel Export Datei auswählen.");
             return false;
         }
-        //wenn kein Fehler mehr auftritt, Fehlermeldung zuruecksetzen
+        //wenn Werte vollstaendig, Infomeldung zuruecksetzen
         descriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, null);
         return true;
     }
@@ -115,10 +109,9 @@ public class ImportWizardPanel1 implements WizardDescriptor.ValidatingPanel, Pro
     @Override
     public void storeSettings(Object settings) {
         ((WizardDescriptor) settings).putProperty(ImportVisualPanel1.PROPERTY_BASE_DIRECTORY, ((ImportVisualPanel1) getComponent()).getBaseDirectoryFile());
-        ((WizardDescriptor) settings).putProperty(ImportVisualPanel1.PROPERTY_PROJECT_DIRECTORY, ((ImportVisualPanel1) getComponent()).getProjectDirectoryFile());
-        ((WizardDescriptor) settings).putProperty(ImportVisualPanel1.PROPERTY_PROJECT_DATA_FILE, ((ImportVisualPanel1) getComponent()).getProjectDataFile());
+        ((WizardDescriptor) settings).putProperty(ImportVisualPanel1.PROPERTY_PROJECT_PARENT_DIRECTORY, ((ImportVisualPanel1) getComponent()).getProjectParentDirectoryFile());
+        ((WizardDescriptor) settings).putProperty(ImportVisualPanel1.PROPERTY_PROJECT_NAME, ((ImportVisualPanel1) getComponent()).getProjectName());
         ((WizardDescriptor) settings).putProperty(ImportVisualPanel1.PROPERTY_EXCEL_DATA_FILE, ((ImportVisualPanel1) getComponent()).getExcelDataFile());
-        ((WizardDescriptor) settings).putProperty(ImportVisualPanel1.PROPERTY_GEL_DATA_FILE, ((ImportVisualPanel1) getComponent()).getGelDataFile());
     }
 
     @Override

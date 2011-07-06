@@ -94,9 +94,8 @@ public class ProjectBuilder {
                     Logger.getLogger(ProjectBuilder.class.getName()).log(Level.WARNING, "Failed to open Gel {}", gi.getGelImageId().getId());
                 } else {
                     gel.setName(gi.getName());
-                    //don't use SourceImage attribute (absolute windows path)
-                    //don't set filename here / filename is set by the Project
-                    //gel.setFilename(gi.getSourceImage());
+                    //don't use gi.getSourceImage() (absolute windows path)
+                    gel.setFilename(gi.getGelImageId().getId());
                 }
             }
 

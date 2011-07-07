@@ -86,14 +86,11 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
                 IProteomicProjectFactory ippf = Lookup.getDefault().lookup(IProteomicProjectFactory.class);
                 ippf.createProject(projectDirectoryFile, p);
             } catch (IllegalArgumentException iae) {
-                NotifyDescriptor.Exception e = new NotifyDescriptor.Exception(iae,iae.getMessage());
-                DialogDisplayer.getDefault().notify(e);
+                Exceptions.printStackTrace(iae);
                 projectDirectoryFile.delete();
                 return null;
             } catch (IOException ioe) {
-                //FIXME Fehlerbehandlung
-                //die IOException wird geworfen von FileUtil.copyFile()
-                ioe.printStackTrace();
+                Exceptions.printStackTrace(ioe);
             }
             return projectDirectoryFile;
         }

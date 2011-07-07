@@ -1,6 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPropertyChangeSource;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  *
  * @author kotte
  */
-public interface ISpotGroup {
+public interface ISpotGroup extends IPropertyChangeSource {
 
     public String getLabel();
 

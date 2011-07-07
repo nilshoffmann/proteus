@@ -4,7 +4,7 @@
  */
 package de.unibielefeld.gi.kotte.laborprogramm.debug;
 
-import java.util.Vector;
+import de.unibielefeld.gi.kotte.laborprogramm.centralLookup.CentralLookup;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import org.openide.util.LookupEvent;
@@ -30,8 +30,10 @@ public final class LookupMonitorTopComponent extends TopComponent implements Loo
     private static final String PREFERRED_ID = "LookupMonitorTopComponent";
 
     private Result<Object> r = null;
+    private Result<Object> centralLookupResult = null;
 
     private DefaultListModel dlm = new DefaultListModel();
+    private DefaultListModel dlm2 = new DefaultListModel();
 
     public LookupMonitorTopComponent() {
         initComponents();
@@ -51,6 +53,10 @@ public final class LookupMonitorTopComponent extends TopComponent implements Loo
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jList2 = new javax.swing.JList();
+        jLabel2 = new javax.swing.JLabel();
 
         jList1.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -59,27 +65,52 @@ public final class LookupMonitorTopComponent extends TopComponent implements Loo
         });
         jScrollPane1.setViewportView(jList1);
 
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(LookupMonitorTopComponent.class, "LookupMonitorTopComponent.jLabel1.text")); // NOI18N
+
+        jList2.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(jList2);
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(LookupMonitorTopComponent.class, "LookupMonitorTopComponent.jLabel2.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                    .addComponent(jLabel1)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                    .addComponent(jLabel2))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JList jList1;
+    private javax.swing.JList jList2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
     /**
      * Gets default instance. Do not use directly: reserved for *.settings files only,
@@ -121,6 +152,8 @@ public final class LookupMonitorTopComponent extends TopComponent implements Loo
     public void componentOpened() {
         r = Utilities.actionsGlobalContext().lookupResult(Object.class);
         r.addLookupListener(this);
+        centralLookupResult = CentralLookup.getDefault().lookupResult(Object.class);
+        centralLookupResult.addLookupListener(this);
     }
 
     @Override
@@ -160,5 +193,11 @@ public final class LookupMonitorTopComponent extends TopComponent implements Loo
             dlm.addElement(obj);
         }
         jList1.setModel(dlm);
+
+        dlm2 = new DefaultListModel();
+        for(Object obj:centralLookupResult.allInstances()) {
+            dlm2.addElement(obj);
+        }
+        jList2.setModel(dlm2);
     }
 }

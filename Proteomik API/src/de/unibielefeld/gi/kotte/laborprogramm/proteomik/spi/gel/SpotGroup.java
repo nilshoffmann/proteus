@@ -4,6 +4,8 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import java.util.List;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -13,6 +15,32 @@ import java.util.Iterator;
  * @author kotte
  */
 public class SpotGroup implements ISpotGroup {
+
+    /**
+     * PropertyChangeSupport ala JavaBeans(tm)
+     * Not persisted!
+     */
+    private transient PropertyChangeSupport pcs = null;
+
+    @Override
+    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
+        getPropertyChangeSupport().removePropertyChangeListener(listener);
+    }
+
+    @Override
+    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
+        getPropertyChangeSupport().addPropertyChangeListener(listener);
+    }
+
+    private PropertyChangeSupport getPropertyChangeSupport() {
+        if(this.pcs == null) {
+            this.pcs = new PropertyChangeSupport(this);
+        }
+        return this.pcs;
+    }
+    /**
+     * Object definition
+     */
 
     IProject parent;
     String label;
@@ -32,6 +60,7 @@ public class SpotGroup implements ISpotGroup {
     @Override
     public void setParent(IProject parent) {
         this.parent = parent;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
@@ -42,6 +71,7 @@ public class SpotGroup implements ISpotGroup {
     @Override
     public void setLabel(String label) {
         this.label = label;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
@@ -52,6 +82,7 @@ public class SpotGroup implements ISpotGroup {
     @Override
     public void setNumber(int number) {
         this.number = number;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
@@ -62,11 +93,13 @@ public class SpotGroup implements ISpotGroup {
     @Override
     public void setSpots(List<ISpot> spots) {
         this.spots = spots;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public void addSpot(ISpot spot) {
         this.spots.add(spot);
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override

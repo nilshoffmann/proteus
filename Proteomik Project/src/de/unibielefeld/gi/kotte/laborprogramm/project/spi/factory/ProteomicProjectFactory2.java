@@ -24,12 +24,11 @@ public class ProteomicProjectFactory2 implements IProteomicProjectFactory{
     public IProteomicProject createProject(File projdir, IProject project) {
         ProteomicProject proproject = null;
         try {
-            proproject = new ProteomicProject();
+            proproject = new ProteomicProject(project);
             proproject.activate(new File(projdir, ProteomikProjectFactory.PROJECT_FILE).toURI().toURL());
            // proproject.store(project);
             //IProject ipr = proproject.retrieve(IProject.class);
             //System.out.println("My funky Project: "+ipr.toString());
-            proproject.setProjectData(project);
 //            System.out.println("Gel groups: " + proproject.getGelGroups());
             proproject.close();
         } catch (MalformedURLException ex) {

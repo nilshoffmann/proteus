@@ -6,9 +6,12 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGe
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
+import java.awt.BorderLayout;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
@@ -18,6 +21,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import net.sf.maltcms.chromaui.db.api.ICrudProvider;
 import net.sf.maltcms.chromaui.db.api.ICrudProviderFactory;
 import net.sf.maltcms.chromaui.db.api.ICrudSession;
@@ -28,12 +33,16 @@ import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
+import org.openide.cookies.SaveCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
-import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 
 /**
  *
@@ -45,17 +54,25 @@ public class ProteomicProject implements IProteomicProject {
     ICrudProvider icp = null;
     ICrudSession ics = null;
     IProject activeProject = null;
-    ProjectState state;
-    Lookup lookup;
+    InstanceContent instanceContent = new InstanceContent();
+    Lookup lookup = null;
     URL dblocation = null;
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/ProjectIcon.png";
+
+    public ProteomicProject() {
+    }
+
+    public ProteomicProject(IProject project) {
+        this();
+        this.activeProject = project;
+    }
 
     private ICrudSession getCrudSession() {
         openSession();
         return ics;
     }
 
-    private synchronized IProject persist(IProject project) {
+    private synchronized void persist() {
 //        IProject activeProject = project;
 ////        if (activeProject == null) {
 ////            activeProject = Lookup.getDefault().lookup(IProjectFactory.class).createEmptyProject();
@@ -69,7 +86,11 @@ public class ProteomicProject implements IProteomicProject {
 //            throw new NullPointerException("IProject instance was null!");
 //        }
 //        if (icp != null) {
-            getCrudSession().update(Arrays.asList(project));
+        //getCrudSession().update(Arrays.asList(project));
+//        this.activeProject = project;
+
+        instanceContent.add(new ProjectSaveCookie());
+//        store(project);
 //            //ics.close();
 //        }else{
 //            try{
@@ -79,24 +100,42 @@ public class ProteomicProject implements IProteomicProject {
 //            }
 //        }
         //}
-        return getFromDB();
+//        return getFromDB();
     }
 
-    public synchronized void store(Object obj) {
-        //if (icp != null) {
-            //ICrudSession ics = icp.createSession();
-            getCrudSession().update(Arrays.asList(obj));
+    @Override
+    public void propertyChange(PropertyChangeEvent pce) {
+        persist();
+    }
+
+    private final class ProjectSaveCookie implements SaveCookie {
+
+        @Override
+        public void save() throws IOException {
+
+            getCrudSession().update(Arrays.asList(activeProject));
             //ics.close();
-        //}
+            //}
+            getLookup().lookup(Info.class).firePropertyChange(getClass().getName(), null, this);
+            try {
+                instanceContent.remove(this);
+            } catch (Exception e) {
+                Exceptions.printStackTrace(e);
+            }
+        }
     }
 
+//    public synchronized void store(Object obj) {
+//        //if (icp != null) {
+//        //ICrudSession ics = icp.createSession();
+//    }
     public synchronized <T> T retrieve(Class<T> c) {
         //if (icp != null) {
-            //ICrudSession ics = icp.createSession();
-            Collection<T> coll = getCrudSession().retrieve(c);
-            T t = coll.iterator().next();
-            //ics.close();
-            return t;
+        //ICrudSession ics = icp.createSession();
+        Collection<T> coll = getCrudSession().retrieve(c);
+        T t = coll.iterator().next();
+        //ics.close();
+        return t;
         //}
         //return null;
     }
@@ -104,23 +143,23 @@ public class ProteomicProject implements IProteomicProject {
     private IProject getFromDB() {
         //Logger.getLogger(getClass().getName()).log(Level.INFO, "CrudProvider: {0}",icp);
         //if (icp != null && ics != null) {
-            //ICrudSession ics = icp.createSession();
-            Collection<IProject> projects = getCrudSession().retrieve(IProject.class);
-            if (projects.size() > 1) {
-                //ics.close();
-                throw new IllegalArgumentException("Found more than one instance of IProject in project database!");
-            } else if (projects.size() == 0) {
-                throw new IllegalArgumentException("Failed to find an instance of IProject in project database!");
-            }
-            try {
-                IProject project = projects.iterator().next();
-                //ics.close();
-                return project;
-            } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Exception: {0}", e.getLocalizedMessage());
-            } finally {
-                //ics.close();
-            }
+        //ICrudSession ics = icp.createSession();
+        Collection<IProject> projects = getCrudSession().retrieve(IProject.class);
+        if (projects.size() > 1) {
+            //ics.close();
+            throw new IllegalArgumentException("Found more than one instance of IProject in project database!");
+        } else if (projects.size() == 0) {
+            throw new IllegalArgumentException("Failed to find an instance of IProject in project database!");
+        }
+        try {
+            IProject project = projects.iterator().next();
+            //ics.close();
+            return project;
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Exception: {0}", e.getLocalizedMessage());
+        } finally {
+            //ics.close();
+        }
 //            return myProject;
         //}
         Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Could not retrieve Project instance from database");
@@ -133,7 +172,7 @@ public class ProteomicProject implements IProteomicProject {
 //            this.icp.close();
 //        }
         if (this.dblocation != null) {
-            closeSession();
+            Exceptions.printStackTrace(new IllegalStateException("ProteomicProject already activated for " + this.dblocation));
             //throw new IllegalArgumentException("Activate already called! DB location is: " + this.dblocation);
         } else {
             this.dblocation = url;
@@ -153,15 +192,23 @@ public class ProteomicProject implements IProteomicProject {
     @Override
     public Lookup getLookup() {
         if (lookup == null) {
-            lookup = Lookups.fixed(
-                    state, //allow outside code to mark the project as needing saving
-                    new ActionProviderImpl(), //Provides standard actions like Build and Clean
-                    //                        new DemoDeleteOperation(),
-                    //                        new DemoCopyOperation(this),
-                    new OpenCloseHook(),
-                    new Info(), //Project information implementation
-                    new ProteomicProjectLogicalView(this) //Logical view of project implementation
-                    );
+            lookup = new AbstractLookup(instanceContent);
+            instanceContent.add(new ProjectState() {
+
+                @Override
+                public void markModified() {
+                    instanceContent.add(new ProjectSaveCookie());
+                }
+
+                @Override
+                public void notifyDeleted() throws IllegalStateException {
+                    throw new UnsupportedOperationException("Deletion is not supported yet.");
+                }
+            });
+            instanceContent.add(new ActionProviderImpl());
+            instanceContent.add(new OpenCloseHook());
+            instanceContent.add(new Info());
+            instanceContent.add(new ProteomicProjectLogicalView(this));
         }
         return lookup;
     }
@@ -173,24 +220,54 @@ public class ProteomicProject implements IProteomicProject {
 
     @Override
     public void setProjectState(ProjectState ps) {
-        this.state = ps;
+        instanceContent.remove(getLookup().lookup(ProjectState.class));
+        instanceContent.add(ps);
     }
 
-    private void openSession() {
+    private synchronized void openSession() {
         //closeSession();
-        if(icp==null) {
+        if (icp == null || ics == null) {
             icp = Lookup.getDefault().lookup(ICrudProviderFactory.class).getCrudProvider(dblocation, new NoAuthCredentials());//new DB4oCrudProvider(pdbf, new NoAuthCredentials(), this.getClass().getClassLoader());
             Logger.getLogger(getClass().getName()).log(Level.INFO, "Using {0} as CRUD provider", icp.getClass().getName());
 //            icp.open();
             ics = icp.createSession();
             ics.open();
+            if (this.activeProject == null) {
+                this.activeProject = getFromDB();
+                this.activeProject.addPropertyChangeListener(this);
+            } else {
+                Collection<IProject> projects = ics.retrieve(IProject.class);
+                if (!projects.isEmpty()) {
+                    JPanel jp = new JPanel();
+                    jp.add(new JLabel("A project is already present in the database, discard and overwrite?"), BorderLayout.CENTER);
+                    NotifyDescriptor nd = new NotifyDescriptor(
+                            jp, // instance of your panel
+                            "Overwrite project in database?", // title of the dialog
+                            NotifyDescriptor.YES_NO_OPTION, // it is Yes/No dialog ...
+                            NotifyDescriptor.QUESTION_MESSAGE, // ... of a question type => a question mark icon
+                            null, // we have specified YES_NO_OPTION => can be null, options specified by L&F,
+                            // otherwise specify options as:
+                            //     new Object[] { NotifyDescriptor.YES_OPTION, ... etc. },
+                            NotifyDescriptor.NO_OPTION // default option is "Yes"
+                            );
+
+                    Object returnValue = DialogDisplayer.getDefault().notify(nd);
+                    if (returnValue == NotifyDescriptor.YES_OPTION) {
+                        ics.delete(projects);
+                        ics.create(Arrays.asList(activeProject));
+                    } else {
+                        activeProject = projects.iterator().next();
+                    }
+                }
+            }
         }
-        
-        
+
+
     }
 
-    private void closeSession() {
+    private synchronized void closeSession() {
         Logger.getLogger(getClass().getName()).log(Level.INFO, "Closing database for project ", dblocation);
+        getCrudSession().update(Arrays.asList(this.activeProject));
         if (ics != null) {
             ics.close();
             ics = null;
@@ -199,6 +276,18 @@ public class ProteomicProject implements IProteomicProject {
             icp.close();
             icp = null;
         }
+        this.activeProject.removePropertyChangeListener(this);
+        this.activeProject = null;
+    }
+
+    @Override
+    public void addPropertyChangeListener(PropertyChangeListener pcl) {
+        getLookup().lookup(Info.class).addPropertyChangeListener(pcl);
+    }
+
+    @Override
+    public void removePropertyChangeListener(PropertyChangeListener pcl) {
+        getLookup().lookup(Info.class).removePropertyChangeListener(pcl);
     }
 
     private final class OpenCloseHook extends ProjectOpenedHook {
@@ -280,128 +369,131 @@ public class ProteomicProject implements IProteomicProject {
         public Project getProject() {
             return ProteomicProject.this;
         }
+
+        protected void firePropertyChange(String name, Object before, Object after) {
+            this.pcs.firePropertyChange(name, before, after);
+        }
     }
 
     @Override
     public List<ILogicalGelGroup> getGelGroups() {
-        return getFromDB().getGelGroups();
+        return activeProject.getGelGroups();
     }
 
     @Override
     public void setGelGroups(List<ILogicalGelGroup> groups) {
-        IProject project = getFromDB();
-        project.setGelGroups(groups);
-        persist(project);
+        activeProject.setGelGroups(groups);
+        persist();
     }
 
     @Override
     public void addGelGroup(ILogicalGelGroup group) {
-        IProject project = getFromDB();
-        project.addGelGroup(group);
-        persist(project);
+        activeProject.addGelGroup(group);
+        persist();
     }
 
     @Override
     public List<ISpotGroup> getSpotGroups() {
-        return getFromDB().getSpotGroups();
+        return activeProject.getSpotGroups();
     }
 
     @Override
     public void setSpotGroups(List<ISpotGroup> groups) {
-        IProject project = getFromDB();
-        project.setSpotGroups(groups);
-        persist(project);
+        activeProject.setSpotGroups(groups);
+        persist();
     }
 
     @Override
     public void addSpotGroup(ISpotGroup group) {
-        IProject project = getFromDB();
-        project.addSpotGroup(group);
-        persist(project);
+        activeProject.addSpotGroup(group);
+        persist();
     }
 
     @Override
     public String getName() {
-        return getFromDB().getName();
+        return activeProject.getName();
     }
 
     @Override
     public void setName(String name) {
-        IProject project = getFromDB();
-        project.setName(name);
-        persist(project);
+        activeProject.setName(name);
+        persist();
     }
 
     @Override
     public String getOwner() {
-        return getFromDB().getOwner();
+        return activeProject.getOwner();
     }
 
     @Override
     public void setOwner(String owner) {
-        IProject project = getFromDB();
-        project.setOwner(owner);
-        persist(project);
+        activeProject.setOwner(owner);
+        persist();
     }
 
     @Override
     public String getDescription() {
-        return getFromDB().getDescription();
+        return activeProject.getDescription();
     }
 
     @Override
     public void setDescription(String description) {
-        IProject project = getFromDB();
-        project.setDescription(description);
-        persist(project);
+        activeProject.setDescription(description);
+        persist();
     }
 
     @Override
     public List<IPlate96> get96Plates() {
-        return getFromDB().get96Plates();
+        return activeProject.get96Plates();
     }
 
     @Override
     public void set96Plates(List<IPlate96> plates) {
-        IProject project = getFromDB();
-        project.set96Plates(plates);
-        persist(project);
+        activeProject.set96Plates(plates);
+        persist();
     }
 
     @Override
     public List<IPlate384> get384Plates() {
-        return getFromDB().get384Plates();
+        return activeProject.get384Plates();
     }
 
     @Override
     public void set384Plates(List<IPlate384> plates) {
-        IProject project = getFromDB();
-        project.set384Plates(plates);
-        persist(project);
+        activeProject.set384Plates(plates);
+        persist();
     }
 
     @Override
     public void add96Plate(IPlate96 plate) {
-        IProject project = getFromDB();
-        project.add96Plate(plate);
-        persist(project);
+        activeProject.add96Plate(plate);
+        persist();
     }
 
     @Override
     public void add384Plate(IPlate384 plate) {
-        IProject project = getFromDB();
-        project.add384Plate(plate);
-        persist(project);
+        activeProject.add384Plate(plate);
+        persist();
     }
 
     @Override
     public void setProjectData(IProject project) {
-        persist(project);
+        if (activeProject != null) {
+            persist();
+        }
+        activeProject = project;
+        persist();
         //activeProject = retrieve(IProject.class);
     }
 
     @Override
     public String toString() {
-        return getFromDB().toString();
+        if (activeProject != null) {
+            return activeProject.toString();
+        }
+//        if (icp == null || ics == null || activeProject == null) {
+        return "<NOT INITIALIZED>";
+//        }
+//        return activeProject.toString();
     }
 }

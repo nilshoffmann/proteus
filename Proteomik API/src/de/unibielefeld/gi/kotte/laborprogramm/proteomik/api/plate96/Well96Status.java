@@ -1,5 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96;
 
+import java.awt.Color;
+
 /**
  * Represents the status of a well on a 96 well microplate.
  *
@@ -10,11 +12,11 @@ public enum Well96Status {
     /**
      * The well is empty.
      */
-    EMPTY,
+    EMPTY ,
     /**
      * The well is filled and thus has a corresponding spot on a gel.
      */
-    FILLED,
+    FILLED ,
     /**
      * The well is filled and has been processed,
      * it has a corresponding spot on a gel and
@@ -25,4 +27,17 @@ public enum Well96Status {
      * This well is in an errand state.
      */
     ERROR;
+
+    public static Color getColor(Well96Status status) {
+        switch(status) {
+            case FILLED:
+                return Color.GREEN;
+            case PROCESSED:
+                return Color.BLUE;
+            case ERROR:
+                return Color.RED;
+            default:
+                return Color.BLACK;
+        }
+    }
 }

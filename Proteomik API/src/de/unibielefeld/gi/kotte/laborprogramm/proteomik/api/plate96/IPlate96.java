@@ -1,13 +1,14 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPropertyChangeSource;
 
 /**
  * A 96 well microplate.
  *
  * @author kotte
  */
-public interface IPlate96 {
+public interface IPlate96 extends IPropertyChangeSource {
 
     public String getDescription();
 

@@ -5,8 +5,9 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -16,6 +17,32 @@ import java.util.List;
  */
 public class Project implements IProject {
 
+    /**
+     * PropertyChangeSupport ala JavaBeans(tm)
+     * Not persisted!
+     */
+    private transient PropertyChangeSupport pcs = null;
+
+    @Override
+    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
+        getPropertyChangeSupport().removePropertyChangeListener(listener);
+    }
+
+    @Override
+    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
+        getPropertyChangeSupport().addPropertyChangeListener(listener);
+    }
+
+    private PropertyChangeSupport getPropertyChangeSupport() {
+        if(this.pcs == null) {
+            this.pcs = new PropertyChangeSupport(this);
+        }
+        return this.pcs;
+    }
+
+    /**
+     * Object definition
+     */
     String owner;
     String name;
     String description;
@@ -42,11 +69,13 @@ public class Project implements IProject {
     @Override
     public void setGelGroups(List<ILogicalGelGroup> groups) {
         this.gelgroups = groups;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public void addGelGroup(ILogicalGelGroup group) {
         this.gelgroups.add(group);
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
@@ -57,11 +86,13 @@ public class Project implements IProject {
     @Override
     public void setSpotGroups(List<ISpotGroup> groups) {
         this.spotgroups = groups;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public void addSpotGroup(ISpotGroup group) {
         this.spotgroups.add(group);
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
@@ -72,6 +103,7 @@ public class Project implements IProject {
     @Override
     public void setName(String name) {
         this.name = name;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
@@ -82,6 +114,7 @@ public class Project implements IProject {
     @Override
     public void setOwner(String owner) {
         this.owner = owner;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
@@ -92,6 +125,7 @@ public class Project implements IProject {
     @Override
     public void setDescription(String description) {
         this.description = description;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
@@ -102,6 +136,7 @@ public class Project implements IProject {
     @Override
     public void set96Plates(List<IPlate96> plates) {
         this.plates96 = plates;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
@@ -112,16 +147,19 @@ public class Project implements IProject {
     @Override
     public void set384Plates(List<IPlate384> plates) {
         this.plates384 = plates;
+       getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public void add96Plate(IPlate96 plate) {
         this.plates96.add(plate);
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public void add384Plate(IPlate384 plate) {
         this.plates384.add(plate);
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override

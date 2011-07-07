@@ -4,6 +4,8 @@ import java.util.List;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroup;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -14,6 +16,31 @@ import java.util.Iterator;
  */
 public class TechRepGelGroup implements ITechRepGelGroup {
 
+    /**
+     * PropertyChangeSupport ala JavaBeans(tm)
+     * Not persisted!
+     */
+    private transient PropertyChangeSupport pcs = null;
+
+    @Override
+    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
+        getPropertyChangeSupport().removePropertyChangeListener(listener);
+    }
+
+    @Override
+    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
+        getPropertyChangeSupport().addPropertyChangeListener(listener);
+    }
+
+    private PropertyChangeSupport getPropertyChangeSupport() {
+        if(this.pcs == null) {
+            this.pcs = new PropertyChangeSupport(this);
+        }
+        return this.pcs;
+    }
+    /**
+     * Object definition
+     */
     IBioRepGelGroup parent;
     String name;
     String description;
@@ -33,6 +60,7 @@ public class TechRepGelGroup implements ITechRepGelGroup {
     @Override
     public void setDescription(String description) {
         this.description = description;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
@@ -43,6 +71,7 @@ public class TechRepGelGroup implements ITechRepGelGroup {
     @Override
     public void setGels(List<IGel> gels) {
         this.gels = gels;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
@@ -53,6 +82,7 @@ public class TechRepGelGroup implements ITechRepGelGroup {
     @Override
     public void setName(String name) {
         this.name = name;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
@@ -63,11 +93,13 @@ public class TechRepGelGroup implements ITechRepGelGroup {
     @Override
     public void setParent(IBioRepGelGroup parent) {
         this.parent = parent;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public void addGel(IGel gel) {
         this.gels.add(gel);
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override

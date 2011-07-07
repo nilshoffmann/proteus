@@ -1,5 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384;
 
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPropertyChangeSource;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 
 /**
@@ -7,7 +8,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
  *
  * @author kotte
  */
-public interface IWell384 {
+public interface IWell384 extends IPropertyChangeSource {
 
     public IPlate384 getParent();
 

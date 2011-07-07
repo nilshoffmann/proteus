@@ -5,6 +5,8 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,31 @@ import java.util.List;
  */
 public class Well96 implements IWell96 {
 
+    /**
+     * PropertyChangeSupport ala JavaBeans(tm)
+     * Not persisted!
+     */
+    private transient PropertyChangeSupport pcs = null;
+
+    @Override
+    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
+        getPropertyChangeSupport().removePropertyChangeListener(listener);
+    }
+
+    @Override
+    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
+        getPropertyChangeSupport().addPropertyChangeListener(listener);
+    }
+
+    private PropertyChangeSupport getPropertyChangeSupport() {
+        if(this.pcs == null) {
+            this.pcs = new PropertyChangeSupport(this);
+        }
+        return this.pcs;
+    }
+    /**
+     * Object definition
+     */
     IPlate96 parent;
     Well96Status status;
     ISpot spot;
@@ -73,26 +100,31 @@ public class Well96 implements IWell96 {
     @Override
     public void setParent(IPlate96 parent) {
         this.parent = parent;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public void setRow(char posX) {
         this.row = posX;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public void setColumn(int posY) {
         this.column = posY;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public void setStatus(Well96Status status) {
         this.status = status;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public void setSpot(ISpot spot) {
         this.spot = spot;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
@@ -103,11 +135,13 @@ public class Well96 implements IWell96 {
     @Override
     public void set384Wells(List<IWell384> wells) {
         this.wells384 = wells;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public void add384Well(IWell384 well) {
         this.wells384.add(well);
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override

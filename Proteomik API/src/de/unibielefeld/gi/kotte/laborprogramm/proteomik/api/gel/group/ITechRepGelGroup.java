@@ -1,5 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group;
 
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPropertyChangeSource;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  *
  * @author kotte
  */
-public interface ITechRepGelGroup {
+public interface ITechRepGelGroup extends IPropertyChangeSource {
 
     public IBioRepGelGroup getParent();
 

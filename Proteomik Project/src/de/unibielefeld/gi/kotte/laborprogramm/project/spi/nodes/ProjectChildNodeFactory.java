@@ -2,9 +2,12 @@ package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import java.beans.IntrospectionException;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.ChildFactory;
@@ -15,9 +18,14 @@ import org.openide.util.Exceptions;
  *
  * @author kotte
  */
-public class ProjectChildNodeFactory extends ChildFactory<Object> {
+public class ProjectChildNodeFactory extends ChildFactory<Object> implements PropertyChangeListener {
 
     private IProteomicProject ipp;
+
+    @Override
+    public void propertyChange(PropertyChangeEvent pce) {
+        refresh(true);
+    }
 
     private enum NodeGroup {
 
@@ -51,6 +59,8 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> {
                 nodes = new Node[illgs.size()];
                 i = 0;
                 for (ILogicalGelGroup ilgg : illgs) {
+                    ilgg.addPropertyChangeListener(this);
+                    ilgg.addPropertyChangeListener(ipp);
                     nodes[i++] = new LogicalGelGroupNode(ilgg);
                 }
                 return nodes;
@@ -59,6 +69,7 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> {
                 nodes = new Node[plates384.size()];
                 i = 0;
                 for (IPlate384 plate : plates384) {
+                    plate.addPropertyChangeListener(this);
                     try {
                         nodes[i++] = new BeanNode(plate);
                     } catch (IntrospectionException ex) {
@@ -72,6 +83,7 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> {
                 nodes = new Node[plates96.size()];
                 i = 0;
                 for (IPlate96 plate : plates96) {
+                    plate.addPropertyChangeListener(this);
                     try {
                         nodes[i++] = new BeanNode(plate);
                     } catch (IntrospectionException ex) {
@@ -84,38 +96,4 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> {
         }
         return new Node[]{Node.EMPTY};
     }
-//    @Override
-//    protected Node createNodeForKey(Object key) {
-//        NodeGroup keyVal = (NodeGroup)key;
-//        switch(keyVal) {
-//            case GELGROUPS:
-//                break;
-//            case PLATES384:
-//                break;
-//            case PLATES96:
-//                break;
-//            case SPOTGROUPS:
-//                return new SpotGroupFolderNode(ipp.getSpotGroups());
-//        }
-//
-//
-//        if (key instanceof ILogicalGelGroup) {
-//            return new LogicalGelGroupNode((ILogicalGelGroup) key);
-////        } else if (key instanceof IPlate384) {
-////            //return new Plate384Node((IPlate384)key);
-////        } else if (key instanceof IPlate96) {
-////
-////        } else if (key instanceof ISpotGroup) {
-//
-//        } else {
-//            //TODO anpassen fuer z.B. IGel
-//            //--> custom AbstractNode mit eigener ChildFactory
-//            try {
-//                return new BeanNode(key);
-//            } catch (IntrospeFctionException ex) {
-//                Exceptions.printStackTrace(ex);
-//            }
-//        }
-//        return Node.EMPTY;
-//    }
 }

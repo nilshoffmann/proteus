@@ -1,5 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96;
 
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPropertyChangeSource;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
  *
  * @author kotte
  */
-public interface IWell96 {
+public interface IWell96 extends IPropertyChangeSource {
 
     public IPlate96 getParent();
 

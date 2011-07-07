@@ -2,16 +2,18 @@
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
     <folder name="Actions">
-<!--        <folder name="GelNode">
-            <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-GelViewOpenAction.instance">
-                <attr name="delegate" newvalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.GelViewOpenAction"/>
-                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.Bundle#CTL_GelViewOpenAction"/>
+        <folder name="File">
+            <file name="org-openide-actions-SaveAction.instance">
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
-                <attr name="noIconInMenu" boolvalue="false"/>
+                <attr name="delegate" newvalue="org.openide.actions.SaveAction"/>
                 <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
-                <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel"/>
+                <attr name="surviveFocusChange" boolvalue="false"/>
+                <attr name="displayName" bundlevalue="org/openide/actions/Bundle#Save"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+                <attr name="iconBase" stringvalue="org/openide/resources/actions/save.png"/>
+                <attr name="type" stringvalue="org.openide.cookies.SaveCookie"/>
             </file>
-        </folder>-->
+        </folder>
         <folder name="GelNode">
             <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-GelViewerOpenAction.instance">
                 <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
@@ -24,6 +26,22 @@
             </file>
         </folder>
     </folder>
+    <folder name="Menu">
+        <folder name="File">
+            <file name="SaveAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-openide-actions-SaveAction.instance"/>
+                <attr name="position" intvalue="100"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Toolbars">
+        <folder name="File">
+            <file name="SaveAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-openide-actions-SaveAction.instance"/>
+                <attr name="position" intvalue="100"/>
+            </file>
+        </folder>
+    </folder> 
     <folder name="Projects">
         <folder name="ProteomikLaborProgramm">
             <folder name="Actions"/>
@@ -43,4 +61,4 @@
             -->
         </folder>
     </folder>
-    </filesystem>
+</filesystem>

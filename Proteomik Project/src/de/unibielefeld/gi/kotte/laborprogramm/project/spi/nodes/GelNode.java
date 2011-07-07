@@ -10,6 +10,7 @@ import javax.swing.Action;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
+import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
@@ -45,6 +46,11 @@ public class GelNode extends AbstractNode {
     @Override
     public String getDisplayName() {
         return getLookup().lookup(IGel.class).getName();
+    }
+
+    @Override
+    protected Sheet createSheet() {
+        return super.createSheet();
     }
 
     @Override

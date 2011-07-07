@@ -3,6 +3,8 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 /**
  * Default implementation for IPlate384.
@@ -11,6 +13,32 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
  */
 public class Plate384 implements IPlate384 {
 
+    /**
+     * PropertyChangeSupport ala JavaBeans(tm)
+     * Not persisted!
+     */
+    private transient PropertyChangeSupport pcs = null;
+
+    @Override
+    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
+        getPropertyChangeSupport().removePropertyChangeListener(listener);
+    }
+
+    @Override
+    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
+        getPropertyChangeSupport().addPropertyChangeListener(listener);
+    }
+
+    private PropertyChangeSupport getPropertyChangeSupport() {
+        if(this.pcs == null) {
+            this.pcs = new PropertyChangeSupport(this);
+        }
+        return this.pcs;
+    }
+
+    /**
+     * Object definition
+     */
     String name;
     String description;
     IWell384[] wells;
@@ -67,26 +95,31 @@ public class Plate384 implements IPlate384 {
     @Override
     public void setDescription(String description) {
         this.description = description;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public void setName(String name) {
         this.name = name;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public void setParent(IProject parent) {
         this.parent = parent;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public void setWells(IWell384[] wells) {
         this.wells = wells;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public void setWell(IWell384 well, char row, int column) {
         this.wells[posToIndex(row, column)] = well;
+        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override

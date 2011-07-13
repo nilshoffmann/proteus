@@ -1,5 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384;
 
+import java.awt.Color;
+
 /**
  * Represents the status of a well on a 384 well microplate.
  *
@@ -36,4 +38,23 @@ public enum Well384Status {
      * This well is in an errand state.
      */
     ERROR;
+
+    public static Color getColor(Well384Status status) {
+        switch(status) {
+            case FILLED:
+                return Color.BLUE;
+            case IDENTIFIED:
+                return Color.GREEN;
+            case UNCERTAIN:
+                return Color.CYAN;
+            case UNIDENTIFIED:
+                return Color.MAGENTA;
+            case MULTIPLE_IDENTIFICATIONS:
+                return Color.YELLOW;
+            case ERROR:
+                return Color.RED;
+            default:
+                return Color.BLACK;
+        }
+    }
 }

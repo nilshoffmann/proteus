@@ -70,11 +70,7 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> implements Pro
                 i = 0;
                 for (IPlate384 plate : plates384) {
                     plate.addPropertyChangeListener(this);
-                    try {
-                        nodes[i++] = new BeanNode(plate);
-                    } catch (IntrospectionException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+                    nodes[i++] = new Plate384Node(plate);
                 }
                 return nodes;
             }
@@ -84,11 +80,7 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> implements Pro
                 i = 0;
                 for (IPlate96 plate : plates96) {
                     plate.addPropertyChangeListener(this);
-                    try {
-                        nodes[i++] = new BeanNode(plate);
-                    } catch (IntrospectionException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+                    nodes[i++] = new Plate96Node(plate);
                 }
                 return nodes;
             case SPOTGROUPS:

@@ -1,7 +1,11 @@
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
+import de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.CreatePlate384Action;
+import de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.CreatePlate96Action;
 import java.awt.Image;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.Action;
@@ -19,7 +23,7 @@ import org.openide.util.lookup.ProxyLookup;
  *
  * @author kotte
  */
-public class ProjectNode extends AbstractNode {
+public class ProjectNode extends AbstractNode implements PropertyChangeListener {
 
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/ProjectIcon.png";
     private final InstanceContent lookupContents;
@@ -57,9 +61,15 @@ public class ProjectNode extends AbstractNode {
     @Override
     public Action[] getActions(boolean arg0) {
         Action[] nodeActions = new Action[7];
-        nodeActions[0] = CommonProjectActions.newFileAction();
-        nodeActions[1] = CommonProjectActions.copyProjectAction();
-        nodeActions[2] = CommonProjectActions.deleteProjectAction();
+        CreatePlate96Action cP96Action = new CreatePlate96Action(getLookup().lookup(IProteomicProject.class));
+        cP96Action.addPropertyChangeListener(this);
+        nodeActions[0] = cP96Action;
+        CreatePlate384Action cP384Action = new CreatePlate384Action(getLookup().lookup(IProteomicProject.class));
+        cP384Action.addPropertyChangeListener(this);
+        nodeActions[1] = cP384Action;
+        //nodeActions[0] = CommonProjectActions.newFileAction();
+        //nodeActions[1] = CommonProjectActions.copyProjectAction();
+        nodeActions[3] = CommonProjectActions.deleteProjectAction();
         nodeActions[5] = CommonProjectActions.setAsMainProjectAction();
         nodeActions[6] = CommonProjectActions.closeProjectAction();
         List<? extends Action> actions = Utilities.actionsForPath("/Projects/ProteomikLaborProgramm/");
@@ -81,5 +91,10 @@ public class ProjectNode extends AbstractNode {
     @Override
     public String getDisplayName() {
         return getLookup().lookup(IProteomicProject.class).getProjectDirectory().getName();
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        setChildren(Children.create(new ProjectChildNodeFactory(getLookup().lookup(IProteomicProject.class)), true));
     }
 }

@@ -1,35 +1,44 @@
 package de.unibielefeld.gi.kotte.laborprogramm.plateViewer;
 
+import de.unibielefeld.gi.kotte.laborprogramm.centralLookup.CentralLookup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96Factory;
 import java.awt.BorderLayout;
+import java.util.Iterator;
 import java.util.logging.Logger;
+import org.openide.util.LookupEvent;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 //import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.openide.util.Lookup;
+import org.openide.util.Lookup.Result;
+import org.openide.util.LookupListener;
 
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.plateViewer//PlateViewer//EN",
+@ConvertAsProperties(dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.plateViewer//Plate96Viewer//EN",
 autostore = false)
-public final class PlateViewerTopComponent extends TopComponent {
+public final class Plate96ViewerTopComponent extends TopComponent implements LookupListener {
 
-    private static PlateViewerTopComponent instance;
+    private static Plate96ViewerTopComponent instance;
     /** path to the icon used by the component and its open action */
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
-    private static final String PREFERRED_ID = "PlateViewerTopComponentTopComponent";
+    private static final String PREFERRED_ID = "Plate96ViewerTopComponentTopComponent";
+    private Result<IPlate96> result = null;
 
-    public PlateViewerTopComponent() {
+    public Plate96ViewerTopComponent() {
+        result = CentralLookup.getDefault().lookupResult(IPlate96.class);
         initComponents();
-        initPlateComponent(); //FIXME Testen, ob man das hier ueberhaupt darf!
-        setName(NbBundle.getMessage(PlateViewerTopComponent.class, "CTL_PlateViewerTopComponent"));
-        setToolTipText(NbBundle.getMessage(PlateViewerTopComponent.class, "HINT_PlateViewerTopComponent"));
+        //initPlateComponent(); //FIXME Testen, ob man das hier ueberhaupt darf!
+        setName(NbBundle.getMessage(Plate96ViewerTopComponent.class, "CTL_Plate96ViewerTopComponent"));
+        setToolTipText(NbBundle.getMessage(Plate96ViewerTopComponent.class, "HINT_Plate96ViewerTopComponent"));
 //        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
 
+        IPlate96 plate = CentralLookup.getDefault().lookup(IPlate96.class);
+        if (plate != null) {
+            initPlateComponent(plate);
+        }
     }
 
     /** This method is called from within the constructor to
@@ -42,15 +51,16 @@ public final class PlateViewerTopComponent extends TopComponent {
 
         setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
     private Plate96Panel platePanel;
-    
-    private void initPlateComponent() {
-        IPlate96 plate = Lookup.getDefault().lookup(IPlate96Factory.class).createPlate96(); //FIXME Test-dummy Platte
+
+    private void initPlateComponent(IPlate96 plate) {
+        if (platePanel != null) {
+            remove(platePanel);
+        }
         platePanel = new Plate96Panel(plate);
-        add(platePanel,BorderLayout.CENTER);
+        add(platePanel, BorderLayout.CENTER);
     }
 
     /**
@@ -58,27 +68,27 @@ public final class PlateViewerTopComponent extends TopComponent {
      * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
      * To obtain the singleton instance, use {@link #findInstance}.
      */
-    public static synchronized PlateViewerTopComponent getDefault() {
+    public static synchronized Plate96ViewerTopComponent getDefault() {
         if (instance == null) {
-            instance = new PlateViewerTopComponent();
+            instance = new Plate96ViewerTopComponent();
         }
         return instance;
     }
 
     /**
-     * Obtain the PlateViewerTopComponent instance. Never call {@link #getDefault} directly!
+     * Obtain the Plate96ViewerTopComponent instance. Never call {@link #getDefault} directly!
      */
-    public static synchronized PlateViewerTopComponent findInstance() {
+    public static synchronized Plate96ViewerTopComponent findInstance() {
         TopComponent win = WindowManager.getDefault().findTopComponent(PREFERRED_ID);
         if (win == null) {
-            Logger.getLogger(PlateViewerTopComponent.class.getName()).warning(
+            Logger.getLogger(Plate96ViewerTopComponent.class.getName()).warning(
                     "Cannot find " + PREFERRED_ID + " component. It will not be located properly in the window system.");
             return getDefault();
         }
-        if (win instanceof PlateViewerTopComponent) {
-            return (PlateViewerTopComponent) win;
+        if (win instanceof Plate96ViewerTopComponent) {
+            return (Plate96ViewerTopComponent) win;
         }
-        Logger.getLogger(PlateViewerTopComponent.class.getName()).warning(
+        Logger.getLogger(Plate96ViewerTopComponent.class.getName()).warning(
                 "There seem to be multiple components with the '" + PREFERRED_ID
                 + "' ID. That is a potential source of errors and unexpected behavior.");
         return getDefault();
@@ -91,12 +101,16 @@ public final class PlateViewerTopComponent extends TopComponent {
 
     @Override
     public void componentOpened() {
-        // TODO add custom code on component opening
+        if (result != null) {
+            result.addLookupListener(this);
+        }
     }
 
     @Override
     public void componentClosed() {
-        // TODO add custom code on component closing
+        if (result != null) {
+            result.removeLookupListener(this);
+        }
     }
 
     void writeProperties(java.util.Properties p) {
@@ -122,5 +136,14 @@ public final class PlateViewerTopComponent extends TopComponent {
     @Override
     protected String preferredID() {
         return PREFERRED_ID;
+    }
+
+    @Override
+    public void resultChanged(LookupEvent ev) {
+        //set plate
+        Iterator<? extends IPlate96> instances = result.allInstances().iterator();
+        if (instances.hasNext()) {
+            initPlateComponent(instances.next());
+        }
     }
 }

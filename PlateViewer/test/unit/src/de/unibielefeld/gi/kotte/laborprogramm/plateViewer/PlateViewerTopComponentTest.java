@@ -28,22 +28,22 @@ public class PlateViewerTopComponentTest {
     }
 
     /**
-     * Test of getDefault method, of class PlateViewerTopComponent.
+     * Test of getDefault method, of class Plate96ViewerTopComponent.
      */
     @Test
     public void testGetDefault() {
         System.out.println("getDefault");
-        PlateViewerTopComponent result = PlateViewerTopComponent.getDefault();
+        Plate96ViewerTopComponent result = Plate96ViewerTopComponent.getDefault();
         assertNotNull(result);
     }
 
     /**
-     * Test of findInstance method, of class PlateViewerTopComponent.
+     * Test of findInstance method, of class Plate96ViewerTopComponent.
      */
     @Test
     public void testFindInstance() {
         System.out.println("findInstance");
-        PlateViewerTopComponent result = PlateViewerTopComponent.findInstance();
+        Plate96ViewerTopComponent result = Plate96ViewerTopComponent.findInstance();
         assertNotNull(result);
     }
 

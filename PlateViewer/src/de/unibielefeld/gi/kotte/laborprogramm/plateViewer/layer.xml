@@ -3,27 +3,27 @@
 <filesystem>
     <folder name="Actions">
         <folder name="Window">
-            <file name="de-unibielefeld-gi-kotte-laborprogramm-plateViewer-PlateViewerTopComponentAction.instance">
-                <attr name="component" methodvalue="de.unibielefeld.gi.kotte.laborprogramm.plateViewer.PlateViewerTopComponent.findInstance"/>
-                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.plateViewer.Bundle#CTL_PlateViewerTopComponentAction"/>
+            <file name="de-unibielefeld-gi-kotte-laborprogramm-plateViewer-Plate96ViewerTopComponentAction.instance">
+                <attr name="component" methodvalue="de.unibielefeld.gi.kotte.laborprogramm.plateViewer.Plate96ViewerTopComponent.findInstance"/>
+                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.plateViewer.Bundle#CTL_Plate96ViewerTopComponentAction"/>
                 <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
             </file>
         </folder>
     </folder>
     <folder name="Menu">
         <folder name="Window">
-            <file name="PlateViewerTopComponentAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/de-unibielefeld-gi-kotte-laborprogramm-plateViewer-PlateViewerTopComponentAction.instance"/>
+            <file name="Plate96ViewerTopComponentAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/de-unibielefeld-gi-kotte-laborprogramm-plateViewer-Plate96ViewerTopComponentAction.instance"/>
             </file>
         </folder>
     </folder>
     <folder name="Windows2">
         <folder name="Components">
-            <file name="PlateViewerTopComponent.settings" url="PlateViewerTopComponentSettings.xml"/>
+            <file name="Plate96ViewerTopComponent.settings" url="Plate96ViewerTopComponentSettings.xml"/>
         </folder>
         <folder name="Modes">
             <folder name="editor">
-                <file name="PlateViewerTopComponent.wstcref" url="PlateViewerTopComponentWstcref.xml"/>
+                <file name="Plate96ViewerTopComponent.wstcref" url="Plate96ViewerTopComponentWstcref.xml"/>
             </folder>
         </folder>
     </folder>

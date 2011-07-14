@@ -2,10 +2,16 @@ package de.unibielefeld.gi.kotte.laborprogramm.project.spi;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import java.awt.BorderLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -73,34 +79,7 @@ public class ProteomicProject implements IProteomicProject {
     }
 
     private synchronized void persist() {
-//        IProject activeProject = project;
-////        if (activeProject == null) {
-////            activeProject = Lookup.getDefault().lookup(IProjectFactory.class).createEmptyProject();
-////            if (icp != null) {
-////                ICrudSession ics = icp.createSession();
-////                ics.create(Arrays.asList(activeProject));
-////                ics.close();
-////            }
-////        } else {
-//        if (activeProject == null) {
-//            throw new NullPointerException("IProject instance was null!");
-//        }
-//        if (icp != null) {
-        //getCrudSession().update(Arrays.asList(project));
-//        this.activeProject = project;
-
         instanceContent.add(new ProjectSaveCookie());
-//        store(project);
-//            //ics.close();
-//        }else{
-//            try{
-//                openSession();
-//            }catch(Exception e) {
-//                Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Exception: {0}", e.getLocalizedMessage());
-//            }
-//        }
-        //}
-//        return getFromDB();
     }
 
     @Override
@@ -112,10 +91,7 @@ public class ProteomicProject implements IProteomicProject {
 
         @Override
         public void save() throws IOException {
-
             getCrudSession().update(Arrays.asList(activeProject));
-            //ics.close();
-            //}
             getLookup().lookup(Info.class).firePropertyChange(getClass().getName(), null, this);
             try {
                 instanceContent.remove(this);
@@ -125,19 +101,10 @@ public class ProteomicProject implements IProteomicProject {
         }
     }
 
-//    public synchronized void store(Object obj) {
-//        //if (icp != null) {
-//        //ICrudSession ics = icp.createSession();
-//    }
     public synchronized <T> T retrieve(Class<T> c) {
-        //if (icp != null) {
-        //ICrudSession ics = icp.createSession();
         Collection<T> coll = getCrudSession().retrieve(c);
         T t = coll.iterator().next();
-        //ics.close();
         return t;
-        //}
-        //return null;
     }
 
     private IProject getFromDB() {
@@ -153,6 +120,38 @@ public class ProteomicProject implements IProteomicProject {
         }
         try {
             IProject project = projects.iterator().next();
+            //initialize project listeners
+            for(IPlate384 ipl:project.get384Plates()) {
+                for(IWell384 well:ipl.getWells()) {
+                    well.addPropertyChangeListener(this);
+                }
+                ipl.addPropertyChangeListener(this);
+            }
+            for(IPlate96 ipl:project.get96Plates()) {
+                for(IWell96 well:ipl.getWells()) {
+                    well.addPropertyChangeListener(this);
+                }
+                ipl.addPropertyChangeListener(this);
+            }
+            for(ILogicalGelGroup ilgg:project.getGelGroups()) {
+                for(IBioRepGelGroup blgg:ilgg.getGelGroups()) {
+                    for(ITechRepGelGroup trgg:blgg.getGelGroups()) {
+                        for(IGel gel:trgg.getGels()) {
+                            for(ISpot spot:gel.getSpots()) {
+                                spot.addPropertyChangeListener(this);
+                            }
+                            gel.addPropertyChangeListener(this);
+                        }
+                        trgg.addPropertyChangeListener(this);
+                    }
+                    blgg.addPropertyChangeListener(this);
+                }
+                ilgg.addPropertyChangeListener(this);
+            }
+            for(ISpotGroup sg:project.getSpotGroups()) {
+                sg.addPropertyChangeListener(this);
+            }
+
             //ics.close();
             return project;
         } catch (Exception e) {

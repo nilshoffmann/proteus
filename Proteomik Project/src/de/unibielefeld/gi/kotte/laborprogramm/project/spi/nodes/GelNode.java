@@ -55,12 +55,9 @@ public class GelNode extends AbstractNode {
 
     @Override
     public Action[] getActions(boolean arg0) {
-        //Action[] nodeActions = new Action[7];
-        //nodeActions[0] = CommonProjectActions.newFileAction();
         List<? extends Action> actions = Utilities.actionsForPath("/Actions/GelNode");
-        System.out.println("Retrieved actions for path :"+"/Actions/GelNode/:"+actions);
+//        System.out.println("Retrieved actions for path :"+"/Actions/GelNode/:"+actions);
         List<Action> allActions = new LinkedList<Action>(actions);
-        //allActions.addAll(Arrays.asList(nodeActions));
         return allActions.toArray(new Action[allActions.size()]);
     }
 }

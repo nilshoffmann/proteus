@@ -25,6 +25,17 @@
                 <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel"/><!--org.openide.cookies.OpenCookie"/>-->
             </file>
         </folder>
+        <folder name="Plate96Node">
+            <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-Plate96ViewerOpenAction.instance">
+                <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
+                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.Bundle#CTL_Plate96ViewerOpenAction"/>
+                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.Plate96ViewerOpenAction"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+                <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
+                <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96"/><!--org.openide.cookies.OpenCookie"/>-->
+            </file>
+        </folder>
     </folder>
     <folder name="Menu">
         <folder name="File">

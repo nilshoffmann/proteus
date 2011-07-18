@@ -84,6 +84,7 @@ public class ProteomicProject implements IProteomicProject {
 
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
+        System.out.println("Received property change event");
         persist();
     }
 

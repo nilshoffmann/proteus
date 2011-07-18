@@ -13,6 +13,7 @@ import org.openide.nodes.BeanNode;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -24,6 +25,8 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> implements Pro
 
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
+        System.out.println("Received property change event: "+pce);
+        ipp.propertyChange(pce);
         refresh(true);
     }
 
@@ -79,8 +82,11 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> implements Pro
                 nodes = new Node[plates96.size()];
                 i = 0;
                 for (IPlate96 plate : plates96) {
+                    System.out.println("Adding plate96: "+plate);
                     plate.addPropertyChangeListener(this);
-                    nodes[i++] = new Plate96Node(plate);
+                        Plate96Node plateNode = new Plate96Node(plate, Lookups.singleton(ipp));
+                        plateNode.addPropertyChangeListener(this);
+                        nodes[i++] = plateNode;
                 }
                 return nodes;
             case SPOTGROUPS:

@@ -5,6 +5,7 @@
 
 package de.unibielefeld.gi.kotte.laborprogramm.project.api.cookies;
 
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import org.openide.cookies.OpenCookie;
 
 /**

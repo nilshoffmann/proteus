@@ -12,8 +12,6 @@ import java.awt.event.ActionEvent;
 import org.openide.util.Lookup;
 
 public final class GelViewerOpenAction implements ActionListener {
-
-//    private final OpenCookie context;
     private final IGel context;
 
     public GelViewerOpenAction(IGel context) {

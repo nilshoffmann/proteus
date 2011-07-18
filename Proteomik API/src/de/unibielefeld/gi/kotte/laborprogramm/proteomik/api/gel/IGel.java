@@ -32,4 +32,8 @@ public interface IGel extends IPropertyChangeSource{
     public void addSpot(ISpot spot);
 
     public void setSpots(List<ISpot> spots);
+
+    public boolean isVirtual();
+    
+    public void setVirtual(boolean virtual);
 }

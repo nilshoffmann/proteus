@@ -45,12 +45,14 @@ public class Gel implements IGel {
     String description;
     String filename;
     List<ISpot> spots;
+    boolean virtual;
 
     public Gel() {
         this.name = "";
         this.description = "";
         this.filename = "";
         this.spots = new ArrayList<ISpot>();
+        this.virtual = false;
     }
 
     @Override
@@ -112,6 +114,16 @@ public class Gel implements IGel {
     public void setSpots(List<ISpot> spots) {
         this.spots = spots;
         getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+    }
+
+    @Override
+    public boolean isVirtual(){
+        return this.virtual;
+    }
+
+    @Override
+    public void setVirtual(boolean virtual){
+        this.virtual = virtual;
     }
 
     @Override

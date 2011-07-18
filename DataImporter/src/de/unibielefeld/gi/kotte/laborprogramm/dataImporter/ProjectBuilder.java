@@ -94,6 +94,8 @@ public class ProjectBuilder {
                     Logger.getLogger(ProjectBuilder.class.getName()).log(Level.WARNING, "Failed to open Gel {}", gi.getGelImageId().getId());
                 } else {
                     gel.setName(gi.getName());
+                    //if gel is fused image, mark it as virtual
+                    gel.setVirtual(gi.getName().startsWith("Fused Image"));
                     //don't use gi.getSourceImage() (absolute windows path)
                     gel.setFilename(gi.getGelImageId().getId());
                 }

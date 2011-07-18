@@ -1,6 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer;
 
 import de.unibielefeld.gi.kotte.laborprogramm.centralLookup.CentralLookup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import java.awt.BorderLayout;
 import java.util.Iterator;
@@ -13,6 +14,7 @@ import org.openide.windows.WindowManager;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.Lookup.Result;
 import org.openide.util.LookupListener;
+import org.openide.util.Utilities;
 
 /**
  * Top component which displays something.
@@ -28,6 +30,8 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
     private static final String PREFERRED_ID = "Plate96ViewerTopComponentTopComponent";
     private Result<IPlate96> result = null;
+    private Result<ISpot> spotResult = null;
+    private ISpot spot = null;
 
     public Plate96ViewerTopComponent() {
         result = CentralLookup.getDefault().lookupResult(IPlate96.class);
@@ -51,9 +55,24 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        spotNameLabel = new javax.swing.JLabel();
+
         setLayout(new java.awt.BorderLayout());
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(Plate96ViewerTopComponent.class, "Plate96ViewerTopComponent.jLabel1.text")); // NOI18N
+        jPanel1.add(jLabel1);
+
+        org.openide.awt.Mnemonics.setLocalizedText(spotNameLabel, org.openide.util.NbBundle.getMessage(Plate96ViewerTopComponent.class, "Plate96ViewerTopComponent.spotNameLabel.text")); // NOI18N
+        jPanel1.add(spotNameLabel);
+
+        add(jPanel1, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel spotNameLabel;
     // End of variables declaration//GEN-END:variables
     private Plate96Panel platePanel;
 
@@ -62,6 +81,7 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
             remove(platePanel);
         }
         platePanel = new Plate96Panel(plate);
+        setDisplayName("96 Well Plate: "+plate.getName());
         add(platePanel, BorderLayout.CENTER);
     }
 
@@ -106,12 +126,19 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         if (result != null) {
             result.addLookupListener(this);
         }
+        if(spotResult==null) {
+            spotResult = Utilities.actionsGlobalContext().lookupResult(ISpot.class);
+        }
+        spotResult.addLookupListener(this);
     }
 
     @Override
     public void componentClosed() {
         if (result != null) {
             result.removeLookupListener(this);
+        }
+        if(spotResult!=null) {
+            spotResult.removeLookupListener(this);
         }
     }
 
@@ -146,6 +173,13 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         Iterator<? extends IPlate96> instances = result.allInstances().iterator();
         if (instances.hasNext()) {
             initPlateComponent(instances.next());
+        }
+
+        Iterator<? extends ISpot> spotInstances = spotResult.allInstances().iterator();
+        if (spotInstances.hasNext()) {
+            ISpot spotInstance = spotInstances.next();
+            spotNameLabel.setText(spotInstance.toString());
+            this.spot = spotInstance;
         }
     }
 }

@@ -77,7 +77,7 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
                                 String oldPath = baseDirectoryFile.getAbsolutePath() + File.separator + "gelImages" + File.separator + gel.getFilename();
                                 FileObject originalFileObject = FileUtil.toFileObject(new File(oldPath));
                                 FileObject gelFileObject = FileUtil.copyFile(originalFileObject, FileUtil.toFileObject(gelDirectoryFile), gel.getName());
-                                gel.setFilename(gelFileObject.getPath());
+                                gel.setFilename("gels"+File.separator+gelFileObject.getNameExt());
                             }
                         }
                     }

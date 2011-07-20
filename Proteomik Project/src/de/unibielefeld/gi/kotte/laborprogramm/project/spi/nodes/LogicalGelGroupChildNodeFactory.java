@@ -3,25 +3,25 @@ package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
 import java.util.List;
-import java.util.logging.Logger;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
+import org.openide.util.Lookup;
 
 /**
  *
  * @author kotte
  */
-class LogicalGelGroupChildNodeFactory extends ChildFactory<Object> {
+class LogicalGelGroupChildNodeFactory extends ChildFactory<IBioRepGelGroup> {
 
-    private ILogicalGelGroup illg;
+    private Lookup lkp;
 
-    public LogicalGelGroupChildNodeFactory(ILogicalGelGroup illg) {
-        this.illg = illg;
+    public LogicalGelGroupChildNodeFactory(Lookup lkp) {
+        this.lkp = lkp;
     }
 
     @Override
-    protected boolean createKeys(List<Object> toPopulate) {
-        List<IBioRepGelGroup> ibrggs = illg.getGelGroups();
+    protected boolean createKeys(List<IBioRepGelGroup> toPopulate) {
+        List<IBioRepGelGroup> ibrggs = lkp.lookup(ILogicalGelGroup.class).getGelGroups();
         for (IBioRepGelGroup ibrgg : ibrggs) {
             if (Thread.interrupted()) {
                 return true;
@@ -34,10 +34,10 @@ class LogicalGelGroupChildNodeFactory extends ChildFactory<Object> {
     }
 
     @Override
-    protected Node createNodeForKey(Object key) {
+    protected Node createNodeForKey(IBioRepGelGroup key) {
         //Logger.getLogger(LogicalGelGroupChildNodeFactory.class.getName()).info("Creating node for key " + key.getClass().getName());
         if (key instanceof IBioRepGelGroup) {
-            return new BioRepGelGroupNode((IBioRepGelGroup) key);
+            return new BioRepGelGroupNode(key,lkp);
         }
         return Node.EMPTY;
     }

@@ -58,6 +58,14 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.openide.actions</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>6.16.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.openide.awt</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -142,7 +150,6 @@
             <public-packages>
                 <package>de.unibielefeld.gi.kotte.laborprogramm.project.api</package>
                 <package>de.unibielefeld.gi.kotte.laborprogramm.project.api.cookies</package>
-                <package>de.unibielefeld.gi.kotte.laborprogramm.project.spi.factory</package>
             </public-packages>
         </data>
     </configuration>

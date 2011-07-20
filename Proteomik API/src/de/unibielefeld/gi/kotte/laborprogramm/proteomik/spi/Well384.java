@@ -1,5 +1,8 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
 
+import com.db4o.activation.ActivationPurpose;
+import com.db4o.activation.Activator;
+import com.db4o.ta.Activatable;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
@@ -12,7 +15,7 @@ import java.beans.PropertyChangeSupport;
  *
  * @author kotte
  */
-public class Well384 implements IWell384 {
+public class Well384 implements IWell384, Activatable {
 
     /**
      * PropertyChangeSupport ala JavaBeans(tm)
@@ -36,24 +39,37 @@ public class Well384 implements IWell384 {
         }
         return this.pcs;
     }
+
+    private transient Activator activator;
+
+    @Override
+    public void bind(Activator activator) {
+        if (this.activator == activator) {
+            return;
+        }
+        if (activator != null && null != this.activator) {
+            throw new IllegalStateException(
+                    "Object can only be bound to one activator");
+        }
+        this.activator = activator;
+    }
+
+    @Override
+    public void activate(ActivationPurpose activationPurpose) {
+        if (null != activator) {
+            activator.activate(activationPurpose);
+        }
+    }
+
     /**
      * Object definition
      */
-    IPlate384 parent;
-    Well384Status status;
-    IWell96 well96;
-    String identification;
-    char row;
-    int column;
-
-    public Well384() {
-        this.parent = null;
-        this.status = Well384Status.EMPTY;
-        this.well96 = null;
-        this.identification = "";
-        this.row = 'X'; //Well96 Position X0 fuer ausserhalb einer Platte
-        this.column = 0;
-    }
+    private IPlate384 parent;
+    private Well384Status status = Well384Status.EMPTY;
+    private IWell96 well96;
+    private String identification = "";
+    private char row = 'X';
+    private int column = 0;
 
     public Well384(char posX, int posY, IPlate384 parent) {
         this.parent = parent;
@@ -66,75 +82,90 @@ public class Well384 implements IWell384 {
 
     @Override
     public IPlate384 getParent() {
+        activate(ActivationPurpose.READ);
         return parent;
     }
 
     @Override
     public char getRow() {
+        activate(ActivationPurpose.READ);
         return row;
     }
 
     @Override
     public int getColumn() {
+        activate(ActivationPurpose.READ);
         return column;
     }
 
     @Override
     public String getWellPosition() {
-        return "" + row + column;
+        activate(ActivationPurpose.READ);
+        return "" + getRow() + getColumn();
     }
 
     @Override
     public Well384Status getStatus() {
+        activate(ActivationPurpose.READ);
         return status;
     }
 
     @Override
     public IWell96 getWell96() {
+        activate(ActivationPurpose.READ);
         return well96;
     }
 
+    @Override
     public String getIdentification() {
+        activate(ActivationPurpose.READ);
         return identification;
     }
 
+    @Override
     public void setIdentification(String identification) {
+        activate(ActivationPurpose.WRITE);
         this.identification = identification;
         getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public void setParent(IPlate384 parent) {
+        activate(ActivationPurpose.WRITE);
         this.parent = parent;
         getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public void setRow(char posX) {
+        activate(ActivationPurpose.WRITE);
         this.row = posX;
         getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public void setColumn(int posY) {
+        activate(ActivationPurpose.WRITE);
         this.column = posY;
         getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public void setStatus(Well384Status status) {
+        activate(ActivationPurpose.WRITE);
         this.status = status;
         getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public void setWell96(IWell96 well96) {
+        activate(ActivationPurpose.WRITE);
         this.well96 = well96;
         getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
     }
 
     @Override
     public String toString() {
-        return "well " + row + column + " is " + status;
+        return "well " + getRow()+ getColumn() + " is " + getStatus();
     }
 }

@@ -5,14 +5,9 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96Factory;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.swing.Action;
-import javax.swing.Box;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Lookup;
@@ -88,7 +83,8 @@ public class CreatePlate96Action implements Action {
             this.proj.add96Plate(plate96);
             plate96.setParent(this.proj);
             plate96.setName(dialog.getNameText());
-            listener.propertyChange(null);
+            System.out.println("Firing PropertyChangeEvent: PLATE96_CREATED");
+            listener.propertyChange(new PropertyChangeEvent(this,"PLATE96_CREATED",null,plate96));
         }
 
     }

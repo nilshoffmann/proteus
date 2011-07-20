@@ -3,10 +3,13 @@ package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -14,15 +17,23 @@ import org.openide.nodes.Node;
  */
 class SpotGroupFolderChildNodeFactory extends ChildFactory<ISpotGroup> implements PropertyChangeListener {
 
-    private Collection<ISpotGroup> isgs;
+    private Lookup lkp;
 
-    public SpotGroupFolderChildNodeFactory(Collection<ISpotGroup> isgs) {
-        this.isgs = isgs;
+    public SpotGroupFolderChildNodeFactory(Lookup lkp) {
+        this.lkp = lkp;
     }
 
     @Override
     protected boolean createKeys(List<ISpotGroup> toPopulate) {
-        for (ISpotGroup isg : isgs) {
+        List<ISpotGroup> l = new ArrayList<ISpotGroup>(lkp.lookupAll(ISpotGroup.class));
+        Collections.sort(l, new Comparator<ISpotGroup>() {
+
+            @Override
+            public int compare(ISpotGroup t, ISpotGroup t1) {
+                return t.getNumber() - t1.getNumber();
+            }
+        });
+        for (ISpotGroup isg : l) {
             if (Thread.interrupted()) {
                 return true;
             } else {
@@ -36,7 +47,7 @@ class SpotGroupFolderChildNodeFactory extends ChildFactory<ISpotGroup> implement
     @Override
     protected Node createNodeForKey(ISpotGroup key) {
         key.addPropertyChangeListener(this);
-        return new SpotGroupNode(key);
+        return new SpotGroupNode(key,lkp);
     }
 
     @Override

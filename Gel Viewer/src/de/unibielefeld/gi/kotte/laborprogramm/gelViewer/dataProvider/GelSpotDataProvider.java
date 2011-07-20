@@ -10,7 +10,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
+import java.io.File;
 import javax.media.jai.JAI;
 import javax.media.jai.PlanarImage;
 import maltcms.ui.viewer.datastructures.tree.QuadTree;
@@ -26,15 +26,15 @@ public class GelSpotDataProvider implements IDataProvider<ISpot> {
     private Rectangle2D dataBounds = null;
     private int maxRow = 0;
     private Point2D toOrigin;
-    private IGel gel;
+    private File gelLocation;
     private QuadTree<ISpot> qt = null;
 
-    public GelSpotDataProvider(IGel gel) {
-        this(gel, new Point2D.Double(0,0));
+    public GelSpotDataProvider(File gelLocation, IGel gel) {
+        this(gelLocation, gel, new Point2D.Double(0,0));
     }
 
-    public GelSpotDataProvider(IGel gel, Point2D toOrigin) {
-        this.gel = gel;
+    public GelSpotDataProvider(File gelLocation, IGel gel, Point2D toOrigin) {
+        this.gelLocation = gelLocation;
         BufferedImage bi = null;
 //        try {
         //        if (file == 0) {
@@ -45,7 +45,7 @@ public class GelSpotDataProvider implements IDataProvider<ISpot> {
         //
         //        }
         PlanarImage im = null;
-        im = JAI.create("fileload", gel.getFilename());
+        im = JAI.create("fileload", gelLocation.getAbsolutePath());
         bi = im.getAsBufferedImage();
         this.dataImage = bi;
         this.toOrigin = toOrigin;

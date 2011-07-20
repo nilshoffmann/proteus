@@ -2,6 +2,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.gelViewer;
 
 import de.unibielefeld.gi.kotte.laborprogramm.centralLookup.CentralLookup;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.dataProvider.GelSpotDataProvider;
+import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import java.awt.BorderLayout;
@@ -39,6 +40,7 @@ import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 //import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup.Result;
 import org.openide.util.Lookup.Template;
@@ -50,9 +52,11 @@ import org.openide.util.lookup.InstanceContent;
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.gelViewer//GelViewer//EN",
+@ConvertAsProperties(
+dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.gelViewer//GelViewer//EN",
 autostore = false)
-public final class GelViewerTopComponent extends TopComponent implements LookupListener {
+public final class GelViewerTopComponent extends TopComponent implements
+        LookupListener {
 
     private static GelViewerTopComponent instance;
     /** path to the icon used by the component and its open action */
@@ -71,18 +75,20 @@ public final class GelViewerTopComponent extends TopComponent implements LookupL
 
         initComponents();
 
-        setName(NbBundle.getMessage(GelViewerTopComponent.class, "CTL_GelViewerTopComponent"));
-        setToolTipText(NbBundle.getMessage(GelViewerTopComponent.class, "HINT_GelViewerTopComponent"));
+        setName(NbBundle.getMessage(GelViewerTopComponent.class,
+                "CTL_GelViewerTopComponent"));
+        setToolTipText(NbBundle.getMessage(GelViewerTopComponent.class,
+                "HINT_GelViewerTopComponent"));
 //        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
 //        if (gel == null) {
-            //setGel();
-            //setGel();
+        //setGel();
+        //setGel();
 //        } else {
 //            setGel(gel);
 //        }
 
         IGel gel = CentralLookup.getDefault().lookup(IGel.class);
-        if(gel!=null) {
+        if (gel != null) {
             setGel(gel);
         }
     }
@@ -111,28 +117,22 @@ public final class GelViewerTopComponent extends TopComponent implements LookupL
 
     private void addHeatmapPanel(IGel gel) {
         //TODO fixme
+        System.out.println("Loading gel " + gel.getFilename());
         File file = new File(gel.getFilename());
-        if (!file.exists()) {
-            Exceptions.printStackTrace(new FileNotFoundException("Could not find referenced file " + file.getAbsolutePath() + " for gel " + gel.getName()));
-            //file = new File("/vol/maltcms/kotte/ProteomikLaborProgramm/Sample/Delta 2D/Konstantin/gelImages/1284023623027");
-            return;
+        if (file.isAbsolute()) {
+            if (!file.exists()) {
+                Exceptions.printStackTrace(new FileNotFoundException("Could not find referenced file " + file.
+                        getPath() + " for gel " + gel.getName()));
+                return;
+            }
+        }else{//resolve relative gel path
+            System.out.println("Resolving gel path agains project basedir!");
+            IProteomicProject p = Utilities.actionsGlobalContext().lookup(IProteomicProject.class);
+            System.out.println("Using project: "+p);
+            file = new File(FileUtil.toFile(p.getProjectDirectory()),file.getPath());
         }
-        //File file = new File("/vol/maltcms/kotte/ProteomikLaborProgramm/Sample/Delta 2D/Konstantin/gelImages/1284023623027");
         HeatmapDataset<ISpot> hmd = null;
-//        BufferedImage bi = null;
-//        try {
-        //        if (file == 0) {
-        //            bi = ImageIO.read(HeatmapPanel.class.getResource(s));
-        //            hmd = new HeatmapDataset<List<Integer>>(new HeatmapDataProvider(
-        //                    bi, new Point2D.Double(0, bi.getHeight())));
-        //        } else {
-        //
-        //        }
-//        PlanarImage im = null;
-//        im = JAI.create("fileload", file.getAbsolutePath());
-//        bi = im.getAsBufferedImage();
-//            bi = ImageIO.read(file);
-        hmd = new HeatmapDataset<ISpot>(new GelSpotDataProvider(gel));
+        hmd = new HeatmapDataset<ISpot>(new GelSpotDataProvider(file,gel));
 
         ic.add(hmd);
         final HeatmapPanel<ISpot> jl = new HeatmapPanel<ISpot>(
@@ -140,7 +140,8 @@ public final class GelViewerTopComponent extends TopComponent implements LookupL
         hmd.addPropertyChangeListener(jl);
 
         for (ISpot spot : gel.getSpots()) {
-            hmd.addAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()), spot);
+            hmd.addAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()),
+                    spot);
         }
         final IDataProvider hdp = hmd.getDataProvider();
         //create a tooltip painter for the payload type (here: List<Float>)
@@ -326,9 +327,12 @@ public final class GelViewerTopComponent extends TopComponent implements LookupL
 
             @Override
             public void run() {
-                Rectangle2D dataBounds = getLookup().lookup(HeatmapDataset.class).getDataBounds();
-                getLookup().lookup(ZoomProcessor.class).zoomIn(new Point2D.Double(dataBounds.getCenterX(), dataBounds.getCenterY()));
-                zoomDisplay.setText(String.format("%1.2f", getLookup().lookup(HeatmapDataset.class).getZoom().getSecond()));
+                Rectangle2D dataBounds = getLookup().lookup(HeatmapDataset.class).
+                        getDataBounds();
+                getLookup().lookup(ZoomProcessor.class).zoomIn(new Point2D.Double(dataBounds.
+                        getCenterX(), dataBounds.getCenterY()));
+                zoomDisplay.setText(String.format("%1.2f", getLookup().lookup(
+                        HeatmapDataset.class).getZoom().getSecond()));
             }
         };
         SwingUtilities.invokeLater(r);
@@ -340,16 +344,18 @@ public final class GelViewerTopComponent extends TopComponent implements LookupL
 
             @Override
             public void run() {
-                Rectangle2D dataBounds = getLookup().lookup(HeatmapDataset.class).getDataBounds();
+                Rectangle2D dataBounds = getLookup().lookup(HeatmapDataset.class).
+                        getDataBounds();
 
                 getLookup().lookup(ZoomProcessor.class).zoomOut(
-                        new Point2D.Double(dataBounds.getCenterX(), dataBounds.getCenterY()));
-                zoomDisplay.setText(String.format("%1.2f", getLookup().lookup(HeatmapDataset.class).getZoom().getSecond()));
+                        new Point2D.Double(dataBounds.getCenterX(), dataBounds.
+                        getCenterY()));
+                zoomDisplay.setText(String.format("%1.2f", getLookup().lookup(
+                        HeatmapDataset.class).getZoom().getSecond()));
             }
         };
         SwingUtilities.invokeLater(r);
     }//GEN-LAST:event_jButton2ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -373,7 +379,8 @@ public final class GelViewerTopComponent extends TopComponent implements LookupL
      * Obtain the GelViewerTopComponent instance. Never call {@link #getDefault} directly!
      */
     public static synchronized GelViewerTopComponent findInstance() {
-        TopComponent win = WindowManager.getDefault().findTopComponent(PREFERRED_ID);
+        TopComponent win = WindowManager.getDefault().findTopComponent(
+                PREFERRED_ID);
         if (win == null) {
             Logger.getLogger(GelViewerTopComponent.class.getName()).warning(
                     "Cannot find " + PREFERRED_ID + " component. It will not be located properly in the window system.");
@@ -397,6 +404,7 @@ public final class GelViewerTopComponent extends TopComponent implements LookupL
     public void componentOpened() {
         result = Utilities.actionsGlobalContext().lookupResult(IGel.class);
         result.addLookupListener(this);
+        resultChanged(new LookupEvent(result));
     }
 
     @Override
@@ -437,7 +445,8 @@ public final class GelViewerTopComponent extends TopComponent implements LookupL
         if (result != null) {
             Collection<? extends IGel> c = result.allInstances();
             if (c.size() > 1) {
-                throw new IllegalArgumentException("Found more than one instance of IGel in lookup!");
+                throw new IllegalArgumentException(
+                        "Found more than one instance of IGel in lookup!");
             }
             if (c.size() == 1) {
                 System.out.println("Setting gel!");

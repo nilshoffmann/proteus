@@ -28,10 +28,10 @@ public class Plate96Node extends AbstractNode {
         this.plate = plate;
     }
 
-    public Plate96Node(IPlate96 plate) {
-        super(Children.LEAF,Lookups.fixed(plate,Lookup.getDefault().lookup(IPlate96OpenCookie.class)));
-        this.plate = plate;
-    }
+//    public Plate96Node(IPlate96 plate) {
+//        super(Children.LEAF,Lookups.fixed(plate,Lookup.getDefault().lookup(IPlate96OpenCookie.class)));
+//        this.plate = plate;
+//    }
 
     @Override
     public Image getIcon(int type) {

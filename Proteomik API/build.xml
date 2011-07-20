@@ -5,4 +5,35 @@
 <project name="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api" default="netbeans" basedir=".">
     <description>Builds, tests, and runs the project de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.</description>
     <import file="nbproject/build-impl.xml"/>
+
+<!--    <path id="db4o.classpath">
+        <pathelement path="${build.classes.dir}"/>
+        <pathelement path="${module.classpath}"/>
+    </path>
+
+    <taskdef name="db4o-enhance"
+         classname="com.db4o.enhance.Db4oEnhancerAntTask"
+         classpathref="db4o.classpath"/>
+
+    <target name="enhance">
+        <db4o-enhance classtargetdir="${build.classes.dir}"
+                  jartargetdir="${cluster}"
+                  nq="true" ta="true"
+                  collections="true">
+            <classpath refid="${db4o.classpath}"/>
+            <sources dir="${build.classes.dir}">
+                <include name="**/*.class"/>
+            </sources>
+            
+            <jars dir="${module.classpath}">
+                <include name="*.jar"/>
+                <exclude name="db4o-*.jar"/>
+                <exclude name="ant.jar"/>
+                <exclude name="bloat-1.0.jar"/>
+            </jars>
+        </db4o-enhance>
+    </target>
+
+    <target name="-post-compile" depends="enhance" />-->
+
 </project>

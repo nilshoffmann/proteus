@@ -5,22 +5,23 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGe
 import java.util.List;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
+import org.openide.util.Lookup;
 
 /**
  *
  * @author kotte
  */
-class BioRepGelGroupChildNodeFactory extends ChildFactory<Object> {
+class BioRepGelGroupChildNodeFactory extends ChildFactory<ITechRepGelGroup> {
 
-    private IBioRepGelGroup ibrgg;
+    private Lookup lkp;
 
-    public BioRepGelGroupChildNodeFactory(IBioRepGelGroup ibrgg) {
-        this.ibrgg = ibrgg;
+    public BioRepGelGroupChildNodeFactory(Lookup lkp) {
+        this.lkp = lkp;
     }
 
     @Override
-    protected boolean createKeys(List<Object> toPopulate) {
-        List<ITechRepGelGroup> itrggs = ibrgg.getGelGroups();
+    protected boolean createKeys(List<ITechRepGelGroup> toPopulate) {
+        List<ITechRepGelGroup> itrggs = lkp.lookup(IBioRepGelGroup.class).getGelGroups();
         for (ITechRepGelGroup itrgg : itrggs) {
             if (Thread.interrupted()) {
                 return true;
@@ -33,9 +34,9 @@ class BioRepGelGroupChildNodeFactory extends ChildFactory<Object> {
     }
 
     @Override
-    protected Node createNodeForKey(Object key) {
-        if (key instanceof ITechRepGelGroup) {
-            return new TechRepGelGroupNode((ITechRepGelGroup) key);
+    protected Node createNodeForKey(ITechRepGelGroup key) {
+        if (key != null) {
+            return new TechRepGelGroupNode(key,lkp);
         }
         return Node.EMPTY;
     }

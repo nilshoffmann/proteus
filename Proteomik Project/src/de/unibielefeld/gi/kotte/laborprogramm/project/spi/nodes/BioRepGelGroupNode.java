@@ -13,6 +13,7 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -24,14 +25,14 @@ public class BioRepGelGroupNode extends AbstractNode {
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/BioRepGelGroupIcon.png";
 
     public BioRepGelGroupNode(IBioRepGelGroup ibrgg, Lookup lkp) {
-        super(Children.create(new BioRepGelGroupChildNodeFactory(ibrgg), true), lkp);
+        super(Children.create(new BioRepGelGroupChildNodeFactory(new ProxyLookup(lkp,Lookups.fixed(ibrgg))), true), new ProxyLookup(lkp,Lookups.singleton(ibrgg)));
         this.ibrgg = ibrgg;
     }
 
-    public BioRepGelGroupNode(IBioRepGelGroup ibrgg) {
-        super(Children.create(new BioRepGelGroupChildNodeFactory(ibrgg), true), Lookups.singleton(ibrgg));
-        this.ibrgg = ibrgg;
-    }
+//    public BioRepGelGroupNode(IBioRepGelGroup ibrgg) {
+//        super(Children.create(new BioRepGelGroupChildNodeFactory(ibrgg), true), Lookups.singleton(ibrgg));
+//        this.ibrgg = ibrgg;
+//    }
 
     @Override
     public Action[] getActions(boolean arg0) {

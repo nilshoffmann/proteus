@@ -1,18 +1,11 @@
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi.factory;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
-import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProjectFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.project.spi.ProteomicProject;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.Map;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectState;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -35,18 +28,10 @@ public class ProteomikProjectFactory implements ProjectFactory {
 
         if (isProject(fo)) {
             System.out.println("Loading project from " + fo.getPath());
-            //IProteomicProject ipf = Lookup.getDefault().lookup(IProteomicProject.class);
             ProteomicProject project = null;
             project = new ProteomicProject();
             project.setProjectState(ps);
             project.activate(fo.getFileObject(PROJECT_FILE).getURL());
-            
-            //IProteomicProject project = createProject(FileUtil.toFile(fo));
-            //project.setState(ps);
-            /**
-            project.setState(ps);
-            project.activate(FileUtil.toFile(fo.getFileObject(DBProjectFactory.PROJECT_FILE)).toURI().toURL());
-             */
             return project;
         } else {
             return null;
@@ -55,8 +40,9 @@ public class ProteomikProjectFactory implements ProjectFactory {
 
     @Override
     public void saveProject(org.netbeans.api.project.Project prjct) throws IOException, ClassCastException {
-//        ChromAUIProject cp = (ChromAUIProject)prjct;
-//        cp.getCrudProvider().
+        if(prjct instanceof IProteomicProject) {
+            ((IProteomicProject)prjct).close();
+        }
     }
 
 }

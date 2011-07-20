@@ -26,10 +26,6 @@ public class ProteomicProjectFactory2 implements IProteomicProjectFactory{
         try {
             proproject = new ProteomicProject(project);
             proproject.activate(new File(projdir, ProteomikProjectFactory.PROJECT_FILE).toURI().toURL());
-           // proproject.store(project);
-            //IProject ipr = proproject.retrieve(IProject.class);
-            //System.out.println("My funky Project: "+ipr.toString());
-//            System.out.println("Gel groups: " + proproject.getGelGroups());
             proproject.close();
         } catch (MalformedURLException ex) {
             Exceptions.printStackTrace(ex);

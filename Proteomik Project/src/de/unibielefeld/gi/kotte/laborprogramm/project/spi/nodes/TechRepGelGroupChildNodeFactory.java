@@ -5,22 +5,23 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGe
 import java.util.List;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
+import org.openide.util.Lookup;
 
 /**
  *
  * @author kotte
  */
-class TechRepGelGroupChildNodeFactory extends ChildFactory<Object> {
+class TechRepGelGroupChildNodeFactory extends ChildFactory<IGel> {
+    
+    private Lookup lkp;
 
-    private ITechRepGelGroup itrgg;
-
-    public TechRepGelGroupChildNodeFactory(ITechRepGelGroup itrgg) {
-        this.itrgg = itrgg;
+    public TechRepGelGroupChildNodeFactory(Lookup lkp) {
+        this.lkp = lkp;
     }
 
     @Override
-    protected boolean createKeys(List<Object> toPopulate) {
-        List<IGel> gels = itrgg.getGels();
+    protected boolean createKeys(List<IGel> toPopulate) {
+        List<IGel> gels = lkp.lookup(ITechRepGelGroup.class).getGels();
         for (IGel gel : gels) {
             if (Thread.interrupted()) {
                 return true;
@@ -33,9 +34,9 @@ class TechRepGelGroupChildNodeFactory extends ChildFactory<Object> {
     }
 
     @Override
-    protected Node createNodeForKey(Object key) {
-        if (key instanceof IGel) {
-            return new GelNode((IGel) key);
+    protected Node createNodeForKey(IGel key) {
+        if(key!=null) {
+            return new GelNode(key,lkp);
         }
         return Node.EMPTY;
     }

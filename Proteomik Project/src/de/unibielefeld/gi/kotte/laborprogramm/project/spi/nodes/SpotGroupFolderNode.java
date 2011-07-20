@@ -10,6 +10,7 @@ import org.openide.nodes.Children;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -20,12 +21,12 @@ public class SpotGroupFolderNode extends AbstractNode {
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/SpotGroupIcon.png";
 
     public SpotGroupFolderNode(Collection<ISpotGroup> illg, Lookup lkp) {
-        super(Children.create(new SpotGroupFolderChildNodeFactory(illg), true), lkp);
+        super(Children.create(new SpotGroupFolderChildNodeFactory(new ProxyLookup(lkp,Lookups.fixed(illg.toArray(new ISpotGroup[illg.size()])))), true), new ProxyLookup(lkp,Lookups.fixed(illg)));
     }
 
-    public SpotGroupFolderNode(Collection<ISpotGroup> illg) {
-        super(Children.create(new SpotGroupFolderChildNodeFactory(illg), true), Lookups.singleton(illg));
-    }
+//    public SpotGroupFolderNode(Collection<ISpotGroup> illg) {
+//        super(Children.create(new SpotGroupFolderChildNodeFactory(illg), true), Lookups.singleton(illg));
+//    }
 
     @Override
     public Action[] getActions(boolean arg0) {

@@ -20,25 +20,27 @@ import org.openide.util.Utilities;
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.debug//LookupMonitor//EN",
+@ConvertAsProperties(
+dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.debug//LookupMonitor//EN",
 autostore = false)
-public final class LookupMonitorTopComponent extends TopComponent implements LookupListener{
+public final class LookupMonitorTopComponent extends TopComponent implements
+        LookupListener {
 
     private static LookupMonitorTopComponent instance;
     /** path to the icon used by the component and its open action */
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
     private static final String PREFERRED_ID = "LookupMonitorTopComponent";
-
     private Result<Object> r = null;
     private Result<Object> centralLookupResult = null;
-
     private DefaultListModel dlm = new DefaultListModel();
     private DefaultListModel dlm2 = new DefaultListModel();
 
     public LookupMonitorTopComponent() {
         initComponents();
-        setName(NbBundle.getMessage(LookupMonitorTopComponent.class, "CTL_LookupMonitorTopComponent"));
-        setToolTipText(NbBundle.getMessage(LookupMonitorTopComponent.class, "HINT_LookupMonitorTopComponent"));
+        setName(NbBundle.getMessage(LookupMonitorTopComponent.class,
+                "CTL_LookupMonitorTopComponent"));
+        setToolTipText(NbBundle.getMessage(LookupMonitorTopComponent.class,
+                "HINT_LookupMonitorTopComponent"));
 //        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
 
     }
@@ -103,7 +105,6 @@ public final class LookupMonitorTopComponent extends TopComponent implements Loo
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -112,6 +113,7 @@ public final class LookupMonitorTopComponent extends TopComponent implements Loo
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
+
     /**
      * Gets default instance. Do not use directly: reserved for *.settings files only,
      * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
@@ -128,7 +130,8 @@ public final class LookupMonitorTopComponent extends TopComponent implements Loo
      * Obtain the LookupMonitorTopComponent instance. Never call {@link #getDefault} directly!
      */
     public static synchronized LookupMonitorTopComponent findInstance() {
-        TopComponent win = WindowManager.getDefault().findTopComponent(PREFERRED_ID);
+        TopComponent win = WindowManager.getDefault().findTopComponent(
+                PREFERRED_ID);
         if (win == null) {
             Logger.getLogger(LookupMonitorTopComponent.class.getName()).warning(
                     "Cannot find " + PREFERRED_ID + " component. It will not be located properly in the window system.");
@@ -152,13 +155,19 @@ public final class LookupMonitorTopComponent extends TopComponent implements Loo
     public void componentOpened() {
         r = Utilities.actionsGlobalContext().lookupResult(Object.class);
         r.addLookupListener(this);
-        centralLookupResult = CentralLookup.getDefault().lookupResult(Object.class);
+        centralLookupResult = CentralLookup.getDefault().lookupResult(
+                Object.class);
         centralLookupResult.addLookupListener(this);
     }
 
     @Override
     public void componentClosed() {
-        // TODO add custom code on component closing
+        if(r!=null) {
+            r.removeLookupListener(this);
+        }
+        if(centralLookupResult!=null) {
+            centralLookupResult.removeLookupListener(this);
+        }
     }
 
     void writeProperties(java.util.Properties p) {
@@ -188,16 +197,19 @@ public final class LookupMonitorTopComponent extends TopComponent implements Loo
 
     @Override
     public void resultChanged(LookupEvent ev) {
-        dlm = new DefaultListModel();
-        for(Object obj:r.allInstances()) {
-            dlm.addElement(obj);
+        if (r != null) {
+            dlm = new DefaultListModel();
+            for (Object obj : r.allInstances()) {
+                dlm.addElement(obj);
+            }
+            jList1.setModel(dlm);
         }
-        jList1.setModel(dlm);
-
-        dlm2 = new DefaultListModel();
-        for(Object obj:centralLookupResult.allInstances()) {
-            dlm2.addElement(obj);
+        if (centralLookupResult != null) {
+            dlm2 = new DefaultListModel();
+            for (Object obj : centralLookupResult.allInstances()) {
+                dlm2.addElement(obj);
+            }
+            jList2.setModel(dlm2);
         }
-        jList2.setModel(dlm2);
     }
 }

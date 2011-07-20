@@ -9,6 +9,7 @@ import org.openide.nodes.Children;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -20,14 +21,15 @@ public class LogicalGelGroupNode extends AbstractNode {
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/LogicalGelGroupIcon.png";
 
     public LogicalGelGroupNode(ILogicalGelGroup illg, Lookup lkp) {
-        super(Children.create(new LogicalGelGroupChildNodeFactory(illg), true), lkp);
+        super(Children.create(new LogicalGelGroupChildNodeFactory(new ProxyLookup(
+                lkp,Lookups.fixed(illg))), true), new ProxyLookup(lkp,Lookups.singleton(illg)));
         this.illg = illg;
     }
 
-    public LogicalGelGroupNode(ILogicalGelGroup illg) {
-        super(Children.create(new LogicalGelGroupChildNodeFactory(illg), true), Lookups.singleton(illg));
-        this.illg = illg;
-    }
+//    public LogicalGelGroupNode(ILogicalGelGroup illg) {
+//        super(Children.create(new LogicalGelGroupChildNodeFactory(illg), true), Lookups.singleton(illg));
+//        this.illg = illg;
+//    }
 
     @Override
     public Action[] getActions(boolean arg0) {

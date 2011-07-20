@@ -12,7 +12,7 @@ import org.netbeans.spi.project.ProjectState;
  *
  * @author kotte
  */
-public interface IProteomicProject extends Project, IProject, PropertyChangeListener {
+public interface IProteomicProject extends Project, IPropertyChangeSource, PropertyChangeListener {
 
     public void activate(URL url);
 

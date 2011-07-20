@@ -9,6 +9,7 @@ import org.openide.nodes.Children;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -16,18 +17,16 @@ import org.openide.util.lookup.Lookups;
  */
 public class TechRepGelGroupNode extends AbstractNode {
 
-    private ITechRepGelGroup itrgg;
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/TechRepGelGroupIcon.png";
 
     public TechRepGelGroupNode(ITechRepGelGroup itrgg, Lookup lkp) {
-        super(Children.create(new TechRepGelGroupChildNodeFactory(itrgg), true), lkp);
-        this.itrgg = itrgg;
+        super(Children.create(new TechRepGelGroupChildNodeFactory(new ProxyLookup(lkp,Lookups.fixed(itrgg))), true), new ProxyLookup(lkp,Lookups.fixed(itrgg)));
     }
 
-    public TechRepGelGroupNode(ITechRepGelGroup itrgg) {
-        super(Children.create(new TechRepGelGroupChildNodeFactory(itrgg), true), Lookups.singleton(itrgg));
-        this.itrgg = itrgg;
-    }
+//    public TechRepGelGroupNode(ITechRepGelGroup itrgg) {
+//        super(Children.create(new TechRepGelGroupChildNodeFactory(itrgg), true), Lookups.singleton(itrgg));
+//        this.itrgg = itrgg;
+//    }
 
     @Override
     public Action[] getActions(boolean arg0) {
@@ -52,6 +51,6 @@ public class TechRepGelGroupNode extends AbstractNode {
 
     @Override
     public String getDisplayName() {
-        return itrgg.getName();
+        return getLookup().lookup(ITechRepGelGroup.class).getName();
     }
 }

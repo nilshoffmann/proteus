@@ -7,6 +7,7 @@ package net.sf.maltcms.chromaui.db.spi.db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.query.Query;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import net.sf.maltcms.chromaui.db.api.exceptions.AuthenticationException;
 import net.sf.maltcms.chromaui.db.api.ICredentials;
@@ -43,7 +44,17 @@ public class DB4oCrudSession implements ICrudSession {
 
     @Override
     public final void update(Collection<? extends Object> o) {
-        create(o);
+        authenticate(ic);
+        try {
+            for (Object obj : o) {
+                System.out.println("Storing object of type "+obj.getClass().getName());
+                oc.store(obj);
+            }
+            oc.commit();
+        } catch (RuntimeException re) {
+            oc.rollback();
+            throw re;
+        }
     }
 
     @Override
@@ -63,6 +74,8 @@ public class DB4oCrudSession implements ICrudSession {
     /**
      * Returns a copy of ALL elements returned
      * by the query on the underlying ObjectContainer.
+     * The collection returned is
+     * lazily populated with objects on access.
      * 
      * @param <T>
      * @param c
@@ -82,7 +95,8 @@ public class DB4oCrudSession implements ICrudSession {
     /**
      * Returns a copy of ALL elements returned
      * by the query on the underlying ObjectContainer using 
-     * an example object.
+     * an example object. The collection returned is
+     * lazily populated with objects on access.
      * 
      * @param <T>
      * @param c
@@ -99,6 +113,10 @@ public class DB4oCrudSession implements ICrudSession {
         return a;
     }
 
+    /**
+     * Returns a SODA query builder.
+     * @return
+     */
     public final Query getSODAQuery() {
         authenticate(ic);
         return oc.query();
@@ -110,6 +128,10 @@ public class DB4oCrudSession implements ICrudSession {
         }
     }
 
+    /**
+     * Commits all open changes. Does not close the underlying ObjectContainer.
+     * @throws AuthenticationException
+     */
     @Override
     public final void close() throws AuthenticationException {
         authenticate(ic);
@@ -119,5 +141,20 @@ public class DB4oCrudSession implements ICrudSession {
     @Override
     public final void open() throws AuthenticationException {
         authenticate(ic);
+    }
+
+    @Override
+    public void create(Object... o) throws AuthenticationException {
+        create(Arrays.asList(o));
+    }
+
+    @Override
+    public void delete(Object... o) throws AuthenticationException {
+        delete(Arrays.asList(o));
+    }
+
+    @Override
+    public void update(Object... o) throws AuthenticationException {
+        update(Arrays.asList(o));
     }
 }

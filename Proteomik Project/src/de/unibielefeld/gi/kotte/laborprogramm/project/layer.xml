@@ -3,6 +3,15 @@
 <filesystem>
     <folder name="Actions">
         <folder name="File">
+            <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-ProjectSaveAction.instance">
+                <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
+                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.Bundle#CTL_ProjectSaveAction"/>
+                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.ProjectSaveAction"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+                <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
+                <attr name="type" stringvalue="org.openide.cookies.SaveCookie"/>
+            </file>
             <file name="org-openide-actions-SaveAction.instance">
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
                 <attr name="delegate" newvalue="org.openide.actions.SaveAction"/>
@@ -23,6 +32,15 @@
                 <attr name="noIconInMenu" boolvalue="false"/>
                 <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
                 <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel"/><!--org.openide.cookies.OpenCookie"/>-->
+                <attr name="position" intvalue="1"/>
+            </file>
+            <file name="org-openide-actions-ToolsAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="org-openide-actions-PropertiesAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                <attr name="position" intvalue="5000"/>
             </file>
         </folder>
         <folder name="Plate96Node">
@@ -39,23 +57,38 @@
     </folder>
     <folder name="Menu">
         <folder name="File">
-            <file name="SaveAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/org-openide-actions-SaveAction.instance"/>
-                <attr name="position" intvalue="100"/>
+            <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-ProjectSaveAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-ProjectSaveAction.instance"/>
+                <attr name="position" intvalue="472"/>
+            </file>
+            <file name="org-openide-actions-SaveAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAction.instance"/>
+                <attr name="position" intvalue="444"/>
             </file>
         </folder>
     </folder>
     <folder name="Toolbars">
         <folder name="File">
-            <file name="SaveAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/org-openide-actions-SaveAction.instance"/>
-                <attr name="position" intvalue="100"/>
+            <file name="org-openide-actions-SaveAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAction.instance"/>
+                <attr name="position" intvalue="444"/>
             </file>
+            <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
         </folder>
-    </folder> 
+    </folder>
     <folder name="Projects">
         <folder name="ProteomikLaborProgramm">
-            <folder name="Actions"/>
+            <folder name="Actions">
+                <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-ProjectSaveAction.instance">
+                    <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
+                    <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.Bundle#CTL_ProjectSaveAction"/>
+                    <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.ProjectSaveAction"/>
+                    <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
+                    <attr name="noIconInMenu" boolvalue="false"/>
+                    <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
+                    <attr name="type" stringvalue="org.openide.cookies.SaveCookie"/>
+                </file>
+            </folder>
         </folder>
     </folder>
     <folder name="Templates">

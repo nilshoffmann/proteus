@@ -1,25 +1,22 @@
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
+import de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes.ProjectChildNodeFactory.NodeGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
-import java.beans.IntrospectionException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
-import org.openide.nodes.BeanNode;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
-import org.openide.util.lookup.Lookups;
 
 /**
  *
  * @author kotte
  */
-public class ProjectChildNodeFactory extends ChildFactory<Object> implements PropertyChangeListener {
+public class ProjectChildNodeFactory extends ChildFactory<NodeGroup> implements PropertyChangeListener {
 
     private IProteomicProject ipp;
 
@@ -30,7 +27,7 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> implements Pro
         refresh(true);
     }
 
-    private enum NodeGroup {
+    public enum NodeGroup {
 
         GELGROUPS, PLATES384, PLATES96, SPOTGROUPS
     };
@@ -40,7 +37,7 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> implements Pro
     }
 
     @Override
-    protected boolean createKeys(List<Object> toPopulate) {
+    protected boolean createKeys(List<NodeGroup> toPopulate) {
         for (NodeGroup s : NodeGroup.values()) {
             if (Thread.interrupted()) {
                 return true;
@@ -52,45 +49,45 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> implements Pro
     }
 
     @Override
-    protected Node[] createNodesForKey(Object key) {
-        NodeGroup keyVal = (NodeGroup) key;
+    protected Node[] createNodesForKey(NodeGroup key) {
+        NodeGroup keyVal = key;
         Node[] nodes = null;
         int i = 0;
         switch (keyVal) {
             case GELGROUPS:
-                List<ILogicalGelGroup> illgs = ipp.getGelGroups();
+                List<ILogicalGelGroup> illgs = ipp.getLookup().lookup(IProject.class).getGelGroups();
                 nodes = new Node[illgs.size()];
                 i = 0;
                 for (ILogicalGelGroup ilgg : illgs) {
                     ilgg.addPropertyChangeListener(this);
                     ilgg.addPropertyChangeListener(ipp);
-                    nodes[i++] = new LogicalGelGroupNode(ilgg);
+                    nodes[i++] = new LogicalGelGroupNode(ilgg,ipp.getLookup());
                 }
                 return nodes;
             case PLATES384: {
-                List<IPlate384> plates384 = ipp.get384Plates();
+                List<IPlate384> plates384 = ipp.getLookup().lookup(IProject.class).get384Plates();
                 nodes = new Node[plates384.size()];
                 i = 0;
                 for (IPlate384 plate : plates384) {
                     plate.addPropertyChangeListener(this);
-                    nodes[i++] = new Plate384Node(plate);
+                    nodes[i++] = new Plate384Node(plate,ipp.getLookup());
                 }
                 return nodes;
             }
             case PLATES96:
-                List<IPlate96> plates96 = ipp.get96Plates();
+                List<IPlate96> plates96 = ipp.getLookup().lookup(IProject.class).get96Plates();
                 nodes = new Node[plates96.size()];
                 i = 0;
                 for (IPlate96 plate : plates96) {
                     System.out.println("Adding plate96: "+plate);
                     plate.addPropertyChangeListener(this);
-                        Plate96Node plateNode = new Plate96Node(plate, Lookups.singleton(ipp));
+                        Plate96Node plateNode = new Plate96Node(plate, ipp.getLookup());
                         plateNode.addPropertyChangeListener(this);
                         nodes[i++] = plateNode;
                 }
                 return nodes;
             case SPOTGROUPS:
-                return new Node[]{new SpotGroupFolderNode(ipp.getSpotGroups())};
+                return new Node[]{new SpotGroupFolderNode(ipp.getLookup().lookup(IProject.class).getSpotGroups(),ipp.getLookup())};
         }
         return new Node[]{Node.EMPTY};
     }

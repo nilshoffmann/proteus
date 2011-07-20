@@ -8,6 +8,8 @@ import com.db4o.Db4oEmbedded;
 import com.db4o.EmbeddedObjectContainer;
 import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.reflect.jdk.JdkReflector;
+import com.db4o.ta.TransparentActivationSupport;
+import com.db4o.ta.TransparentPersistenceSupport;
 import java.io.File;
 import java.util.HashSet;
 import java.util.logging.Level;
@@ -53,21 +55,22 @@ public final class DB4oCrudProvider implements ICrudProvider {
     }
 
     @Override
-    public void open() {
+    public final void open() {
         authenticate();
         if (eoc == null) {
             System.out.println("Opening ObjectContainer at " + projectDBLocation.getAbsolutePath());
             EmbeddedConfiguration ec = com.db4o.Db4oEmbedded.newConfiguration();
-            ec.common().activationDepth(10);
+//            ec.common().activationDepth(10);
             ec.common().reflectWith(new JdkReflector(this.domainClassLoader));
-//            ec.common().add(new TransparentActivationSupport());
+            ec.common().add(new TransparentActivationSupport());
+            ec.common().add(new TransparentPersistenceSupport());
             eoc = Db4oEmbedded.openFile(ec, projectDBLocation.getAbsolutePath());
             sessionCache = new HashSet<ICrudSession>();
         }
     }
 
     @Override
-    public void close() {
+    public final void close() {
         authenticate();
         for (ICrudSession ics : sessionCache) {
             try {

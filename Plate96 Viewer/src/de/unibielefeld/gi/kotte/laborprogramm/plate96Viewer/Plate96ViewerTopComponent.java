@@ -35,6 +35,7 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
 
     public Plate96ViewerTopComponent() {
         result = CentralLookup.getDefault().lookupResult(IPlate96.class);
+        spotResult = Utilities.actionsGlobalContext().lookupResult(ISpot.class);
         initComponents();
         //initPlateComponent(); //FIXME Testen, ob man das hier ueberhaupt darf!
         setName(NbBundle.getMessage(Plate96ViewerTopComponent.class, "CTL_Plate96ViewerTopComponent"));
@@ -126,10 +127,9 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         if (result != null) {
             result.addLookupListener(this);
         }
-        if(spotResult==null) {
-            spotResult = Utilities.actionsGlobalContext().lookupResult(ISpot.class);
+        if(spotResult!=null) {
+            spotResult.addLookupListener(this);
         }
-        spotResult.addLookupListener(this);
     }
 
     @Override

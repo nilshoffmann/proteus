@@ -111,35 +111,7 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <public-packages>
-                <package>com.sun.media.jai.codec</package>
-                <package>com.sun.media.jai.codecimpl</package>
-                <package>com.sun.media.jai.codecimpl.fpx</package>
-                <package>com.sun.media.jai.codecimpl.util</package>
-                <package>com.sun.media.jai.iterator</package>
-                <package>com.sun.media.jai.mlib</package>
-                <package>com.sun.media.jai.opimage</package>
-                <package>com.sun.media.jai.remote</package>
-                <package>com.sun.media.jai.rmi</package>
-                <package>com.sun.media.jai.tilecodec</package>
-                <package>com.sun.media.jai.util</package>
-                <package>com.sun.media.jai.widget</package>
-                <package>javax.media.jai</package>
-                <package>javax.media.jai.iterator</package>
-                <package>javax.media.jai.operator</package>
-                <package>javax.media.jai.registry</package>
-                <package>javax.media.jai.remote</package>
-                <package>javax.media.jai.tilecodec</package>
-                <package>javax.media.jai.util</package>
-                <package>javax.media.jai.widget</package>
-                <package>maltcms.ui.viewer.datastructures.tree</package>
-                <package>net.sf.maltcms.ui.plot.heatmap</package>
-                <package>net.sf.maltcms.ui.plot.heatmap.actions</package>
-                <package>net.sf.maltcms.ui.plot.heatmap.axis</package>
-                <package>net.sf.maltcms.ui.plot.heatmap.event</package>
-                <package>net.sf.maltcms.ui.plot.heatmap.event.mouse</package>
-                <package>net.sf.maltcms.ui.plot.heatmap.painter</package>
-            </public-packages>
+            <public-packages/>
             <class-path-extension>
                 <runtime-relative-path>ext/jai_core-1.1.3.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/jai_core-1.1.3.jar</binary-origin>

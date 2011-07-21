@@ -1,16 +1,13 @@
 package de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer;
 
-import de.unibielefeld.gi.kotte.laborprogramm.centralLookup.CentralLookup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.topComponentRegistry.api.IRegistryFactory;
 import java.awt.BorderLayout;
 import java.util.Iterator;
-import java.util.logging.Logger;
 import org.openide.util.LookupEvent;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
 //import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.Lookup;
@@ -21,7 +18,7 @@ import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 
 /**
- * Top component which displays something.
+ * Top component for the Plate96 Viewer.
  *
  * @author kotte
  */
@@ -43,7 +40,6 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         result = Utilities.actionsGlobalContext().lookupResult(IPlate96.class);
         spotResult = Utilities.actionsGlobalContext().lookupResult(ISpot.class);
         initComponents();
-        //initPlateComponent(); //FIXME Testen, ob man das hier ueberhaupt darf!
         setName(NbBundle.getMessage(Plate96ViewerTopComponent.class, "CTL_Plate96ViewerTopComponent"));
         setToolTipText(NbBundle.getMessage(Plate96ViewerTopComponent.class, "HINT_Plate96ViewerTopComponent"));
 //        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
@@ -193,6 +189,7 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
             ISpot spotInstance = spotInstances.next();
             spotNameLabel.setText(spotInstance.toString());
             this.spot = spotInstance;
+            platePanel.setSpot(this.spot);
         }
     }
 }

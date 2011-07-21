@@ -28,8 +28,8 @@ public enum Well96Status {
      */
     ERROR;
 
-    public static Color getColor(Well96Status status) {
-        switch(status) {
+    public Color getColor() {
+        switch(this) {
             case FILLED:
                 return Color.GREEN;
             case PROCESSED:
@@ -39,5 +39,20 @@ public enum Well96Status {
             default:
                 return Color.BLACK;
         }
+    }
+
+    @Override
+    public String toString() {
+        return name().toLowerCase();
+//        switch(this) {
+//            case EMPTY:
+//                return "leer";
+//            case FILLED:
+//                return "befüllt";
+//            case PROCESSED:
+//                return "prozessiert";
+//            default:
+//                return "fehlerhaft";
+//        }
     }
 }

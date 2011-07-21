@@ -39,8 +39,8 @@ public enum Well384Status {
      */
     ERROR;
 
-    public static Color getColor(Well384Status status) {
-        switch(status) {
+    public Color getColor() {
+        switch(this) {
             case FILLED:
                 return Color.BLUE;
             case IDENTIFIED:
@@ -56,5 +56,26 @@ public enum Well384Status {
             default:
                 return Color.BLACK;
         }
+    }
+
+    @Override
+    public String toString() {
+        return name().toLowerCase();
+//        switch(this) {
+//            case EMPTY:
+//                return "leer";
+//            case FILLED:
+//                return "befüllt";
+//            case IDENTIFIED:
+//                return "identifiziert";
+//            case UNCERTAIN:
+//                return "unsicher";
+//            case UNIDENTIFIED:
+//                return "nicht identifiziert";
+//            case MULTIPLE_IDENTIFICATIONS:
+//                return "uneindeutig iderntifiziert";
+//            default:
+//                return "fehlerhaft";
+//        }
     }
 }

@@ -3,6 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer;
 import de.unibielefeld.gi.kotte.laborprogramm.centralLookup.CentralLookup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
+import de.unibielefeld.gi.kotte.laborprogramm.topComponentRegistry.api.IRegistryFactory;
 import java.awt.BorderLayout;
 import java.util.Iterator;
 import java.util.logging.Logger;
@@ -12,9 +13,12 @@ import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 //import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
 import org.openide.util.LookupListener;
 import org.openide.util.Utilities;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 
 /**
  * Top component which displays something.
@@ -32,9 +36,11 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
     private Result<IPlate96> result = null;
     private Result<ISpot> spotResult = null;
     private ISpot spot = null;
+    private InstanceContent instanceContent = new InstanceContent();
 
     public Plate96ViewerTopComponent() {
-        result = CentralLookup.getDefault().lookupResult(IPlate96.class);
+        associateLookup(new AbstractLookup(instanceContent));
+        result = Utilities.actionsGlobalContext().lookupResult(IPlate96.class);
         spotResult = Utilities.actionsGlobalContext().lookupResult(ISpot.class);
         initComponents();
         //initPlateComponent(); //FIXME Testen, ob man das hier ueberhaupt darf!
@@ -42,7 +48,7 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         setToolTipText(NbBundle.getMessage(Plate96ViewerTopComponent.class, "HINT_Plate96ViewerTopComponent"));
 //        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
 
-        IPlate96 plate = CentralLookup.getDefault().lookup(IPlate96.class);
+        IPlate96 plate = Utilities.actionsGlobalContext().lookup(IPlate96.class);
         if (plate != null) {
             initPlateComponent(plate);
         }
@@ -78,48 +84,50 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
     private Plate96Panel platePanel;
 
     private void initPlateComponent(IPlate96 plate) {
-        if (platePanel != null) {
-            remove(platePanel);
+        if (platePanel == null) {
+//            remove(platePanel);
+//        }
+            instanceContent.add(plate);
+            platePanel = new Plate96Panel(plate);
+            setDisplayName("96 Well Plate: " + plate.getName());
+            add(platePanel, BorderLayout.CENTER);
+//            CentralLookup.getDefault().remove(plate);
         }
-        platePanel = new Plate96Panel(plate);
-        setDisplayName("96 Well Plate: "+plate.getName());
-        add(platePanel, BorderLayout.CENTER);
     }
 
-    /**
-     * Gets default instance. Do not use directly: reserved for *.settings files only,
-     * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
-     * To obtain the singleton instance, use {@link #findInstance}.
-     */
-    public static synchronized Plate96ViewerTopComponent getDefault() {
-        if (instance == null) {
-            instance = new Plate96ViewerTopComponent();
-        }
-        return instance;
-    }
-
-    /**
-     * Obtain the Plate96ViewerTopComponent instance. Never call {@link #getDefault} directly!
-     */
-    public static synchronized Plate96ViewerTopComponent findInstance() {
-        TopComponent win = WindowManager.getDefault().findTopComponent(PREFERRED_ID);
-        if (win == null) {
-            Logger.getLogger(Plate96ViewerTopComponent.class.getName()).warning(
-                    "Cannot find " + PREFERRED_ID + " component. It will not be located properly in the window system.");
-            return getDefault();
-        }
-        if (win instanceof Plate96ViewerTopComponent) {
-            return (Plate96ViewerTopComponent) win;
-        }
-        Logger.getLogger(Plate96ViewerTopComponent.class.getName()).warning(
-                "There seem to be multiple components with the '" + PREFERRED_ID
-                + "' ID. That is a potential source of errors and unexpected behavior.");
-        return getDefault();
-    }
-
+//    /**
+//     * Gets default instance. Do not use directly: reserved for *.settings files only,
+//     * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
+//     * To obtain the singleton instance, use {@link #findInstance}.
+//     */
+//    public static synchronized Plate96ViewerTopComponent getDefault() {
+//        if (instance == null) {
+//            instance = new Plate96ViewerTopComponent();
+//        }
+//        return instance;
+//    }
+//
+//    /**
+//     * Obtain the Plate96ViewerTopComponent instance. Never call {@link #getDefault} directly!
+//     */
+//    public static synchronized Plate96ViewerTopComponent findInstance() {
+//        TopComponent win = WindowManager.getDefault().findTopComponent(PREFERRED_ID);
+//        if (win == null) {
+//            Logger.getLogger(Plate96ViewerTopComponent.class.getName()).warning(
+//                    "Cannot find " + PREFERRED_ID + " component. It will not be located properly in the window system.");
+//            return getDefault();
+//        }
+//        if (win instanceof Plate96ViewerTopComponent) {
+//            return (Plate96ViewerTopComponent) win;
+//        }
+//        Logger.getLogger(Plate96ViewerTopComponent.class.getName()).warning(
+//                "There seem to be multiple components with the '" + PREFERRED_ID
+//                + "' ID. That is a potential source of errors and unexpected behavior.");
+//        return getDefault();
+//    }
     @Override
     public int getPersistenceType() {
-        return TopComponent.PERSISTENCE_ALWAYS;
+        return TopComponent.PERSISTENCE_NEVER;
     }
 
     @Override
@@ -127,7 +135,7 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         if (result != null) {
             result.addLookupListener(this);
         }
-        if(spotResult!=null) {
+        if (spotResult != null) {
             spotResult.addLookupListener(this);
         }
     }
@@ -137,8 +145,13 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         if (result != null) {
             result.removeLookupListener(this);
         }
-        if(spotResult!=null) {
+        if (spotResult != null) {
             spotResult.removeLookupListener(this);
+        }
+        IPlate96 plate = getLookup().lookup(IPlate96.class);
+        if (plate != null) {
+            Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().closeTopComponent(plate);
+//            CentralLookup.getDefault().remove(plate);
         }
     }
 

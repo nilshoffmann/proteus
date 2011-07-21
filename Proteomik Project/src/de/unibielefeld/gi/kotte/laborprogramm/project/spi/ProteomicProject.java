@@ -1,6 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi;
 
 //import de.unibielefeld.gi.kotte.laborprogramm.centralLookup.CentralLookup;
+import de.unibielefeld.gi.kotte.laborprogramm.centralLookup.CentralLookup;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
@@ -97,13 +98,13 @@ public class ProteomicProject implements IProteomicProject {
 //            singletonSaveCookie = new ProjectSaveCookie();
 //            instanceContent.add(singletonSaveCookie);
 //        }
-        if(ics!=null) {
-            ics.update(Arrays.asList(this.activeProject));
-            System.out.println("Persisting state of "+pce.getPropertyName()+" "+pce.getNewValue());
-//            ics.create(Arrays.asList(pce.getNewValue()));
-            //activeProject = getFromDB();
-        }
-        getLookup().lookup(ProjectState.class).markModified();
+//        if(ics!=null) {
+//            ics.update(Arrays.asList(this.activeProject));
+//            System.out.println("Persisting state of "+pce.getPropertyName()+" "+pce.getNewValue());
+////            ics.create(Arrays.asList(pce.getNewValue()));
+//            //activeProject = getFromDB();
+//        }
+//        getLookup().lookup(ProjectState.class).markModified();
     }
 
     private IProject showOverwriteDatabaseDialog(IProject project) throws AuthenticationException {
@@ -161,50 +162,51 @@ public class ProteomicProject implements IProteomicProject {
             throw new IllegalArgumentException(
                     "Failed to find an instance of IProject in project database!");
         }
-        try {
-            IProject project = projects.iterator().next();
-            //initialize project listeners
-            for (IPlate384 ipl : project.get384Plates()) {
-                for (IWell384 well : ipl.getWells()) {
-                    well.addPropertyChangeListener(this);
-                }
-                ipl.addPropertyChangeListener(this);
-            }
-            System.out.println("Found "+project.get96Plates().size()+" 96WellPlates");
-            for (IPlate96 ipl : project.get96Plates()) {
-                for (IWell96 well : ipl.getWells()) {
-                    well.addPropertyChangeListener(this);
-                }
-                ipl.addPropertyChangeListener(this);
-            }
-            for (ILogicalGelGroup ilgg : project.getGelGroups()) {
-                for (IBioRepGelGroup blgg : ilgg.getGelGroups()) {
-                    for (ITechRepGelGroup trgg : blgg.getGelGroups()) {
-                        for (IGel gel : trgg.getGels()) {
-                            for (ISpot spot : gel.getSpots()) {
-                                spot.addPropertyChangeListener(this);
-                            }
-                            gel.addPropertyChangeListener(this);
-                        }
-                        trgg.addPropertyChangeListener(this);
-                    }
-                    blgg.addPropertyChangeListener(this);
-                }
-                ilgg.addPropertyChangeListener(this);
-            }
-            for (ISpotGroup sg : project.getSpotGroups()) {
-                sg.addPropertyChangeListener(this);
-            }
-            project.addPropertyChangeListener(this);
-            return project;
-        } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-                    "Exception: {0}", e.getLocalizedMessage());
-        } finally {
-        }
-        Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-                "Could not retrieve Project instance from database");
-        return null;
+        return projects.iterator().next();
+//        try {
+//            IProject project = projects.iterator().next();
+//            //initialize project listeners
+//            for (IPlate384 ipl : project.get384Plates()) {
+//                for (IWell384 well : ipl.getWells()) {
+//                    well.addPropertyChangeListener(this);
+//                }
+//                ipl.addPropertyChangeListener(this);
+//            }
+//            System.out.println("Found "+project.get96Plates().size()+" 96WellPlates");
+//            for (IPlate96 ipl : project.get96Plates()) {
+//                for (IWell96 well : ipl.getWells()) {
+//                    well.addPropertyChangeListener(this);
+//                }
+//                ipl.addPropertyChangeListener(this);
+//            }
+//            for (ILogicalGelGroup ilgg : project.getGelGroups()) {
+//                for (IBioRepGelGroup blgg : ilgg.getGelGroups()) {
+//                    for (ITechRepGelGroup trgg : blgg.getGelGroups()) {
+//                        for (IGel gel : trgg.getGels()) {
+//                            for (ISpot spot : gel.getSpots()) {
+//                                spot.addPropertyChangeListener(this);
+//                            }
+//                            gel.addPropertyChangeListener(this);
+//                        }
+//                        trgg.addPropertyChangeListener(this);
+//                    }
+//                    blgg.addPropertyChangeListener(this);
+//                }
+//                ilgg.addPropertyChangeListener(this);
+//            }
+//            for (ISpotGroup sg : project.getSpotGroups()) {
+//                sg.addPropertyChangeListener(this);
+//            }
+//            project.addPropertyChangeListener(this);
+//            return project;
+//        } catch (Exception e) {
+//            Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+//                    "Exception: {0}", e.getLocalizedMessage());
+//        } finally {
+//        }
+//        Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+//                "Could not retrieve Project instance from database");
+//        return null;
     }
 
     @Override
@@ -309,6 +311,7 @@ public class ProteomicProject implements IProteomicProject {
         instanceContent.remove(activeProject);
         instanceContent.remove(this);
         activeProject = null;
+        CentralLookup.getDefault().remove(this);
     }
 
     @Override

@@ -97,7 +97,7 @@ public final class GelViewerTopComponent extends TopComponent implements
             setDisplayName(gel.getName());
             addHeatmapPanel(gel);//deregister
             result.removeLookupListener(this);
-        } else if(gel == null){
+        } else if (gel == null) {
             throw new IllegalStateException("Gel can not be null!");
         } else {
             throw new IllegalStateException("Gel can only be set once on GelViewerTopComponent!");
@@ -445,14 +445,22 @@ public final class GelViewerTopComponent extends TopComponent implements
     public void propertyChange(PropertyChangeEvent evt) {
         if ("annotationPointSelection".equals(evt.getPropertyName())) {
             Tuple2D<Point2D, Annotation<ISpot>> newAnnotation = (Tuple2D<Point2D, Annotation<ISpot>>) evt.getNewValue();
-            if (getLookup().lookup(Annotation.class) == null) {
-                System.out.println("Setting new annotation");
-                ic.add(newAnnotation.getSecond().getPayload());
-            }else{
-                ic.remove(annotation.getSecond().getPayload());
-                ic.add(newAnnotation.getSecond().getPayload());
+            //reset current selection
+            if (newAnnotation==null) {
+                if (annotation != null) {
+                    ic.remove(annotation.getSecond().getPayload());
+                }
+            } else {
+                if (annotation != null) {
+                    ic.remove(annotation.getSecond().getPayload());
+                    System.out.println("Setting new annotation");
+                    ic.add(newAnnotation.getSecond().getPayload());
+                } else {
+                    System.out.println("Setting new annotation");
+                    ic.add(newAnnotation.getSecond().getPayload());
+                }
+                annotation = newAnnotation;
             }
-            annotation = newAnnotation;
         }
     }
 }

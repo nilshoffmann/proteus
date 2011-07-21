@@ -112,35 +112,35 @@ public class Plate96 implements IPlate96, Activatable {
     public void setDescription(String description) {
         activate(ActivationPurpose.WRITE);
         this.description = description;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange("description", null, this);
     }
 
     @Override
     public void setName(String name) {
         activate(ActivationPurpose.WRITE);
         this.name = name;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange("name", null, this);
     }
 
     @Override
     public void setParent(IProject parent) {
         activate(ActivationPurpose.WRITE);
         this.parent = parent;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange("parent", null, this);
     }
 
     @Override
     public void setWells(IWell96[] wells) {
         activate(ActivationPurpose.WRITE);
         this.wells = wells;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange("wells", null, this);
     }
 
     @Override
     public void setWell(IWell96 well, char row, int column) {
         activate(ActivationPurpose.WRITE);
         this.wells[posToIndex(row, column)] = well;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange("well", null, this);
     }
 
     @Override

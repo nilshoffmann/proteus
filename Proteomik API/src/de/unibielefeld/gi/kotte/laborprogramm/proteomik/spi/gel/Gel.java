@@ -82,7 +82,7 @@ public class Gel implements IGel, Activatable {
     public void setParent(ITechRepGelGroup parent) {
         activate(ActivationPurpose.WRITE);
         this.parent = parent;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange("parent", null, this);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class Gel implements IGel, Activatable {
     public void setDescription(String description) {
         activate(ActivationPurpose.WRITE);
         this.description = description;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange("description", null, this);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class Gel implements IGel, Activatable {
     public void setFilename(String filename) {
         activate(ActivationPurpose.WRITE);
         this.filename = filename;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange("filename", null, this);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class Gel implements IGel, Activatable {
     public void setName(String name) {
         activate(ActivationPurpose.WRITE);
         this.name = name;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange("name", null, this);
     }
 
     @Override
@@ -134,14 +134,14 @@ public class Gel implements IGel, Activatable {
     public void addSpot(ISpot spot) {
         activate(ActivationPurpose.WRITE);
         this.spots.add(spot);
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange("spot", null, this);
     }
 
     @Override
     public void setSpots(List<ISpot> spots) {
         activate(ActivationPurpose.WRITE);
         this.spots = spots;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange("spots", null, this);
     }
 
     @Override
@@ -154,6 +154,7 @@ public class Gel implements IGel, Activatable {
     public void setVirtual(boolean virtual){
         activate(ActivationPurpose.WRITE);
         this.virtual = virtual;
+        getPropertyChangeSupport().firePropertyChange("virtual", null, this);
     }
 
     @Override

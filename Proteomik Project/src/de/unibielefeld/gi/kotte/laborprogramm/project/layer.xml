@@ -53,6 +53,20 @@
                 <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
                 <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96"/><!--org.openide.cookies.OpenCookie"/>-->
             </file>
+            <file name="org-openide-actions-ToolsAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="org-openide-actions-PropertiesAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                <attr name="position" intvalue="5000"/>
+            </file>
+        </folder>
+        <folder name="SpotGroupFolderNode">
+            <file name="org-openide-actions-PropertiesAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                <attr name="position" intvalue="5000"/>
+            </file>
         </folder>
     </folder>
     <folder name="Menu">

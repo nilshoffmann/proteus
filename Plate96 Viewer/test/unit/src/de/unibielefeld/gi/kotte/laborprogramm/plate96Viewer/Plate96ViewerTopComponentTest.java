@@ -22,24 +22,4 @@ public class Plate96ViewerTopComponentTest {
     public static void tearDownClass() throws Exception {
     }
 
-    /**
-     * Test of getDefault method, of class Plate96ViewerTopComponent.
-     */
-    @Test
-    public void testGetDefault() {
-        System.out.println("getDefault");
-        Plate96ViewerTopComponent result = Plate96ViewerTopComponent.getDefault();
-        assertNotNull(result);
-    }
-
-    /**
-     * Test of findInstance method, of class Plate96ViewerTopComponent.
-     */
-    @Test
-    public void testFindInstance() {
-        System.out.println("findInstance");
-        Plate96ViewerTopComponent result = Plate96ViewerTopComponent.findInstance();
-        assertNotNull(result);
-    }
-
 }

@@ -27,7 +27,7 @@ public final class Plate96ViewerOpenAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent ev) {
-        CentralLookup.getDefault().add(this.context);
+//        CentralLookup.getDefault().add(this.context);
         IPlate96OpenCookie igoc = Lookup.getDefault().lookup(IPlate96OpenCookie.class);
         igoc.open();
     }

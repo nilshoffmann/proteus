@@ -2,7 +2,9 @@ package de.unibielefeld.gi.kotte.laborprogramm.gelViewer;
 
 import cross.datastructures.tuple.Tuple2D;
 import de.unibielefeld.gi.kotte.laborprogramm.centralLookup.CentralLookup;
+import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.dataProvider.GelSpotDataProvider;
+import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.theme.ThemeManager;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
@@ -70,7 +72,7 @@ public final class GelViewerTopComponent extends TopComponent implements
     public GelViewerTopComponent() {
         associateLookup(new AbstractLookup(ic));
         initComponents();
-
+        setFocusable(true);
         setName(NbBundle.getMessage(GelViewerTopComponent.class,
                 "CTL_GelViewerTopComponent"));
         setToolTipText(NbBundle.getMessage(GelViewerTopComponent.class,
@@ -126,9 +128,12 @@ public final class GelViewerTopComponent extends TopComponent implements
                 hmd);
         hmd.addPropertyChangeListener(jl);
 
+        ThemeManager tm = ThemeManager.getInstance();
         for (ISpot spot : gel.getSpots()) {
+            Annotation<ISpot> ann = new SpotAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()), spot);
+            
             hmd.addAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()),
-                    spot);
+                    ann);
         }
         final IDataProvider hdp = hmd.getDataProvider();
         //create a tooltip painter for the payload type (here: List<Float>)
@@ -147,7 +152,8 @@ public final class GelViewerTopComponent extends TopComponent implements
 
         //create an annotation painter
         AnnotationPainter<ISpot, JPanel> annotationPainter = new AnnotationPainter<ISpot, JPanel>(
-                hmd);
+                hmd) {
+        };
         annotationPainter.setSearchRadius(10.0d);
 
         //wire tooltip painter to annotation painter, to display selected annotations
@@ -185,9 +191,9 @@ public final class GelViewerTopComponent extends TopComponent implements
 //        pointSelectionProcessor.addListener(ra,
 //                MouseEvent.CTRL_DOWN_MASK | MouseEvent.BUTTON3_DOWN_MASK);
 
-        SelectionRectanglePainter srp = new SelectionRectanglePainter();
-        RectangularSelectionProcessor rsp = new RectangularSelectionProcessor();
-        rsp.addListener(srp);
+//        SelectionRectanglePainter srp = new SelectionRectanglePainter();
+//        RectangularSelectionProcessor rsp = new RectangularSelectionProcessor();
+//        rsp.addListener(srp);
 
         //create a zoom processor
         ZoomProcessor zoomProcessor = new ZoomProcessor();
@@ -282,6 +288,7 @@ public final class GelViewerTopComponent extends TopComponent implements
         jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
@@ -293,6 +300,7 @@ public final class GelViewerTopComponent extends TopComponent implements
         jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButton2.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
@@ -392,6 +400,7 @@ public final class GelViewerTopComponent extends TopComponent implements
         result = Utilities.actionsGlobalContext().lookupResult(IGel.class);
         result.addLookupListener(this);
         resultChanged(new LookupEvent(result));
+        requestActive();
     }
 
     @Override
@@ -446,7 +455,7 @@ public final class GelViewerTopComponent extends TopComponent implements
         if ("annotationPointSelection".equals(evt.getPropertyName())) {
             Tuple2D<Point2D, Annotation<ISpot>> newAnnotation = (Tuple2D<Point2D, Annotation<ISpot>>) evt.getNewValue();
             //reset current selection
-            if (newAnnotation==null) {
+            if (newAnnotation == null) {
                 if (annotation != null) {
                     ic.remove(annotation.getSecond().getPayload());
                 }

@@ -23,6 +23,9 @@ public class Plate96Panel extends JPanel {
         setName(plate.getName());
         add(new JLabel()); //add upper left corner empty JLabel placeholder
 
+        //FIXME button initialization needs to be done differently
+        //TODO implement auto assignment of next free well, also handle resetting of already assigned wells
+        //assignment should proceed from left top to bottom, column by column (A1, B1, C1 ..., A2, B2, C2 ...)
         for (int j = 1; j <= x; j++) {
             JLabel jl = new JLabel("" + j);
             jl.setHorizontalAlignment(JLabel.CENTER);

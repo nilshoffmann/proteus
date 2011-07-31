@@ -45,7 +45,6 @@ import org.jdesktop.swingx.JXFrame;
 import org.jdesktop.swingx.painter.CompoundPainter;
 
 /**
- *
  * @author nilshoffmann
  */
 public class HeatmapPanel<T> extends JComponent implements

@@ -147,7 +147,6 @@ public class DB4oCrudProviderTest {
 //        ICredentials ic = null;
 //        DB4oCrudProvider instance = null;
 //        instance.update(o, ic);
-//        // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
     }
 
@@ -161,7 +160,6 @@ public class DB4oCrudProviderTest {
 //        ICredentials ic = null;
 //        DB4oCrudProvider instance = null;
 //        instance.delete(o, ic);
-//        // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
     }
 
@@ -170,7 +168,6 @@ public class DB4oCrudProviderTest {
      */
     @Test
     public void testRetrieve() {
-        // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
     }
 
@@ -185,7 +182,6 @@ public class DB4oCrudProviderTest {
 //        Query expResult = null;
 //        Query result = instance.getSODAQuery(ic);
 //        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
     }
 

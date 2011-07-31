@@ -27,7 +27,7 @@ import net.sf.maltcms.ui.plot.heatmap.event.mouse.MouseEventType;
 import org.jdesktop.swingx.painter.AbstractPainter;
 
 /**
- *
+ * FIXME resolve shift + mouse click on annotation, shift + mouse move etc. behaviour
  * @author nilshoffmann
  */
 public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPainter<U> implements IProcessorResultListener<Point2D>, PropertyChangeListener {

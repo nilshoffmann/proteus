@@ -45,10 +45,9 @@ public class Plate384Panel extends JPanel {
 
     public Plate384Panel(IPlate384 plate) {
         //Icons to display wells on the plate
-        //TODO Farben für weitere Zustände einbinden
         URL emptyURL = Plate96Panel.class.getResource("resources/Well01.jpg");
         URL errorURL = Plate96Panel.class.getResource("resources/Well02.jpg");
-        URL  okayURL = Plate96Panel.class.getResource("resources/Well03.jpg");
+        URL okayURL = Plate96Panel.class.getResource("resources/Well03.jpg");
         wellEmpty = new ImageIcon(emptyURL);//resourcePath + "Well01.jpg");
         wellError = new ImageIcon(errorURL);//resourcePath + "Well02.jpg");
         wellOkay  = new ImageIcon(okayURL); //resourcePath + "Well03.jpg");

@@ -148,7 +148,6 @@ public class SampleProjectPanelVisual extends JPanel implements DocumentListener
     boolean valid(WizardDescriptor wizardDescriptor) {
 
         if (projectNameTextField.getText().length() == 0) {
-            // TODO if using org.openide.dialogs >= 7.8, can use WizardDescriptor.PROP_ERROR_MESSAGE:
             wizardDescriptor.putProperty("WizardPanel_errorMessage",
                     "Project Name is not a valid folder name.");
             return false; // Display name not specified

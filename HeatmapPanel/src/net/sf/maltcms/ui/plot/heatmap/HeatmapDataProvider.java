@@ -76,9 +76,9 @@ public class HeatmapDataProvider implements IDataProvider<List<Integer>> {
             throw new IllegalArgumentException("Point out of bounds: " + dataBounds);
         }
 
-        Integer red = (int) ((rbg >> 16) & 0xFF);
-        Integer green = (int) ((rbg >> 8) & 0xFF);
-        Integer blue = (int) ((rbg) & 0xFF);
+        Integer red = ((rbg >> 16) & 0xFF);
+        Integer green = ((rbg >> 8) & 0xFF);
+        Integer blue = ((rbg) & 0xFF);
 //        return ((double) ((red * 0.3f) + (green * 0.59f) + (blue * 0.11f)));
         return Arrays.asList(red, green, blue);
     }

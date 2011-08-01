@@ -272,6 +272,8 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
             setDirty(true);
         } else if (pce.getPropertyName().equals(JScrollPane.AccessibleJComponent.ACCESSIBLE_VALUE_PROPERTY)) {
             setDirty(true);
+        } else {
+            setDirty(true);
         }
 
     }

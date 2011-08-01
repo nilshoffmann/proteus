@@ -152,7 +152,8 @@ public class Plate96 implements IPlate96, Activatable {
         return str;
     }
 
-    public static int posToIndex(char row, int column) {
+    @Override
+    public int posToIndex(char row, int column) {
         assert (column >= 1 && column <= 12);
         //setze x auf 0 fuer A oder a, 1 fuer B oder b, etc.
         int x = row - 65;

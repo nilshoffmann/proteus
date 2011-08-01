@@ -22,7 +22,7 @@ public class Plate384Factory implements IPlate384Factory {
                 well.setRow(row);
                 well.setColumn(column);
                 well.setParent(plate);
-                wells[Plate384.posToIndex(row, column)] = well;
+                wells[plate.posToIndex(row, column)] = well;
             }
         }
         plate.setWells(wells);

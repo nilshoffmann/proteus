@@ -22,7 +22,7 @@ public class Plate96Factory implements IPlate96Factory {
                 well.setRow(row);
                 well.setColumn(column);
                 well.setParent(plate);
-                wells[Plate96.posToIndex(row, column)] = well;
+                wells[plate.posToIndex(row, column)] = well;
             }
         }
         plate.setWells(wells);

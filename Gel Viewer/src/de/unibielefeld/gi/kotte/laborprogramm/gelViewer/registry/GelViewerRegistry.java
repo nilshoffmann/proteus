@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
+ * TODO refactor to TopComponentRegistry
  * @author hoffmann
  */
 public class GelViewerRegistry {

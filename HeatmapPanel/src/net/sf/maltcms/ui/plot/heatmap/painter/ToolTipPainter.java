@@ -154,6 +154,10 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
 
     public abstract String getStringFor(Annotation<T> t);
 
+    /**
+     * FIXME selection issue when selecting the same annotation
+     * @param pce
+     */
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
         System.out.println("ToolTipPainter Event: " + pce.getPropertyName());
@@ -168,11 +172,11 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
                 this.a = newVal;
                 this.a.getSecond().setSelected(true);
                 setPoint(this.a.getFirst());
-                setDrawLabels(true);
+//                setDrawLabels(true);
             } else {
                 this.a = null;
                 setPoint(null);
-                setDrawLabels(false);
+//                setDrawLabels(false);
             }
         } else if (pce.getPropertyName().equals(HeatmapDataset.PROP_TRANSFORM)) {
             this.at = (AffineTransform) pce.getNewValue();

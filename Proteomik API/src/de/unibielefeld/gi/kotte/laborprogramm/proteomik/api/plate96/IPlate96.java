@@ -33,4 +33,6 @@ public interface IPlate96 extends IPropertyChangeSource {
     public void setWells(IWell96[] wells);
 
     public void setWell(IWell96 well, char row, int column);
+
+    public int posToIndex(char row, int column);
 }

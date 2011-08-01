@@ -57,6 +57,7 @@ import org.openide.util.lookup.InstanceContent;
  * TODO implement printing support for whole gel http://www.apl.jhu.edu/~hall/java/Swing-Tutorial/Swing-Tutorial-Printing.html
  * TODO allow setting of font size property
  * TODO allow setting of focused view
+ * TODO add support for highlighting / scrolling to a specific annotation
  * Top component which displays something.
  */
 @ConvertAsProperties(dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.gelViewer//GelViewer//EN",
@@ -129,10 +130,11 @@ public final class GelViewerTopComponent extends TopComponent implements
         ic.add(hmd);
         final HeatmapPanel<ISpot> jl = new HeatmapPanel<ISpot>(
                 hmd);
-        hmd.addPropertyChangeListener(jl);
+        hmd.addPropertyChangeListener(this);
 
         ThemeManager tm = ThemeManager.getInstance();
         for (ISpot spot : gel.getSpots()) {
+            spot.addPropertyChangeListener(jl);
             Annotation<ISpot> ann = new SpotAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()), spot);
             
             hmd.addAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()),
@@ -152,6 +154,7 @@ public final class GelViewerTopComponent extends TopComponent implements
         };
         //register ToolTipPainter to receive events from dataset
         hmd.addPropertyChangeListener(tooltipPainter);
+        ic.add(tooltipPainter);
 
         //create an annotation painter
         AnnotationPainter<ISpot, JPanel> annotationPainter = new AnnotationPainter<ISpot, JPanel>(
@@ -281,6 +284,7 @@ public final class GelViewerTopComponent extends TopComponent implements
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         zoomDisplay = new javax.swing.JTextField();
+        jCheckBox1 = new javax.swing.JCheckBox();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -291,7 +295,6 @@ public final class GelViewerTopComponent extends TopComponent implements
         jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
@@ -303,7 +306,6 @@ public final class GelViewerTopComponent extends TopComponent implements
         jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButton2.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
@@ -317,6 +319,18 @@ public final class GelViewerTopComponent extends TopComponent implements
         zoomDisplay.setMaximumSize(new java.awt.Dimension(40, 50));
         zoomDisplay.setMinimumSize(new java.awt.Dimension(40, 20));
         jToolBar1.add(zoomDisplay);
+
+        jCheckBox1.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(GelViewerTopComponent.class, "GelViewerTopComponent.jCheckBox1.text")); // NOI18N
+        jCheckBox1.setFocusable(false);
+        jCheckBox1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        jCheckBox1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jCheckBox1);
 
         add(jToolBar1, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
@@ -354,9 +368,15 @@ public final class GelViewerTopComponent extends TopComponent implements
         };
         SwingUtilities.invokeLater(r);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        getLookup().lookup(net.sf.maltcms.ui.plot.heatmap.painter.ToolTipPainter.class).setDrawLabels(jCheckBox1.isSelected());
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JTextField zoomDisplay;
     // End of variables declaration//GEN-END:variables
@@ -473,6 +493,8 @@ public final class GelViewerTopComponent extends TopComponent implements
                 }
                 annotation = newAnnotation;
             }
+        } else {
+            repaint();
         }
     }
 }

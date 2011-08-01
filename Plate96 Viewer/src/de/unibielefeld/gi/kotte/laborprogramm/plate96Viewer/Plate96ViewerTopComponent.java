@@ -16,6 +16,8 @@ import org.openide.util.LookupListener;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
+import org.openide.windows.Mode;
+import org.openide.windows.WindowManager;
 
 /**
  * Top component for the Plate96 Viewer.
@@ -48,6 +50,9 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         if (plate != null) {
             initPlateComponent(plate);
         }
+        WindowManager mgr = WindowManager.getDefault();
+        Mode mode = mgr.findMode("explorer");
+        mode.dockInto(this); 
     }
 
     /** This method is called from within the constructor to
@@ -58,24 +63,46 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jToolBar1 = new javax.swing.JToolBar();
+        autoAssignSpots = new javax.swing.JToggleButton();
+        jSeparator1 = new javax.swing.JToolBar.Separator();
         jLabel1 = new javax.swing.JLabel();
-        spotNameLabel = new javax.swing.JLabel();
+        activeSpotLabel = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
 
+        jToolBar1.setRollover(true);
+
+        org.openide.awt.Mnemonics.setLocalizedText(autoAssignSpots, org.openide.util.NbBundle.getMessage(Plate96ViewerTopComponent.class, "Plate96ViewerTopComponent.autoAssignSpots.text")); // NOI18N
+        autoAssignSpots.setToolTipText(org.openide.util.NbBundle.getMessage(Plate96ViewerTopComponent.class, "Plate96ViewerTopComponent.autoAssignSpots.toolTipText")); // NOI18N
+        autoAssignSpots.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                autoAssignSpotsActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(autoAssignSpots);
+        jToolBar1.add(jSeparator1);
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(Plate96ViewerTopComponent.class, "Plate96ViewerTopComponent.jLabel1.text")); // NOI18N
-        jPanel1.add(jLabel1);
+        jToolBar1.add(jLabel1);
 
-        org.openide.awt.Mnemonics.setLocalizedText(spotNameLabel, org.openide.util.NbBundle.getMessage(Plate96ViewerTopComponent.class, "Plate96ViewerTopComponent.spotNameLabel.text")); // NOI18N
-        jPanel1.add(spotNameLabel);
+        org.openide.awt.Mnemonics.setLocalizedText(activeSpotLabel, org.openide.util.NbBundle.getMessage(Plate96ViewerTopComponent.class, "Plate96ViewerTopComponent.activeSpotLabel.text")); // NOI18N
+        jToolBar1.add(activeSpotLabel);
 
-        add(jPanel1, java.awt.BorderLayout.PAGE_START);
+        add(jToolBar1, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void autoAssignSpotsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoAssignSpotsActionPerformed
+        platePanel.setAutoAssignSpots(autoAssignSpots.isSelected());
+    }//GEN-LAST:event_autoAssignSpotsActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel activeSpotLabel;
+    private javax.swing.JToggleButton autoAssignSpots;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel spotNameLabel;
+    private javax.swing.JToolBar.Separator jSeparator1;
+    private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
     private Plate96Panel platePanel;
 
@@ -185,9 +212,11 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         Iterator<? extends ISpot> spotInstances = spotResult.allInstances().iterator();
         if (spotInstances.hasNext()) {
             ISpot spotInstance = spotInstances.next();
-            spotNameLabel.setText(spotInstance.toString());
-            this.spot = spotInstance;
-            platePanel.setSpot(this.spot);
+            if(spotInstance!=this.spot) {
+                activeSpotLabel.setText(String.format("# %d @Gel %s",spotInstance.getNumber(),spotInstance.getGel().getName()));
+                this.spot = spotInstance;
+                platePanel.setSpot(this.spot);
+            }
         }
     }
 }

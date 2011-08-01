@@ -26,6 +26,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.RepaintManager;
 import javax.swing.Scrollable;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputListener;
@@ -100,11 +101,15 @@ public class HeatmapPanel<T> extends JComponent implements
                     (int) (hd.getDataBounds().getHeight() * zoom));
             setPreferredSize(newPreferredSize);
             this.at = hd.getTransform();
-            revalidate();
+            RepaintManager.currentManager(this).markCompletelyDirty(this);
+            RepaintManager.currentManager(this).paintDirtyRegions();
             scrollRectToVisible(new Rectangle2D.Double(
                     t.getFirst().getX() - getVisibleRect().width / 2,
                     t.getFirst().getY() - getVisibleRect().height / 2,
                     getVisibleRect().width, getVisibleRect().height).getBounds());
+        }else{
+            RepaintManager.currentManager(this).markCompletelyDirty(this);
+            RepaintManager.currentManager(this).paintDirtyRegions();
         }
     }
 

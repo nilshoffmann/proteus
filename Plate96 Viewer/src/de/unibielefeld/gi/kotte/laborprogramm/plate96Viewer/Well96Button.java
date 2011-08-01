@@ -1,6 +1,9 @@
 package de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer;
 
+import com.sun.corba.se.impl.interceptors.PICurrent;
+import de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer.stateMachine.StateMachine;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
 import java.awt.Color;
@@ -15,7 +18,12 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JSeparator;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
+import org.openide.util.Exceptions;
 
 /**
  * Button to be placed on a Plate96Panel. Represents a IWell96 and offers actions to set the wells status.
@@ -33,15 +41,17 @@ public class Well96Button extends JButton {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(menu!=null) {
+            if (menu != null) {
                 menu.setVisible(false);
             }
             menu = new Well96StatusSelectMenu(well.getStatus());
             menu.setInvoker(panel);
-            Point p = new Point(getMousePosition());
-            SwingUtilities.convertPointToScreen(p, button);
-            menu.setLocation(p);
-            menu.setVisible(true);
+            if (getMousePosition() != null) {
+                Point p = new Point(getMousePosition());
+                SwingUtilities.convertPointToScreen(p, button);
+                menu.setLocation(p);
+                menu.setVisible(true);
+            }
         }
     }
 
@@ -52,13 +62,58 @@ public class Well96Button extends JButton {
             for (Well96Status s : Well96Status.values()) {
                 JRadioButtonMenuItem jrbmi = new JRadioButtonMenuItem(new Well96StatusSelectRadioButtonAction(s));
                 jrbmi.setText(s.toString());
-                if(s.equals(Well96Status.FILLED) && (panel.getSpot() == null)) {
+                jrbmi.setEnabled(StateMachine.isTransitionAllowed(status, s));
+                if (s.equals(Well96Status.FILLED) && (panel.getSpot() == null)) {
                     jrbmi.setEnabled(false);
                 }
+//                } else if (s == Well96Status.PROCESSED) {
+//                    if ((panel.getSpot() == null) && (well.getSpot() == null)) {
+//                        jrbmi.setEnabled(false);
+//                    }
+//                }
                 jrbmi.setSelected(s == status);
                 group.add(jrbmi);
                 add(jrbmi);
             }
+            add(new JSeparator(JSeparator.HORIZONTAL));
+            add(new AbstractAction("Details") {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String text = well.toString() + "\n";
+
+                    if (well.getSpot() != null) {
+                        text += well.getSpot().toString();
+                    }
+                    JTextArea jl = new JTextArea(text);
+                    NotifyDescriptor nd = new NotifyDescriptor(
+                            jl, // instance of your panel
+                            "Details for Well", // title of the dialog
+                            NotifyDescriptor.OK_CANCEL_OPTION, // it is Yes/No dialog ...
+                            NotifyDescriptor.PLAIN_MESSAGE, // ... of a question type => a question mark icon
+                            null, // we have specified YES_NO_OPTION => can be null, options specified by L&F,
+                            // otherwise specify options as:
+                            //     new Object[] { NotifyDescriptor.YES_OPTION, ... etc. },
+                            NotifyDescriptor.OK_OPTION // default option is "Yes"
+                            );
+
+                    // let's display the dialog now...
+                    if (DialogDisplayer.getDefault().notify(nd) == NotifyDescriptor.OK_OPTION) {
+                        // user clicked yes, do something here, for example:
+                        //     System.out.println(myPanel.getNameFieldValue());
+//                        IPlate96 plate96 = Lookup.getDefault().lookup(IPlate96Factory.class).createPlate96();
+//                        this.proj.add96Plate(plate96);
+//                        plate96.setParent(this.proj);
+//                        plate96.setName(dialog.getNameText());
+//                        System.out.println("Firing PropertyChangeEvent: PLATE96_CREATED");
+//                        listener.propertyChange(new PropertyChangeEvent(this, "PLATE96_CREATED", null, plate96));
+                    }
+                }
+            });
+            //TODO see GelViewerTopComponent
+//            if(well.getSpot()!=null) {
+//                add(new AbstractAction());
+//            }
         }
     }
 
@@ -74,6 +129,9 @@ public class Well96Button extends JButton {
         public void actionPerformed(ActionEvent e) {
             selectStatus(status);
             menu.setVisible(false);
+            boolean autoAssignState = panel.isAutoAssignSpots();
+            panel.setAutoAssignSpots(!autoAssignState);
+            panel.setAutoAssignSpots(autoAssignState);
         }
     }
 
@@ -84,24 +142,102 @@ public class Well96Button extends JButton {
         setName(well.getWellPosition());
 //        setBorderPainted(false);
         setContentAreaFilled(false);
-        setMinimumSize(new Dimension(5,5));
+        setMinimumSize(new Dimension(5, 5));
     }
 
-    private void selectStatus(Well96Status status) {
-        if(!well.getStatus().equals(status)){
-            if(status.equals(Well96Status.FILLED)) {
-                ISpot spot = panel.getSpot(); // get spot from lookup
-                spot.setWell(this.well);
-                this.well.setSpot(spot);
+    public void selectStatus(Well96Status nextStatus) {
+        //nextStatus -> EMPTY, FILLED, PROCESSED, ERROR
+        Well96Status currentStatus = well.getStatus();
+        if (!well.getStatus().equals(nextStatus)) {
+            ISpot spot = null;
+            if (StateMachine.isTransitionAllowed(currentStatus, nextStatus)) {
+                switch (nextStatus) {
+                    case EMPTY:
+                        spot = this.well.getSpot();
+                        if (spot != null) {
+                            this.well.setSpot(null);
+                            spot.setStatus(SpotStatus.UNPICKED);
+                            spot.setWell(null);
+                        }
+                        well.setStatus(nextStatus);
+                        break;
+                    case FILLED:
+                        spot = panel.getSpot(); // get spot from lookup
+//                        if (spot.getStatus() == SpotStatus.PICKED) {
+                        if (reassignWell(spot)) {
+                            spot.setWell(this.well);
+                            spot.setStatus(SpotStatus.PICKED);
+                            this.well.setSpot(spot);
+                            well.setStatus(nextStatus);
+                        }
+//                        } else {
+//                            spot.setWell(this.well);
+//                            spot.setStatus(SpotStatus.PICKED);
+//                            this.well.setSpot(spot);
+//                            well.setStatus(nextStatus);
+//                        }
+
+                        break;
+                    case PROCESSED:
+                        if (this.well.getSpot() != null) {
+                            well.setStatus(nextStatus);
+                        }
+                        break;
+                    case ERROR:
+                        well.setStatus(nextStatus);
+                        break;
+                }
+                panel.setButtonForSpotActive(spot);
+                repaint();
+            } else {
+                Exceptions.printStackTrace(new IllegalStateException("Illegal transition attempted: tried to transit from " + currentStatus + " to " + nextStatus));
             }
-            if(status.equals(Well96Status.EMPTY) && well.getStatus().equals(Well96Status.FILLED)) {
-                ISpot spot = this.well.getSpot();
-                this.well.setSpot(null);
-                spot.setWell(null);
-            }
-            well.setStatus(status);
-            repaint();
         }
+    }
+
+    private boolean reassignWell(ISpot lookupSpot) {
+//        ISpot wellSpot = well.getSpot();
+        IWell96 spotWell = lookupSpot.getWell();
+        if (spotWell != null) {
+            if (spotWell.getStatus() == Well96Status.PROCESSED) {
+                NotifyDescriptor nd = new NotifyDescriptor(
+                        "Spot is already assigned to well " + well.getWellPosition() + " on plate " + well.getParent().getName() + " and processed.", // instance of your panel
+                        "Spot already processed", // title of the dialog
+                        NotifyDescriptor.DEFAULT_OPTION, // it is Yes/No dialog ...
+                        NotifyDescriptor.INFORMATION_MESSAGE, // ... of a question type => a question mark icon
+                        null, // we have specified YES_NO_OPTION => can be null, options specified by L&F,
+                        // otherwise specify options as:
+                        //     new Object[] { NotifyDescriptor.YES_OPTION, ... etc. },
+                        NotifyDescriptor.OK_OPTION // default option is "Yes"
+                        );
+
+                // let's display the dialog now...
+                DialogDisplayer.getDefault().notify(nd);
+                return false;
+            }
+            if (spotWell != well) {
+                NotifyDescriptor nd = new NotifyDescriptor(
+                        "Spot is already assigned to well " + well.getWellPosition() + " on plate " + well.getParent().getName() + ". Reassign?", // instance of your panel
+                        "Reassign spot?", // title of the dialog
+                        NotifyDescriptor.YES_NO_OPTION, // it is Yes/No dialog ...
+                        NotifyDescriptor.PLAIN_MESSAGE, // ... of a question type => a question mark icon
+                        null, // we have specified YES_NO_OPTION => can be null, options specified by L&F,
+                        // otherwise specify options as:
+                        //     new Object[] { NotifyDescriptor.YES_OPTION, ... etc. },
+                        NotifyDescriptor.YES_OPTION // default option is "Yes"
+                        );
+
+                // let's display the dialog now...
+                if (DialogDisplayer.getDefault().notify(nd) == NotifyDescriptor.NO_OPTION) {
+                    return false;
+                } else {
+                    spotWell.setStatus(Well96Status.EMPTY);
+                    spotWell.setSpot(null);
+                    return true;
+                }
+            }
+        }
+        return true;
     }
 
     @Override
@@ -115,7 +251,15 @@ public class Well96Button extends JButton {
         g2.setColor(well.getStatus().getColor());
 //        int width = getWidth() - (getInsets().left + getInsets().right);
 //        int height = getHeight() - (getInsets().top + getInsets().bottom);
-        g2.fillOval(2,2,getWidth()-4,getHeight()-4);//getInsets().left, getInsets().top, width, height);
+        if (isSelected()) {
+            g2.fillOval(2, 2, getWidth() - 4, getHeight() - 4);//getInsets().left, getInsets().top, width, height);
+        } else {
+            g2.drawOval(2, 2, getWidth() - 4, getHeight() - 4);//getInsets().left, getInsets().top, width, height);
+        }
         g2.setColor(originalColor);
+    }
+
+    public IWell96 getWell() {
+        return well;
     }
 }

@@ -11,6 +11,11 @@ import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
+/**
+ * Descriptor for the Sample Project Wizward.
+ *
+ * @author kotte
+ */
 public class SampleProjectWizardIterator implements WizardDescriptor./*Progress*/InstantiatingIterator {
 
     private int index;

@@ -25,6 +25,11 @@ import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.actions.CallableSystemAction;
 
+/**
+ * Wizard Action for the Project creation wizard.
+ *
+ * @author kotte
+ */
 public final class ImportWizardAction extends CallableSystemAction implements ActionListener {
 
     private WizardDescriptor.Panel[] panels;

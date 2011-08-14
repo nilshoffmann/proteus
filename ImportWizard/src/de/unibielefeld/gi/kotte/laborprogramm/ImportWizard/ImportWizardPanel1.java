@@ -13,6 +13,11 @@ import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
 
+/**
+ * Wizard Panel class for the Project creation wizard.
+ *
+ * @author kotte
+ */
 public class ImportWizardPanel1 implements WizardDescriptor.ValidatingPanel, PropertyChangeListener {
 
     private WizardDescriptor descriptor;

@@ -6,6 +6,11 @@ import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+/**
+ * Visual Panel for the Project creation wizard.
+ *
+ * @author kotte
+ */
 public final class ImportVisualPanel1 extends JPanel implements DocumentListener {
 
     public static final String PROPERTY_BASE_DIRECTORY = "baseDirectory";
@@ -120,40 +125,28 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(projectNameLabel)
+                    .addComponent(projectParentDirectoryLabel)
+                    .addComponent(projectDirectoryLabel)
+                    .addComponent(separator, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
+                    .addComponent(baseDirectoryLabel)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(projectNameLabel)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(projectNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
-                                .addGap(85, 85, 85))
-                            .addComponent(projectParentDirectoryLabel)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(projectParentDirectoryTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(projectParentDirectoryButton)))
-                        .addContainerGap())
+                        .addComponent(baseDirectoryTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(baseDirectoryButton))
+                    .addComponent(excelDataLabel)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(projectDirectoryLabel)
-                            .addComponent(projectDirectoryTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE))
-                        .addGap(97, 97, 97))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(separator, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
-                            .addComponent(baseDirectoryLabel)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(baseDirectoryTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(baseDirectoryButton)))
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(excelDataLabel)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(excelDataTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(excelDataButton)))
-                        .addContainerGap())))
+                        .addComponent(excelDataTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(excelDataButton))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(projectNameTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+                            .addComponent(projectDirectoryTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+                            .addComponent(projectParentDirectoryTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(projectParentDirectoryButton)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

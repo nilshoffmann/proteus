@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.unibielefeld.gi.kotte.laborprogramm.ImportWizard;
 
 import java.io.File;
@@ -15,6 +11,11 @@ import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.filesystems.FileUtil;
 
+/**
+ * Visual Panel for the Sample Project Wizard.
+ *
+ * @author kotte
+ */
 public class SampleProjectPanelVisual extends JPanel implements DocumentListener {
 
     public static final String PROP_PROJECT_NAME = "projectName";

@@ -23,6 +23,24 @@
                 <attr name="type" stringvalue="org.openide.cookies.SaveCookie"/>
             </file>
         </folder>
+        <folder name="LogicalGelGroupNode">
+            <file name="org-openide-actions-PropertiesAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                <attr name="position" intvalue="5000"/>
+            </file>
+        </folder>
+        <folder name="BioRepGelGroupNode">
+            <file name="org-openide-actions-PropertiesAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                <attr name="position" intvalue="5000"/>
+            </file>
+        </folder>
+        <folder name="TechRepGelGroupNode">
+            <file name="org-openide-actions-PropertiesAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                <attr name="position" intvalue="5000"/>
+            </file>
+        </folder>
         <folder name="GelNode">
             <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-GelViewerOpenAction.instance">
                 <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>

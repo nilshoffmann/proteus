@@ -82,7 +82,6 @@ public class SpotGroupFolderNode extends AbstractNode {
 
         sheet.put(set);
         return sheet;
-
     }
 
     @Override

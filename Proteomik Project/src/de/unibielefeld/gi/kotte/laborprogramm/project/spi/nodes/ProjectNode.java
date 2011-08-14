@@ -9,6 +9,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +18,8 @@ import javax.swing.Action;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
+import org.openide.nodes.PropertySupport.ReadWrite;
+import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
@@ -59,7 +62,7 @@ public class ProjectNode extends AbstractNode implements PropertyChangeListener,
         super(Children.create(new ProjectChildNodeFactory(ipp), true), new ProxyLookup(lkp,new AbstractLookup(content)));
         this.content = content;
         // adds the node to our own lookup
-        this.content.add (this);
+        this.content.add(this);
         this.content.add(ipp);
         CentralLookup.getDefault().addActionsGlobalContextListener(IProteomicProject.class);
 //        result = ipp.getLookup().lookupResult(SaveCookie.class);
@@ -92,6 +95,62 @@ public class ProjectNode extends AbstractNode implements PropertyChangeListener,
         allActions.addAll(actions);
         allActions.addAll(Arrays.asList(super.getActions(arg0)));
         return allActions.toArray(new Action[allActions.size()]);
+    }
+
+    @Override
+    protected Sheet createSheet() {
+        Sheet sheet = Sheet.createDefault();
+        Sheet.Set set = Sheet.createPropertiesSet();
+        System.out.println("creating property sheet for Project node");
+        final IProject proj = getLookup().lookup(IProject.class);
+
+        Property nameProp = new ReadWrite<String>("name", String.class,
+                "Project name", "The project name.") {
+
+            @Override
+            public String getValue() throws IllegalAccessException, InvocationTargetException {
+                return proj.getName();
+            }
+
+            @Override
+            public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                proj.setName(val);
+            }
+        };
+        set.put(nameProp);
+
+        Property descProp = new ReadWrite<String>("description", String.class,
+                "Project description", "A descripption of this project.") {
+
+            @Override
+            public String getValue() throws IllegalAccessException, InvocationTargetException {
+                return proj.getDescription();
+            }
+
+            @Override
+            public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                proj.setDescription(val);
+            }
+        };
+        set.put(descProp);
+
+        Property ownerProp = new ReadWrite<String>("owner", String.class,
+                "Project owner", "The name of this project's owner.") {
+
+            @Override
+            public String getValue() throws IllegalAccessException, InvocationTargetException {
+                return proj.getOwner();
+            }
+
+            @Override
+            public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                proj.setOwner(val);
+            }
+        };
+        set.put(ownerProp);
+
+        sheet.put(set);
+        return sheet;
     }
 
     @Override

@@ -2,6 +2,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroup;
 import java.awt.Image;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,6 +10,8 @@ import javax.swing.Action;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
+import org.openide.nodes.PropertySupport.ReadWrite;
+import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
@@ -43,6 +46,46 @@ public class BioRepGelGroupNode extends AbstractNode {
         allActions.addAll(Arrays.asList(nodeActions));
         return allActions.toArray(new Action[allActions.size()]);
 //        return nodeActions;
+    }
+
+    @Override
+    protected Sheet createSheet() {
+        Sheet sheet = Sheet.createDefault();
+        Sheet.Set set = Sheet.createPropertiesSet();
+        System.out.println("creating property sheet for BioRepGelGroup node");
+
+        Property nameProp = new ReadWrite<String>("name", String.class,
+                "Group name", "The name of this biological replicates gel group.") {
+
+            @Override
+            public String getValue() throws IllegalAccessException, InvocationTargetException {
+                return ibrgg.getName();
+            }
+
+            @Override
+            public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                ibrgg.setName(val);
+            }
+        };
+        set.put(nameProp);
+
+        Property descProp = new ReadWrite<String>("description", String.class,
+                "Group description", "This gel group's description.") {
+
+            @Override
+            public String getValue() throws IllegalAccessException, InvocationTargetException {
+                return ibrgg.getDescription();
+            }
+
+            @Override
+            public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                ibrgg.setDescription(val);
+            }
+        };
+        set.put(descProp);
+
+        sheet.put(set);
+        return sheet;
     }
 
     @Override

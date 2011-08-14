@@ -11,6 +11,22 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
  */
 public interface ISpot extends IPropertyChangeSource{
 
+    public static final String PROPERTY_LABEL = "label";
+
+    public static final String PROPERTY_NUMBER = "spot number";
+
+    public static final String PROPERTY_GROUP = "spot group";
+
+    public static final String PROPERTY_POS_X = "X coordinate";
+
+    public static final String PROPERTY_POS_Y = "Y coordinate";
+
+    public static final String PROPERTY_STATUS = "spot status";
+
+    public static final String PROPERTY_WELL = "plate96 well";
+
+    public static final String PROPERTY_GEL = "gel";
+
     public String getLabel();
 
     public int getNumber();

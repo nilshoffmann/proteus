@@ -11,6 +11,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -85,16 +86,14 @@ public class Project implements IProject, Activatable {
     public void setGelGroups(List<ILogicalGelGroup> groups) {
         activate(ActivationPurpose.WRITE);
         this.gelgroups = groups;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_GELGROUPS, null, groups);
     }
 
     @Override
     public void addGelGroup(ILogicalGelGroup group) {
         activate(ActivationPurpose.WRITE);
         this.gelgroups.add(group);
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_GELGROUPS, null, this.gelgroups);
     }
 
     @Override
@@ -107,16 +106,14 @@ public class Project implements IProject, Activatable {
     public void setSpotGroups(List<ISpotGroup> groups) {
         activate(ActivationPurpose.WRITE);
         this.spotgroups = groups;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_SPOTGROUPS, null, groups);
     }
 
     @Override
     public void addSpotGroup(ISpotGroup group) {
         activate(ActivationPurpose.WRITE);
         this.spotgroups.add(group);
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_SPOTGROUPS, null, this.spotgroups);
     }
 
     @Override
@@ -129,8 +126,7 @@ public class Project implements IProject, Activatable {
     public void setName(String name) {
         activate(ActivationPurpose.WRITE);
         this.name = name;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_NAME, null, name);
     }
 
     @Override
@@ -143,8 +139,7 @@ public class Project implements IProject, Activatable {
     public void setOwner(String owner) {
         activate(ActivationPurpose.WRITE);
         this.owner = owner;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_OWNER, null, owner);
     }
 
     @Override
@@ -157,8 +152,7 @@ public class Project implements IProject, Activatable {
     public void setDescription(String description) {
         activate(ActivationPurpose.WRITE);
         this.description = description;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_DESCRIPTION, null, description);
     }
 
     @Override
@@ -171,8 +165,7 @@ public class Project implements IProject, Activatable {
     public void set96Plates(List<IPlate96> plates) {
         activate(ActivationPurpose.WRITE);
         this.plates96 = plates;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PLATES96, null, plates);
     }
 
     @Override
@@ -185,65 +178,67 @@ public class Project implements IProject, Activatable {
     public void set384Plates(List<IPlate384> plates) {
         activate(ActivationPurpose.WRITE);
         this.plates384 = plates;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PLATES384, null, plates);
     }
 
     @Override
     public void add96Plate(IPlate96 plate) {
         activate(ActivationPurpose.WRITE);
         this.plates96.add(plate);
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PLATES96, null, this.plates96);
     }
 
     @Override
     public void add384Plate(IPlate384 plate) {
         activate(ActivationPurpose.WRITE);
         this.plates384.add(plate);
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PLATES384, null, this.plates384);
     }
 
     @Override
     public String toString() {
+        return "project '" + getName() + "' from " + getOwner() + ": " + getDescription();
+    }
+
+    @Override
+    public String toFullyRecursiveString() {
         String str = "project '" + getName() + "' from " + getOwner() + ": " + getDescription();
-//        if (!gelgroups.isEmpty()) {
-//            ILogicalGelGroup group = null;
-//            for (Iterator<ILogicalGelGroup> it = gelgroups.iterator(); it.hasNext();) {
-//                group = it.next();
-//                str += "\n  > " + group.toString();
-//            }
-//        } else {
-//            str += "\n  no logical gel groups";
-//        }
-//        if (!plates384.isEmpty()) {
-//            IPlate384 plate = null;
-//            for (Iterator<IPlate384> it = plates384.iterator(); it.hasNext();) {
-//                plate = it.next();
-//                str += "\n  > " + plate.toString();
-//            }
-//        } else {
-//            str += "\n  no 384 well plates";
-//        }
-//        if (!plates96.isEmpty()) {
-//            IPlate96 plate = null;
-//            for (Iterator<IPlate96> it = plates96.iterator(); it.hasNext();) {
-//                plate = it.next();
-//                str += "\n  > " + plate.toString();
-//            }
-//        } else {
-//            str += "\n  no 96 well plates";
-//        }
-//        if (!spotgroups.isEmpty()) {
-//            ISpotGroup group = null;
-//            for (Iterator<ISpotGroup> it = spotgroups.iterator(); it.hasNext();) {
-//                group = it.next();
-//                str += "\n  > " + group.toString();
-//            }
-//        } else {
-//            str += "\n  no spot groups";
-//        }
+        if (!gelgroups.isEmpty()) {
+            ILogicalGelGroup group = null;
+            for (Iterator<ILogicalGelGroup> it = gelgroups.iterator(); it.hasNext();) {
+                group = it.next();
+                str += "\n  > " + group.toFullyRecursiveString();
+            }
+        } else {
+            str += "\n  no logical gel groups";
+        }
+        if (!plates384.isEmpty()) {
+            IPlate384 plate = null;
+            for (Iterator<IPlate384> it = plates384.iterator(); it.hasNext();) {
+                plate = it.next();
+                str += "\n  > " + plate.toFullyRecursiveString();
+            }
+        } else {
+            str += "\n  no 384 well plates";
+        }
+        if (!plates96.isEmpty()) {
+            IPlate96 plate = null;
+            for (Iterator<IPlate96> it = plates96.iterator(); it.hasNext();) {
+                plate = it.next();
+                str += "\n  > " + plate.toFullyRecursiveString();
+            }
+        } else {
+            str += "\n  no 96 well plates";
+        }
+        if (!spotgroups.isEmpty()) {
+            ISpotGroup group = null;
+            for (Iterator<ISpotGroup> it = spotgroups.iterator(); it.hasNext();) {
+                group = it.next();
+                str += "\n  > " + group.toFullyRecursiveString();
+            }
+        } else {
+            str += "\n  no spot groups";
+        }
         return str;
     }
 }

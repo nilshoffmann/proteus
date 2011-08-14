@@ -119,49 +119,49 @@ public class Spot implements ISpot, Activatable {
     public void setWell(IWell96 well) {
         activate(ActivationPurpose.WRITE);
         this.well = well;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_WELL, null, well);
     }
 
     @Override
     public void setLabel(String label) {
         activate(ActivationPurpose.WRITE);
         this.label = label;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_LABEL, null, label);
     }
 
     @Override
     public void setNumber(int number) {
         activate(ActivationPurpose.WRITE);
         this.number = number;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_NUMBER, null, number);
     }
 
     @Override
-    public void setGel(IGel parent) {
+    public void setGel(IGel gel) {
         activate(ActivationPurpose.WRITE);
-        this.gel = parent;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        this.gel = gel;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_GEL, null, gel);
     }
 
     @Override
     public void setPosX(double posX) {
         activate(ActivationPurpose.WRITE);
         this.posX = posX;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_POS_X, null, posX);
     }
 
     @Override
     public void setPosY(double posY) {
         activate(ActivationPurpose.WRITE);
         this.posY = posY;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_POS_Y, null, posY);
     }
 
     @Override
     public void setStatus(SpotStatus status) {
         activate(ActivationPurpose.WRITE);
         this.status = status;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_STATUS, null, status);
     }
 
     @Override
@@ -173,7 +173,7 @@ public class Spot implements ISpot, Activatable {
     public void setGroup(ISpotGroup group) {
         activate(ActivationPurpose.WRITE);
         this.group = group;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_GROUP, null, group);
     }
 
     @Override

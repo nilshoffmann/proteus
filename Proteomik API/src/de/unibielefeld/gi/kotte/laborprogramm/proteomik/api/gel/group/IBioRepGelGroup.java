@@ -11,6 +11,14 @@ import java.util.List;
  */
 public interface IBioRepGelGroup extends IPropertyChangeSource{
 
+    public static final String PROPERTY_PARENT = "parent";
+
+    public static final String PROPERTY_NAME = "name";
+
+    public static final String PROPERTY_DESCRIPTION = "description";
+
+    public static final String PROPERTY_GROUPS = "gel groups";
+
     public ILogicalGelGroup getParent();
 
     public void setParent(ILogicalGelGroup parent);
@@ -28,4 +36,6 @@ public interface IBioRepGelGroup extends IPropertyChangeSource{
     public void addGelGroup(ITechRepGelGroup group);
 
     public void setGelGroups(List<ITechRepGelGroup> groups);
+
+    public String toFullyRecursiveString();
 }

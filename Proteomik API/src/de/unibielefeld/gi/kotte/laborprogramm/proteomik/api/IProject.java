@@ -13,6 +13,20 @@ import java.util.List;
  */
 public interface IProject extends IPropertyChangeSource {
 
+    public static final String PROPERTY_DESCRIPTION = "description";
+
+    public static final String PROPERTY_NAME = "name";
+
+    public static final String PROPERTY_GELGROUPS = "logical gel groups";
+
+    public static final String PROPERTY_SPOTGROUPS = "spot groups";
+
+    public static final String PROPERTY_OWNER = "Project owner";
+
+    public static final String PROPERTY_PLATES96 = "96 well plates";
+
+    public static final String PROPERTY_PLATES384 = "384 well plates";
+
     public List<ILogicalGelGroup> getGelGroups();
 
     public void setGelGroups(List<ILogicalGelGroup> groups);
@@ -48,4 +62,6 @@ public interface IProject extends IPropertyChangeSource {
     public void add96Plate(IPlate96 plate);
 
     public void add384Plate(IPlate384 plate);
+
+    public String toFullyRecursiveString();
 }

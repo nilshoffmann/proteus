@@ -81,7 +81,7 @@ public class SpotGroup implements ISpotGroup, Activatable {
     public void setParent(IProject parent) {
         activate(ActivationPurpose.WRITE);
         this.parent = parent;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null, parent);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class SpotGroup implements ISpotGroup, Activatable {
     public void setLabel(String label) {
         activate(ActivationPurpose.WRITE);
         this.label = label;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_LABEL, null, label);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class SpotGroup implements ISpotGroup, Activatable {
     public void setNumber(int number) {
         activate(ActivationPurpose.WRITE);
         this.number = number;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_NUMBER, null, number);
     }
 
     @Override
@@ -120,18 +120,23 @@ public class SpotGroup implements ISpotGroup, Activatable {
     public void setSpots(List<ISpot> spots) {
         activate(ActivationPurpose.WRITE);
         this.spots = spots;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_SPOTS, null, spots);
     }
 
     @Override
     public void addSpot(ISpot spot) {
         activate(ActivationPurpose.WRITE);
         this.spots.add(spot);
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_SPOTS, null, this.spots);
     }
 
     @Override
     public String toString() {
+        return "spot group #" + getNumber() + ": " + getLabel()==null?"N.N.":getLabel();
+    }
+
+    @Override
+    public String toFullyRecursiveString() {
         String str = "spot group #" + getNumber() + ": " + getLabel()==null?"N.N.":getLabel();
         if (!getSpots().isEmpty()) {
             ISpot spot = null;

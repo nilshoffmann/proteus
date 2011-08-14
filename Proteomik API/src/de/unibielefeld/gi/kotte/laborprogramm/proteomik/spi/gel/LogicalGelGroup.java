@@ -81,7 +81,7 @@ public class LogicalGelGroup implements ILogicalGelGroup, Activatable {
     public void setDescription(String description) {
         activate(ActivationPurpose.WRITE);
         this.description = description;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_DESCRIPTION, null, description);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class LogicalGelGroup implements ILogicalGelGroup, Activatable {
     public void setGelGroups(List<IBioRepGelGroup> groups) {
         activate(ActivationPurpose.WRITE);
         this.groups = groups;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_GROUPS, null, groups);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class LogicalGelGroup implements ILogicalGelGroup, Activatable {
     public void setName(String name) {
         activate(ActivationPurpose.WRITE);
         this.name = name;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_NAME, null, name);
     }
 
     @Override
@@ -120,18 +120,23 @@ public class LogicalGelGroup implements ILogicalGelGroup, Activatable {
     public void setParent(IProject parent) {
         activate(ActivationPurpose.WRITE);
         this.parent = parent;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null, parent);
     }
 
     @Override
     public void addGelGroup(IBioRepGelGroup group) {
         activate(ActivationPurpose.WRITE);
         this.groups.add(group);
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_GROUPS, null, this.groups);
     }
 
     @Override
     public String toString() {
+        return "logical gel group '" + getName() + "': " + getDescription();
+    }
+
+    @Override
+    public String toFullyRecursiveString() {
         String str = "logical gel group '" + getName() + "': " + getDescription();
         if (!getGelGroups().isEmpty()) {
             IBioRepGelGroup group = null;

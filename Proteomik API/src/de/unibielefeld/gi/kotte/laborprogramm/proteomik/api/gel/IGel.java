@@ -11,6 +11,18 @@ import java.util.List;
  */
 public interface IGel extends IPropertyChangeSource{
 
+    public static final String PROPERTY_PARENT = "parent";
+
+    public static final String PROPERTY_DESCRIPTION = "description";
+
+    public static final String PROPERTY_FILENAME = "image file name";
+
+    public static final String PROPERTY_NAME = "name";
+
+    public static final String PROPERTY_SPOTS = "gel spots";
+
+    public static final String PROPERTY_VIRTUAL = "virtual";
+
     public ITechRepGelGroup getParent();
 
     public void setParent(ITechRepGelGroup parent);
@@ -36,4 +48,6 @@ public interface IGel extends IPropertyChangeSource{
     public boolean isVirtual();
     
     public void setVirtual(boolean virtual);
+
+    public String toFullyRecursiveString();
 }

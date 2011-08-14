@@ -12,6 +12,14 @@ import java.util.List;
  */
 public interface ISpotGroup extends IPropertyChangeSource {
 
+    public static final String PROPERTY_LABEL = "user defined label";
+
+    public static final String PROPERTY_NUMBER = "spot number";
+
+    public static final String PROPERTY_PARENT = "parent";
+
+    public static final String PROPERTY_SPOTS = "spots";
+
     public String getLabel();
 
     public int getNumber();
@@ -29,4 +37,6 @@ public interface ISpotGroup extends IPropertyChangeSource {
     public void addSpot(ISpot spot);
 
     public void setSpots(List<ISpot> spots);
+
+    public String toFullyRecursiveString();
 }

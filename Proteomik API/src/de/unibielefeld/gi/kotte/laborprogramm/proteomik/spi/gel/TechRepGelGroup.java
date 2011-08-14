@@ -81,7 +81,7 @@ public class TechRepGelGroup implements ITechRepGelGroup, Activatable {
     public void setDescription(String description) {
         activate(ActivationPurpose.WRITE);
         this.description = description;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_DESCRIPTION, null, description);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class TechRepGelGroup implements ITechRepGelGroup, Activatable {
     public void setGels(List<IGel> gels) {
         activate(ActivationPurpose.WRITE);
         this.gels = gels;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_GELS, null, gels);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class TechRepGelGroup implements ITechRepGelGroup, Activatable {
     public void setName(String name) {
         activate(ActivationPurpose.WRITE);
         this.name = name;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_NAME, null, name);
     }
 
     @Override
@@ -120,18 +120,23 @@ public class TechRepGelGroup implements ITechRepGelGroup, Activatable {
     public void setParent(IBioRepGelGroup parent) {
         activate(ActivationPurpose.WRITE);
         this.parent = parent;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null, parent);
     }
 
     @Override
     public void addGel(IGel gel) {
         activate(ActivationPurpose.WRITE);
         this.gels.add(gel);
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_GELS, null, this.gels);
     }
 
     @Override
     public String toString() {
+        return "tech rep gel group '" + getName() + "': " + getDescription();
+    }
+
+    @Override
+    public String toFullyRecursiveString() {
         String str = "tech rep gel group '" + getName() + "': " + getDescription();
         if (!getGels().isEmpty()) {
             IGel gel = null;

@@ -126,42 +126,42 @@ public class Well384 implements IWell384, Activatable {
     public void setIdentification(String identification) {
         activate(ActivationPurpose.WRITE);
         this.identification = identification;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_IDENTIFICATION, null, identification);
     }
 
     @Override
     public void setParent(IPlate384 parent) {
         activate(ActivationPurpose.WRITE);
         this.parent = parent;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null, parent);
     }
 
     @Override
     public void setRow(char posX) {
         activate(ActivationPurpose.WRITE);
         this.row = posX;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_POSITION, null, getWellPosition());
     }
 
     @Override
     public void setColumn(int posY) {
         activate(ActivationPurpose.WRITE);
         this.column = posY;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_POSITION, null, getWellPosition());
     }
 
     @Override
     public void setStatus(Well384Status status) {
         activate(ActivationPurpose.WRITE);
         this.status = status;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_STATUS, null, status);
     }
 
     @Override
     public void setWell96(IWell96 well96) {
         activate(ActivationPurpose.WRITE);
         this.well96 = well96;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_WELL96, null, well96);
     }
 
     @Override

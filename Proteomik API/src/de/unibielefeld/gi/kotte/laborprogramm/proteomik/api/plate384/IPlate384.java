@@ -10,6 +10,14 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPropertyChangeSourc
  */
 public interface IPlate384 extends IPropertyChangeSource {
 
+    public static final String PROPERTY_DESCRIPTION = "description";
+
+    public static final String PROPERTY_NAME = "name";
+
+    public static final String PROPERTY_PARENT = "parent";
+
+    public static final String PROPERTY_WELLS = "wells";
+
     public String getDescription();
 
     public String getName();
@@ -35,4 +43,6 @@ public interface IPlate384 extends IPropertyChangeSource {
     public void setWell(IWell384 well, char row, int column);
 
     public int posToIndex(char row, int column);
+
+    public String toFullyRecursiveString();
 }

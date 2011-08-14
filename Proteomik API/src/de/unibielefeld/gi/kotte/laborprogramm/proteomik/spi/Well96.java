@@ -114,40 +114,35 @@ public class Well96 implements IWell96, Activatable {
     public void setParent(IPlate96 parent) {
         activate(ActivationPurpose.WRITE);
         this.parent = parent;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null, parent);
     }
 
     @Override
     public void setRow(char posX) {
         activate(ActivationPurpose.WRITE);
         this.row = posX;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_POSITION, null, getWellPosition());
     }
 
     @Override
     public void setColumn(int posY) {
         activate(ActivationPurpose.WRITE);
         this.column = posY;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_POSITION, null, getWellPosition());
     }
 
     @Override
     public void setStatus(Well96Status status) {
         activate(ActivationPurpose.WRITE);
         this.status = status;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_STATUS, null, status);
     }
 
     @Override
     public void setSpot(ISpot spot) {
         activate(ActivationPurpose.WRITE);
         this.spot = spot;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_SPOT, null, spot);
     }
 
     @Override
@@ -160,16 +155,14 @@ public class Well96 implements IWell96, Activatable {
     public void set384Wells(List<IWell384> wells) {
         activate(ActivationPurpose.WRITE);
         this.wells384 = wells;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_WELLS384, null, wells);
     }
 
     @Override
     public void add384Well(IWell384 well) {
         activate(ActivationPurpose.WRITE);
         this.wells384.add(well);
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_WELLS384, null, this.wells384);
     }
 
     @Override

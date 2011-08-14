@@ -9,6 +9,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroup;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -82,7 +83,7 @@ public class Gel implements IGel, Activatable {
     public void setParent(ITechRepGelGroup parent) {
         activate(ActivationPurpose.WRITE);
         this.parent = parent;
-        getPropertyChangeSupport().firePropertyChange("parent", null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null, parent);
     }
 
     @Override
@@ -95,7 +96,7 @@ public class Gel implements IGel, Activatable {
     public void setDescription(String description) {
         activate(ActivationPurpose.WRITE);
         this.description = description;
-        getPropertyChangeSupport().firePropertyChange("description", null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_DESCRIPTION, null, description);
     }
 
     @Override
@@ -108,7 +109,7 @@ public class Gel implements IGel, Activatable {
     public void setFilename(String filename) {
         activate(ActivationPurpose.WRITE);
         this.filename = filename;
-        getPropertyChangeSupport().firePropertyChange("filename", null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_FILENAME, null, filename);
     }
 
     @Override
@@ -121,7 +122,7 @@ public class Gel implements IGel, Activatable {
     public void setName(String name) {
         activate(ActivationPurpose.WRITE);
         this.name = name;
-        getPropertyChangeSupport().firePropertyChange("name", null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_NAME, null, name);
     }
 
     @Override
@@ -134,14 +135,14 @@ public class Gel implements IGel, Activatable {
     public void addSpot(ISpot spot) {
         activate(ActivationPurpose.WRITE);
         this.spots.add(spot);
-        getPropertyChangeSupport().firePropertyChange("spot", null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_SPOTS, null, this.spots);
     }
 
     @Override
     public void setSpots(List<ISpot> spots) {
         activate(ActivationPurpose.WRITE);
         this.spots = spots;
-        getPropertyChangeSupport().firePropertyChange("spots", null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_SPOTS, null, spots);
     }
 
     @Override
@@ -154,21 +155,26 @@ public class Gel implements IGel, Activatable {
     public void setVirtual(boolean virtual){
         activate(ActivationPurpose.WRITE);
         this.virtual = virtual;
-        getPropertyChangeSupport().firePropertyChange("virtual", null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_VIRTUAL, null, virtual);
     }
 
     @Override
     public String toString() {
+        return "gel '" + getName() + "' from file '" + getFilename() + "': " + getDescription();
+    }
+    
+    @Override
+    public String toFullyRecursiveString() {
         String str = "gel '" + getName() + "' from file '" + getFilename() + "': " + getDescription();
-//        if (!spots.isEmpty()) {
-//            ISpot spot = null;
-//            for (Iterator<ISpot> it = spots.iterator(); it.hasNext();) {
-//                spot = it.next();
-//                str += "\n          > " + spot.toString();
-//            }
-//        } else {
-//            str += "\n          no spots";
-//        }
+        if (!spots.isEmpty()) {
+            ISpot spot = null;
+            for (Iterator<ISpot> it = spots.iterator(); it.hasNext();) {
+                spot = it.next();
+                str += "\n          > " + spot.toString();
+            }
+        } else {
+            str += "\n          no spots";
+        }
         return str;
     }
 }

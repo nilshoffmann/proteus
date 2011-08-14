@@ -10,6 +10,18 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
  */
 public interface IWell384 extends IPropertyChangeSource {
 
+    public static final String PROPERTY_NAME = "name";
+
+    public static final String PROPERTY_PARENT = "parent";
+
+    public static final String PROPERTY_STATUS = "status";
+
+    public static final String PROPERTY_IDENTIFICATION = "identification";
+
+    public static final String PROPERTY_WELL96 = "plate96 well";
+
+    public static final String PROPERTY_POSITION = "position";
+
     public IPlate384 getParent();
 
     public char getRow();

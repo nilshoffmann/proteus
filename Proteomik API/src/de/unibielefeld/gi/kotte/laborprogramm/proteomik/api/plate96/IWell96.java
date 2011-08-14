@@ -12,6 +12,18 @@ import java.util.List;
  */
 public interface IWell96 extends IPropertyChangeSource {
 
+    public static final String PROPERTY_NAME = "name";
+
+    public static final String PROPERTY_PARENT = "parent";
+
+    public static final String PROPERTY_STATUS = "status";
+
+    public static final String PROPERTY_WELLS384 = "plate384 wells";
+
+    public static final String PROPERTY_SPOT = "gel spot";
+
+    public static final String PROPERTY_POSITION = "position";
+
     public IPlate96 getParent();
 
     public char getRow();

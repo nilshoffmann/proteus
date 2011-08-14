@@ -111,40 +111,50 @@ public class Plate96 implements IPlate96, Activatable {
     @Override
     public void setDescription(String description) {
         activate(ActivationPurpose.WRITE);
+        //String oldValue = this.description;
         this.description = description;
-        getPropertyChangeSupport().firePropertyChange("description", null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_DESCRIPTION, null, description);
     }
 
     @Override
     public void setName(String name) {
         activate(ActivationPurpose.WRITE);
+        //String oldValue = this.name;
         this.name = name;
-        getPropertyChangeSupport().firePropertyChange("name", null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_NAME, null, name);
     }
 
     @Override
     public void setParent(IProject parent) {
         activate(ActivationPurpose.WRITE);
+        //IProject oldValue = this.parent;
         this.parent = parent;
-        getPropertyChangeSupport().firePropertyChange("parent", null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null, parent);
     }
 
     @Override
     public void setWells(IWell96[] wells) {
         activate(ActivationPurpose.WRITE);
+        //IWell96[] oldValue = this.wells;
         this.wells = wells;
-        getPropertyChangeSupport().firePropertyChange("wells", null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_WELLS, null, wells);
     }
 
     @Override
     public void setWell(IWell96 well, char row, int column) {
         activate(ActivationPurpose.WRITE);
+        //IWell96[] oldValue = this.wells;
         this.wells[posToIndex(row, column)] = well;
-        getPropertyChangeSupport().firePropertyChange("well", null, this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_WELLS, null, this.wells);
     }
 
     @Override
     public String toString() {
+        return "96 well plate '" + getName() + "': " + getDescription();
+    }
+
+    @Override
+    public String toFullyRecursiveString() {
         String str = "96 well plate '" + getName() + "': " + getDescription();
         for (int i = 0; i < getWells().length; i++) {
             str += "\n    > " + getWells()[i].toString();

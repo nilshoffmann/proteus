@@ -73,25 +73,25 @@ public class Plate384 implements IPlate384, Activatable {
     @Override
     public String getDescription() {
         activate(ActivationPurpose.READ);
-        return description;
+        return this.description;
     }
 
     @Override
     public String getName() {
         activate(ActivationPurpose.READ);
-        return name;
+        return this.name;
     }
 
     @Override
     public IProject getParent() {
         activate(ActivationPurpose.READ);
-        return parent;
+        return this.parent;
     }
 
     @Override
     public IWell384[] getWells() {
         activate(ActivationPurpose.READ);
-        return wells;
+        return this.wells;
     }
 
     @Override
@@ -113,45 +113,50 @@ public class Plate384 implements IPlate384, Activatable {
     @Override
     public void setDescription(String description) {
         activate(ActivationPurpose.WRITE);
+        //String oldValue = this.description;
         this.description = description;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_DESCRIPTION, null, description);
     }
 
     @Override
     public void setName(String name) {
         activate(ActivationPurpose.WRITE);
+        //String oldValue = this.name;
         this.name = name;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_NAME, null, name);
     }
 
     @Override
     public void setParent(IProject parent) {
         activate(ActivationPurpose.WRITE);
+        //IProject oldValue = this.parent;
         this.parent = parent;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null, parent);
     }
 
     @Override
     public void setWells(IWell384[] wells) {
         activate(ActivationPurpose.WRITE);
+        //IWell384[] oldValue = this.wells;
         this.wells = wells;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_WELLS, null, wells);
     }
 
     @Override
     public void setWell(IWell384 well, char row, int column) {
         activate(ActivationPurpose.WRITE);
+        //IWell384[] oldValue = this.wells;
         this.wells[posToIndex(row, column)] = well;
-        getPropertyChangeSupport().firePropertyChange(getClass().getName(), null,
-                this);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_WELLS, null, this.wells);
     }
 
     @Override
     public String toString() {
+        return "384 well plate '" + getName() + "': " + getDescription();
+    }
+
+    @Override
+    public String toFullyRecursiveString() {
         String str = "384 well plate '" + getName() + "': " + getDescription();
         for (int i = 0; i < getWells().length; i++) {
             str += "\n    > " + getWells()[i].toString();

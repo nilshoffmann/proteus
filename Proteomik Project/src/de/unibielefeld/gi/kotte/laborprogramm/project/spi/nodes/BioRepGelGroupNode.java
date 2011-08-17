@@ -3,6 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroup;
 import java.awt.Image;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,11 +42,12 @@ public class BioRepGelGroupNode extends AbstractNode {
     public Action[] getActions(boolean arg0) {
         Action[] nodeActions = new Action[7];
         nodeActions[0] = CommonProjectActions.newFileAction();
-        List<? extends Action> actions = Utilities.actionsForPath("/Actions/ProteomikLaborProgramm/"+getClass().getSimpleName()+"/");
-        List<Action> allActions = new LinkedList<Action>(actions);
-        allActions.addAll(Arrays.asList(nodeActions));
+//        List<? extends Action> actions = Utilities.actionsForPath("/Actions/ProteomikLaborProgramm/"+getClass().getSimpleName()+"/");
+        List<? extends Action> actions = Utilities.actionsForPath("/Projects/ProteomikLaborProgramm/");
+        List<Action> allActions = new ArrayList<Action>(Arrays.asList(nodeActions));
+        allActions.addAll(actions);
+        allActions.addAll(Arrays.asList(super.getActions(arg0)));
         return allActions.toArray(new Action[allActions.size()]);
-//        return nodeActions;
     }
 
     @Override

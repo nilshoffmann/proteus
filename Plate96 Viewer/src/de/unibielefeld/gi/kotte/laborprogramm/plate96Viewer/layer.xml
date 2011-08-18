@@ -2,6 +2,17 @@
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
     <folder name="Actions">
+        <folder name="Plate96Node">
+            <file name="de-unibielefeld-gi-kotte-laborprogramm-plate96Viewer-actions-Plate96ViewerOpenAction.instance">
+                <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
+                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer.actions.Bundle#CTL_Plate96ViewerOpenAction"/>
+                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer.actions.Plate96ViewerOpenAction"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+                <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
+                <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96"/><!--org.openide.cookies.OpenCookie"/>-->
+            </file>
+        </folder>
         <folder name="Window">
             <file name="de-unibielefeld-gi-kotte-laborprogramm-plate96Viewer-Plate96ViewerTopComponentAction.instance">
                 <attr name="component" methodvalue="de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer.Plate96ViewerTopComponent.findInstance"/>

@@ -149,10 +149,30 @@ public class Well384Button extends JButton {
             IWell96 well96 = null;
             if (StateMachine.isTransitionAllowed(currentStatus, nextStatus)) {
                 switch (nextStatus) {
+                    case EMPTY:
+                        well96.get384Wells().remove(well);
+                        well.setWell96(null);
+                        break;
+                    case FILLED:
+                        well96.add384Well(well);
+                        well.setWell96(well96);
+                        break;
+//                    case IDENTIFIED:
+//                        well.setIdentification("<MOCK IDENTIFICATION>");
+//                        break;
+//                    case MULTIPLE_IDENTIFICATIONS:
+//                        well.setIdentification("<MOCK IDENTIFICATION>,<MOCK IDENTIFICATION>,<MOCK IDENTIFICATION>");
+//                        break;
+//                    case UNCERTAIN:
+//                        well.setIdentification("<MAYBE MOCK IDENTIFICATION>,<MAYBE MOCK IDENTIFICATION>,<MAYBE MOCK IDENTIFICATION>");
+//                        break;
+//                    case UNIDENTIFIED:
+//                        well.setIdentification("MOCK UNIDENTIFIED");
+//                        break;
                     case ERROR:
-                        well.setStatus(nextStatus);
                         break;
                 }
+                well.setStatus(nextStatus);
                 panel.setButtonForWell96Active(well96);
                 repaint();
             } else {

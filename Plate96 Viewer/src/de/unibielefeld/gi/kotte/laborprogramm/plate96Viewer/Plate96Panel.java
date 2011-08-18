@@ -3,11 +3,13 @@ package de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer;
 import javax.swing.JPanel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
 import java.awt.GridLayout;
 import javax.swing.JLabel;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.util.lookup.InstanceContent;
 
 /**
  * GUI Panel that visually represents a IPlate96. Offers Well96Buttons to manipulate plate wells.
@@ -21,9 +23,12 @@ public class Plate96Panel extends JPanel {
     private int currentPlateIndex = 0;
     private IPlate96 plate = null;
     private Well96Button[] buttons = null;
+    private InstanceContent instanceContent = null;
+    private Well96Button activeButton = null;
 
-    public Plate96Panel(IPlate96 plate) {
+    public Plate96Panel(IPlate96 plate, InstanceContent instanceContent) {
         this.plate = plate;
+        this.instanceContent = instanceContent;
         final int x = plate.getXdimension();
         final int y = plate.getYdimension();
         this.setLayout(new GridLayout(y + 1, x + 1));
@@ -58,6 +63,17 @@ public class Plate96Panel extends JPanel {
                 }
             }
         }
+    }
+
+    public void setActiveWellButton(Well96Button wellButton) {
+        if (activeButton != null) {
+            IWell96 oldWell = activeButton.getWell();
+            instanceContent.remove(oldWell);
+            activeButton.setSelected(false);
+        }
+        wellButton.setSelected(true);
+        instanceContent.add(wellButton.getWell());
+        activeButton = wellButton;
     }
 
     public ISpot getSpot() {

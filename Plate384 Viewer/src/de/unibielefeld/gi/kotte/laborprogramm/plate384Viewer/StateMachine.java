@@ -16,7 +16,7 @@ public class StateMachine {
         if(start==Well384Status.EMPTY && end==Well384Status.FILLED) {
             return true;
         }
-        if(start==Well384Status.FILLED) {
+        if(start==Well384Status.ERROR && end==Well384Status.EMPTY) {
             return true;
         }
         return false;

@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openide.util.Lookup;
+import org.openide.util.lookup.InstanceContent;
 
 /**
  *
@@ -46,24 +47,24 @@ public class Plate96PanelTest {
     public void tearDown() {
     }
 
-    @Test
-    public void testIcons() {
-        final String resourcePath = "/homes/kotte/ProteomikProjekt/";
-        Icon wellEmpty = new ImageIcon(resourcePath + "Well01.jpg");
-        Icon wellError = new ImageIcon(resourcePath + "Well02.jpg");
-        Icon wellOkay = new ImageIcon(resourcePath + "Well03.jpg");
-        JLabel labelEmpty = new JLabel(wellEmpty);
-        JLabel labelError = new JLabel(wellError);
-        JLabel labelOkay = new JLabel(wellOkay);
-        JPanel panel = new JPanel();
-        panel.add(labelEmpty);
-        panel.add(labelError);
-        panel.add(labelOkay);
-    }
+//    @Test
+//    public void testIcons() {
+//        final String resourcePath = "/homes/kotte/ProteomikProjekt/";
+//        Icon wellEmpty = new ImageIcon(resourcePath + "Well01.jpg");
+//        Icon wellError = new ImageIcon(resourcePath + "Well02.jpg");
+//        Icon wellOkay = new ImageIcon(resourcePath + "Well03.jpg");
+//        JLabel labelEmpty = new JLabel(wellEmpty);
+//        JLabel labelError = new JLabel(wellError);
+//        JLabel labelOkay = new JLabel(wellOkay);
+//        JPanel panel = new JPanel();
+//        panel.add(labelEmpty);
+//        panel.add(labelError);
+//        panel.add(labelOkay);
+//    }
 
     @Test
     public void testPlate() {
-        JPanel platePanel = new Plate96Panel(plate);
+        JPanel platePanel = new Plate96Panel(plate,new InstanceContent());
         Dialog dialog = new JDialog();
         dialog.add(platePanel);
         dialog.setVisible(true);

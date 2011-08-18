@@ -24,7 +24,7 @@ import org.openide.windows.WindowManager;
  *
  * @author kotte
  */
-@ConvertAsProperties(dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.plateViewer//Plate96Viewer//EN",
+@ConvertAsProperties(dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.plateViewer//Plate384Viewer//EN",
 autostore = false)
 public final class Plate384ViewerTopComponent extends TopComponent implements LookupListener {
 
@@ -112,7 +112,7 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
 //        }
             instanceContent.add(plate);
             platePanel = new Plate384Panel(plate);
-            setDisplayName("96 Well Plate: " + plate.getName());
+            setDisplayName("384 Well Plate: " + plate.getName());
             add(platePanel, BorderLayout.CENTER);
 //            CentralLookup.getDefault().remove(plate);
         }

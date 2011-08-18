@@ -1,6 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPropertyChangeSource;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IWellIdentification;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 
 /**
@@ -34,9 +35,9 @@ public interface IWell384 extends IPropertyChangeSource {
 
     public IWell96 getWell96();
 
-    public String getIdentification();
+    public IWellIdentification getIdentification();
 
-    public void setIdentification(String identification);
+    public void setIdentification(IWellIdentification identification);
 
     public void setParent(IPlate384 parent);
 

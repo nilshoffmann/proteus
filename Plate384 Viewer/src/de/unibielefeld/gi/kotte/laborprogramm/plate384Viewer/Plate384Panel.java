@@ -98,11 +98,11 @@ public class Plate384Panel extends JPanel {
         if (well96 != null) {
             Well384Button[] wells = this.buttons;
             for (int i = currentPlateIndex; i < wells.length; i++) {
-//                if (wells[i].getWell().getSpot() == spot) {
+                if (wells[i].getWell() == well96) {
                     wells[i].setSelected(true);
-//                } else {
-//                    wells[i].setSelected(false);
-//                }
+                } else {
+                    wells[i].setSelected(false);
+                }
             }
         }
     }

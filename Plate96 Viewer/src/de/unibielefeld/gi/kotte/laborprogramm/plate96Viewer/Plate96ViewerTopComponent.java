@@ -111,7 +111,7 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
 //            remove(platePanel);
 //        }
             instanceContent.add(plate);
-            platePanel = new Plate96Panel(plate);
+            platePanel = new Plate96Panel(plate, instanceContent);
             setDisplayName("96 Well Plate: " + plate.getName());
             add(platePanel, BorderLayout.CENTER);
 //            CentralLookup.getDefault().remove(plate);

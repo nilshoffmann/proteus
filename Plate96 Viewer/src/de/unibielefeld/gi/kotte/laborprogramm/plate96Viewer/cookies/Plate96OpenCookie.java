@@ -1,6 +1,5 @@
 package de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer.cookies;
 
-import de.unibielefeld.gi.kotte.laborprogramm.centralLookup.CentralLookup;
 import de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer.Plate96ViewerTopComponent;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.cookies.IPlate96OpenCookie;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;

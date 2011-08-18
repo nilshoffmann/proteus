@@ -13,6 +13,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -21,6 +22,7 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.event.MouseInputListener;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
@@ -30,17 +32,16 @@ import org.openide.util.Exceptions;
  *
  * @author hoffmann, kotte
  */
-public class Well96Button extends JButton {
+public class Well96Button extends JButton implements MouseInputListener {
 
     private IWell96 well = null;
     private JPopupMenu menu = null;
     private final Plate96Panel panel;
     private final Well96Button button = this;
 
-    private class Well96Action extends AbstractAction {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if(e.getButton()==MouseEvent.BUTTON3) {
             if (menu != null) {
                 menu.setVisible(false);
             }
@@ -52,6 +53,49 @@ public class Well96Button extends JButton {
                 menu.setLocation(p);
                 menu.setVisible(true);
             }
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+
+    }
+
+    private class Well96Action extends AbstractAction {
+
+        private final Well96Button button;
+        
+        public Well96Action(Well96Button button) {
+            this.button = button;
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            panel.setActiveWellButton(button);
         }
     }
 
@@ -138,11 +182,13 @@ public class Well96Button extends JButton {
     public Well96Button(IWell96 well, Plate96Panel panel) {
         this.well = well;
         this.panel = panel;
-        setAction(new Well96Action());
+        setAction(new Well96Action(this));
         setName(well.getWellPosition());
 //        setBorderPainted(false);
         setContentAreaFilled(false);
         setMinimumSize(new Dimension(5, 5));
+        addMouseListener(this);
+        addMouseMotionListener(this);
     }
 
     public void selectStatus(Well96Status nextStatus) {

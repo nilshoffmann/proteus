@@ -1,14 +1,22 @@
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 
+import de.unibielefeld.gi.kotte.laborprogramm.project.api.cookies.IPlate384OpenCookie;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import java.awt.Image;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
+import java.util.LinkedList;
+import java.util.List;
+import javax.swing.Action;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.PropertySupport.ReadWrite;
 import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.Utilities;
+import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
@@ -16,25 +24,20 @@ import org.openide.util.lookup.ProxyLookup;
  *
  * @author kotte
  */
-public class Plate384Node extends AbstractNode {
+public class Plate384Node extends AbstractNode implements PropertyChangeListener  {
 
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/Plate384Icon.png";
-    private final IPlate384 plate;
 
     public Plate384Node(IPlate384 plate, Lookup lkp) {
-        super(Children.LEAF,new ProxyLookup(Lookups.singleton(plate),lkp));
-        this.plate = plate;
+        super(Children.LEAF, new ProxyLookup(lkp, Lookups.fixed(plate, Lookup.getDefault().lookup(IPlate384OpenCookie.class))));
+        plate.addPropertyChangeListener(WeakListeners.propertyChange(this, plate));
     }
-
-//    public Plate384Node(IPlate384 plate) {
-//        super(Children.LEAF);
-//        this.plate = plate;
-//    }
 
     @Override
     protected Sheet createSheet() {
         Sheet sheet = Sheet.createDefault();
         Sheet.Set set = Sheet.createPropertiesSet();
+        final IPlate384 plate = getLookup().lookup(IPlate384.class);
         System.out.println("creating property sheet for Plate384 node");
 
         Property nameProp = new ReadWrite<String>("name", String.class,
@@ -84,5 +87,22 @@ public class Plate384Node extends AbstractNode {
     @Override
     public String getDisplayName() {
         return getLookup().lookup(IPlate384.class).getName();
+    }
+    
+    @Override
+    public Action[] getActions(boolean context) {
+        List<? extends Action> actions = Utilities.actionsForPath("/Actions/Plate384Node");
+        List<Action> allActions = new LinkedList<Action>(actions);
+        return allActions.toArray(new Action[allActions.size()]);
+    }
+    
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals(IPlate384.PROPERTY_NAME)) {
+            this.fireDisplayNameChange(null, getDisplayName());
+        } else {
+            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.
+                    getNewValue());
+        }
     }
 }

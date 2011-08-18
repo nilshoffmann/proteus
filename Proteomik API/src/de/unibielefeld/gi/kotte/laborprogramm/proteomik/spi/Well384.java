@@ -3,6 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
 import com.db4o.activation.ActivationPurpose;
 import com.db4o.activation.Activator;
 import com.db4o.ta.Activatable;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IWellIdentification;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
@@ -67,7 +68,7 @@ public class Well384 implements IWell384, Activatable {
     private IPlate384 parent;
     private Well384Status status = Well384Status.EMPTY;
     private IWell96 well96;
-    private String identification = "";
+    private IWellIdentification identification = null;
     private char row = 'X';
     private int column = 0;
 
@@ -75,7 +76,7 @@ public class Well384 implements IWell384, Activatable {
         this.parent = parent;
         this.status = Well384Status.EMPTY;
         this.well96 = null;
-        this.identification = "";
+        this.identification = new WellIdentification();
         this.row = posX;
         this.column = posY;
     }
@@ -117,13 +118,13 @@ public class Well384 implements IWell384, Activatable {
     }
 
     @Override
-    public String getIdentification() {
+    public IWellIdentification getIdentification() {
         activate(ActivationPurpose.READ);
         return identification;
     }
 
     @Override
-    public void setIdentification(String identification) {
+    public void setIdentification(IWellIdentification identification) {
         activate(ActivationPurpose.WRITE);
         this.identification = identification;
         getPropertyChangeSupport().firePropertyChange(PROPERTY_IDENTIFICATION, null, identification);

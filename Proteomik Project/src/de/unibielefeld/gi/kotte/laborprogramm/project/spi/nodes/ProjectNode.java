@@ -27,29 +27,25 @@ import org.openide.util.LookupListener;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
-import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
 /**
+ * Node representing a Proteomik Project.
  *
  * @author kotte
  */
 public class ProjectNode extends AbstractNode implements PropertyChangeListener, LookupListener {
 
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/ProjectIcon.png";
-
 //    private Result<SaveCookie> result = null;
-
     private InstanceContent content = null;
-    /**
-     *
-     * @param ipp
-     */
+
     public ProjectNode(IProteomicProject ipp) {
         this(ipp, new InstanceContent(),ipp.getLookup());
     }
 
-    /** A private constructor that takes an InstanceContent and
+    /**
+     * A private constructor that takes an InstanceContent and
      * uses it as internals for the Node lookup and also allow us
      * to modify the content, for example by adding a reference
      * to the node itself or any other object we want to represent.
@@ -101,9 +97,9 @@ public class ProjectNode extends AbstractNode implements PropertyChangeListener,
     protected Sheet createSheet() {
         Sheet sheet = Sheet.createDefault();
         Sheet.Set set = Sheet.createPropertiesSet();
-        System.out.println("creating property sheet for Project node");
         final IProject proj = getLookup().lookup(IProject.class);
-
+        System.out.println("creating property sheet for Project node");
+        
         Property nameProp = new ReadWrite<String>("name", String.class,
                 "Project name", "The project name.") {
 
@@ -176,7 +172,6 @@ public class ProjectNode extends AbstractNode implements PropertyChangeListener,
 
     @Override
     public void resultChanged(LookupEvent ev) {
-        //throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

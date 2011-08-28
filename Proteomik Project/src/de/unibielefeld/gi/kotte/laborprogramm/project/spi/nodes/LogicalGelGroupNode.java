@@ -2,6 +2,8 @@ package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
 import java.awt.Image;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +17,7 @@ import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
+import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
@@ -22,21 +25,16 @@ import org.openide.util.lookup.ProxyLookup;
  *
  * @author kotte
  */
-public class LogicalGelGroupNode extends AbstractNode {
+public class LogicalGelGroupNode extends AbstractNode implements PropertyChangeListener {
 
-    private ILogicalGelGroup illg;
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/LogicalGelGroupIcon.png";
 
-    public LogicalGelGroupNode(ILogicalGelGroup illg, Lookup lkp) {
+    public LogicalGelGroupNode(ILogicalGelGroup ilgg, Lookup lkp) {
         super(Children.create(new LogicalGelGroupChildNodeFactory(new ProxyLookup(
-                lkp,Lookups.fixed(illg))), true), new ProxyLookup(lkp,Lookups.singleton(illg)));
-        this.illg = illg;
+                lkp,Lookups.fixed(ilgg))), true), new ProxyLookup(lkp,Lookups.singleton(ilgg)));
+        ilgg.addPropertyChangeListener(WeakListeners.propertyChange(this, ilgg));
     }
 
-//    public LogicalGelGroupNode(ILogicalGelGroup illg) {
-//        super(Children.create(new LogicalGelGroupChildNodeFactory(illg), true), Lookups.singleton(illg));
-//        this.illg = illg;
-//    }
 
     @Override
     public Action[] getActions(boolean arg0) {
@@ -53,6 +51,7 @@ public class LogicalGelGroupNode extends AbstractNode {
     protected Sheet createSheet() {
         Sheet sheet = Sheet.createDefault();
         Sheet.Set set = Sheet.createPropertiesSet();
+        final ILogicalGelGroup ilgg = getLookup().lookup(ILogicalGelGroup.class);
         System.out.println("creating property sheet for LogicalGelGroup node");
 
         Property nameProp = new ReadWrite<String>("name", String.class,
@@ -60,12 +59,12 @@ public class LogicalGelGroupNode extends AbstractNode {
 
             @Override
             public String getValue() throws IllegalAccessException, InvocationTargetException {
-                return illg.getName();
+                return ilgg.getName();
             }
 
             @Override
             public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                illg.setName(val);
+                ilgg.setName(val);
             }
         };
         set.put(nameProp);
@@ -75,12 +74,12 @@ public class LogicalGelGroupNode extends AbstractNode {
 
             @Override
             public String getValue() throws IllegalAccessException, InvocationTargetException {
-                return illg.getDescription();
+                return ilgg.getDescription();
             }
 
             @Override
             public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                illg.setDescription(val);
+                ilgg.setDescription(val);
             }
         };
         set.put(descProp);
@@ -101,6 +100,16 @@ public class LogicalGelGroupNode extends AbstractNode {
 
     @Override
     public String getDisplayName() {
-        return illg.getName();
+        return getLookup().lookup(ILogicalGelGroup.class).getName();
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("name")) {
+            this.fireDisplayNameChange(null, getDisplayName());
+        } else {
+            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.
+                    getNewValue());
+        }
     }
 }

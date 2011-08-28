@@ -18,6 +18,7 @@ import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
 /**
+ * Node representing a virtual folder containing all groups of gel spots.
  *
  * @author kotte
  */
@@ -32,8 +33,8 @@ public class SpotGroupFolderNode extends AbstractNode {
         this.sgfcnf = childNodeFactory;
     }
 
-    public SpotGroupFolderNode(Collection<ISpotGroup> illg, Lookup lkp) {
-        this(illg,lkp,new SpotGroupFolderChildNodeFactory(new ProxyLookup(lkp,Lookups.fixed(illg.toArray(new ISpotGroup[illg.size()])))));
+    public SpotGroupFolderNode(Collection<ISpotGroup> isgs, Lookup lkp) {
+        this(isgs,lkp,new SpotGroupFolderChildNodeFactory(new ProxyLookup(lkp,Lookups.fixed(isgs.toArray(new ISpotGroup[isgs.size()])))));
     }
 
 //    public SpotGroupFolderNode(Collection<ISpotGroup> illg) {

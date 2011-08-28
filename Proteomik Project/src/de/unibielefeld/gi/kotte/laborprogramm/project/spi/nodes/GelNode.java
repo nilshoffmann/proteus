@@ -11,10 +11,8 @@ import java.util.List;
 import javax.swing.Action;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
-import org.openide.nodes.PropertySupport;
 import org.openide.nodes.PropertySupport.ReadWrite;
 import org.openide.nodes.Sheet;
-import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
@@ -23,6 +21,7 @@ import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
 /**
+ * Node representing a 2D gel.
  *
  * @author kotte
  */
@@ -36,11 +35,6 @@ public class GelNode extends AbstractNode implements PropertyChangeListener {
         gel.addPropertyChangeListener(WeakListeners.propertyChange(this, gel));
     }
 
-//    public GelNode(IGel gel) {
-//        super(Children.LEAF, Lookups.fixed(gel, Lookup.getDefault().lookup(
-//                IGelOpenCookie.class)));
-//        gel.addPropertyChangeListener(WeakListeners.propertyChange(this, gel));
-//    }
     @Override
     public Image getIcon(int type) {
         return ImageUtilities.loadImage(ICON_PATH);
@@ -66,19 +60,19 @@ public class GelNode extends AbstractNode implements PropertyChangeListener {
 
         Sheet sheet = Sheet.createDefault();
         Sheet.Set set = Sheet.createPropertiesSet();
-        final IGel obj = getLookup().lookup(IGel.class);
+        final IGel gel = getLookup().lookup(IGel.class);
         System.out.println("creating property sheet for gel node");
         Property filenameProp = new ReadWrite<String>("filename", String.class,
                 "Gel location", "The location of this gel's image file.") {
 
             @Override
             public String getValue() throws IllegalAccessException, InvocationTargetException {
-                return obj.getFilename();
+                return gel.getFilename();
             }
 
             @Override
             public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                obj.setFilename(val);
+                gel.setFilename(val);
             }
         };
         Property nameProp = new ReadWrite<String>("name", String.class,
@@ -86,12 +80,12 @@ public class GelNode extends AbstractNode implements PropertyChangeListener {
 
             @Override
             public String getValue() throws IllegalAccessException, InvocationTargetException {
-                return obj.getName();
+                return gel.getName();
             }
 
             @Override
             public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                obj.setName(val);
+                gel.setName(val);
             }
         };
         Property descriptionProp = new ReadWrite<String>("description",
@@ -99,12 +93,12 @@ public class GelNode extends AbstractNode implements PropertyChangeListener {
 
             @Override
             public String getValue() throws IllegalAccessException, InvocationTargetException {
-                return obj.getDescription();
+                return gel.getDescription();
             }
 
             @Override
             public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                obj.setDescription(val);
+                gel.setDescription(val);
             }
         };
 
@@ -126,11 +120,11 @@ public class GelNode extends AbstractNode implements PropertyChangeListener {
     }
 
     @Override
-    public void propertyChange(PropertyChangeEvent pce) {
-        if (pce.getPropertyName().equals("name")) {
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("name")) {
             this.fireDisplayNameChange(null, getDisplayName());
         } else {
-            this.firePropertyChange(pce.getPropertyName(), pce.getOldValue(), pce.
+            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.
                     getNewValue());
         }
     }

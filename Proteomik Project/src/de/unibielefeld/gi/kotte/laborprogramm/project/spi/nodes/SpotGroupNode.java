@@ -14,6 +14,7 @@ import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
 /**
+ * Node representing groups of gel spots.
  *
  * @author kotte
  */
@@ -24,11 +25,6 @@ public class SpotGroupNode extends AbstractNode {
     public SpotGroupNode(ISpotGroup isg, Lookup lkp) {
         super(Children.LEAF,Lookups.fixed(isg));
     }
-
-//    public SpotGroupNode(ISpotGroup isg) {
-//        super(Children.LEAF);
-//        this.isg = isg;
-//    }
 
     @Override
     protected Sheet createSheet() {

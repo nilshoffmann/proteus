@@ -22,6 +22,7 @@ import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
 /**
+ * Node representing a 96 well microplate.
  *
  * @author kotte
  */
@@ -33,11 +34,6 @@ public class Plate96Node extends AbstractNode implements PropertyChangeListener 
         super(Children.LEAF,new ProxyLookup(lkp,Lookups.fixed(plate,Lookup.getDefault().lookup(IPlate96OpenCookie.class))));
         plate.addPropertyChangeListener(WeakListeners.propertyChange(this, plate));
     }
-
-//    public Plate96Node(IPlate96 plate) {
-//        super(Children.LEAF,Lookups.fixed(plate,Lookup.getDefault().lookup(IPlate96OpenCookie.class)));
-//        this.plate = plate;
-//    }
 
     @Override
     public Image getIcon(int type) {
@@ -113,6 +109,4 @@ public class Plate96Node extends AbstractNode implements PropertyChangeListener 
                     getNewValue());
         }
     }
-
-
 }

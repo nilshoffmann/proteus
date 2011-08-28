@@ -2,10 +2,11 @@ package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroup;
 import java.awt.Image;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import javax.swing.Action;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
@@ -16,27 +17,23 @@ import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
+import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
 /**
+ * Node representing a group of biological replicates of 2D gels.
  *
  * @author kotte
  */
-public class BioRepGelGroupNode extends AbstractNode {
+public class BioRepGelGroupNode extends AbstractNode implements PropertyChangeListener {
 
-    private IBioRepGelGroup ibrgg;
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/BioRepGelGroupIcon.png";
 
     public BioRepGelGroupNode(IBioRepGelGroup ibrgg, Lookup lkp) {
         super(Children.create(new BioRepGelGroupChildNodeFactory(new ProxyLookup(lkp,Lookups.fixed(ibrgg))), true), new ProxyLookup(lkp,Lookups.singleton(ibrgg)));
-        this.ibrgg = ibrgg;
+        ibrgg.addPropertyChangeListener(WeakListeners.propertyChange(this, ibrgg));
     }
-
-//    public BioRepGelGroupNode(IBioRepGelGroup ibrgg) {
-//        super(Children.create(new BioRepGelGroupChildNodeFactory(ibrgg), true), Lookups.singleton(ibrgg));
-//        this.ibrgg = ibrgg;
-//    }
 
     @Override
     public Action[] getActions(boolean arg0) {
@@ -54,6 +51,7 @@ public class BioRepGelGroupNode extends AbstractNode {
     protected Sheet createSheet() {
         Sheet sheet = Sheet.createDefault();
         Sheet.Set set = Sheet.createPropertiesSet();
+        final IBioRepGelGroup ibrgg = getLookup().lookup(IBioRepGelGroup.class);
         System.out.println("creating property sheet for BioRepGelGroup node");
 
         Property nameProp = new ReadWrite<String>("name", String.class,
@@ -102,6 +100,16 @@ public class BioRepGelGroupNode extends AbstractNode {
 
     @Override
     public String getDisplayName() {
-        return ibrgg.getName();
+        return getLookup().lookup(IBioRepGelGroup.class).getName();
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("name")) {
+            this.fireDisplayNameChange(null, getDisplayName());
+        } else {
+            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.
+                    getNewValue());
+        }
     }
 }

@@ -2,6 +2,8 @@ package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroup;
 import java.awt.Image;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,21 +17,22 @@ import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
+import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
 /**
+ * Node representing a group of technical replicates of 2D gels.
  *
  * @author kotte
  */
-public class TechRepGelGroupNode extends AbstractNode {
+public class TechRepGelGroupNode extends AbstractNode implements PropertyChangeListener {
 
-    private ITechRepGelGroup itrgg;
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/TechRepGelGroupIcon.png";
 
     public TechRepGelGroupNode(ITechRepGelGroup itrgg, Lookup lkp) {
         super(Children.create(new TechRepGelGroupChildNodeFactory(new ProxyLookup(lkp,Lookups.fixed(itrgg))), true), new ProxyLookup(lkp,Lookups.fixed(itrgg)));
-        this.itrgg = itrgg;
+        itrgg.addPropertyChangeListener(WeakListeners.propertyChange(this, itrgg));
     }
 
 //    public TechRepGelGroupNode(ITechRepGelGroup itrgg) {
@@ -52,6 +55,7 @@ public class TechRepGelGroupNode extends AbstractNode {
     protected Sheet createSheet() {
         Sheet sheet = Sheet.createDefault();
         Sheet.Set set = Sheet.createPropertiesSet();
+        final ITechRepGelGroup itrgg = getLookup().lookup(ITechRepGelGroup.class);
         System.out.println("creating property sheet for TechRepGelGroup node");
 
         Property nameProp = new ReadWrite<String>("name", String.class,
@@ -101,5 +105,15 @@ public class TechRepGelGroupNode extends AbstractNode {
     @Override
     public String getDisplayName() {
         return getLookup().lookup(ITechRepGelGroup.class).getName();
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("name")) {
+            this.fireDisplayNameChange(null, getDisplayName());
+        } else {
+            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.
+                    getNewValue());
+        }
     }
 }

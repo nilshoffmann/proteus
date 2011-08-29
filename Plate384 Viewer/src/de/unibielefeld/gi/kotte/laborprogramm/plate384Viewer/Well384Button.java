@@ -90,21 +90,6 @@ public class Well384Button extends JButton implements MouseInputListener {
         public void actionPerformed(ActionEvent e) {
             panel.setActiveWellButton(button);
         }
-///////old version for left mouse button///////
-//        @Override
-//        public void actionPerformed(ActionEvent e) {
-//            if (menu != null) {
-//                menu.setVisible(false);
-//            }
-//            menu = new Well384StatusSelectMenu(well.getStatus());
-//            menu.setInvoker(panel);
-//            if (getMousePosition() != null) {
-//                Point p = new Point(getMousePosition());
-//                SwingUtilities.convertPointToScreen(p, button);
-//                menu.setLocation(p);
-//                menu.setVisible(true);
-//            }
-//        }
     }
 
     private class Well384StatusSelectMenu extends JPopupMenu {
@@ -118,11 +103,6 @@ public class Well384Button extends JButton implements MouseInputListener {
                 if (s.equals(Well384Status.FILLED) && (panel.getWell96() == null)) {
                     jrbmi.setEnabled(false);
                 }
-//                } else if (s == Well384Status.PROCESSED) {
-//                    if ((panel.getSpot() == null) && (well.getSpot() == null)) {
-//                        jrbmi.setEnabled(false);
-//                    }
-//                }
                 jrbmi.setSelected(s == status);
                 group.add(jrbmi);
                 add(jrbmi);
@@ -134,9 +114,6 @@ public class Well384Button extends JButton implements MouseInputListener {
                 public void actionPerformed(ActionEvent e) {
                     String text = well.toString() + "\n";
 
-//                    if (well.getSpot() != null) {
-//                        text += well.getSpot().toString();
-//                    }
                     JTextArea jl = new JTextArea(text);
                     NotifyDescriptor nd = new NotifyDescriptor(
                             jl, // instance of your panel
@@ -148,24 +125,11 @@ public class Well384Button extends JButton implements MouseInputListener {
                             //     new Object[] { NotifyDescriptor.YES_OPTION, ... etc. },
                             NotifyDescriptor.OK_OPTION // default option is "Yes"
                             );
-
                     // let's display the dialog now...
                     if (DialogDisplayer.getDefault().notify(nd) == NotifyDescriptor.OK_OPTION) {
-                        // user clicked yes, do something here, for example:
-                        //     System.out.println(myPanel.getNameFieldValue());
-//                        IPlate96 plate96 = Lookup.getDefault().lookup(IPlate96Factory.class).createPlate96();
-//                        this.proj.add96Plate(plate96);
-//                        plate96.setParent(this.proj);
-//                        plate96.setName(dialog.getNameText());
-//                        System.out.println("Firing PropertyChangeEvent: PLATE96_CREATED");
-//                        listener.propertyChange(new PropertyChangeEvent(this, "PLATE96_CREATED", null, plate96));
                     }
                 }
             });
-            //TODO see GelViewerTopComponent
-//            if(well.getSpot()!=null) {
-//                add(new AbstractAction());
-//            }
         }
     }
 

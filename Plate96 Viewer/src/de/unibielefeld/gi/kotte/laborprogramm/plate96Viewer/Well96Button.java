@@ -108,11 +108,6 @@ public class Well96Button extends JButton implements MouseInputListener {
                 if (s.equals(Well96Status.FILLED) && (panel.getSpot() == null)) {
                     jrbmi.setEnabled(false);
                 }
-//                } else if (s == Well96Status.PROCESSED) {
-//                    if ((panel.getSpot() == null) && (well.getSpot() == null)) {
-//                        jrbmi.setEnabled(false);
-//                    }
-//                }
                 jrbmi.setSelected(s == status);
                 group.add(jrbmi);
                 add(jrbmi);
@@ -138,24 +133,11 @@ public class Well96Button extends JButton implements MouseInputListener {
                             //     new Object[] { NotifyDescriptor.YES_OPTION, ... etc. },
                             NotifyDescriptor.OK_OPTION // default option is "Yes"
                             );
-
                     // let's display the dialog now...
                     if (DialogDisplayer.getDefault().notify(nd) == NotifyDescriptor.OK_OPTION) {
-                        // user clicked yes, do something here, for example:
-                        //     System.out.println(myPanel.getNameFieldValue());
-//                        IPlate96 plate96 = Lookup.getDefault().lookup(IPlate96Factory.class).createPlate96();
-//                        this.proj.add96Plate(plate96);
-//                        plate96.setParent(this.proj);
-//                        plate96.setName(dialog.getNameText());
-//                        System.out.println("Firing PropertyChangeEvent: PLATE96_CREATED");
-//                        listener.propertyChange(new PropertyChangeEvent(this, "PLATE96_CREATED", null, plate96));
                     }
                 }
             });
-            //TODO see GelViewerTopComponent
-//            if(well.getSpot()!=null) {
-//                add(new AbstractAction());
-//            }
         }
     }
 
@@ -214,13 +196,6 @@ public class Well96Button extends JButton implements MouseInputListener {
                             this.well.setSpot(spot);
                             well.setStatus(nextStatus);
                         }
-//                        } else {
-//                            spot.setWell(this.well);
-//                            spot.setStatus(SpotStatus.PICKED);
-//                            this.well.setSpot(spot);
-//                            well.setStatus(nextStatus);
-//                        }
-
                         break;
                     case PROCESSED:
                         if (this.well.getSpot() != null) {
@@ -261,7 +236,6 @@ public class Well96Button extends JButton implements MouseInputListener {
                         //     new Object[] { NotifyDescriptor.YES_OPTION, ... etc. },
                         NotifyDescriptor.OK_OPTION // default option is "Yes"
                         );
-
                 // let's display the dialog now...
                 DialogDisplayer.getDefault().notify(nd);
                 return false;
@@ -277,7 +251,6 @@ public class Well96Button extends JButton implements MouseInputListener {
                         //     new Object[] { NotifyDescriptor.YES_OPTION, ... etc. },
                         NotifyDescriptor.YES_OPTION // default option is "Yes"
                         );
-
                 // let's display the dialog now...
                 if (DialogDisplayer.getDefault().notify(nd) == NotifyDescriptor.NO_OPTION) {
                     return false;

@@ -216,4 +216,9 @@ public class Identification implements IIdentification, Activatable {
         this.method = method;
         getPropertyChangeSupport().firePropertyChange(PROPERTY_METHOD, null, method);
     }
+
+    @Override
+    public String toString() {
+        return "Identification{" + "accession=" + accession + "abbreviation=" + abbreviation + "name=" + name + "keggNumber=" + keggNumber + "gendbId=" + gendbId + "proteinMolecularWeight=" + proteinMolecularWeight + "piValue=" + piValue + "coverage=" + coverage + "difference=" + difference + "score=" + score + "method=" + method + '}';
+    }
 }

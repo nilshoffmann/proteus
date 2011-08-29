@@ -1,7 +1,5 @@
 package de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer;
 
-import com.sun.corba.se.impl.interceptors.PICurrent;
-import de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer.stateMachine.StateMachine;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
@@ -241,6 +239,13 @@ public class Well96Button extends JButton implements MouseInputListener {
         }
     }
 
+    /**
+     * Checks if it is okay to reassign the button's IWell96 to a new spot
+     * and if so removes the old spot-well-connection.
+     *
+     * @param lookupSpot the current spot in the Lookup
+     * @return true if the well is to be reassigned, false elsewise
+     */
     private boolean reassignWell(ISpot lookupSpot) {
 //        ISpot wellSpot = well.getSpot();
         IWell96 spotWell = lookupSpot.getWell();

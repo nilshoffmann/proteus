@@ -109,9 +109,7 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <public-packages>
-                <package>de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer</package>
-            </public-packages>
+            <public-packages/>
         </data>
     </configuration>
 </project>

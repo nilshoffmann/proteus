@@ -21,13 +21,13 @@ public class Plate96Panel extends JPanel {
     private ISpot spot = null;
     private boolean autoAssignSpots = false;
     private int currentPlateIndex = 0;
-    private IPlate96 plate = null;
+//    private IPlate96 plate = null;
     private Well96Button[] buttons = null;
     private InstanceContent instanceContent = null;
     private Well96Button activeButton = null;
 
     public Plate96Panel(IPlate96 plate, InstanceContent instanceContent) {
-        this.plate = plate;
+//        this.plate = plate;
         this.instanceContent = instanceContent;
         final int x = plate.getXdimension();
         final int y = plate.getYdimension();
@@ -44,10 +44,8 @@ public class Plate96Panel extends JPanel {
             add(jl); //add top row label
         }
         buttons = new Well96Button[plate.getWells().length];
-        int buttonCnt = 0;
         //rows
         for (char c = 'A'; c < 'A' + y; c++) {
-            int rowIndex = ((int) c) - ((int) 'A');
             //columns
             for (int i = 0; i <= x; i++) {
                 if (i == 0) {

@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer.stateMachine;
+package de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
 

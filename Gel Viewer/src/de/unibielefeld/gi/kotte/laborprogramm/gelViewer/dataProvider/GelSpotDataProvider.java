@@ -36,21 +36,12 @@ public class GelSpotDataProvider implements IDataProvider<ISpot> {
     public GelSpotDataProvider(File gelLocation, IGel gel, Point2D toOrigin) {
         this.gelLocation = gelLocation;
         BufferedImage bi = null;
-//        try {
-        //        if (file == 0) {
-        //            bi = ImageIO.read(HeatmapPanel.class.getResource(s));
-        //            hmd = new HeatmapDataset<List<Integer>>(new HeatmapDataProvider(
-        //                    bi, new Point2D.Double(0, bi.getHeight())));
-        //        } else {
-        //
-        //        }
         PlanarImage im = null;
         im = JAI.create("fileload", gelLocation.getAbsolutePath());
         bi = im.getAsBufferedImage();
         this.dataImage = bi;
         this.toOrigin = toOrigin;
         this.dataBounds = new Rectangle2D.Double(0, 0, this.dataImage.getWidth(), this.dataImage.getHeight());
-        System.out.println("DataBounds: " + this.dataBounds);
         this.maxRow = (int) this.dataBounds.getHeight() - 1;
         this.qt = new QuadTree<ISpot>(this.dataBounds);
         for(ISpot spot:gel.getSpots()) {
@@ -76,38 +67,12 @@ public class GelSpotDataProvider implements IDataProvider<ISpot> {
 
     @Override
     public ISpot get(Point2D p) {
-        System.out.println("Screen point: "+p);
-//        int rbg = -1;
-//        Point2D dataPoint = p;//transformToModel(p);
-//        System.out.println("Model point: "+dataPoint);
-//        if (this.dataBounds.contains(dataPoint)) {
-////            try {
-////            if (flipY) {
-////                dataPoint = new Point2D.Double(p.getX(), this.dataBounds.getHeight() - p.getY());
-////            }
-////                dataPoint = p;
-////                System.out.println("Retrieving data at " + p + " transformed: " + dataPoint);
-//            rbg = this.dataImage.getRGB((int) dataPoint.getX(), ((int) dataPoint.getY()));
-////            } catch (NoninvertibleTransformException ex) {
-////                Logger.getLogger(HeatmapDataProvider.class.getName()).log(Level.SEVERE, null, ex);
-////            }
-//
-//        } else {
-//            throw new IllegalArgumentException("Point out of bounds: " + dataBounds);
-//        }
-//
-//        Integer red = (int) ((rbg >> 16) & 0xFF);
-//        Integer green = (int) ((rbg >> 8) & 0xFF);
-//        Integer blue = (int) ((rbg) & 0xFF);
-//        return ((double) ((red * 0.3f) + (green * 0.59f) + (blue * 0.11f)));
-        //return Arrays.asList(red, green, blue);
         return qt.get(p);
     }
     
     public Point2D transformToModel(Point2D viewPoint) {
         Point2D dataPoint = getViewToModelTransform().transform(viewPoint, null);
         return dataPoint;
-//        return viewPoint;
     }
 
     @Override

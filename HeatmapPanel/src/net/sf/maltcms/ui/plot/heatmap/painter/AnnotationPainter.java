@@ -125,7 +125,13 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
     protected void doPaint(Graphics2D g, JComponent t, int width, int height) {
         if (this.hm != null) {
             AffineTransform old = g.getTransform();
-            g.setTransform(at);
+            AffineTransform activeTransform = null;
+            if (t == null) {
+                activeTransform = AffineTransform.getTranslateInstance(0, 0);
+            } else {
+                activeTransform = at;
+            }
+            g.setTransform(activeTransform);
             Shape clip = g.getClip();
             Composite c = g.getComposite();
 //            AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f);
@@ -133,10 +139,18 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
 
             AffineTransform inverseTransf = null;
             Rectangle2D selection = null;
+
             try {
-                inverseTransf = at.createInverse();
-                selection = inverseTransf.createTransformedShape(t.getVisibleRect()).getBounds2D();
-                g.setClip(selection);
+                inverseTransf = activeTransform.createInverse();
+                if (t != null) {
+                    selection = inverseTransf.createTransformedShape(t.getVisibleRect()).getBounds2D();
+                    g.setClip(selection);
+                } else {
+                    if (clip != null) {
+                        selection = inverseTransf.createTransformedShape(clip).getBounds2D();
+                        g.setClip(selection);
+                    }
+                }
             } catch (NoninvertibleTransformException ex) {
                 Logger.getLogger(AnnotationPainter.class.getName()).log(Level.SEVERE, null, ex);
             }

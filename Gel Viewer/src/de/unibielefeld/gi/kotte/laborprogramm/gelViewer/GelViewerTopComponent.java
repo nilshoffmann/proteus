@@ -2,6 +2,8 @@ package de.unibielefeld.gi.kotte.laborprogramm.gelViewer;
 
 import cross.datastructures.tuple.Tuple2D;
 import de.unibielefeld.gi.kotte.laborprogramm.centralLookup.CentralLookup;
+import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.actions.ExportGelAction;
+import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.actions.GelPrintProvider;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.dataProvider.GelSpotDataProvider;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.theme.ThemeManager;
@@ -10,6 +12,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
+import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -58,6 +61,7 @@ import org.openide.util.lookup.InstanceContent;
  * TODO allow setting of font size property
  * TODO allow setting of focused view
  * TODO add support for highlighting / scrolling to a specific annotation
+ * FIXME repair zoom support
  * Top component which displays something.
  */
 @ConvertAsProperties(dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.gelViewer//GelViewer//EN",
@@ -72,6 +76,7 @@ public final class GelViewerTopComponent extends TopComponent implements
     private InstanceContent ic = new InstanceContent();
     private Tuple2D<Point2D, Annotation<ISpot>> annotation;
     private Result<IGel> result;
+    private JXLayer<JComponent> layer;
 
     public GelViewerTopComponent() {
         associateLookup(new AbstractLookup(ic));
@@ -81,13 +86,6 @@ public final class GelViewerTopComponent extends TopComponent implements
                 "CTL_GelViewerTopComponent"));
         setToolTipText(NbBundle.getMessage(GelViewerTopComponent.class,
                 "HINT_GelViewerTopComponent"));
-//        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
-//        if (gel == null) {
-        //setGel();
-        //setGel();
-//        } else {
-//            setGel(gel);
-//        }
 
         IGel gel = CentralLookup.getDefault().lookup(IGel.class);
         if (gel != null) {
@@ -103,9 +101,12 @@ public final class GelViewerTopComponent extends TopComponent implements
             setDisplayName(gel.getName());
             addHeatmapPanel(gel);//deregister
             result.removeLookupListener(this);
+            putClientProperty("print.printable", Boolean.TRUE);
         } else if (gel == null) {
+            putClientProperty("print.printable", Boolean.FALSE);
             throw new IllegalStateException("Gel can not be null!");
         } else {
+            putClientProperty("print.printable", Boolean.FALSE);
             throw new IllegalStateException("Gel can only be set once on GelViewerTopComponent!");
         }
     }
@@ -167,18 +168,20 @@ public final class GelViewerTopComponent extends TopComponent implements
         annotationPainter.addPropertyChangeListener(tooltipPainter);
         annotationPainter.addPropertyChangeListener(this);
 
+        ic.add(annotationPainter);
+        
         //the PointSelectionProcessor will handle selection of single points
         PointSelectionProcessor pointSelectionProcessor = new PointSelectionProcessor();
         //register tooltip painter to receive events only, if shift is down
         pointSelectionProcessor.addListener(tooltipPainter,
-                MouseEvent.SHIFT_DOWN_MASK);
-        pointSelectionProcessor.addListener(tooltipPainter,
-                MouseEvent.BUTTON1_DOWN_MASK);
+                MouseEvent.BUTTON1_DOWN_MASK | MouseEvent.SHIFT_DOWN_MASK);
+//        pointSelectionProcessor.addListener(tooltipPainter,
+//                );
         //register annotation painter to receive all events
         pointSelectionProcessor.addListener(annotationPainter,
-                MouseEvent.SHIFT_DOWN_MASK);
-        pointSelectionProcessor.addListener(annotationPainter,
                 MouseEvent.BUTTON1_DOWN_MASK);
+//        pointSelectionProcessor.addListener(annotationPainter,
+//                MouseEvent.BUTTON1_DOWN_MASK);
 
         ic.add(pointSelectionProcessor);
 
@@ -218,7 +221,7 @@ public final class GelViewerTopComponent extends TopComponent implements
         CompoundPainter<JComponent> compoundPainter = new CompoundPainter<JComponent>(
                 annotationPainter, tooltipPainter);
         PainterLayerUI plui = new PainterLayerUI(compoundPainter);
-        final JXLayer<JComponent> layer = new JXLayer<JComponent>(jl,
+        layer = new JXLayer<JComponent>(jl,
                 plui);
 
         //register layer ui with HeatmapPanel for transformation events
@@ -262,16 +265,50 @@ public final class GelViewerTopComponent extends TopComponent implements
                 new Corner());
         jsp.setCorner(JScrollPane.UPPER_RIGHT_CORNER,
                 new Corner());
-        requestFocusInWindow(true);
+        
         add(jsp, BorderLayout.CENTER);
 
 //        } catch (IOException ex) {
 //            Exceptions.printStackTrace(ex);
 //        }
+        jToolBar1.add(new ExportGelAction("Save as image",jl,annotationPainter,gel));
+        requestFocusInWindow(true);
+        jl.requestFocusInWindow();
         revalidate();
 //        repaint();
     }
 
+    @Override
+    public void print(Graphics g) {
+        if(layer!=null) {
+            layer.print(g);
+        }
+    }
+
+    @Override
+    public void printAll(Graphics g) {
+        if(layer!=null) {
+            layer.printAll(g);
+        }
+    }
+
+    @Override
+    protected void printBorder(Graphics g) {
+//        super.printBorder(g);
+    }
+
+    @Override
+    protected void printChildren(Graphics g) {
+//        super.printChildren(g);
+    }
+
+    @Override
+    protected void printComponent(Graphics g) {
+//        super.printComponent(g);
+    }
+    
+    
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is

@@ -6,6 +6,7 @@ package net.sf.maltcms.ui.plot.heatmap.event.mouse;
 
 import cross.datastructures.tuple.Tuple2D;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 import net.sf.maltcms.ui.plot.heatmap.event.AEventProcessor;
 
@@ -46,6 +47,7 @@ public class ZoomProcessor extends AEventProcessor<Tuple2D<Point2D, Double>> {
     }
 
     public void zoomIn(Point2D point) {
+        System.out.println("ZoomIn");
         zoom = Math.min(maxZoom, zoom + zoomDelta);
         result = new Tuple2D<Point2D, Double>(point, zoom);
 //            System.out.println("ZoomProcessor notifying listeners for mouse wheel event!");
@@ -53,6 +55,7 @@ public class ZoomProcessor extends AEventProcessor<Tuple2D<Point2D, Double>> {
     }
 
     public void zoomOut(Point2D point) {
+        System.out.println("ZoomOut");
         zoom = Math.max(minZoom, zoom - zoomDelta);
         result = new Tuple2D<Point2D, Double>(point, zoom);
 //            System.out.println("ZoomProcessor notifying listeners for mouse wheel event!");
@@ -60,32 +63,36 @@ public class ZoomProcessor extends AEventProcessor<Tuple2D<Point2D, Double>> {
     }
 
     @Override
-    public void processMouseEvent(MouseEvent me, MouseEventType et) {
-        super.processMouseEvent(me, et);
-        boolean changed = true;
-//        double zoom = 1.0d;
-        switch (et) {
-            case CLICKED:
-                if (me.isAltDown() && me.getButton() == MouseEvent.BUTTON1) {//UP
-                    zoomIn(me.getPoint());
-                } else if (me.isAltDown() && me.getButton() == MouseEvent.BUTTON3) {//DOWN
-                    zoomOut(me.getPoint());
-                } else {
-                    changed = false;
-                }
-                break;
+    public void processMouseWheelEvent(MouseWheelEvent mwe, MouseEventType et) {
+        super.processMouseWheelEvent(mwe, et);
+        System.out.println("MouseWheelEvent on zoom processor: "+mwe.paramString());
+        switch(et) {
             case WHEEL_UP:
-                if (me.isShiftDown()) {
-                    zoomIn(me.getPoint());
-                }else{
-                    changed = false;
-                }
+                System.out.println("Wheel up event!");
+//                if (me.isControlDown()) {
+                    zoomIn(mwe.getPoint());
+//                }
                 break;
             case WHEEL_DOWN:
-                if (me.isShiftDown()) {
+                System.out.println("Wheel down event!");
+//                if (me.isControlDown()) {
+                    zoomOut(mwe.getPoint());
+//                }
+                break;
+        }
+    }
+
+    @Override
+    public void processMouseEvent(MouseEvent me, MouseEventType et) {
+        super.processMouseEvent(me, et);
+        System.out.println("MouseEvent on zoom processor: "+me.paramString());
+        switch (et) {
+            case CLICKED:
+                System.out.println("Click event!");
+                if (me.isControlDown() && me.getButton() == MouseEvent.BUTTON1) {//UP
+                    zoomIn(me.getPoint());
+                } else if (me.isControlDown() && me.getButton() == MouseEvent.BUTTON3) {//DOWN
                     zoomOut(me.getPoint());
-                }else{
-                    changed = false;
                 }
                 break;
         }

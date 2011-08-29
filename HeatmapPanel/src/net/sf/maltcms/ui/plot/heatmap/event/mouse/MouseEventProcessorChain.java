@@ -21,10 +21,10 @@ import javax.swing.SwingUtilities;
 public class MouseEventProcessorChain implements Runnable, MouseListener, MouseMotionListener, MouseWheelListener {
 
     private List<IMouseEventProcessor> processorChain;
-    private WeakReference<MouseEvent> lastMouseEvent;
-    private WeakReference<MouseWheelEvent> lastMouseWheelEvent;
-    private WeakReference<MouseEventType> lastMouseEventType;
-    private WeakReference<MouseEventType> lastMouseWheelEventType;
+    private MouseEvent lastMouseEvent;
+    private MouseWheelEvent lastMouseWheelEvent;
+    private MouseEventType lastMouseEventType;
+    private MouseEventType lastMouseWheelEventType;
 
     public MouseEventProcessorChain(IMouseEventProcessor... imep) {
         this.processorChain = Arrays.asList(imep);
@@ -33,8 +33,8 @@ public class MouseEventProcessorChain implements Runnable, MouseListener, MouseM
     protected void notify(MouseEvent me, MouseEventType et) {
         lastMouseWheelEvent = null;
 //        System.out.println("MouseEvent: "+MouseEvent.getMouseModifiersText(me.getModifiers())+" "+MouseEvent.getMouseModifiersText(me.getModifiersEx()));
-        lastMouseEvent = new WeakReference<MouseEvent>(me);
-        lastMouseEventType = new WeakReference<MouseEventType>(et);
+        lastMouseEvent = me;
+        lastMouseEventType = et;
         if (SwingUtilities.isEventDispatchThread()) {
             run();
         } else {
@@ -45,8 +45,8 @@ public class MouseEventProcessorChain implements Runnable, MouseListener, MouseM
     protected void notify(MouseWheelEvent mwe, MouseEventType et) {
         lastMouseEvent = null;
 //        System.out.println("MouseWheelEvent: "+MouseEvent.getMouseModifiersText(mwe.getModifiers())+" "+MouseEvent.getMouseModifiersText(mwe.getModifiersEx()));
-        lastMouseWheelEvent = new WeakReference<MouseWheelEvent>(mwe);
-        lastMouseWheelEventType = new WeakReference<MouseEventType>(et);
+        lastMouseWheelEvent = mwe;
+        lastMouseWheelEventType = et;
         if (SwingUtilities.isEventDispatchThread()) {
             run();
         } else {
@@ -92,9 +92,11 @@ public class MouseEventProcessorChain implements Runnable, MouseListener, MouseM
     @Override
     public void mouseWheelMoved(MouseWheelEvent mwe) {
         //up, zoom in
-        if(mwe.getWheelRotation()<0) {
+        if (mwe.getWheelRotation() < 0) {
+            System.out.println("WHEEL_UP");
             notify(mwe, MouseEventType.WHEEL_UP);
-        }else{
+        } else {
+            System.out.println("WHEEL_DOWN");
             //down, zoom out
             notify(mwe, MouseEventType.WHEEL_DOWN);
         }
@@ -102,18 +104,18 @@ public class MouseEventProcessorChain implements Runnable, MouseListener, MouseM
 
     @Override
     public void run() {
-        if (lastMouseEvent != null) {
-            MouseEvent me = lastMouseEvent.get();
-            MouseEventType met = lastMouseEventType.get();
+        if (lastMouseEvent != null && lastMouseEventType != null) {
+            MouseEvent me = lastMouseEvent;
+            MouseEventType met = lastMouseEventType;
             for (IMouseEventProcessor imep : processorChain) {
                 if (me != null && met != null) {
                     imep.processMouseEvent(me, met);
                 }
             }
         }
-        if (lastMouseWheelEvent != null) {
-            MouseWheelEvent mwe = lastMouseWheelEvent.get();
-            MouseEventType mwet = lastMouseWheelEventType.get();
+        if (lastMouseWheelEvent != null && lastMouseWheelEventType != null) {
+            MouseWheelEvent mwe = lastMouseWheelEvent;
+            MouseEventType mwet = lastMouseWheelEventType;
             for (IMouseEventProcessor imep : processorChain) {
                 if (mwe != null && mwet != null) {
                     imep.processMouseWheelEvent(mwe, mwet);
@@ -122,5 +124,4 @@ public class MouseEventProcessorChain implements Runnable, MouseListener, MouseM
         }
 
     }
-
 }

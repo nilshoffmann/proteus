@@ -18,7 +18,6 @@ import java.util.List;
 import maltcms.ui.viewer.datastructures.tree.ElementNotFoundException;
 import maltcms.ui.viewer.datastructures.tree.QuadTree;
 import net.sf.maltcms.ui.plot.heatmap.event.IProcessorResultListener;
-import net.sf.maltcms.ui.plot.heatmap.event.mouse.MouseEventType;
 
 /**
  *
@@ -39,7 +38,7 @@ public class HeatmapDataset<T> implements IProcessorResultListener<Tuple2D<Point
     public void setZoom(Tuple2D<Point2D, Double> zoom) {
         Tuple2D<Point2D, Double> oldZoom = this.zoom;
         this.zoom = zoom;
-//        System.out.println("Zoom: "+this.zoom);
+        System.out.println("HMD: setting zoom to: "+this.zoom+" was: "+oldZoom);
         propertyChangeSupport.firePropertyChange(PROP_ZOOM, oldZoom, this.zoom);
     }
 
@@ -53,12 +52,6 @@ public class HeatmapDataset<T> implements IProcessorResultListener<Tuple2D<Point
         return this.dp;
     }
 
-//    public T getItemAt(Point2D p) {
-//        
-//    }
-//    public QuadTree<Annotation<T>> getQuadTree() {
-//        return this.quadTree;
-//    }
     public void addAnnotation(Point2D p, Annotation<T> annotation) {
         this.quadTree.put(p, annotation);
     }
@@ -193,8 +186,9 @@ public class HeatmapDataset<T> implements IProcessorResultListener<Tuple2D<Point
 
     @Override
     public void listen(Tuple2D<Point2D, Double> t, net.sf.maltcms.ui.plot.heatmap.event.mouse.MouseEvent et) {
-        if (et.getMet() == MouseEventType.CLICKED) {
-            setZoom(t);
-        }
+//        if (et.getMet() == MouseEventType.CLICKED) {
+        System.out.println("HeatmapDataset received mouse event information!");           
+        setZoom(t);
+//        }
     }
 }

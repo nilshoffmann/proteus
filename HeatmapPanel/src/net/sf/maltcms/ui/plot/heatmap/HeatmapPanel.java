@@ -12,6 +12,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -49,10 +51,8 @@ import org.jdesktop.swingx.painter.CompoundPainter;
  * @author nilshoffmann
  */
 public class HeatmapPanel<T> extends JComponent implements
-        PropertyChangeListener, IProcessorResultListener<Point2D>, Scrollable,
-        MouseInputListener {
+        PropertyChangeListener, IProcessorResultListener<Point2D>, Scrollable {
 
-//    private JXImageView imageLabel;
     private final BufferedImage bi;
     private final HeatmapDataset<T> hd;
     private AffineTransform at;
@@ -61,23 +61,57 @@ public class HeatmapPanel<T> extends JComponent implements
     public HeatmapPanel(HeatmapDataset<T> hd) {
         this.bi = hd.getImage();
         this.hd = hd;
+        this.hd.addPropertyChangeListener(this);
         setPreferredSize(new Dimension(this.bi.getWidth(), this.bi.getHeight()));
         setAutoscrolls(true);
-        addMouseListener(this);
-        addMouseMotionListener(this);
+//        addMouseListener(this);
+//        addMouseMotionListener(this);
+//        addMouseWheelListener(this);
         setPreferredScrollableViewportSize(
                 new Dimension(Math.min(preferredViewportSize.width,
                 getPreferredSize().width), Math.min(preferredViewportSize.height,
                 getPreferredSize().height)));
     }
+    
+    public BufferedImage getImage() {
+        return bi;
+    }
+
+    @Override
+    public void print(Graphics g) {
+        System.out.println("Print called with clip: "+g.getClip());
+        Rectangle clipRect = new Rectangle(getPreferredSize().width,getPreferredSize().height);
+        g.setClip(clipRect);
+        g.drawImage(bi,0,0,null);
+    }
+
+    @Override
+    public void printAll(Graphics g) {
+        print(g);
+    }
+
+    @Override
+    protected void printBorder(Graphics g) {
+        print(g);
+    }
+
+    @Override
+    protected void printChildren(Graphics g) {
+        print(g);
+    }
+
+    @Override
+    protected void printComponent(Graphics g) {
+        print(g);
+    }
+    
+    
 
     @Override
     protected void paintComponent(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-//        AffineTransform at = g2.getTransform();
-//        g2.setTransform(at);
+        Graphics2D g2 = (Graphics2D)g.create();
         g2.drawImage(bi, at, null);
-//        g2.setTransform(at);
+        g2.dispose();
     }
 
     @Override
@@ -93,21 +127,24 @@ public class HeatmapPanel<T> extends JComponent implements
             firePropertyChange(HeatmapDataset.PROP_TRANSFORM, pce.getOldValue(),
                     pce.getNewValue());
         } else if (pce.getPropertyName().equals(HeatmapDataset.PROP_ZOOM)) {
-            Tuple2D<Point2D, Double> t = (Tuple2D<Point2D, Double>) pce.
-                    getNewValue();
+            System.out.println("Received PROP_ZOOM change event");
+            Tuple2D<Point2D, Double> t = (Tuple2D<Point2D, Double>) pce.getNewValue();
             double zoom = t.getSecond();
             Dimension newPreferredSize = new Dimension((int) (hd.getDataBounds().
                     getWidth() * zoom),
                     (int) (hd.getDataBounds().getHeight() * zoom));
             setPreferredSize(newPreferredSize);
             this.at = hd.getTransform();
+            revalidate();
             RepaintManager.currentManager(this).markCompletelyDirty(this);
             RepaintManager.currentManager(this).paintDirtyRegions();
+            System.out.println("Zoom occurred around "+t.getFirst());
             scrollRectToVisible(new Rectangle2D.Double(
-                    t.getFirst().getX() - getVisibleRect().width / 2,
-                    t.getFirst().getY() - getVisibleRect().height / 2,
-                    getVisibleRect().width, getVisibleRect().height).getBounds());
-        }else{
+                    t.getFirst().getX() - getPreferredSize().width / 2,
+                    t.getFirst().getY() - getPreferredSize().height / 2,
+                    getPreferredSize().width, getPreferredSize().height).getBounds());
+        } else {
+            revalidate();
             RepaintManager.currentManager(this).markCompletelyDirty(this);
             RepaintManager.currentManager(this).paintDirtyRegions();
         }
@@ -154,43 +191,6 @@ public class HeatmapPanel<T> extends JComponent implements
         return false;
     }
 
-    @Override
-    public void mouseClicked(MouseEvent me) {
-//        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void mousePressed(MouseEvent me) {
-//        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent me) {
-//        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent me) {
-//        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void mouseExited(MouseEvent me) {
-//        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent me) {
-//        throw new UnsupportedOperationException("Not supported yet.");
-        scrollRectToVisible(
-                new Rectangle(me.getPoint().x, me.getPoint().y, 1, 1));
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent me) {
-//        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     public static void main(String[] args) {
         String[] files = {"/resources/80547_255_75_101.jpeg"};//"/resources/100414_Standard_FAME_1_50Hz.png"
         int file = 0;
@@ -220,8 +220,7 @@ public class HeatmapPanel<T> extends JComponent implements
                         Point2D dataCoord = hdp.getViewToModelTransform().
                                 transform(t.getPosition(), null);
                         return String.format("x=%.2f, y=%.2f; values=",
-                                dataCoord.getX(), dataCoord.getY()) + t.
-                                getPayload();//"x="+t.getPosition().getX()+" values: "+t.getPayload();
+                                dataCoord.getX(), dataCoord.getY()) + t.getPayload();//"x="+t.getPosition().getX()+" values: "+t.getPayload();
                     }
                 };
                 //register ToolTipPainter to receive events from dataset
@@ -337,8 +336,7 @@ public class HeatmapPanel<T> extends JComponent implements
                 System.out.println("Adding " + maxAnnotations + " annotations!");
 
                 for (int i = 0; i < maxAnnotations; i++) {
-                    Point2D p2 = new Point2D.Double((int) (Math.random() * (hmd.
-                            getDataBounds().getWidth() - 1)),
+                    Point2D p2 = new Point2D.Double((int) (Math.random() * (hmd.getDataBounds().getWidth() - 1)),
                             (int) (Math.random() * (hmd.getDataBounds().
                             getHeight() - 1)));
                     annotationPainter.setActivePoint(p2);

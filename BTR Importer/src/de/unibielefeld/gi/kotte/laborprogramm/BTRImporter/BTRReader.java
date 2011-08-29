@@ -9,8 +9,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.openide.util.Lookup;
 
 /**
@@ -32,6 +36,13 @@ public class BTRReader {
             String line = null;
             in.readLine(); //FIXME header Zeile
             in.readLine(); //FIXME Sternchen Zeile
+
+            //Pattern definition (re-usable)
+            Pattern abbreviationPattern = Pattern.compile("^(\\w{3,4}) ");
+            Pattern namePattern = Pattern.compile("(.*)");//TODO sinnvolle Loesung...
+            Pattern gendbPattern = Pattern.compile("\\(GenDB-ID=(\\d+)\\)");
+            Pattern keggPattern = Pattern.compile("(\\d+\\.\\d+\\.\\d+\\.\\d+)");
+
             while ((line = in.readLine()) != null) {
                 line = line.trim();
                 System.out.println(line);
@@ -41,24 +52,48 @@ public class BTRReader {
                 //TODO data[4] gibt den Status an (Identified/Undefined/Error)
                 //TODO im Augenblick wird von exakt einer Identification pro WellIdentification ausgegangen
 
+                //parse data
+                String abbreviation = "";
+                Matcher abbreviationMatcher = abbreviationPattern.matcher(data[2]);
+                if (abbreviationMatcher.find()) {
+                    abbreviation = abbreviationMatcher.group(1);
+                    abbreviation = Character.toUpperCase(abbreviation.charAt(0)) + abbreviation.substring(1, abbreviation.length());
+                }
+                String name = "";
+                Matcher nameMatcher = namePattern.matcher(data[2]);
+                if (nameMatcher.find()) {
+                    name = nameMatcher.group(1);
+                }
+                int gendbId = -1;
+                Matcher gendbMatcher = gendbPattern.matcher(data[2]);
+                if (gendbMatcher.find()) {
+                    gendbId = Integer.parseInt(gendbMatcher.group(1));
+                }
+                List<String> keggNumbers = new ArrayList<String>();
+                Matcher keggMatcher = keggPattern.matcher(data[2]);
+                while (keggMatcher.find()) {
+                    keggNumbers.add(keggMatcher.group(1));
+                }
+
+                //create identification
                 IIdentification identification = Lookup.getDefault().lookup(IIdentificationFactory.class).createIdentification();
-                identification.setAbbreviation("TODO");
+                identification.setAbbreviation(abbreviation);
                 identification.setAccession(data[1]);
-                identification.setName("TODO");
+                identification.setName(name);
                 identification.setCoverage(Integer.parseInt(data[7]));
                 identification.setDifference(Integer.parseInt(data[8]));
-                identification.setGendbId(0);//TODO
-                identification.setKeggNumber("TODO");
+                identification.setGendbId(gendbId);
+                identification.setKeggNumbers(keggNumbers);
                 identification.setPiValue(Float.parseFloat(data[6]));
                 identification.setProteinMolecularWeight(Float.parseFloat(data[5]));
                 identification.setScore(Float.parseFloat(data[3]));
                 identification.setMethod(data[9]);
                 System.out.println(identification);
 
+                //add identification to well
                 IWell384 well = plate.getWell(data[0].charAt(0), Integer.parseInt(data[0].substring(2)));
                 //TODO check if well is processed
                 IWellIdentification wellIdentification = well.getIdentification();
-
                 wellIdentification.addIdentification(identification);
             }
         } catch (IOException ex) {

@@ -1,6 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPropertyChangeSource;
+import java.util.List;
 
 /**
  * Identification of a protein.
@@ -33,8 +34,9 @@ public interface IIdentification extends IPropertyChangeSource {
     public void setDifference(int difference);
     public int getGendbId();
     public void setGendbId(int gendbId);
-    public String getKeggNumber();
-    public void setKeggNumber(String keggNumber);
+    public List<String> getKeggNumbers();
+    public void addKeggNumber(String keggNumber);
+    public void setKeggNumbers(List<String> keggNumbers);
     public float getPiValue();
     public void setPiValue(float piValue);
     public float getProteinMolecularWeight();

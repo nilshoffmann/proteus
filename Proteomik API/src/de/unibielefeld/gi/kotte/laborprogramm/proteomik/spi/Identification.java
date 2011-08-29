@@ -2,10 +2,12 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
 
 import com.db4o.activation.ActivationPurpose;
 import com.db4o.activation.Activator;
+import com.db4o.collections.ActivatableArrayList;
 import com.db4o.ta.Activatable;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentification;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.List;
 
 /**
  * Default implementation of IIdentification
@@ -65,7 +67,7 @@ public class Identification implements IIdentification, Activatable {
     private String accession;
     private String abbreviation;
     private String name;
-    private String keggNumber = "0.0.0.0";
+    private List<String> keggNumbers = new ActivatableArrayList<String>();
     private int gendbId = -1;
     private float proteinMolecularWeight = Float.NaN;
     private float piValue = Float.NaN;
@@ -153,16 +155,23 @@ public class Identification implements IIdentification, Activatable {
     }
 
     @Override
-    public String getKeggNumber() {
+    public List<String> getKeggNumbers() {
         activate(ActivationPurpose.READ);
-        return keggNumber;
+        return keggNumbers;
     }
 
     @Override
-    public void setKeggNumber(String keggNumber) {
+    public void addKeggNumber(String keggNumber) {
         activate(ActivationPurpose.WRITE);
-        this.keggNumber = keggNumber;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_KEGG, null, keggNumber);
+        this.keggNumbers.add(keggNumber);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_KEGG, null, keggNumbers);
+    }
+
+    @Override
+    public void setKeggNumbers(List<String> keggNumbers) {
+        activate(ActivationPurpose.WRITE);
+        this.keggNumbers = keggNumbers;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_KEGG, null, keggNumbers);
     }
 
     @Override
@@ -219,6 +228,6 @@ public class Identification implements IIdentification, Activatable {
 
     @Override
     public String toString() {
-        return "Identification{" + "accession=" + accession + "abbreviation=" + abbreviation + "name=" + name + "keggNumber=" + keggNumber + "gendbId=" + gendbId + "proteinMolecularWeight=" + proteinMolecularWeight + "piValue=" + piValue + "coverage=" + coverage + "difference=" + difference + "score=" + score + "method=" + method + '}';
+        return "Identification{accession=" + accession + " abbreviation=" + abbreviation + " name=" + name + " keggNumber=" + keggNumbers + " gendbId=" + gendbId + " proteinMolecularWeight=" + proteinMolecularWeight + " piValue=" + piValue + " coverage=" + coverage + " difference=" + difference + " score=" + score + " method=" + method + '}';
     }
 }

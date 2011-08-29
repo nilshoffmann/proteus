@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentification;
@@ -9,6 +5,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIden
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * Default implementation of IIdentificationFactory
  *
  * @author hoffmann
  */

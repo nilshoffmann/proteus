@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
 
 import com.db4o.activation.ActivationPurpose;
@@ -12,8 +8,9 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 /**
+ * Default implementation of IIdentification
  *
- * @author hoffmann
+ * @author kotte, hoffmann
  */
 public class Identification implements IIdentification, Activatable {
 
@@ -88,9 +85,8 @@ public class Identification implements IIdentification, Activatable {
     @Override
     public void setMethod(String method) {
         activate(ActivationPurpose.WRITE);
-        String oldMethod = this.method;
         this.method = method;
-        pcs.firePropertyChange(PROPERTY_METHOD, oldMethod, method);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_METHOD, null, method);
     }
 
     /**
@@ -112,9 +108,8 @@ public class Identification implements IIdentification, Activatable {
     @Override
     public void setName(String name) {
         activate(ActivationPurpose.WRITE);
-        String oldName = this.name;
         this.name = name;
-        pcs.firePropertyChange(PROPERTY_NAME, oldName, name);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_NAME, null, name);
     }
 
     /**
@@ -136,9 +131,8 @@ public class Identification implements IIdentification, Activatable {
     @Override
     public void setId(String id) {
         activate(ActivationPurpose.WRITE);
-        String oldId = this.id;
         this.id = id;
-        pcs.firePropertyChange(PROPERTY_ID, oldId, id);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_ID, null, id);
     }
 
     /**
@@ -160,8 +154,12 @@ public class Identification implements IIdentification, Activatable {
     @Override
     public void setDescription(String description) {
         activate(ActivationPurpose.WRITE);
-        String oldDescription = this.description;
         this.description = description;
-        pcs.firePropertyChange(PROPERTY_DESCRIPTION, oldDescription, description);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_DESCRIPTION, null, description);
+    }
+
+    @Override
+    public String toString() {
+        return "Identification of protein '" + name + "' with id '" + id + "' using method '" + method + "': " + description;
     }
 }

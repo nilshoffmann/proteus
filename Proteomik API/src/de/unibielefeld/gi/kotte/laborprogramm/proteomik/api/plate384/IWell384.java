@@ -48,4 +48,6 @@ public interface IWell384 extends IPropertyChangeSource {
     public void setStatus(Well384Status status);
 
     public void setWell96(IWell96 well96);
+
+    public String toFullyRecursiveString();
 }

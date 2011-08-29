@@ -169,4 +169,11 @@ public class Well384 implements IWell384, Activatable {
     public String toString() {
         return "well " + getRow()+ getColumn() + " is " + getStatus();
     }
+
+    @Override
+    public String toFullyRecursiveString(){
+        String str = "well " + getRow()+ getColumn() + " is " + getStatus();
+        str += "\n      > " + identification;
+        return str;
+    }
 }

@@ -1,11 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
 
 import com.db4o.activation.ActivationPurpose;
 import com.db4o.activation.Activator;
+import com.db4o.collections.ActivatableArrayList;
 import com.db4o.ta.Activatable;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentification;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IWellIdentification;
@@ -15,8 +12,9 @@ import java.beans.PropertyChangeSupport;
 import java.util.List;
 
 /**
+ * Default implementation of IWellIdentification
  *
- * @author hoffmann
+ * @author kotte, hoffmann
  */
 public class WellIdentification implements IWellIdentification, Activatable {
 
@@ -68,7 +66,7 @@ public class WellIdentification implements IWellIdentification, Activatable {
      * Object definition
      */
     private IWell384 well;
-    private List<IIdentification> identifications;
+    private List<IIdentification> identifications = new ActivatableArrayList<IIdentification>();
     private boolean uncertain;
 
     /**
@@ -90,9 +88,8 @@ public class WellIdentification implements IWellIdentification, Activatable {
     @Override
     public void setWell(IWell384 well) {
         activate(ActivationPurpose.WRITE);
-        IWell384 oldWell = this.well;
         this.well = well;
-        pcs.firePropertyChange(PROPERTY_WELL, oldWell, well);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_WELL, null, well);
     }
 
     /**
@@ -114,16 +111,15 @@ public class WellIdentification implements IWellIdentification, Activatable {
     @Override
     public void setIdentifications(List<IIdentification> identifications) {
         activate(ActivationPurpose.WRITE);
-        List<IIdentification> oldIdentifications = this.identifications;
         this.identifications = identifications;
-        pcs.firePropertyChange(PROPERTY_IDENTIFICATIONS, oldIdentifications, identifications);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_IDENTIFICATIONS, null, identifications);
     }
 
     @Override
     public void addIdentification(IIdentification identification) {
         activate(ActivationPurpose.WRITE);
         this.identifications.add(identification);
-        pcs.firePropertyChange(PROPERTY_IDENTIFICATIONS, null, identifications);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_IDENTIFICATIONS, null, identifications);
     }
 
     /**
@@ -145,8 +141,21 @@ public class WellIdentification implements IWellIdentification, Activatable {
     @Override
     public void setUncertain(boolean uncertain) {
         activate(ActivationPurpose.WRITE);
-        boolean oldUncertain = this.uncertain;
         this.uncertain = uncertain;
-        pcs.firePropertyChange(PROPERTY_UNCERTAIN, oldUncertain, uncertain);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_UNCERTAIN, null, uncertain);
+    }
+
+    @Override
+    public String toString() {
+        String str = "well identification ";
+        if(uncertain){
+            str += "is uncertain:";
+        } else {
+            str += "is certain:";
+        }
+        for (IIdentification identification : identifications) {
+            str += "\n        > " + identification.toString();
+        }
+        return str;
     }
 }

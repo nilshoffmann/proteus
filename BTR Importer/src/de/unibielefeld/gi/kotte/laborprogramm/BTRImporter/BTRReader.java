@@ -3,7 +3,6 @@ package de.unibielefeld.gi.kotte.laborprogramm.BTRImporter;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentification;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IWellIdentification;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IWellIdentificationFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import java.io.BufferedReader;
@@ -43,20 +42,24 @@ public class BTRReader {
                 //TODO im Augenblick wird von exakt einer Identification pro WellIdentification ausgegangen
 
                 IIdentification identification = Lookup.getDefault().lookup(IIdentificationFactory.class).createIdentification();
+                identification.setAbbreviation("TODO");
+                identification.setAccession(data[1]);
+                identification.setName("TODO");
+                identification.setCoverage(Integer.parseInt(data[7]));
+                identification.setDifference(Integer.parseInt(data[8]));
+                identification.setGendbId(0);//TODO
+                identification.setKeggNumber("TODO");
+                identification.setPiValue(Float.parseFloat(data[6]));
+                identification.setProteinMolecularWeight(Float.parseFloat(data[5]));
+                identification.setScore(Float.parseFloat(data[3]));
                 identification.setMethod(data[9]);
-                identification.setName(data[2]);
-                identification.setId(data[1]);
-                identification.setDescription(line);
                 System.out.println(identification);
-
-                IWellIdentification wellIdentification = Lookup.getDefault().lookup(IWellIdentificationFactory.class).createWellIdentification();
-                wellIdentification.addIdentification(identification);
-                wellIdentification.setUncertain(false); //TODO check if identification is uncertain
 
                 IWell384 well = plate.getWell(data[0].charAt(0), Integer.parseInt(data[0].substring(2)));
                 //TODO check if well is processed
-                wellIdentification.setWell(well);
-                well.setIdentification(wellIdentification);
+                IWellIdentification wellIdentification = well.getIdentification();
+
+                wellIdentification.addIdentification(identification);
             }
         } catch (IOException ex) {
             Logger.getLogger(BTRReader.class.getName()).log(Level.SEVERE, null, ex);

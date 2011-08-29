@@ -42,10 +42,10 @@
             </file>
         </folder>
         <folder name="GelNode">
-            <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-GelViewerOpenAction.instance">
+            <file name="de-unibielefeld-gi-kotte-laborprogramm-gelViewer-actions-GelViewerOpenAction.instance">
                 <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
-                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.Bundle#CTL_GelViewerOpenAction"/>
-                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.GelViewerOpenAction"/>
+                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.gelViewer.actions.Bundle#CTL_GelViewerOpenAction"/>
+                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.gelViewer.actions.GelViewerOpenAction"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
                 <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
@@ -72,10 +72,10 @@
             </file>
         </folder>
         <folder name="Plate384Node">
-            <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-Plate384ViewerOpenAction.instance">
+            <file name="de-unibielefeld-gi-kotte-laborprogramm-plate384Viewer-actions-Plate384ViewerOpenAction.instance">
                 <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
-                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.Bundle#CTL_Plate384ViewerOpenAction"/>
-                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.Plate384ViewerOpenAction"/>
+                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer.actions.Bundle#CTL_Plate384ViewerOpenAction"/>
+                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer.actions.Plate384ViewerOpenAction"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
                 <attr name="selectionType" stringvalue="EXACTLY_ONE"/>

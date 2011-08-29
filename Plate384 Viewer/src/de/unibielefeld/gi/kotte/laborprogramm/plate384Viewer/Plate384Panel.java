@@ -2,12 +2,14 @@ package de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer;
 
 import javax.swing.JPanel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.Well384Status;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import java.awt.GridLayout;
 import javax.swing.JLabel;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.util.lookup.InstanceContent;
 
 /**
  * GUI Panel that visually represents a IPlate384. Offers Well96Buttons to manipulate plate wells.
@@ -17,13 +19,16 @@ import org.openide.NotifyDescriptor;
 public class Plate384Panel extends JPanel {
 
     private IWell96 well96 = null;
-    private boolean autoAssignSpots = false;
+    private boolean autoAssign96Wells = false;
     private int currentPlateIndex = 0;
-    private IPlate384 plate = null;
+//    private IPlate384 plate = null;
     private Well384Button[] buttons = null;
+    private InstanceContent instanceContent = null;
+    private Well384Button activeButton = null;
 
-    public Plate384Panel(IPlate384 plate) {
-        this.plate = plate;
+    public Plate384Panel(IPlate384 plate, InstanceContent instanceContent) {
+//        this.plate = plate;
+        this.instanceContent = instanceContent;
         final int x = plate.getXdimension();
         final int y = plate.getYdimension();
         this.setLayout(new GridLayout(y + 1, x + 1));
@@ -39,10 +44,8 @@ public class Plate384Panel extends JPanel {
             add(jl); //add top row label
         }
         buttons = new Well384Button[plate.getWells().length];
-        int buttonCnt = 0;
         //rows
         for (char c = 'A'; c < 'A' + y; c++) {
-            int rowIndex = ((int) c) - ((int) 'A');
             //columns
             for (int i = 0; i <= x; i++) {
                 if (i == 0) {
@@ -60,15 +63,26 @@ public class Plate384Panel extends JPanel {
         }
     }
 
+    public void setActiveWellButton(Well384Button wellButton) {
+        if (activeButton != null) {
+            IWell384 oldWell = activeButton.getWell();
+            instanceContent.remove(oldWell);
+            activeButton.setSelected(false);
+        }
+        wellButton.setSelected(true);
+        instanceContent.add(wellButton.getWell());
+        activeButton = wellButton;
+    }
+
     public IWell96 getWell96() {
         return this.well96;
     }
 
     public void setWell96(IWell96 well96) {
         this.well96 = well96;
-        if (autoAssignSpots) {
+        if (autoAssign96Wells) {
             try {
-                Well384Button wb = getNextUnassignedWell();
+                Well384Button wb = getNextUnassigned96Well();
                 wb.selectStatus(Well384Status.FILLED);
             } catch (IllegalStateException ise) {
                 NotifyDescriptor nd = new NotifyDescriptor(
@@ -90,8 +104,8 @@ public class Plate384Panel extends JPanel {
         setButtonForWell96Active(well96);
     }
 
-    public boolean isAutoAssignSpots() {
-        return autoAssignSpots;
+    public boolean isAutoAssignWell96() {
+        return autoAssign96Wells;
     }
 
     protected void setButtonForWell96Active(IWell96 well96) {
@@ -107,7 +121,7 @@ public class Plate384Panel extends JPanel {
         }
     }
 
-    protected Well384Button getNextUnassignedWell() {
+    protected Well384Button getNextUnassigned96Well() {
         Well384Button[] wells = this.buttons;
         for (int i = currentPlateIndex; i < wells.length; i++) {
             if (wells[i].getWell().getStatus() == Well384Status.EMPTY) {
@@ -118,10 +132,10 @@ public class Plate384Panel extends JPanel {
         throw new IllegalStateException("No empty wells left on plate!");
     }
 
-    public void setAutoAssignSpots(boolean autoAssignSpots) {
-        if (this.autoAssignSpots != autoAssignSpots) {
+    public void setAutoAssign96Wells(boolean autoAssign96Wells) {
+        if (this.autoAssign96Wells != autoAssign96Wells) {
             currentPlateIndex = 0;
         }
-        this.autoAssignSpots = autoAssignSpots;
+        this.autoAssign96Wells = autoAssign96Wells;
     }
 }

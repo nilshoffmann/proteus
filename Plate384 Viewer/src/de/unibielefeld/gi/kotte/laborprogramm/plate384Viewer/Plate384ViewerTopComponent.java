@@ -94,7 +94,7 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
     }// </editor-fold>//GEN-END:initComponents
 
     private void autoAssignSpotsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoAssignSpotsActionPerformed
-        platePanel.setAutoAssignSpots(autoAssignSpots.isSelected());
+        platePanel.setAutoAssign96Wells(autoAssignSpots.isSelected());
     }//GEN-LAST:event_autoAssignSpotsActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -111,7 +111,7 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
 //            remove(platePanel);
 //        }
             instanceContent.add(plate);
-            platePanel = new Plate384Panel(plate);
+            platePanel = new Plate384Panel(plate, instanceContent);
             setDisplayName("384 Well Plate: " + plate.getName());
             add(platePanel, BorderLayout.CENTER);
 //            CentralLookup.getDefault().remove(plate);

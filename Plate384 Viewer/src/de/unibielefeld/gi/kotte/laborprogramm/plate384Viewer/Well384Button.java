@@ -3,6 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.Well384Status;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -10,6 +11,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -18,6 +20,7 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.event.MouseInputListener;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
@@ -27,21 +30,20 @@ import org.openide.util.Exceptions;
  *
  * @author hoffmann, kotte
  */
-public class Well384Button extends JButton {
+public class Well384Button extends JButton implements MouseInputListener {
 
     private IWell384 well = null;
     private JPopupMenu menu = null;
     private final Plate384Panel panel;
     private final Well384Button button = this;
 
-    private class Well384Action extends AbstractAction {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON3) {
             if (menu != null) {
                 menu.setVisible(false);
             }
-            menu = new Well96StatusSelectMenu(well.getStatus());
+            menu = new Well384StatusSelectMenu(well.getStatus());
             menu.setInvoker(panel);
             if (getMousePosition() != null) {
                 Point p = new Point(getMousePosition());
@@ -52,9 +54,62 @@ public class Well384Button extends JButton {
         }
     }
 
-    private class Well96StatusSelectMenu extends JPopupMenu {
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
 
-        public Well96StatusSelectMenu(Well384Status status) {
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+    }
+
+    private class Well384Action extends AbstractAction {
+
+        private final Well384Button button;
+
+        public Well384Action(Well384Button button) {
+            this.button = button;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            panel.setActiveWellButton(button);
+        }
+///////old version for left mouse button///////
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+//            if (menu != null) {
+//                menu.setVisible(false);
+//            }
+//            menu = new Well384StatusSelectMenu(well.getStatus());
+//            menu.setInvoker(panel);
+//            if (getMousePosition() != null) {
+//                Point p = new Point(getMousePosition());
+//                SwingUtilities.convertPointToScreen(p, button);
+//                menu.setLocation(p);
+//                menu.setVisible(true);
+//            }
+//        }
+    }
+
+    private class Well384StatusSelectMenu extends JPopupMenu {
+
+        public Well384StatusSelectMenu(Well384Status status) {
             ButtonGroup group = new ButtonGroup();
             for (Well384Status s : Well384Status.values()) {
                 JRadioButtonMenuItem jrbmi = new JRadioButtonMenuItem(new Well384StatusSelectRadioButtonAction(s));
@@ -126,36 +181,50 @@ public class Well384Button extends JButton {
         public void actionPerformed(ActionEvent e) {
             selectStatus(status);
             menu.setVisible(false);
-            boolean autoAssignState = panel.isAutoAssignSpots();
-            panel.setAutoAssignSpots(!autoAssignState);
-            panel.setAutoAssignSpots(autoAssignState);
+            boolean autoAssignState = panel.isAutoAssignWell96();
+            panel.setAutoAssign96Wells(!autoAssignState);
+            panel.setAutoAssign96Wells(autoAssignState);
         }
     }
 
     public Well384Button(IWell384 well, Plate384Panel panel) {
         this.well = well;
         this.panel = panel;
-        setAction(new Well384Action());
+        setAction(new Well384Action(this));
         setName(well.getWellPosition());
 //        setBorderPainted(false);
         setContentAreaFilled(false);
         setMinimumSize(new Dimension(5, 5));
+        addMouseListener(this);
+        addMouseMotionListener(this);
     }
 
     public void selectStatus(Well384Status nextStatus) {
-        //nextStatus -> EMPTY, FILLED, PROCESSED, ERROR
+        //nextStatus -> EMPTY, FILLED, IDENTIFIED, MULTIPLE_IDENTIFICATIONS, UNCERTAIN, UNIDENTIFIED, ERROR
         Well384Status currentStatus = well.getStatus();
         if (!well.getStatus().equals(nextStatus)) {
             IWell96 well96 = null;
             if (StateMachine.isTransitionAllowed(currentStatus, nextStatus)) {
                 switch (nextStatus) {
                     case EMPTY:
-                        well96.get384Wells().remove(well);
+                        well96 = this.well.getWell96();
+                        if (well96 != null /*&& well96.get384Wells().contains(well)*/) {
+                            well96.get384Wells().remove(well);
+                            //reset the well96 to FILLED status if it's last well384 was just removed
+                            if (well96.get384Wells().isEmpty()) {
+                                well96.setStatus(Well96Status.FILLED);
+                            }
+                        }
                         well.setWell96(null);
                         break;
                     case FILLED:
-                        well96.add384Well(well);
-                        well.setWell96(well96);
+                        well96 = panel.getWell96();
+                        //only processed wells that are filled (or processed), ignore empty or errand well96s
+                        if (well96.getStatus() == Well96Status.FILLED || well96.getStatus() == Well96Status.PROCESSED) {
+                            well96.add384Well(well);
+                            well96.setStatus(Well96Status.PROCESSED);
+                            well.setWell96(well96);
+                        }
                         break;
 //                    case IDENTIFIED:
 //                        well.setIdentification("<MOCK IDENTIFICATION>");

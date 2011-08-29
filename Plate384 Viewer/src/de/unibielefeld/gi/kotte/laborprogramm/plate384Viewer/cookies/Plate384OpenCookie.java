@@ -1,5 +1,6 @@
-package de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer;
+package de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer.cookies;
 
+import de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer.Plate384ViewerTopComponent;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.cookies.IPlate384OpenCookie;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import de.unibielefeld.gi.kotte.laborprogramm.topComponentRegistry.api.IRegistryFactory;

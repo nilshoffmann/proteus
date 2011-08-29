@@ -60,51 +60,52 @@ public class Identification implements IIdentification, Activatable {
     }
     /**
      * Object definition
+     *
      */
-    private String method;
+    private String accession;
+    private String abbreviation;
     private String name;
-    private String id;
-    private String description;
+    private String keggNumber = "0.0.0.0";
+    private int gendbId = -1;
+    private float proteinMolecularWeight = Float.NaN;
+    private float piValue = Float.NaN;
+    private int coverage = -1;
+    private int difference = -1;
+    private float score = Float.NaN;
+    private String method;
 
-    /**
-     * Get the value of method
-     *
-     * @return the value of method
-     */
     @Override
-    public String getMethod() {
+    public String getAbbreviation() {
         activate(ActivationPurpose.READ);
-        return method;
+        return abbreviation;
     }
 
-    /**
-     * Set the value of method
-     *
-     * @param method new value of method
-     */
     @Override
-    public void setMethod(String method) {
+    public void setAbbreviation(String abbreviation) {
         activate(ActivationPurpose.WRITE);
-        this.method = method;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_METHOD, null, method);
+        this.abbreviation = abbreviation;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_ABBREVIATION, null, abbreviation);
     }
 
-    /**
-     * Get the value of name
-     *
-     * @return the value of name
-     */
+    @Override
+    public String getAccession() {
+        activate(ActivationPurpose.READ);
+        return accession;
+    }
+
+    @Override
+    public void setAccession(String accession) {
+        activate(ActivationPurpose.WRITE);
+        this.accession = accession;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_ACCESSION, null, accession);
+    }
+
     @Override
     public String getName() {
         activate(ActivationPurpose.READ);
         return name;
     }
 
-    /**
-     * Set the value of name
-     *
-     * @param name new value of name
-     */
     @Override
     public void setName(String name) {
         activate(ActivationPurpose.WRITE);
@@ -112,54 +113,107 @@ public class Identification implements IIdentification, Activatable {
         getPropertyChangeSupport().firePropertyChange(PROPERTY_NAME, null, name);
     }
 
-    /**
-     * Get the value of id
-     *
-     * @return the value of id
-     */
     @Override
-    public String getId() {
+    public int getCoverage() {
         activate(ActivationPurpose.READ);
-        return id;
+        return coverage;
     }
 
-    /**
-     * Set the value of id
-     *
-     * @param id new value of id
-     */
     @Override
-    public void setId(String id) {
+    public void setCoverage(int coverage) {
         activate(ActivationPurpose.WRITE);
-        this.id = id;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_ID, null, id);
+        this.coverage = coverage;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_COVERAGE, null, coverage);
     }
 
-    /**
-     * Get the value of description
-     *
-     * @return the value of description
-     */
     @Override
-    public String getDescription() {
+    public int getDifference() {
         activate(ActivationPurpose.READ);
-        return description;
+        return difference;
     }
 
-    /**
-     * Set the value of description
-     *
-     * @param description new value of description
-     */
     @Override
-    public void setDescription(String description) {
+    public void setDifference(int difference) {
         activate(ActivationPurpose.WRITE);
-        this.description = description;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_DESCRIPTION, null, description);
+        this.difference = difference;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_DIFFERENCE, null, difference);
     }
 
     @Override
-    public String toString() {
-        return "Identification of protein '" + name + "' with id '" + id + "' using method '" + method + "': " + description;
+    public int getGendbId() {
+        activate(ActivationPurpose.READ);
+        return gendbId;
+    }
+
+    @Override
+    public void setGendbId(int gendbId) {
+        activate(ActivationPurpose.WRITE);
+        this.gendbId = gendbId;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_GENDB_ID, null, gendbId);
+    }
+
+    @Override
+    public String getKeggNumber() {
+        activate(ActivationPurpose.READ);
+        return keggNumber;
+    }
+
+    @Override
+    public void setKeggNumber(String keggNumber) {
+        activate(ActivationPurpose.WRITE);
+        this.keggNumber = keggNumber;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_KEGG, null, keggNumber);
+    }
+
+    @Override
+    public float getPiValue() {
+        activate(ActivationPurpose.READ);
+        return piValue;
+    }
+
+    @Override
+    public void setPiValue(float piValue) {
+        activate(ActivationPurpose.WRITE);
+        this.piValue = piValue;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PI_VALUE, null, piValue);
+    }
+
+    @Override
+    public float getProteinMolecularWeight() {
+        activate(ActivationPurpose.READ);
+        return proteinMolecularWeight;
+    }
+
+    @Override
+    public void setProteinMolecularWeight(float proteinMolecularWeight) {
+        activate(ActivationPurpose.WRITE);
+        this.proteinMolecularWeight = proteinMolecularWeight;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PROTEIN_MW, null, proteinMolecularWeight);
+    }
+
+    @Override
+    public float getScore() {
+        activate(ActivationPurpose.READ);
+        return score;
+    }
+
+    @Override
+    public void setScore(float score) {
+        activate(ActivationPurpose.WRITE);
+        this.score = score;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_SCORE, null, score);
+    }
+
+    @Override
+    public String getMethod() {
+        activate(ActivationPurpose.READ);
+        return method;
+    }
+
+    @Override
+    public void setMethod(String method) {
+        activate(ActivationPurpose.WRITE);
+        this.method = method;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_METHOD, null, method);
     }
 }

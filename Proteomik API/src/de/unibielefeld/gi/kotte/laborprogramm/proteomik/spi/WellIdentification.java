@@ -67,7 +67,6 @@ public class WellIdentification implements IWellIdentification, Activatable {
      */
     private IWell384 well;
     private List<IIdentification> identifications = new ActivatableArrayList<IIdentification>();
-    private boolean uncertain;
 
     /**
      * Get the value of well
@@ -122,37 +121,9 @@ public class WellIdentification implements IWellIdentification, Activatable {
         getPropertyChangeSupport().firePropertyChange(PROPERTY_IDENTIFICATIONS, null, identifications);
     }
 
-    /**
-     * Get the value of uncertain
-     *
-     * @return the value of uncertain
-     */
-    @Override
-    public boolean isUncertain() {
-        activate(ActivationPurpose.READ);
-        return uncertain;
-    }
-
-    /**
-     * Set the value of uncertain
-     *
-     * @param uncertain new value of uncertain
-     */
-    @Override
-    public void setUncertain(boolean uncertain) {
-        activate(ActivationPurpose.WRITE);
-        this.uncertain = uncertain;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_UNCERTAIN, null, uncertain);
-    }
-
     @Override
     public String toString() {
-        String str = "well identification ";
-        if(uncertain){
-            str += "is uncertain:";
-        } else {
-            str += "is certain:";
-        }
+        String str = "well identifications:";
         for (IIdentification identification : identifications) {
             str += "\n        > " + identification.toString();
         }

@@ -128,7 +128,7 @@ public class SpotAnnotation extends Annotation<ISpot> {
 
     public SpotAnnotation(Point2D position, ISpot t) {
         super(position, t);
-        setShape(new RoundRectangle2D.Double(position.getX() - 10, position.getY() - 10, 20, 20,5,5));
+        setShape(new RoundRectangle2D.Double(position.getX() - 10, position.getY() - 10, 20, 20, 5, 5));
     }
 
     @Override
@@ -143,6 +143,15 @@ public class SpotAnnotation extends Annotation<ISpot> {
             strokeColor = well.getStatus().getColor();
         } else {
             strokeColor = Color.BLACK;
+        }
+
+        if (t.getLabel() != null && !t.getLabel().isEmpty()) {
+            if(sb.length()==0) {
+                sb.append("Label: ");
+            }else{
+                sb.append(" | Label: ");
+            }
+            sb.append(t.getLabel());
         }
 
         if (!isSelected()) {
@@ -166,21 +175,21 @@ public class SpotAnnotation extends Annotation<ISpot> {
         if (drawSpotID && sb.length() > 0) {
             Color fill = selectedFillColor;
             Color stroke = selectedStrokeColor.darker();
-            if(font==null) {
+            if (font == null) {
                 font = g.getFont().deriveFont(25.0f);
             }
             g.setFont(font);
-            Tuple2D<Rectangle2D,Point2D> tple = PainterTools.getBoundingBox(fill, stroke, sb.toString(), g, 5);
-            AffineTransform at = AffineTransform.getTranslateInstance(getPosition().getX()+displacementX, getPosition().getY()+displacementY);
+            Tuple2D<Rectangle2D, Point2D> tple = PainterTools.getBoundingBox(fill, stroke, sb.toString(), g, 5);
+            AffineTransform at = AffineTransform.getTranslateInstance(getPosition().getX() + displacementX, getPosition().getY() + displacementY);
             Point2D textOrigin = at.transform(tple.getSecond(), null);
 //            g.setColor(fill);
 //            g.fill(s);
             g.setColor(lineColor);
-            Line2D.Double line = new Line2D.Double(getPosition(),textOrigin);
+            Line2D.Double line = new Line2D.Double(getPosition(), textOrigin);
             g.draw(line);
             g.setColor(textColor);
-            
-            g.drawString(sb.toString(), (float)textOrigin.getX(), (float)textOrigin.getY());
+
+            g.drawString(sb.toString(), (float) textOrigin.getX(), (float) textOrigin.getY());
         }
     }
 }

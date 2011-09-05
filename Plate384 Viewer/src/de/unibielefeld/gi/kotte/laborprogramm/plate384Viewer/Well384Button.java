@@ -112,7 +112,7 @@ public class Well384Button extends JButton implements MouseInputListener {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String text = well.toString() + "\n";
+                    String text = well.toString() + "\nAssigned to well: "+well.getWell96()+" on plate "+well.getWell96().getParent().getName();
 
                     JTextArea jl = new JTextArea(text);
                     NotifyDescriptor nd = new NotifyDescriptor(

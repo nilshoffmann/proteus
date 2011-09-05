@@ -3,7 +3,6 @@ package de.unibielefeld.gi.kotte.laborprogramm.gelViewer;
 import cross.datastructures.tuple.Tuple2D;
 import de.unibielefeld.gi.kotte.laborprogramm.centralLookup.CentralLookup;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.actions.ExportGelAction;
-import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.actions.GelPrintProvider;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.dataProvider.GelSpotDataProvider;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.theme.ThemeManager;
@@ -34,11 +33,9 @@ import net.sf.maltcms.ui.plot.heatmap.IDataProvider;
 import net.sf.maltcms.ui.plot.heatmap.axis.Corner;
 import net.sf.maltcms.ui.plot.heatmap.event.mouse.MouseEventProcessorChain;
 import net.sf.maltcms.ui.plot.heatmap.event.mouse.PointSelectionProcessor;
-import net.sf.maltcms.ui.plot.heatmap.event.mouse.RectangularSelectionProcessor;
 import net.sf.maltcms.ui.plot.heatmap.event.mouse.ZoomProcessor;
 import net.sf.maltcms.ui.plot.heatmap.painter.AnnotationPainter;
 import net.sf.maltcms.ui.plot.heatmap.painter.PainterLayerUI;
-import net.sf.maltcms.ui.plot.heatmap.painter.SelectionRectanglePainter;
 import net.sf.maltcms.ui.plot.heatmap.painter.ToolTipPainter;
 import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.swingx.painter.CompoundPainter;
@@ -57,12 +54,11 @@ import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 
 /**
- * TODO implement printing support for whole gel http://www.apl.jhu.edu/~hall/java/Swing-Tutorial/Swing-Tutorial-Printing.html
  * TODO allow setting of font size property
  * TODO allow setting of focused view
  * TODO add support for highlighting / scrolling to a specific annotation
- * FIXME repair zoom support
- * Top component which displays something.
+ * Top component that displays a gel with spot annotations and allows selection
+ * of associated ISpot objects.
  */
 @ConvertAsProperties(dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.gelViewer//GelViewer//EN",
 autostore = false)
@@ -220,7 +216,7 @@ public final class GelViewerTopComponent extends TopComponent implements
         //Compound painter and jxlayer
         CompoundPainter<JComponent> compoundPainter = new CompoundPainter<JComponent>(
                 annotationPainter, tooltipPainter);
-        PainterLayerUI plui = new PainterLayerUI(compoundPainter);
+        PainterLayerUI<JComponent> plui = new PainterLayerUI<JComponent>(compoundPainter);
         layer = new JXLayer<JComponent>(jl,
                 plui);
 

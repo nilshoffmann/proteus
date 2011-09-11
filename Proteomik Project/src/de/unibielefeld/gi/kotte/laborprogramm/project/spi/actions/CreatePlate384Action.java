@@ -9,6 +9,7 @@ import javax.swing.Action;
 import org.openide.util.Lookup;
 
 /**
+ * Action to create a new 384 well microplate.
  *
  * @author kotte
  */
@@ -22,7 +23,7 @@ public class CreatePlate384Action implements Action {
 
     @Override
     public Object getValue(String key) {
-        System.out.println("CreatePlate384Action.getValue() called with key: " + key);
+        //System.out.println("CreatePlate384Action.getValue() called with key: " + key);
         if(key.equals("Name")) {
             return "erstelle 384 Well Platte";
         }
@@ -51,12 +52,10 @@ public class CreatePlate384Action implements Action {
 
     @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
-        //throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("CreatePlate384Action.actionPerformed() called");
         IPlate384 plate384 = Lookup.getDefault().lookup(IPlate384Factory.class).createPlate384();
         this.proj.add384Plate(plate384);
         plate384.setParent(this.proj);

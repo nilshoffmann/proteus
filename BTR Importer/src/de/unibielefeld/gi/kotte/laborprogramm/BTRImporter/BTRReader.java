@@ -5,6 +5,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIden
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IWellIdentification;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.Well384Status;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -92,12 +93,31 @@ public class BTRReader {
 
                 //add identification to well
                 IWell384 well = plate.getWell(data[0].charAt(0), Integer.parseInt(data[0].substring(2)));
-                //TODO check if well is processed
-                IWellIdentification wellIdentification = well.getIdentification();
-                wellIdentification.addIdentification(identification);
+                if (well.getStatus() == Well384Status.FILLED) {
+                    well.getIdentification().addIdentification(identification);
+                } else {
+                    System.out.println("attempting to add identification data to " + well + " (accepted status: filled)");
+                    //TODO Fehler melden
+                }
+
             }
         } catch (IOException ex) {
             Logger.getLogger(BTRReader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void checkStatus(IPlate384 plate) {
+        for(IWell384 well : plate.getWells()) {
+            if(well.getStatus() == Well384Status.FILLED) {
+                List<IIdentification> identifications = well.getIdentification().getIdentifications();
+                if (identifications.isEmpty()) {
+                    well.setStatus(Well384Status.UNIDENTIFIED);
+                } else if (identifications.size() > 1) {
+                    well.setStatus(Well384Status.MULTIPLE_IDENTIFICATIONS);
+                } else {
+                    well.setStatus(Well384Status.IDENTIFIED);
+                }
+            }
         }
     }
 }

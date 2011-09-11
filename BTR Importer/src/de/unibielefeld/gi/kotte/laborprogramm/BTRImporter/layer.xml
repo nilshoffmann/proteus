@@ -1,3 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
-<filesystem/>
+<filesystem>
+    <folder name="Actions">
+        <folder name="Plate384Node">
+            <file name="de-unibielefeld-gi-kotte-laborprogramm-BTRIMporter-actions-BTRImportAction.instance">
+                <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
+                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.BTRImporter.actions.Bundle#CTL_BTRImportAction"/>
+                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.BTRImporter.actions.BTRImportAction"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+                <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
+                <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

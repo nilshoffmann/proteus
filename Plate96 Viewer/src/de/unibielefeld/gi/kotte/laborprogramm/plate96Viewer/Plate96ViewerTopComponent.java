@@ -1,6 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.topComponentRegistry.api.IRegistryFactory;
 import java.awt.BorderLayout;
@@ -31,16 +32,19 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
     private static Plate96ViewerTopComponent instance;
     /** path to the icon used by the component and its open action */
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
-    private static final String PREFERRED_ID = "Plate96ViewerTopComponentTopComponent";
+    private static final String PREFERRED_ID = "Plate96ViewerComponent";
     private Result<IPlate96> result = null;
     private Result<ISpot> spotResult = null;
+    private Result<IWell384> well384Result = null;
     private ISpot spot = null;
+    private IWell384 well384 = null;
     private InstanceContent instanceContent = new InstanceContent();
 
     public Plate96ViewerTopComponent() {
         associateLookup(new AbstractLookup(instanceContent));
         result = Utilities.actionsGlobalContext().lookupResult(IPlate96.class);
         spotResult = Utilities.actionsGlobalContext().lookupResult(ISpot.class);
+        well384Result = Utilities.actionsGlobalContext().lookupResult(IWell384.class);
         initComponents();
         setName(NbBundle.getMessage(Plate96ViewerTopComponent.class, "CTL_Plate96ViewerTopComponent"));
         setToolTipText(NbBundle.getMessage(Plate96ViewerTopComponent.class, "HINT_Plate96ViewerTopComponent"));
@@ -51,7 +55,7 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
             initPlateComponent(plate);
         }
         WindowManager mgr = WindowManager.getDefault();
-        Mode mode = mgr.findMode("explorer");
+        Mode mode = mgr.findMode("output"); //TODO "tools" returns null (this is where we REALLY want our window to be)
         mode.dockInto(this); 
     }
 
@@ -161,6 +165,9 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         if (spotResult != null) {
             spotResult.addLookupListener(this);
         }
+        if (well384Result != null) {
+            well384Result.addLookupListener(this);
+        }
     }
 
     @Override
@@ -170,6 +177,9 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         }
         if (spotResult != null) {
             spotResult.removeLookupListener(this);
+        }
+        if (well384Result != null) {
+            well384Result.removeLookupListener(this);
         }
         IPlate96 plate = getLookup().lookup(IPlate96.class);
         if (plate != null) {
@@ -216,6 +226,15 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
                 activeSpotLabel.setText(String.format("# %d @Gel %s",spotInstance.getNumber(),spotInstance.getGel().getName()));
                 this.spot = spotInstance;
                 platePanel.setSpot(this.spot);
+            }
+        }
+
+        Iterator<? extends IWell384> well384Instances = well384Result.allInstances().iterator();
+        if (well384Instances.hasNext()) {
+            IWell384 well384Instance = well384Instances.next();
+            if(well384Instance!=this.well384) {
+                this.well384 = well384Instance;
+                platePanel.setWell384(this.well384);
             }
         }
     }

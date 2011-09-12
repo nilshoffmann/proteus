@@ -3,6 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer;
 import javax.swing.JPanel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
 import java.awt.GridLayout;
@@ -19,6 +20,7 @@ import org.openide.util.lookup.InstanceContent;
 public class Plate96Panel extends JPanel {
 
     private ISpot spot = null;
+    private IWell384 well384 = null;
     private boolean autoAssignSpots = false;
     private int currentPlateIndex = 0;
 //    private IPlate96 plate = null;
@@ -101,29 +103,52 @@ public class Plate96Panel extends JPanel {
         setButtonForSpotActive(spot);
     }
 
+    public void setWell384(IWell384 well384) {
+        this.well384 = well384;
+        setButtonForWell384Active(well384);
+    }
+
     public boolean isAutoAssignSpots() {
         return autoAssignSpots;
     }
 
     protected void setButtonForSpotActive(ISpot spot) {
         if (spot != null) {
-            Well96Button[] wells = this.buttons;
-            for (int i = currentPlateIndex; i < wells.length; i++) {
-                if (wells[i].getWell().getSpot() == spot) {
-                    wells[i].setSelected(true);
+            for (int i = 0; i < 96; i++) {
+                if (this.buttons[i].getWell().getSpot() == spot) {
+                    this.buttons[i].setSelected(true);
                 } else {
-                    wells[i].setSelected(false);
+                    this.buttons[i].setSelected(false);
                 }
+            }
+        } else {
+            for (int i = 0; i < 96; i++) {
+                this.buttons[i].setSelected(false);
+            }
+        }
+    }
+
+    protected void setButtonForWell384Active(IWell384 well384) {
+        if (well384 != null) {
+            for (int i = 0; i < 96; i++) {
+                if (this.buttons[i].getWell().get384Wells().contains(well384)) {
+                    this.buttons[i].setSelected(true);
+                } else {
+                    this.buttons[i].setSelected(false);
+                }
+            }
+        } else {
+            for (int i = 0; i < 96; i++) {
+                this.buttons[i].setSelected(false);
             }
         }
     }
 
     protected Well96Button getNextUnassignedWell() {
-        Well96Button[] wells = this.buttons;
-        for (int i = currentPlateIndex; i < wells.length; i++) {
-            if (wells[i].getWell().getStatus() == Well96Status.EMPTY) {
+        for (int i = currentPlateIndex; i < 96; i++) {
+            if (this.buttons[i].getWell().getStatus() == Well96Status.EMPTY) {
                 currentPlateIndex = i + 1;
-                return wells[i];
+                return this.buttons[i];
             }
         }
         throw new IllegalStateException("No empty wells left on plate!");

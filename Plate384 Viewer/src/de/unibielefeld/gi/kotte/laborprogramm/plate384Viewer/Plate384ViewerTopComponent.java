@@ -51,7 +51,7 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
             initPlateComponent(plate);
         }
         WindowManager mgr = WindowManager.getDefault();
-        Mode mode = mgr.findMode("explorer");
+        Mode mode = mgr.findMode("output");
         mode.dockInto(this); 
     }
 
@@ -64,8 +64,10 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
     private void initComponents() {
 
         jToolBar1 = new javax.swing.JToolBar();
-        autoAssignSpots = new javax.swing.JToggleButton();
+        autoAssignSpotsButton = new javax.swing.JToggleButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
+        autoPickPlateButton = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JToolBar.Separator();
         jLabel1 = new javax.swing.JLabel();
         activeSpotLabel = new javax.swing.JLabel();
 
@@ -73,15 +75,27 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
 
         jToolBar1.setRollover(true);
 
-        org.openide.awt.Mnemonics.setLocalizedText(autoAssignSpots, org.openide.util.NbBundle.getMessage(Plate384ViewerTopComponent.class, "Plate384ViewerTopComponent.autoAssignSpots.text")); // NOI18N
-        autoAssignSpots.setToolTipText(org.openide.util.NbBundle.getMessage(Plate384ViewerTopComponent.class, "Plate384ViewerTopComponent.autoAssignSpots.toolTipText")); // NOI18N
-        autoAssignSpots.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(autoAssignSpotsButton, org.openide.util.NbBundle.getMessage(Plate384ViewerTopComponent.class, "Plate384ViewerTopComponent.autoAssignSpotsButton.text")); // NOI18N
+        autoAssignSpotsButton.setToolTipText(org.openide.util.NbBundle.getMessage(Plate384ViewerTopComponent.class, "Plate384ViewerTopComponent.autoAssignSpotsButton.toolTipText")); // NOI18N
+        autoAssignSpotsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                autoAssignSpotsActionPerformed(evt);
+                autoAssignSpotsButtonActionPerformed(evt);
             }
         });
-        jToolBar1.add(autoAssignSpots);
+        jToolBar1.add(autoAssignSpotsButton);
         jToolBar1.add(jSeparator1);
+
+        org.openide.awt.Mnemonics.setLocalizedText(autoPickPlateButton, org.openide.util.NbBundle.getMessage(Plate384ViewerTopComponent.class, "Plate384ViewerTopComponent.autoPickPlateButton.text")); // NOI18N
+        autoPickPlateButton.setFocusable(false);
+        autoPickPlateButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        autoPickPlateButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        autoPickPlateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                autoPickPlateButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(autoPickPlateButton);
+        jToolBar1.add(jSeparator2);
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(Plate384ViewerTopComponent.class, "Plate384ViewerTopComponent.jLabel1.text")); // NOI18N
@@ -93,15 +107,21 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
         add(jToolBar1, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void autoAssignSpotsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoAssignSpotsActionPerformed
-        platePanel.setAutoAssign96Wells(autoAssignSpots.isSelected());
-    }//GEN-LAST:event_autoAssignSpotsActionPerformed
+    private void autoAssignSpotsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoAssignSpotsButtonActionPerformed
+        platePanel.setAutoAssign96Wells(autoAssignSpotsButton.isSelected());
+    }//GEN-LAST:event_autoAssignSpotsButtonActionPerformed
+
+    private void autoPickPlateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoPickPlateButtonActionPerformed
+        platePanel.autoPickPlate();
+    }//GEN-LAST:event_autoPickPlateButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel activeSpotLabel;
-    private javax.swing.JToggleButton autoAssignSpots;
+    private javax.swing.JToggleButton autoAssignSpotsButton;
+    private javax.swing.JButton autoPickPlateButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JToolBar.Separator jSeparator1;
+    private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
     private Plate384Panel platePanel;
@@ -213,7 +233,7 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
         if (well96Instances.hasNext()) {
             IWell96 well96instance = well96Instances.next();
             if(well96instance!=this.well96) {
-                activeSpotLabel.setText(well96instance.toString());
+                activeSpotLabel.setText(well96instance.getWellPosition());
                 this.well96 = well96instance;
                 platePanel.setWell96(this.well96);
             }

@@ -63,6 +63,7 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
     }
 
     public void setActivePoint(Point2D activePoint) {
+        deselectAnnotation();
 //        this.hm.getDataProvider().getViewToModelTransform().transform(activeModelPoint, null);
         this.activeModelPoint = activePoint;//this.hm.getDataProvider().getViewToModelTransform().transform(activeModelPoint, null);;
     }

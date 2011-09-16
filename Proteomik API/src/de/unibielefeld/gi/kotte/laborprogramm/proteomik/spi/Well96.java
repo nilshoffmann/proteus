@@ -167,6 +167,6 @@ public class Well96 implements IWell96, Activatable {
 
     @Override
     public String toString() {
-        return "well " + getRow() + getColumn() + " is " + getStatus();
+        return "well " + getRow() + getColumn() + " is " + getStatus()+" on plate "+getParent().getName();
     }
 }

@@ -112,8 +112,10 @@ public class Well384Button extends JButton implements MouseInputListener {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String text = well.toString() + "\nAssigned to well: "+well.getWell96()+" on plate "+well.getWell96().getParent().getName();
-
+                     String text = well.toString();
+                    if (well.getWell96() != null) {
+                        text = text+"\nAssigned to well: " + well.getWell96() + " on plate " + well.getWell96().getParent().getName();
+                    }
                     JTextArea jl = new JTextArea(text);
                     NotifyDescriptor nd = new NotifyDescriptor(
                             jl, // instance of your panel

@@ -1,6 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.topComponentRegistry.api.IRegistryFactory;
 import java.awt.BorderLayout;
@@ -34,13 +35,16 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
     private static final String PREFERRED_ID = "Plate384ViewerTopComponentTopComponent";
     private Result<IPlate384> result = null;
     private Result<IWell96> well96Result = null;
+    private Result<IPlate96> plate96Result = null;
     private IWell96 well96 = null;
+    private IPlate96 autoPickedPlate = null;
     private InstanceContent instanceContent = new InstanceContent();
 
     public Plate384ViewerTopComponent() {
         associateLookup(new AbstractLookup(instanceContent));
         result = Utilities.actionsGlobalContext().lookupResult(IPlate384.class);
         well96Result = Utilities.actionsGlobalContext().lookupResult(IWell96.class);
+        plate96Result = Utilities.actionsGlobalContext().lookupResult(IPlate96.class);
         initComponents();
         setName(NbBundle.getMessage(Plate384ViewerTopComponent.class, "CTL_Plate384ViewerTopComponent"));
         setToolTipText(NbBundle.getMessage(Plate384ViewerTopComponent.class, "HINT_Plate384ViewerTopComponent"));
@@ -52,7 +56,7 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
         }
         WindowManager mgr = WindowManager.getDefault();
         Mode mode = mgr.findMode("output");
-        mode.dockInto(this); 
+        mode.dockInto(this);
     }
 
     /** This method is called from within the constructor to
@@ -68,6 +72,8 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
         jSeparator1 = new javax.swing.JToolBar.Separator();
         autoPickPlateButton = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
+        jButton1 = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JToolBar.Separator();
         jLabel1 = new javax.swing.JLabel();
         activeSpotLabel = new javax.swing.JLabel();
 
@@ -97,6 +103,18 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
         jToolBar1.add(autoPickPlateButton);
         jToolBar1.add(jSeparator2);
 
+        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(Plate384ViewerTopComponent.class, "Plate384ViewerTopComponent.jButton1.text")); // NOI18N
+        jButton1.setFocusable(false);
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton1);
+        jToolBar1.add(jSeparator3);
+
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(Plate384ViewerTopComponent.class, "Plate384ViewerTopComponent.jLabel1.text")); // NOI18N
         jToolBar1.add(jLabel1);
@@ -112,16 +130,21 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
     }//GEN-LAST:event_autoAssignSpotsButtonActionPerformed
 
     private void autoPickPlateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoPickPlateButtonActionPerformed
-        platePanel.autoPickPlate();
+        platePanel.autoPickPlate(autoPickedPlate);
     }//GEN-LAST:event_autoPickPlateButtonActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        platePanel.clear();
+    }//GEN-LAST:event_jButton1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel activeSpotLabel;
     private javax.swing.JToggleButton autoAssignSpotsButton;
     private javax.swing.JButton autoPickPlateButton;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
+    private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
     private Plate384Panel platePanel;
@@ -181,6 +204,9 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
         if (well96Result != null) {
             well96Result.addLookupListener(this);
         }
+        if (plate96Result != null) {
+            plate96Result.addLookupListener(this);
+        }
     }
 
     @Override
@@ -190,6 +216,9 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
         }
         if (well96Result != null) {
             well96Result.removeLookupListener(this);
+        }
+        if (plate96Result != null) {
+            plate96Result.removeLookupListener(this);
         }
         IPlate384 plate = getLookup().lookup(IPlate384.class);
         if (plate != null) {
@@ -232,11 +261,16 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
         Iterator<? extends IWell96> well96Instances = well96Result.allInstances().iterator();
         if (well96Instances.hasNext()) {
             IWell96 well96instance = well96Instances.next();
-            if(well96instance!=this.well96) {
+            if (well96instance != this.well96) {
                 activeSpotLabel.setText(well96instance.getWellPosition());
                 this.well96 = well96instance;
                 platePanel.setWell96(this.well96);
             }
+        }
+
+        Iterator<? extends IPlate96> plate96Instances = plate96Result.allInstances().iterator();
+        if (plate96Instances.hasNext()) {
+            autoPickedPlate = plate96Instances.next();
         }
     }
 }

@@ -120,6 +120,9 @@ public class Well384 implements IWell384, Activatable {
     @Override
     public IWellIdentification getIdentification() {
         activate(ActivationPurpose.READ);
+        if(identification==null) {
+            setIdentification(new WellIdentification());
+        }
         return identification;
     }
 

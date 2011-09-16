@@ -3,7 +3,9 @@ package de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer;
 import javax.swing.JPanel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.Well384Status;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
 import java.awt.GridLayout;
@@ -62,11 +64,32 @@ public class Plate96Panel extends JPanel {
         }
     }
 
+    public void clear() {
+        for (Well96Button button : buttons) {
+            ISpot spot = button.getWell().getSpot();
+            if (spot != null) {
+                spot.setWell(null);
+                button.getWell().setSpot(null);
+                spot.setStatus(SpotStatus.UNPICKED);
+                for (IWell384 well384 : button.getWell().get384Wells()) {
+                    well384.setStatus(Well384Status.EMPTY);
+                    well384.setWell96(null);
+                }
+                button.getWell().get384Wells().clear();
+            }
+            button.getWell().setStatus(Well96Status.EMPTY);
+        }
+        repaint();
+    }
+
     public void setActiveWellButton(Well96Button wellButton) {
         if (activeButton != null) {
             IWell96 oldWell = activeButton.getWell();
             instanceContent.remove(oldWell);
             activeButton.setSelected(false);
+            for(Well96Button button:buttons) {
+                button.setSelected(false);
+            }
         }
         wellButton.setSelected(true);
         instanceContent.add(wellButton.getWell());
@@ -77,7 +100,7 @@ public class Plate96Panel extends JPanel {
         return spot;
     }
 
-    public void setSpot(ISpot spot) {
+    public IWell96 setSpot(ISpot spot) {
         this.spot = spot;
         if (autoAssignSpots) {
             try {
@@ -100,7 +123,11 @@ public class Plate96Panel extends JPanel {
 //                Exceptions.printStackTrace(ise);
             }
         }
-        setButtonForSpotActive(spot);
+        Well96Button button = setButtonForSpotActive(spot);
+        if(button==null) {
+            return null;
+        }
+        return button.getWell();
     }
 
     public void setWell384(IWell384 well384) {
@@ -112,11 +139,13 @@ public class Plate96Panel extends JPanel {
         return autoAssignSpots;
     }
 
-    protected void setButtonForSpotActive(ISpot spot) {
+    protected Well96Button setButtonForSpotActive(ISpot spot) {
+        Well96Button button = null;
         if (spot != null) {
             for (int i = 0; i < 96; i++) {
                 if (this.buttons[i].getWell().getSpot() == spot) {
                     this.buttons[i].setSelected(true);
+                    button = this.buttons[i];
                 } else {
                     this.buttons[i].setSelected(false);
                 }
@@ -126,6 +155,7 @@ public class Plate96Panel extends JPanel {
                 this.buttons[i].setSelected(false);
             }
         }
+        return button;
     }
 
     protected void setButtonForWell384Active(IWell384 well384) {

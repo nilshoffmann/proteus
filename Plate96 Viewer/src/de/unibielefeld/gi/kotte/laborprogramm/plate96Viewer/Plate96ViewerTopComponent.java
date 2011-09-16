@@ -3,6 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.topComponentRegistry.api.IRegistryFactory;
 import java.awt.BorderLayout;
 import java.util.Iterator;
@@ -38,6 +39,7 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
     private Result<IWell384> well384Result = null;
     private ISpot spot = null;
     private IWell384 well384 = null;
+    private IWell96 well96 = null;
     private InstanceContent instanceContent = new InstanceContent();
 
     public Plate96ViewerTopComponent() {
@@ -70,6 +72,8 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         jToolBar1 = new javax.swing.JToolBar();
         autoAssignSpots = new javax.swing.JToggleButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
+        jButton1 = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JToolBar.Separator();
         jLabel1 = new javax.swing.JLabel();
         activeSpotLabel = new javax.swing.JLabel();
 
@@ -87,6 +91,18 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         jToolBar1.add(autoAssignSpots);
         jToolBar1.add(jSeparator1);
 
+        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(Plate96ViewerTopComponent.class, "Plate96ViewerTopComponent.jButton1.text")); // NOI18N
+        jButton1.setFocusable(false);
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton1);
+        jToolBar1.add(jSeparator2);
+
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(Plate96ViewerTopComponent.class, "Plate96ViewerTopComponent.jLabel1.text")); // NOI18N
         jToolBar1.add(jLabel1);
@@ -101,11 +117,17 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         platePanel.setAutoAssignSpots(autoAssignSpots.isSelected());
     }//GEN-LAST:event_autoAssignSpotsActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        platePanel.clear();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel activeSpotLabel;
     private javax.swing.JToggleButton autoAssignSpots;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JToolBar.Separator jSeparator1;
+    private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
     private Plate96Panel platePanel;
@@ -224,8 +246,18 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
             ISpot spotInstance = spotInstances.next();
             if(spotInstance!=this.spot) {
                 activeSpotLabel.setText(String.format("# %d @Gel %s",spotInstance.getNumber(),spotInstance.getGel().getName()));
+                if(this.spot!=null) {
+                    instanceContent.remove(this.spot);
+                }
                 this.spot = spotInstance;
-                platePanel.setSpot(this.spot);
+                if(this.well96!=null) {
+                    instanceContent.remove(this.well96);
+                }
+                this.well96 = platePanel.setSpot(this.spot);
+                if(this.well96!=null) {
+                    instanceContent.add(this.well96);
+                }
+                instanceContent.add(this.spot);
             }
         }
 

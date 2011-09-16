@@ -11,6 +11,7 @@ import java.awt.GridLayout;
 import javax.swing.JLabel;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.util.Utilities;
 import org.openide.util.lookup.InstanceContent;
 
 /**
@@ -62,11 +63,30 @@ public class Plate384Panel extends JPanel {
         }
     }
 
+    public void clear() {
+        for (Well384Button button : buttons) {
+            IWell96 well96 = button.getWell().getWell96();
+            if (well96 != null) {
+                button.getWell().setWell96(null);
+                well96.get384Wells().remove(button.getWell());
+                if(well96.get384Wells().isEmpty()) {
+                    well96.setStatus(Well96Status.FILLED);
+                }
+            }
+            button.getWell().getIdentification().getIdentifications().clear();
+            button.getWell().setStatus(Well384Status.EMPTY);
+        }
+        repaint();
+    }
+
     public void setActiveWellButton(Well384Button wellButton) {
         if (activeButton != null) {
             IWell384 oldWell = activeButton.getWell();
             instanceContent.remove(oldWell);
             activeButton.setSelected(false);
+            for(Well384Button button:buttons) {
+                button.setSelected(false);
+            }
         }
         wellButton.setSelected(true);
         instanceContent.add(wellButton.getWell());
@@ -107,7 +127,7 @@ public class Plate384Panel extends JPanel {
         return autoAssign96Wells;
     }
 
-    protected void setButtonForWell96Active(IWell96 well96) {
+    public void setButtonForWell96Active(IWell96 well96) {
         if (well96 != null) {
             for (int i = 0; i < 384; i++) {
                 if (this.buttons[i].getWell().getWell96() == well96) {
@@ -123,7 +143,7 @@ public class Plate384Panel extends JPanel {
         }
     }
 
-    protected Well384Button getNextUnassignedWell() {
+    public Well384Button getNextUnassignedWell() {
         for (int i = currentPlateIndex; i < 384; i++) {
             if (this.buttons[i].getWell().getStatus() == Well384Status.EMPTY) {
                 currentPlateIndex = i + 1;
@@ -140,22 +160,21 @@ public class Plate384Panel extends JPanel {
         this.autoAssign96Wells = autoAssign96Wells;
     }
 
-    void autoPickPlate() {
-        if(this.well96 != null) {
-            IPlate96 plate96 = well96.getParent();
+    public void autoPickPlate(IPlate96 plate96) {
+        if (plate96 != null) {
             //increase currentPlateIndex until it references to a button in the top row
-            while(!(this.buttons[currentPlateIndex].getWell().getRow() == 'A')) {
+            while (!(this.buttons[currentPlateIndex].getWell().getRow() == 'A')) {
                 currentPlateIndex++;
             }
-            for(IWell96 well96: plate96.getWells()) {
-                if(well96.getStatus() == Well96Status.FILLED) {
+            for (IWell96 well96 : plate96.getWells()) {
+                if (well96.getStatus() == Well96Status.FILLED) {
                     //set current Well96
                     this.well96 = well96;
                     //connect the two wells
                     this.buttons[currentPlateIndex].selectStatus(Well384Status.FILLED);
                 }
                 currentPlateIndex++;
-                if(currentPlateIndex >= 384) {
+                if (currentPlateIndex >= 384) {
                     throw new IllegalStateException("No empty wells left on plate!");
                 }
             }

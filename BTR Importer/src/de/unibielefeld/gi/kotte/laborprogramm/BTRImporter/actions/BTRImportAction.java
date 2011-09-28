@@ -33,9 +33,9 @@ public class BTRImportAction implements ActionListener {
         int status = jfc.showOpenDialog(null);
         if (status == JFileChooser.APPROVE_OPTION) {
             f = jfc.getSelectedFile();
+            BTRReader.readBTRFile(f, context);
+            BTRReader.checkStatus(context);
+            //System.out.println(context.toFullyRecursiveString());
         }
-        BTRReader.readBTRFile(f, context);
-        BTRReader.checkStatus(context);
-        //System.out.println(context.toFullyRecursiveString());
     }
 }

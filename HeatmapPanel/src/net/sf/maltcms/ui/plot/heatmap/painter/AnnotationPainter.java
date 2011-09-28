@@ -208,7 +208,6 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
                     for (Tuple2D<Point2D, Annotation<T>> tpl : oldSelection) {
                         tpl.getSecond().setSelected(false);
                     }
-//                    clipRect = old;
                 }
                 Rectangle2D newSel = (Rectangle2D) pce.getNewValue();
                 List<Tuple2D<Point2D, Annotation<T>>> newSelection = Collections.emptyList();
@@ -218,39 +217,19 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
                     for (Tuple2D<Point2D, Annotation<T>> tpl : newSelection) {
                         tpl.getSecond().setSelected(true);
                     }
-//                    clipRect = newSel;
                     firePropertyChange("annotationMultiSelection", oldSelection, newSelection);
-//                    setDirty(true);
                 }
 
             } catch (NoninvertibleTransformException ex) {
                 Logger.getLogger(AnnotationPainter.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ElementNotFoundException enfe) {
                 firePropertyChange("annotationMultiSelection", oldSelection, Collections.emptyList());
-//                setDirty(true);
             }
         } else if (pce.getPropertyName().equals("point")) {
             System.out.println("Received point property change");
             Point2D old = (Point2D) pce.getOldValue();
 
             Tuple2D<Point2D, Annotation<T>> oldSelection = null;
-//            if (old != null) {
-//                try {
-//                    old = at.inverseTransform(old, null);
-//                    try {
-//                        oldSelection = this.hm.getClosestInRadius(old, this.searchRadius);
-////                    for (Tuple2D<Point2D, Annotation> tpl : oldSelection) {
-//                        oldSelection.getSecond().setSelected(false);
-//                    } catch (ElementNotFoundException enfe) {
-////                        System.out.println("No element found for old selection!");
-//                    } catch (IllegalArgumentException iae) {
-//
-//                    }
-//                } catch (NoninvertibleTransformException ex) {
-//                    Logger.getLogger(AnnotationPainter.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//
-//            }
             if (activeSelection != null) {
                 activeSelection.getSecond().setSelected(false);
             }
@@ -266,22 +245,14 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
                         newSelection = this.hm.getClosestInRadius(newSel, this.searchRadius);
                         newSelection.getSecond().setSelected(true);
                         activeSelection = newSelection;
-//                        System.out.println("Firing annotationPointSelection for Point " + newSelection.getFirst());
                     } catch (ElementNotFoundException enfe) {
-//                        System.out.println("No element found for new selection!");
                     } catch (IllegalArgumentException iae) {
                     }
-//                  
                 } catch (NoninvertibleTransformException ex) {
                     Logger.getLogger(AnnotationPainter.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
-//                    clipRect = new Rectangle2D.Double(newSel.getX() - 10, newSel.getY() - 10, 20, 20);
-                //setDirty(true);
             }
-//            this.activeModelPoint = newSel;
             firePropertyChange("annotationPointSelection", oldSelection, newSelection);
-//            setDirty(true);
         } else if (pce.getPropertyName().equals(HeatmapDataset.PROP_TRANSFORM)) {
             this.at = (AffineTransform) pce.getNewValue();
             setDirty(true);

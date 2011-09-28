@@ -154,7 +154,7 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
 //            remove(platePanel);
 //        }
             instanceContent.add(plate);
-            platePanel = new Plate384Panel(plate, instanceContent);
+            platePanel = new Plate384Panel(plate, instanceContent,getLookup());
             setDisplayName("384 Well Plate: " + plate.getName());
             add(platePanel, BorderLayout.CENTER);
 //            CentralLookup.getDefault().remove(plate);

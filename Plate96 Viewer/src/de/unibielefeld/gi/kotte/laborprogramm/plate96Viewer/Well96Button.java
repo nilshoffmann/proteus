@@ -97,7 +97,8 @@ public class Well96Button extends JButton implements MouseInputListener {
         public Well96StatusSelectMenu(Well96Status status) {
             ButtonGroup group = new ButtonGroup();
             for (Well96Status s : Well96Status.values()) {
-                JRadioButtonMenuItem jrbmi = new JRadioButtonMenuItem(new Well96StatusSelectRadioButtonAction(s));
+                JRadioButtonMenuItem jrbmi = new JRadioButtonMenuItem(new Well96StatusSelectRadioButtonAction(
+                        s));
                 jrbmi.setText(s.toString());
                 jrbmi.setEnabled(StateMachine.isTransitionAllowed(status, s));
                 if (s.equals(Well96Status.FILLED) && (panel.getSpot() == null)) {
@@ -172,23 +173,30 @@ public class Well96Button extends JButton implements MouseInputListener {
 //            NotifyDescriptor nd = new NotifyDescriptor.Message("Can not pick spots from virtual gel " + spotInstance.getGel().getName(), NotifyDescriptor.WARNING_MESSAGE);
 //            DialogDisplayer.getDefault().notify(nd);
 //        } else {
-            //nextStatus -> EMPTY, FILLED, PROCESSED, ERROR
-            Well96Status currentStatus = well.getStatus();
-            if (!well.getStatus().equals(nextStatus)) {
-                ISpot spot = null;
-                if (StateMachine.isTransitionAllowed(currentStatus, nextStatus)) {
-                    switch (nextStatus) {
-                        case EMPTY:
-                            spot = this.well.getSpot();
-                            if (spot != null) {
-                                this.well.setSpot(null);
-                                spot.setStatus(SpotStatus.UNPICKED);
-                                spot.setWell(null);
-                            }
-                            well.setStatus(nextStatus);
-                            break;
-                        case FILLED:
-                            spot = panel.getSpot(); // get spot from lookup
+        //nextStatus -> EMPTY, FILLED, PROCESSED, ERROR
+        Well96Status currentStatus = well.getStatus();
+        if (!well.getStatus().equals(nextStatus)) {
+            ISpot spot = null;
+            if (StateMachine.isTransitionAllowed(currentStatus, nextStatus)) {
+                switch (nextStatus) {
+                    case EMPTY:
+                        spot = this.well.getSpot();
+                        if (spot != null) {
+                            this.well.setSpot(null);
+                            spot.setStatus(SpotStatus.UNPICKED);
+                            spot.setWell(null);
+                        }
+                        well.setStatus(nextStatus);
+                        break;
+                    case FILLED:
+                        spot = panel.getSpot(); // get spot from lookup
+                        if (spot.getGel().isVirtual()) {
+                            NotifyDescriptor nd = new NotifyDescriptor.Message(
+                                    "Can not add a spot from a virtual gel!",
+                                    NotifyDescriptor.INFORMATION_MESSAGE);
+                            DialogDisplayer dd = DialogDisplayer.getDefault();
+                            dd.notify(nd);
+                        } else {
 //                        if (spot.getStatus() == SpotStatus.PICKED) {
                             if (reassignWell(spot)) {
                                 spot.setWell(this.well);
@@ -196,22 +204,25 @@ public class Well96Button extends JButton implements MouseInputListener {
                                 this.well.setSpot(spot);
                                 well.setStatus(nextStatus);
                             }
-                            break;
-                        case PROCESSED:
-                            if (this.well.getSpot() != null) {
-                                well.setStatus(nextStatus);
-                            }
-                            break;
-                        case ERROR:
+                        }
+                        break;
+                    case PROCESSED:
+                        if (this.well.getSpot() != null) {
                             well.setStatus(nextStatus);
-                            break;
-                    }
-                    panel.setButtonForSpotActive(spot);
-                    repaint();
-                } else {
-                    Exceptions.printStackTrace(new IllegalStateException("Illegal transition attempted: tried to transit from " + currentStatus + " to " + nextStatus));
+                        }
+                        break;
+                    case ERROR:
+                        well.setStatus(nextStatus);
+                        break;
                 }
+                panel.setButtonForSpotActive(spot);
+                repaint();
+            } else {
+                Exceptions.printStackTrace(
+                        new IllegalStateException(
+                        "Illegal transition attempted: tried to transit from " + currentStatus + " to " + nextStatus));
             }
+        }
 //        }
     }
 
@@ -228,7 +239,9 @@ public class Well96Button extends JButton implements MouseInputListener {
         if (spotWell != null) {
             if (spotWell.getStatus() == Well96Status.PROCESSED) {
                 NotifyDescriptor nd = new NotifyDescriptor(
-                        "Spot is already assigned to well " + well.getWellPosition() + " on plate " + well.getParent().getName() + " and processed.", // instance of your panel
+                        "Spot is already assigned to well " + well.
+                        getWellPosition() + " on plate " + well.getParent().
+                        getName() + " and processed.", // instance of your panel
                         "Spot already processed", // title of the dialog
                         NotifyDescriptor.DEFAULT_OPTION, // it is Yes/No dialog ...
                         NotifyDescriptor.INFORMATION_MESSAGE, // ... of a question type => a question mark icon
@@ -243,7 +256,9 @@ public class Well96Button extends JButton implements MouseInputListener {
             }
             if (spotWell != well) {
                 NotifyDescriptor nd = new NotifyDescriptor(
-                        "Spot is already assigned to well " + well.getWellPosition() + " on plate " + well.getParent().getName() + ". Reassign?", // instance of your panel
+                        "Spot is already assigned to well " + well.
+                        getWellPosition() + " on plate " + well.getParent().
+                        getName() + ". Reassign?", // instance of your panel
                         "Reassign spot?", // title of the dialog
                         NotifyDescriptor.YES_NO_OPTION, // it is Yes/No dialog ...
                         NotifyDescriptor.PLAIN_MESSAGE, // ... of a question type => a question mark icon
@@ -269,7 +284,8 @@ public class Well96Button extends JButton implements MouseInputListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
         Color originalColor = g2.getColor();
         g2.setColor(Color.WHITE);
         g2.fillRect(0, 0, getWidth(), getHeight());

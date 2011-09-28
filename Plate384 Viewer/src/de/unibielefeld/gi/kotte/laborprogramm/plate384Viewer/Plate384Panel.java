@@ -1,5 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer;
 
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import javax.swing.JPanel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
@@ -11,7 +12,7 @@ import java.awt.GridLayout;
 import javax.swing.JLabel;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.util.Utilities;
+import org.openide.util.Lookup;
 import org.openide.util.lookup.InstanceContent;
 
 /**
@@ -27,11 +28,14 @@ public class Plate384Panel extends JPanel {
 //    private IPlate384 plate = null;
     private Well384Button[] buttons = null;
     private InstanceContent instanceContent = null;
+    private Lookup lookup = null;
     private Well384Button activeButton = null;
 
-    public Plate384Panel(IPlate384 plate, InstanceContent instanceContent) {
+    public Plate384Panel(IPlate384 plate, InstanceContent instanceContent,
+            Lookup lookup) {
 //        this.plate = plate;
         this.instanceContent = instanceContent;
+        this.lookup = lookup;
         final int x = plate.getXdimension();
         final int y = plate.getYdimension();
         this.setLayout(new GridLayout(y + 1, x + 1));
@@ -54,7 +58,8 @@ public class Plate384Panel extends JPanel {
                     add(jl); //add leftmost column label
                 } else {
                     //create button for the current well on the plate grid
-                    Well384Button button = new Well384Button(plate.getWell(c, i), this);
+                    Well384Button button = new Well384Button(plate.getWell(c, i),
+                            this);
                     //we want the buttons to be indexed by increasing x
                     buttons[plate.posToIndex(c, i)] = button;
                     add(button); //add main grid area button
@@ -69,28 +74,67 @@ public class Plate384Panel extends JPanel {
             if (well96 != null) {
                 button.getWell().setWell96(null);
                 well96.get384Wells().remove(button.getWell());
-                if(well96.get384Wells().isEmpty()) {
+                if (well96.get384Wells().isEmpty()) {
                     well96.setStatus(Well96Status.FILLED);
                 }
             }
             button.getWell().getIdentification().getIdentifications().clear();
             button.getWell().setStatus(Well384Status.EMPTY);
         }
+        currentPlateIndex = 0;
         repaint();
     }
 
     public void setActiveWellButton(Well384Button wellButton) {
         if (activeButton != null) {
+            ISpot spot = lookup.lookup(ISpot.class);
+            try {
+                instanceContent.remove(spot);
+            } catch (Exception e) {
+            }
             IWell384 oldWell = activeButton.getWell();
             instanceContent.remove(oldWell);
             activeButton.setSelected(false);
-            for(Well384Button button:buttons) {
+            for (Well384Button button : buttons) {
                 button.setSelected(false);
+            }
+            IWell96 oldWell96 = oldWell.getWell96();
+            try {
+                instanceContent.remove(oldWell96);
+            } catch (Exception e) {
             }
         }
         wellButton.setSelected(true);
         instanceContent.add(wellButton.getWell());
+        if (wellButton.getWell().getWell96() != null) {
+            instanceContent.add(wellButton.getWell().getWell96());
+            if (wellButton.getWell().getWell96().getSpot() != null) {
+                instanceContent.add(wellButton.getWell().getWell96().getSpot());
+            }
+        }
+
         activeButton = wellButton;
+
+//        if (activeButton != null) {
+//            ISpot spot = lookup.lookup(ISpot.class);
+//            try {
+//                instanceContent.remove(spot);
+//            } catch (Exception e) {
+//            }
+//            IWell96 oldWell = activeButton.getWell();
+//            instanceContent.remove(oldWell);
+//            activeButton.setSelected(false);
+//            for (Well96Button button : buttons) {
+//                button.setSelected(false);
+//            }
+//        }
+//        wellButton.setSelected(true);
+//        instanceContent.add(wellButton.getWell());
+//        if (wellButton.getWell().getSpot() != null) {
+//            instanceContent.add(wellButton.getWell().getSpot());
+//        }
+//        activeButton = wellButton;
+
     }
 
     public IWell96 getWell96() {
@@ -171,11 +215,13 @@ public class Plate384Panel extends JPanel {
                     //set current Well96
                     this.well96 = well96;
                     //connect the two wells
-                    this.buttons[currentPlateIndex].selectStatus(Well384Status.FILLED);
+                    this.buttons[currentPlateIndex].selectStatus(
+                            Well384Status.FILLED);
                 }
                 currentPlateIndex++;
                 if (currentPlateIndex >= 384) {
-                    throw new IllegalStateException("No empty wells left on plate!");
+                    throw new IllegalStateException(
+                            "No empty wells left on plate!");
                 }
             }
         }

@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.sf.maltcms.chromaui.db.api.ICredentials;
 import net.sf.maltcms.chromaui.db.api.ICrudProvider;
+import net.sf.maltcms.chromaui.db.api.ICrudProviderFactory;
 import net.sf.maltcms.chromaui.db.api.ICrudSession;
 import net.sf.maltcms.chromaui.db.api.exceptions.AuthenticationException;
 
@@ -29,36 +30,58 @@ public final class DB4oCrudProvider implements ICrudProvider {
     private final File projectDBLocation;
     private final ICredentials ic;
     private final ClassLoader domainClassLoader;
+    private final ICrudProviderFactory factory;
     private HashSet<ICrudSession> sessionCache;
 
     /**
      * Throws IllegalArgumentException if either projectDBFile or ic are null.
      * @param projectDBFile
      * @param ic
+     * @param classLoader
      * @throws IllegalArgumentException
      */
-    public DB4oCrudProvider(File projectDBFile, ICredentials ic, ClassLoader domainClassLoader) throws IllegalArgumentException {
+    public DB4oCrudProvider(File projectDBFile, ICredentials ic,
+            ClassLoader domainClassLoader) throws IllegalArgumentException {
+        this(projectDBFile, ic, domainClassLoader, null);
+    }
+
+    /**
+     * Throws IllegalArgumentException if either projectDBFile or ic are null.
+     * @param projectDBFile
+     * @param ic
+     * @param classLoader
+     * @param factory
+     * @throws IllegalArgumentException
+     */
+    public DB4oCrudProvider(File projectDBFile, ICredentials ic,
+            ClassLoader domainClassLoader, ICrudProviderFactory factory) throws IllegalArgumentException {
         if (ic == null) {
-            throw new IllegalArgumentException("Credentials Provider must not be null!");
+            throw new IllegalArgumentException(
+                    "Credentials Provider must not be null!");
         }
         if (projectDBFile == null) {
-            throw new IllegalArgumentException("Project database file must not be null!");
+            throw new IllegalArgumentException(
+                    "Project database file must not be null!");
         }
         if (projectDBFile.isDirectory()) {
-            throw new IllegalArgumentException("Project database file is a directory!");
+            throw new IllegalArgumentException(
+                    "Project database file is a directory!");
         }
         this.ic = ic;
-        System.out.println("Using crud provider on database file: " + projectDBFile.getAbsolutePath());
+        System.out.println("Using crud provider on database file: " + projectDBFile.
+                getAbsolutePath());
         projectDBLocation = projectDBFile;
         System.out.println("Using class loader: " + domainClassLoader);
         this.domainClassLoader = domainClassLoader;
+        this.factory = factory;
     }
 
     @Override
     public final void open() {
         authenticate();
         if (eoc == null) {
-            System.out.println("Opening ObjectContainer at " + projectDBLocation.getAbsolutePath());
+            System.out.println("Opening ObjectContainer at " + projectDBLocation.
+                    getAbsolutePath());
             EmbeddedConfiguration ec = com.db4o.Db4oEmbedded.newConfiguration();
 //            ec.common().activationDepth(10);
             ec.common().reflectWith(new JdkReflector(this.domainClassLoader));
@@ -76,7 +99,9 @@ public final class DB4oCrudProvider implements ICrudProvider {
             try {
                 ics.close();
             } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.WARNING, "Caught exception while trying to close crud session: {0}", e);
+                Logger.getLogger(getClass().getName()).log(Level.WARNING,
+                        "Caught exception while trying to close crud session: {0}",
+                        e);
             }
         }
         sessionCache = new HashSet<ICrudSession>();
@@ -84,11 +109,15 @@ public final class DB4oCrudProvider implements ICrudProvider {
             eoc.close();
             eoc = null;
         }
+        if (factory != null) {
+            factory.remove(this);
+        }
     }
 
     private void authenticate() throws AuthenticationException {
         if (!ic.authenticate()) {
-            throw new AuthenticationException("Invalid credentials for user, check username and password!");
+            throw new AuthenticationException(
+                    "Invalid credentials for user, check username and password!");
         }
     }
 

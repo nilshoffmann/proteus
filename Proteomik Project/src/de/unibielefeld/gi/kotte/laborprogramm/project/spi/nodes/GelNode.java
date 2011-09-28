@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.Action;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
+import org.openide.nodes.PropertySupport.ReadOnly;
 import org.openide.nodes.PropertySupport.ReadWrite;
 import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
@@ -101,11 +102,19 @@ public class GelNode extends AbstractNode implements PropertyChangeListener {
                 gel.setDescription(val);
             }
         };
+        Property virtualProp = new ReadOnly<Boolean>(IGel.PROPERTY_VIRTUAL,
+                Boolean.class, "Virtual gel", "Whether the Gel is virtual") {
+
+            @Override
+            public Boolean getValue() throws IllegalAccessException, InvocationTargetException {
+                return gel.isVirtual();
+            }
+        };
 
         set.put(filenameProp);
         set.put(nameProp);
         set.put(descriptionProp);
-
+        set.put(virtualProp);
         sheet.put(set);
         return sheet;
 

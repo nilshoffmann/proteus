@@ -39,7 +39,7 @@ public class Well96Button extends JButton implements MouseInputListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(e.getButton()==MouseEvent.BUTTON3) {
+        if (e.getButton() == MouseEvent.BUTTON3) {
             if (menu != null) {
                 menu.setVisible(false);
             }
@@ -56,12 +56,10 @@ public class Well96Button extends JButton implements MouseInputListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
     }
 
     @Override
@@ -70,27 +68,24 @@ public class Well96Button extends JButton implements MouseInputListener {
 
     @Override
     public void mouseExited(MouseEvent e) {
-        
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-
     }
 
     private class Well96Action extends AbstractAction {
 
         private final Well96Button button;
-        
+
         public Well96Action(Well96Button button) {
             this.button = button;
         }
-        
+
         @Override
         public void actionPerformed(ActionEvent e) {
             panel.setActiveWellButton(button);
@@ -172,46 +167,52 @@ public class Well96Button extends JButton implements MouseInputListener {
     }
 
     public void selectStatus(Well96Status nextStatus) {
-        //nextStatus -> EMPTY, FILLED, PROCESSED, ERROR
-        Well96Status currentStatus = well.getStatus();
-        if (!well.getStatus().equals(nextStatus)) {
-            ISpot spot = null;
-            if (StateMachine.isTransitionAllowed(currentStatus, nextStatus)) {
-                switch (nextStatus) {
-                    case EMPTY:
-                        spot = this.well.getSpot();
-                        if (spot != null) {
-                            this.well.setSpot(null);
-                            spot.setStatus(SpotStatus.UNPICKED);
-                            spot.setWell(null);
-                        }
-                        well.setStatus(nextStatus);
-                        break;
-                    case FILLED:
-                        spot = panel.getSpot(); // get spot from lookup
+        //FIXME 
+//        if (spotInstance.getGel().isVirtual()) {
+//            NotifyDescriptor nd = new NotifyDescriptor.Message("Can not pick spots from virtual gel " + spotInstance.getGel().getName(), NotifyDescriptor.WARNING_MESSAGE);
+//            DialogDisplayer.getDefault().notify(nd);
+//        } else {
+            //nextStatus -> EMPTY, FILLED, PROCESSED, ERROR
+            Well96Status currentStatus = well.getStatus();
+            if (!well.getStatus().equals(nextStatus)) {
+                ISpot spot = null;
+                if (StateMachine.isTransitionAllowed(currentStatus, nextStatus)) {
+                    switch (nextStatus) {
+                        case EMPTY:
+                            spot = this.well.getSpot();
+                            if (spot != null) {
+                                this.well.setSpot(null);
+                                spot.setStatus(SpotStatus.UNPICKED);
+                                spot.setWell(null);
+                            }
+                            well.setStatus(nextStatus);
+                            break;
+                        case FILLED:
+                            spot = panel.getSpot(); // get spot from lookup
 //                        if (spot.getStatus() == SpotStatus.PICKED) {
-                        if (reassignWell(spot)) {
-                            spot.setWell(this.well);
-                            spot.setStatus(SpotStatus.PICKED);
-                            this.well.setSpot(spot);
+                            if (reassignWell(spot)) {
+                                spot.setWell(this.well);
+                                spot.setStatus(SpotStatus.PICKED);
+                                this.well.setSpot(spot);
+                                well.setStatus(nextStatus);
+                            }
+                            break;
+                        case PROCESSED:
+                            if (this.well.getSpot() != null) {
+                                well.setStatus(nextStatus);
+                            }
+                            break;
+                        case ERROR:
                             well.setStatus(nextStatus);
-                        }
-                        break;
-                    case PROCESSED:
-                        if (this.well.getSpot() != null) {
-                            well.setStatus(nextStatus);
-                        }
-                        break;
-                    case ERROR:
-                        well.setStatus(nextStatus);
-                        break;
+                            break;
+                    }
+                    panel.setButtonForSpotActive(spot);
+                    repaint();
+                } else {
+                    Exceptions.printStackTrace(new IllegalStateException("Illegal transition attempted: tried to transit from " + currentStatus + " to " + nextStatus));
                 }
-                panel.setButtonForSpotActive(spot);
-                repaint();
-            } else {
-                Exceptions.printStackTrace(new IllegalStateException("Illegal transition attempted: tried to transit from " + currentStatus + " to " + nextStatus));
             }
-        }
+//        }
     }
 
     /**

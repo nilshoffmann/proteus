@@ -80,9 +80,9 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
             Area area = new Area(g.getClip());
             area.subtract(new Area(annotationClipShape));
             g.setClip(area);
-            Color fillColor = new Color(255,255,255,225);
-            g.setColor(fillColor);
-            g.fill(clip);
+//            Color fillColor = new Color(255,255,255,225);
+//            g.setColor(fillColor);
+//            g.fill(clip);
             Stack<AffineTransform> transforms = new Stack<AffineTransform>();
             //g.setClip(t.getVisibleRect());
             transforms.push(g.getTransform());
@@ -94,19 +94,10 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
             g.draw(l1);
             g.draw(l2);
             g.setTransform(at);
-
-//            Point2D transfPoint = at.transform(a.getFirst(),null);
-//            Line2D.Double l1 = new Line2D.Double(0, a.getFirst().getY(), t.getWidth(), a.getFirst().getY());
-//            Line2D.Double l2 = new Line2D.Double(a.getFirst().getX(), 0, a.getFirst().getX(), t.getHeight());
-//            g.setColor(Color.BLACK);
-//            g.draw(l1);
-//            g.draw(l2);
-            
-//            g.setTransform(at);
             int margin = 10;
             a.getSecond().draw(g);
 //            AffineTransform translateToBoxOrigin = AffineTransform.getTranslateInstance(width, width)
-            g.setTransform(transforms.pop());
+            //g.setTransform(transforms.pop());
             //prepare hovering label
             Paint fill = new Color(250, 250, 210, 240);
             Paint border = new Color(218, 165, 32, 240);
@@ -115,31 +106,37 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
             Rectangle2D r = tple.getFirst();
             double lshift = margin;
             double ushift = margin;
-            if (p.getX() + r.getWidth() >= t.getVisibleRect().getMaxX()) {
+            if (lineCross.getX() + margin + r.getWidth() >= t.getVisibleRect().getMaxX()) {
                 lshift = -r.getWidth() - margin;
             }
-            if (p.getY() + r.getHeight() >= t.getVisibleRect().getMaxY()) {
+            if (lineCross.getY() + margin + r.getHeight() >= t.getVisibleRect().getMaxY()) {
                 ushift =  -r.getHeight() - margin;
             }
-            double finalx = Math.max(margin, p.getX() + lshift - r.getX());
-            double finaly = Math.max(margin, p.getY() + ushift - r.getY());
-            AffineTransform at = AffineTransform.getTranslateInstance(finalx, finaly);
-//            AffineTransform transf = g.getTransform();
-            transforms.push(g.getTransform());
-//            transforms.push(at);
-            g.setTransform(at);
-//            Shape s = at.createTransformedShape(r);
-            g.setPaint(fill);
-            RoundRectangle2D boxArea = new RoundRectangle2D.Double(r.getX(),r.getY(),r.getWidth(),r.getHeight(),10,10);
-            g.fill(boxArea);
-            g.setPaint(border);
-            g.draw(boxArea);
-            g.setPaint(Color.BLACK);
+            double finalx = Math.max(margin, lineCross.getX() + lshift - r.getX());
+            double finaly = Math.max(margin, lineCross.getY() + ushift - r.getY());
 
-            g.drawString(label, (float) (tple.getSecond().getX()), (float) (tple.getSecond().getY()));
+            AffineTransform transl = AffineTransform.getTranslateInstance(finalx, finaly);
+            transl.concatenate(at);
+//            AffineTransform transf = g.getTransform();
+            //transforms.push(g.getTransform());
+//            transforms.push(at);
+            g.setTransform(transl);
+
+            drawLabelBox(g, fill, r, border, label, tple);
             g.setTransform(transforms.pop());
         }
         g.setClip(clip);
+    }
+
+    private void drawLabelBox(Graphics2D g, Paint fill, Rectangle2D r, Paint border, String label, Tuple2D<Rectangle2D, Point2D> tple) {
+        //            Shape s = at.createTransformedShape(r);
+        g.setPaint(fill);
+        RoundRectangle2D boxArea = new RoundRectangle2D.Double(r.getX(), r.getY(), r.getWidth(), r.getHeight(), 10, 10);
+        g.fill(boxArea);
+        g.setPaint(border);
+        g.draw(boxArea);
+        g.setPaint(Color.BLACK);
+        g.drawString(label, (float) (tple.getSecond().getX()), (float) (tple.getSecond().getY()));
     }
 
     @Override

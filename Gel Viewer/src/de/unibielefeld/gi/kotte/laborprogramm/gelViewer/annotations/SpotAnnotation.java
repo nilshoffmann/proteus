@@ -17,6 +17,8 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import net.sf.maltcms.ui.plot.heatmap.Annotation;
 import net.sf.maltcms.ui.plot.heatmap.painter.PainterTools;
 
@@ -24,7 +26,7 @@ import net.sf.maltcms.ui.plot.heatmap.painter.PainterTools;
  *
  * @author nils
  */
-public class SpotAnnotation extends Annotation<ISpot> {
+public class SpotAnnotation extends Annotation<ISpot> implements PropertyChangeListener {
 
     private boolean drawSpotID = true;
     private double displacementX = 5.0;
@@ -36,6 +38,16 @@ public class SpotAnnotation extends Annotation<ISpot> {
     private Color selectionCrossColor = Color.BLACK;
     private Color textColor = Color.BLACK;
     private Color lineColor = Color.BLACK;
+    private Font font = Font.decode("Plain-10");
+    private boolean drawSpotBox = true;
+
+    public boolean isDrawSpotBox() {
+        return drawSpotBox;
+    }
+
+    public void setDrawSpotBox(boolean b) {
+        this.drawSpotBox = b;
+    }
 
     public double getDisplacementX() {
         return displacementX;
@@ -124,7 +136,6 @@ public class SpotAnnotation extends Annotation<ISpot> {
     public void setTextColor(Color textColor) {
         this.textColor = textColor;
     }
-    private Font font = null;
 
     public SpotAnnotation(Point2D position, ISpot t) {
         super(position, t);
@@ -146,37 +157,39 @@ public class SpotAnnotation extends Annotation<ISpot> {
         }
 
         if (t.getLabel() != null && !t.getLabel().isEmpty()) {
-            if(sb.length()==0) {
+            if (sb.length() == 0) {
                 sb.append("Label: ");
-            }else{
+            } else {
                 sb.append(" | Label: ");
             }
             sb.append(t.getLabel());
         }
 
-        if (!isSelected()) {
-            g.setPaint(fillColor);
-            g.fill(getShape());
-            g.setPaint(strokeColor);
-            g.draw(getShape());
-            g.setPaint(Color.BLACK);
+        if (drawSpotBox) {
+            if (!isSelected()) {
+                g.setPaint(fillColor);
+                g.fill(getShape());
+                g.setPaint(strokeColor);
+                g.draw(getShape());
+                g.setPaint(Color.BLACK);
 
-        } else {
-            g.setPaint(selectedFillColor);
-            g.fill(getShape());
-            g.setPaint(selectedStrokeColor);
-            Stroke stroke = g.getStroke();
-            Stroke lineStroke = new BasicStroke(3.0f);
-            g.setStroke(lineStroke);
-            g.draw(getShape());
-            g.setStroke(stroke);
+            } else {
+                g.setPaint(selectedFillColor);
+                g.fill(getShape());
+                g.setPaint(selectedStrokeColor);
+                Stroke stroke = g.getStroke();
+                Stroke lineStroke = new BasicStroke(3.0f);
+                g.setStroke(lineStroke);
+                g.draw(getShape());
+                g.setStroke(stroke);
 //            PainterTools.drawCrossInBox(g, selectionCrossColor, getShape().getBounds2D(), 2);
+            }
         }
         if (drawSpotID && sb.length() > 0) {
             Color fill = selectedFillColor;
             Color stroke = selectedStrokeColor.darker();
             if (font == null) {
-                font = g.getFont().deriveFont(25.0f);
+                font = g.getFont().deriveFont(10.0f);
             }
             g.setFont(font);
             Tuple2D<Rectangle2D, Point2D> tple = PainterTools.getBoundingBox(fill, stroke, sb.toString(), g, 5);
@@ -191,5 +204,9 @@ public class SpotAnnotation extends Annotation<ISpot> {
 
             g.drawString(sb.toString(), (float) textOrigin.getX(), (float) textOrigin.getY());
         }
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
     }
 }

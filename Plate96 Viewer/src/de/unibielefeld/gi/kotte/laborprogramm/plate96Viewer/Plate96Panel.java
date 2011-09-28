@@ -12,6 +12,7 @@ import java.awt.GridLayout;
 import javax.swing.JLabel;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.util.Lookup;
 import org.openide.util.lookup.InstanceContent;
 
 /**
@@ -29,10 +30,12 @@ public class Plate96Panel extends JPanel {
     private Well96Button[] buttons = null;
     private InstanceContent instanceContent = null;
     private Well96Button activeButton = null;
+    private Lookup lookup = null;
 
-    public Plate96Panel(IPlate96 plate, InstanceContent instanceContent) {
+    public Plate96Panel(IPlate96 plate, InstanceContent instanceContent, Lookup lookup) {
 //        this.plate = plate;
         this.instanceContent = instanceContent;
+        this.lookup = lookup;
         final int x = plate.getXdimension();
         final int y = plate.getYdimension();
         this.setLayout(new GridLayout(y + 1, x + 1));
@@ -84,15 +87,23 @@ public class Plate96Panel extends JPanel {
 
     public void setActiveWellButton(Well96Button wellButton) {
         if (activeButton != null) {
+            ISpot spot = lookup.lookup(ISpot.class);
+            try {
+                instanceContent.remove(spot);
+            } catch (Exception e) {
+            }
             IWell96 oldWell = activeButton.getWell();
             instanceContent.remove(oldWell);
             activeButton.setSelected(false);
-            for(Well96Button button:buttons) {
+            for (Well96Button button : buttons) {
                 button.setSelected(false);
             }
         }
         wellButton.setSelected(true);
         instanceContent.add(wellButton.getWell());
+        if (wellButton.getWell().getSpot() != null) {
+            instanceContent.add(wellButton.getWell().getSpot());
+        }
         activeButton = wellButton;
     }
 
@@ -124,7 +135,7 @@ public class Plate96Panel extends JPanel {
             }
         }
         Well96Button button = setButtonForSpotActive(spot);
-        if(button==null) {
+        if (button == null) {
             return null;
         }
         return button.getWell();

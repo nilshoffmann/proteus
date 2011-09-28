@@ -19,7 +19,7 @@ import org.openide.util.Exceptions;
  * FIXME possible loss of selection? context is null when action is invoked
  * @author hoffmann
  */
-public final class SpotLabelEditAction implements ActionListener {
+public class SpotLabelEditAction implements ActionListener {
 
     private final ISpot context;
 

@@ -12,6 +12,8 @@ import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 //import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
 import org.openide.util.LookupListener;
@@ -58,7 +60,7 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         }
         WindowManager mgr = WindowManager.getDefault();
         Mode mode = mgr.findMode("output"); //TODO "tools" returns null (this is where we REALLY want our window to be)
-        mode.dockInto(this); 
+        mode.dockInto(this);
     }
 
     /** This method is called from within the constructor to
@@ -120,7 +122,6 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         platePanel.clear();
     }//GEN-LAST:event_jButton1ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel activeSpotLabel;
     private javax.swing.JToggleButton autoAssignSpots;
@@ -137,7 +138,7 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
 //            remove(platePanel);
 //        }
             instanceContent.add(plate);
-            platePanel = new Plate96Panel(plate, instanceContent);
+            platePanel = new Plate96Panel(plate, instanceContent, getLookup());
             setDisplayName("96 Well Plate: " + plate.getName());
             add(platePanel, BorderLayout.CENTER);
 //            CentralLookup.getDefault().remove(plate);
@@ -244,17 +245,18 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         Iterator<? extends ISpot> spotInstances = spotResult.allInstances().iterator();
         if (spotInstances.hasNext()) {
             ISpot spotInstance = spotInstances.next();
-            if(spotInstance!=this.spot) {
-                activeSpotLabel.setText(String.format("# %d @Gel %s",spotInstance.getNumber(),spotInstance.getGel().getName()));
-                if(this.spot!=null) {
+            if (spotInstance != this.spot) {
+
+                activeSpotLabel.setText(String.format("# %d @Gel %s", spotInstance.getNumber(), spotInstance.getGel().getName()));
+                if (this.spot != null) {
                     instanceContent.remove(this.spot);
                 }
                 this.spot = spotInstance;
-                if(this.well96!=null) {
+                if (this.well96 != null) {
                     instanceContent.remove(this.well96);
                 }
                 this.well96 = platePanel.setSpot(this.spot);
-                if(this.well96!=null) {
+                if (this.well96 != null) {
                     instanceContent.add(this.well96);
                 }
                 instanceContent.add(this.spot);
@@ -264,7 +266,7 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         Iterator<? extends IWell384> well384Instances = well384Result.allInstances().iterator();
         if (well384Instances.hasNext()) {
             IWell384 well384Instance = well384Instances.next();
-            if(well384Instance!=this.well384) {
+            if (well384Instance != this.well384) {
                 this.well384 = well384Instance;
                 platePanel.setWell384(this.well384);
             }

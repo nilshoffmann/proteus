@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openide.util.Lookup;
+import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 
 /**
@@ -64,7 +65,9 @@ public class Plate96PanelTest {
 
     @Test
     public void testPlate() {
-        JPanel platePanel = new Plate96Panel(plate,new InstanceContent());
+        InstanceContent ic = new InstanceContent();
+        AbstractLookup lookup = new AbstractLookup(ic);
+        JPanel platePanel = new Plate96Panel(plate,ic,lookup);
         Dialog dialog = new JDialog();
         dialog.add(platePanel);
         dialog.setVisible(true);

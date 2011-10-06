@@ -12,8 +12,6 @@ import java.util.List;
  */
 public interface IWell96 extends IPropertyChangeSource {
 
-    public static final String PROPERTY_NAME = "name";
-
     public static final String PROPERTY_PARENT = "parent";
 
     public static final String PROPERTY_STATUS = "status";

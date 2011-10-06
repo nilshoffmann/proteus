@@ -594,7 +594,6 @@ public final class GelViewerTopComponent extends TopComponent implements
             }
         }
 
-
     }
 
     @Override
@@ -608,11 +607,21 @@ public final class GelViewerTopComponent extends TopComponent implements
                 }
             } else {
                 if (annotation != null) {
-                    ic.remove(annotation.getSecond().getPayload());
+                    ISpot oldSpot = annotation.getSecond().getPayload();
+                    for(ISpot otherOldSpot:oldSpot.getGroup().getSpots()) {
+                        ic.remove(otherOldSpot);
+                    }
                     System.out.println("Setting new annotation");
-                    ic.add(newAnnotation.getSecond().getPayload());
+                    ISpot spot = newAnnotation.getSecond().getPayload();
+                    for(ISpot otherSpot:spot.getGroup().getSpots()) {
+                        ic.add(otherSpot);
+                    }
                 } else {
                     System.out.println("Setting new annotation");
+                    ISpot spot = newAnnotation.getSecond().getPayload();
+                    for(ISpot otherSpot:spot.getGroup().getSpots()) {
+                        ic.add(otherSpot);
+                    }
                     ic.add(newAnnotation.getSecond().getPayload());
                 }
                 annotation = newAnnotation;

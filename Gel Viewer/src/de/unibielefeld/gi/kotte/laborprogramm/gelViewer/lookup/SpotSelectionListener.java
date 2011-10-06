@@ -8,6 +8,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
+import net.sf.maltcms.ui.plot.heatmap.Annotation;
 import net.sf.maltcms.ui.plot.heatmap.HeatmapPanel;
 import net.sf.maltcms.ui.plot.heatmap.painter.AnnotationPainter;
 import org.openide.util.Lookup;
@@ -34,10 +35,16 @@ public class SpotSelectionListener extends AbstractLookupListener<ISpot> {
             Collection<? extends ISpot> spots = getResult().allInstances();
             for (ISpot spot : spots) {
                 AnnotationPainter ap = getContentProviderLookup().lookup(AnnotationPainter.class);
+                //ap.deselectAnnotation();
                 if (ap != null) {
-                    Point2D.Double p = new Point2D.Double(spot.getPosX(), spot.getPosY());
-                    ap.setActivePoint(p);
-                    ap.selectAnnotation();
+                    ap.deselectAnnotation();
+//                    Point2D.Double p = new Point2D.Double(spot.getPosX(), spot.getPosY());
+                    Annotation ann = ap.getAnnotation(spot);
+                    if(ann!=null) {
+                        ap.setActivePoint(ann.getPosition());
+                        ap.selectAnnotation();
+                    }
+                    
 //                    HeatmapPanel jl = getContentProviderLookup().lookup(HeatmapPanel.class);
 //                    if (jl != null) {
 //                        Rectangle2D.Double rect = new Rectangle2D.Double(p.getX() - jl.getBounds().width / 2.0d, p.getY() - jl.getBounds().height / 2.0d, jl.getBounds().width, jl.getBounds().height);

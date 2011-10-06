@@ -113,6 +113,15 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
         }
     }
 
+    public Annotation<T> getAnnotation(T t) {
+        for(Tuple2D<Point2D, Annotation<T>> ann:getAnnotations()) {
+            if(ann.getSecond().getPayload().equals(t)) {
+                return ann.getSecond();
+            }
+        }
+        return null;
+    }
+
     public List<Tuple2D<Point2D, Annotation<T>>> getAnnotations() {
         List<Tuple2D<Point2D, Annotation<T>>> l = new ArrayList<Tuple2D<Point2D, Annotation<T>>>(this.hm.size());
         Iterator<Tuple2D<Point2D, Annotation<T>>> iter = this.hm.getAnnotationIterator();

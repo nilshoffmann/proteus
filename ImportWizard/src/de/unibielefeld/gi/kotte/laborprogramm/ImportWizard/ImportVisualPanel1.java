@@ -5,6 +5,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileFilter;
 
 /**
  * Visual Panel for the Project creation wizard.
@@ -20,7 +21,7 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
     private File baseDirectoryFile;
     private File projectParentDirectoryFile;
     private File excelDataFile;
-    private File lastActiveDirectory;
+    private File lastActiveDirectory = new File(".");
 
     public String getProjectName() {
         return projectNameTextField.getText();
@@ -128,7 +129,7 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
                     .addComponent(projectNameLabel)
                     .addComponent(projectParentDirectoryLabel)
                     .addComponent(projectDirectoryLabel)
-                    .addComponent(separator, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
+                    .addComponent(separator, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
                     .addComponent(baseDirectoryLabel)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(baseDirectoryTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
@@ -195,6 +196,7 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
         if (status == JFileChooser.APPROVE_OPTION) {
             File oldFile = baseDirectoryFile;
             baseDirectoryFile = jfc.getSelectedFile();
+            lastActiveDirectory = baseDirectoryFile;
             baseDirectoryTextField.setText(baseDirectoryFile.getAbsolutePath());
             firePropertyChange(PROPERTY_BASE_DIRECTORY, oldFile, baseDirectoryFile);
         }
@@ -210,6 +212,7 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
         if (status == JFileChooser.APPROVE_OPTION) {
             File oldFile = projectParentDirectoryFile;
             projectParentDirectoryFile = jfc.getSelectedFile();
+            lastActiveDirectory = projectParentDirectoryFile;
             projectParentDirectoryTextField.setText(projectParentDirectoryFile.getAbsolutePath());
             projectDirectoryTextField.setText(projectParentDirectoryFile.getAbsolutePath() + File.separator + projectNameTextField.getText());
             firePropertyChange(PROPERTY_PROJECT_PARENT_DIRECTORY, oldFile, projectParentDirectoryFile);
@@ -219,7 +222,26 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
     private void excelDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excelDataButtonActionPerformed
         JFileChooser jfc = new JFileChooser(lastActiveDirectory);
         //jfc.setCurrentDirectory(new java.io.File("."));
-        jfc.setDialogTitle("Delta2d Excel Export auswÃ¤hlen");
+        FileFilter ff = new FileFilter() {
+
+            @Override
+            public boolean accept(File file) {
+                if(file.isDirectory()) {
+                    return true;
+                }
+                if(file.getName().toLowerCase().endsWith("xlsx")) {
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public String getDescription() {
+                return ".xlsx";
+            }
+        };//"xlsx";
+        jfc.setDialogTitle("Delta2d Excel Export auswählen");
+        jfc.setFileFilter(ff);
         int status = jfc.showOpenDialog(null);
         if (status == JFileChooser.APPROVE_OPTION) {
             File oldFile = excelDataFile;

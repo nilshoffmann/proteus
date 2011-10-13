@@ -36,6 +36,7 @@ public class SpotLabelEditAction implements ActionListener {
             SpotNode bn = new SpotNode(context);
             PropertySheet ps = new PropertySheet();
             ps.setNodes(new Node[]{bn});
+            
             DialogDescriptor bnd = new DialogDescriptor(ps,
                     "Edit Spot Properties");
             Object bndRet = DialogDisplayer.getDefault().notify(bnd);

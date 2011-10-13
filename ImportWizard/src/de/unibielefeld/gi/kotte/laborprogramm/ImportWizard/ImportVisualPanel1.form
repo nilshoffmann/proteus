@@ -22,7 +22,7 @@
                   <Component id="projectNameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="projectParentDirectoryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="projectDirectoryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="separator" alignment="0" pref="416" max="32767" attributes="0"/>
+                  <Component id="separator" alignment="0" pref="424" max="32767" attributes="0"/>
                   <Component id="baseDirectoryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="baseDirectoryTextField" pref="343" max="32767" attributes="1"/>

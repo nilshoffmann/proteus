@@ -29,7 +29,7 @@ public class CreatePlate96Action implements Action {
     public Object getValue(String key) {
         System.out.println("CreatePlate96Action.getValue() called with key: " + key);
         if (key.equals("Name")) {
-            return "erstelle 96 Well Platte";
+            return "Erstelle 96 Well Platte";
         }
         return null;
     }

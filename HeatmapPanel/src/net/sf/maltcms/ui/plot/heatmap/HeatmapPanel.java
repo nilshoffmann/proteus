@@ -145,8 +145,8 @@ public class HeatmapPanel<T> extends JComponent implements
                     getPreferredSize().width, getPreferredSize().height).getBounds());
         } else {
             revalidate();
-            RepaintManager.currentManager(this).markCompletelyDirty(this);
-            RepaintManager.currentManager(this).paintDirtyRegions();
+//            RepaintManager.currentManager(this).markCompletelyDirty(this);
+//            RepaintManager.currentManager(this).paintDirtyRegions();
         }
     }
 

@@ -24,6 +24,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
@@ -49,6 +50,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.NotImplementedException;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 
@@ -73,10 +75,10 @@ public class ProteomicProject implements IProteomicProject {
         getLookup();
     }
 
-    public ProteomicProject(IProject project) {
-        this();
-        this.activeProject = project;
-    }
+//    public ProteomicProject(IProject project) {
+//        this();
+//        this.activeProject = project;
+//    }
 
     private ICrudSession getCrudSession() {
         openSession();
@@ -147,10 +149,17 @@ public class ProteomicProject implements IProteomicProject {
 //        }
 //    }
 
-    public synchronized <T> T retrieve(Class<T> c) {
+    @Override
+    public synchronized <T> Collection<T> retrieve(Class<T> c) {
         Collection<T> coll = getCrudSession().retrieve(c);
-        T t = coll.iterator().next();
-        return t;
+        return coll;
+//        T t = coll.iterator().next();
+//        return t;
+    }
+
+    @Override
+    public <T> void persist(List<T> objects) {
+        getCrudSession().create(objects);
     }
 
     private IProject getFromDB() {
@@ -281,7 +290,8 @@ public class ProteomicProject implements IProteomicProject {
             if (activeProject == null) {
                 activeProject = getFromDB();
             }else{
-                showOverwriteDatabaseDialog(activeProject);
+                ics.create(activeProject);
+//                showOverwriteDatabaseDialog(activeProject);
 //                throw new IllegalStateException("activeProject database is not null! Call close() before opening a new session!");
             }
 //            } else {
@@ -311,7 +321,7 @@ public class ProteomicProject implements IProteomicProject {
         instanceContent.remove(activeProject);
         instanceContent.remove(this);
         activeProject = null;
-        CentralLookup.getDefault().remove(this);
+        //CentralLookup.getDefault().remove(this);
     }
 
     @Override
@@ -415,8 +425,10 @@ public class ProteomicProject implements IProteomicProject {
 
     @Override
     public void setProjectData(IProject project) {
-        showOverwriteDatabaseDialog(project);
-        closeSession();
+        if(activeProject!=null) {
+            throw new IllegalArgumentException("Project is already activated, can not replace project!");
+        }
+        activeProject = project;
         openSession();
     }
 

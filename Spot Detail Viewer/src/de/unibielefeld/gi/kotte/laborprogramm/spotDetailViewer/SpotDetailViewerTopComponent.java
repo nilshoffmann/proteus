@@ -4,9 +4,12 @@
  */
 package de.unibielefeld.gi.kotte.laborprogramm.spotDetailViewer;
 
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import java.awt.BorderLayout;
 import java.beans.IntrospectionException;
+import java.beans.PropertyEditorManager;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -31,6 +34,11 @@ dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.spotDetailViewer//SpotDetailVie
 autostore = false)
 public final class SpotDetailViewerTopComponent extends TopComponent implements
         LookupListener {
+
+    static {
+         PropertyEditorManager.registerEditor(IGel.class, GelPropertyEditor.class);
+         PropertyEditorManager.registerEditor(ISpotGroup.class, SpotGroupPropertyEditor.class);
+    }
 
     private static SpotDetailViewerTopComponent instance;
     /** path to the icon used by the component and its open action */

@@ -24,9 +24,9 @@ public class ProteomicProjectFactory2 implements IProteomicProjectFactory{
     public IProteomicProject createProject(File projdir, IProject project) {
         ProteomicProject proproject = null;
         try {
-            proproject = new ProteomicProject(project);
+            proproject = new ProteomicProject();
             proproject.activate(new File(projdir, ProteomikProjectFactory.PROJECT_FILE).toURI().toURL());
-            proproject.close();
+            proproject.setProjectData(project);
         } catch (MalformedURLException ex) {
             Exceptions.printStackTrace(ex);
         }

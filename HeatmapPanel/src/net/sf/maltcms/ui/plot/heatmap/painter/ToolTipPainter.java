@@ -157,7 +157,7 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
      */
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
-        System.out.println("ToolTipPainter Event: " + pce.getPropertyName());
+//        System.out.println("ToolTipPainter Event: " + pce.getPropertyName());
         if (pce.getPropertyName().equals("annotationPointSelection")) {
 //            System.out.println("ToolTipPainter received annotationPointSelection received for old: " + pce.getOldValue() + " new: " + pce.getNewValue());
             Tuple2D<Point2D, Annotation<T>> oldVal = (Tuple2D<Point2D, Annotation<T>>) pce.getOldValue();

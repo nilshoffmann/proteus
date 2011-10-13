@@ -12,6 +12,7 @@ import org.openide.windows.TopComponent;
  * @author hoffmann
  */
 public interface IRegistry {
+    public TopComponent getTopComponentFor(Object object);
     public void openTopComponent(Object object, Class<? extends TopComponent> topComponentClass);
     public void closeTopComponent(Object object);
 }

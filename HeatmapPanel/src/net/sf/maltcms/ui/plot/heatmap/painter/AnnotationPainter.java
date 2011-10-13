@@ -77,7 +77,7 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
             try {
                 Tuple2D<Point2D, Annotation<T>> tpl = this.hm.getClosestInRadius(activeModelPoint, this.searchRadius);
                 tpl.getSecond().setSelected(true);
-                firePropertyChange("annotations", tpl.getSecond(), null);
+                firePropertyChange("annotations", null, tpl.getSecond());
             } catch (ElementNotFoundException e) {
             }
         }
@@ -88,7 +88,7 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
             try {
                 Tuple2D<Point2D, Annotation<T>> tpl = this.hm.getClosestInRadius(activeModelPoint, this.searchRadius);
                 tpl.getSecond().setSelected(false);
-                firePropertyChange("annotations", tpl.getSecond(), null);
+                firePropertyChange("annotations", null, tpl.getSecond());
             } catch (ElementNotFoundException e) {
             }
         }
@@ -98,7 +98,7 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
         if (activeModelPoint != null) {
             T t = hm.getItemAt(activeModelPoint);
             Annotation<T> a = this.hm.addAnnotation(activeModelPoint, t);
-            firePropertyChange("annotations", a, null);
+            firePropertyChange("annotations", null, a);
         }
     }
 
@@ -107,7 +107,7 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
             try {
                 Tuple2D<Point2D, Annotation<T>> tpl = this.hm.getClosestInRadius(activeModelPoint, 10.0d);
                 Annotation a = this.hm.removeAnnotation(tpl.getFirst());
-                firePropertyChange("annotations", a, null);
+                firePropertyChange("annotations", null, a);
             } catch (ElementNotFoundException fnfe) {
             }
         }

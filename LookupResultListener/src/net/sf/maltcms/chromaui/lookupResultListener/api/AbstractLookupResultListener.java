@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package de.unibielefeld.gi.kotte.laborprogramm.gelViewer.lookup;
+package net.sf.maltcms.chromaui.lookupResultListener.api;
 
 import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
@@ -14,7 +14,7 @@ import org.openide.util.Utilities;
  *
  * @author nilshoffmann
  */
-public abstract class AbstractLookupListener<T> implements LookupListener {
+public abstract class AbstractLookupResultListener<T> implements LookupListener {
 
     private Result<? extends T> result;
 
@@ -22,11 +22,11 @@ public abstract class AbstractLookupListener<T> implements LookupListener {
 
     private Lookup contentProviderLookup;
 
-    public AbstractLookupListener(Class<? extends T> typeToListenFor) {
+    public AbstractLookupResultListener(Class<? extends T> typeToListenFor) {
         this(typeToListenFor,Utilities.actionsGlobalContext());
     }
 
-    public AbstractLookupListener(Class<? extends T> typeToListenFor, Lookup contentProviderLookup) {
+    public AbstractLookupResultListener(Class<? extends T> typeToListenFor, Lookup contentProviderLookup) {
         this.typeToListenFor = typeToListenFor;
         this.contentProviderLookup = contentProviderLookup;
     }

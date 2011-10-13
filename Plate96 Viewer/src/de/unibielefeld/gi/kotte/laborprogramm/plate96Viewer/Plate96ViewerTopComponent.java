@@ -52,10 +52,6 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         setToolTipText(NbBundle.getMessage(Plate96ViewerTopComponent.class, "HINT_Plate96ViewerTopComponent"));
 //        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
 
-        IPlate96 plate = Utilities.actionsGlobalContext().lookup(IPlate96.class);
-        if (plate != null) {
-            initPlateComponent(plate);
-        }
         WindowManager mgr = WindowManager.getDefault();
         Mode mode = mgr.findMode("output"); //TODO "tools" returns null (this is where we REALLY want our window to be)
         mode.dockInto(this);
@@ -143,36 +139,6 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         }
     }
 
-//    /**
-//     * Gets default instance. Do not use directly: reserved for *.settings files only,
-//     * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
-//     * To obtain the singleton instance, use {@link #findInstance}.
-//     */
-//    public static synchronized Plate96ViewerTopComponent getDefault() {
-//        if (instance == null) {
-//            instance = new Plate96ViewerTopComponent();
-//        }
-//        return instance;
-//    }
-//
-//    /**
-//     * Obtain the Plate96ViewerTopComponent instance. Never call {@link #getDefault} directly!
-//     */
-//    public static synchronized Plate96ViewerTopComponent findInstance() {
-//        TopComponent win = WindowManager.getDefault().findTopComponent(PREFERRED_ID);
-//        if (win == null) {
-//            Logger.getLogger(Plate96ViewerTopComponent.class.getName()).warning(
-//                    "Cannot find " + PREFERRED_ID + " component. It will not be located properly in the window system.");
-//            return getDefault();
-//        }
-//        if (win instanceof Plate96ViewerTopComponent) {
-//            return (Plate96ViewerTopComponent) win;
-//        }
-//        Logger.getLogger(Plate96ViewerTopComponent.class.getName()).warning(
-//                "There seem to be multiple components with the '" + PREFERRED_ID
-//                + "' ID. That is a potential source of errors and unexpected behavior.");
-//        return getDefault();
-//    }
     @Override
     public int getPersistenceType() {
         return TopComponent.PERSISTENCE_NEVER;
@@ -180,6 +146,11 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
 
     @Override
     public void componentOpened() {
+        IPlate96 plate = Utilities.actionsGlobalContext().lookup(IPlate96.class);
+        if (plate != null) {
+            initPlateComponent(plate);
+        }
+
         if (result != null) {
             result.addLookupListener(this);
         }

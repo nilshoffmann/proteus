@@ -60,7 +60,7 @@ public class ProjectNode extends AbstractNode implements PropertyChangeListener,
         // adds the node to our own lookup
         this.content.add(this);
         this.content.add(ipp);
-        CentralLookup.getDefault().addActionsGlobalContextListener(IProteomicProject.class);
+        //CentralLookup.getDefault().addActionsGlobalContextListener(IProteomicProject.class);
 //        result = ipp.getLookup().lookupResult(SaveCookie.class);
 //        result.addLookupListener(this);
     }

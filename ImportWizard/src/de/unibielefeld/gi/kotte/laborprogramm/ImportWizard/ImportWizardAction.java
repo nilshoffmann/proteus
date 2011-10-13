@@ -1,6 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.ImportWizard;
 
 import de.unibielefeld.gi.kotte.laborprogramm.dataImporter.ProjectBuilder;
+import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProjectFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
@@ -88,7 +89,8 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
                 }
                 //create Project
                 IProteomicProjectFactory ippf = Lookup.getDefault().lookup(IProteomicProjectFactory.class);
-                ippf.createProject(projectDirectoryFile, p);
+                IProteomicProject pp = ippf.createProject(projectDirectoryFile, p);
+                pp.close();
             } catch (IllegalArgumentException iae) {
                 Exceptions.printStackTrace(iae);
                 projectDirectoryFile.delete();

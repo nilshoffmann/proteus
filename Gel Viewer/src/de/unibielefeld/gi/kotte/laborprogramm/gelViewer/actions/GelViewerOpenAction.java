@@ -4,7 +4,6 @@
  */
 package de.unibielefeld.gi.kotte.laborprogramm.gelViewer.actions;
 
-import de.unibielefeld.gi.kotte.laborprogramm.centralLookup.CentralLookup;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.cookies.IGelOpenCookie;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import java.awt.event.ActionListener;
@@ -21,7 +20,6 @@ public final class GelViewerOpenAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent ev) {
-        CentralLookup.getDefault().add(this.context);
         IGelOpenCookie igoc = Lookup.getDefault().lookup(IGelOpenCookie.class);
         igoc.open();
     }

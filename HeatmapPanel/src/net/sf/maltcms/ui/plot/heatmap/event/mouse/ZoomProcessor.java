@@ -47,7 +47,7 @@ public class ZoomProcessor extends AEventProcessor<Tuple2D<Point2D, Double>> {
     }
 
     public void zoomIn(Point2D point) {
-        System.out.println("ZoomIn");
+//        System.out.println("ZoomIn");
         zoom = Math.min(maxZoom, zoom + zoomDelta);
         result = new Tuple2D<Point2D, Double>(point, zoom);
 //            System.out.println("ZoomProcessor notifying listeners for mouse wheel event!");
@@ -55,7 +55,7 @@ public class ZoomProcessor extends AEventProcessor<Tuple2D<Point2D, Double>> {
     }
 
     public void zoomOut(Point2D point) {
-        System.out.println("ZoomOut");
+//        System.out.println("ZoomOut");
         zoom = Math.max(minZoom, zoom - zoomDelta);
         result = new Tuple2D<Point2D, Double>(point, zoom);
 //            System.out.println("ZoomProcessor notifying listeners for mouse wheel event!");
@@ -65,16 +65,16 @@ public class ZoomProcessor extends AEventProcessor<Tuple2D<Point2D, Double>> {
     @Override
     public void processMouseWheelEvent(MouseWheelEvent mwe, MouseEventType et) {
         super.processMouseWheelEvent(mwe, et);
-        System.out.println("MouseWheelEvent on zoom processor: "+mwe.paramString());
+//        System.out.println("MouseWheelEvent on zoom processor: "+mwe.paramString());
         switch(et) {
             case WHEEL_UP:
-                System.out.println("Wheel up event!");
+//                System.out.println("Wheel up event!");
 //                if (me.isControlDown()) {
                     zoomIn(mwe.getPoint());
 //                }
                 break;
             case WHEEL_DOWN:
-                System.out.println("Wheel down event!");
+//                System.out.println("Wheel down event!");
 //                if (me.isControlDown()) {
                     zoomOut(mwe.getPoint());
 //                }
@@ -85,10 +85,10 @@ public class ZoomProcessor extends AEventProcessor<Tuple2D<Point2D, Double>> {
     @Override
     public void processMouseEvent(MouseEvent me, MouseEventType et) {
         super.processMouseEvent(me, et);
-        System.out.println("MouseEvent on zoom processor: "+me.paramString());
+//        System.out.println("MouseEvent on zoom processor: "+me.paramString());
         switch (et) {
             case CLICKED:
-                System.out.println("Click event!");
+//                System.out.println("Click event!");
                 if (me.isControlDown() && me.getButton() == MouseEvent.BUTTON1) {//UP
                     zoomIn(me.getPoint());
                 } else if (me.isControlDown() && me.getButton() == MouseEvent.BUTTON3) {//DOWN

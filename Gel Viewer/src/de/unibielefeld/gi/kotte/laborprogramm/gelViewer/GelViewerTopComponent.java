@@ -1,18 +1,18 @@
 package de.unibielefeld.gi.kotte.laborprogramm.gelViewer;
 
 import cross.datastructures.tuple.Tuple2D;
-import de.unibielefeld.gi.kotte.laborprogramm.centralLookup.CentralLookup;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.actions.ExportGelAction;
+import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.AnnotationManager;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.dataProvider.GelSpotDataProvider;
-import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.lookup.AbstractLookupListener;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.lookup.SpotSelectionListener;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.theme.ThemeManager;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.topComponentRegistry.api.IRegistryFactory;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
@@ -28,11 +28,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
+import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import net.sf.maltcms.chromaui.lookupResultListener.api.AbstractLookupResultListener;
 import net.sf.maltcms.ui.plot.heatmap.Annotation;
 import net.sf.maltcms.ui.plot.heatmap.HeatmapDataset;
 import net.sf.maltcms.ui.plot.heatmap.HeatmapPanel;
@@ -47,9 +49,10 @@ import net.sf.maltcms.ui.plot.heatmap.painter.PainterLayerUI;
 import net.sf.maltcms.ui.plot.heatmap.painter.ToolTipPainter;
 import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.swingx.painter.CompoundPainter;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
 //import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.DialogDisplayer;
@@ -59,9 +62,12 @@ import org.openide.filesystems.FileUtil;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
+import org.openide.util.RequestProcessor;
+import org.openide.util.TaskListener;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -86,8 +92,9 @@ public final class GelViewerTopComponent extends TopComponent implements
     private Tuple2D<Point2D, Annotation<ISpot>> annotation;
     private Result<IGel> result;
     private JXLayer<JComponent> layer;
-    private List<AbstractLookupListener> lookupListeners;
+    private List<AbstractLookupResultListener> lookupListeners;
     private HeatmapPanel<ISpot> jl;
+    private AnnotationManager annotationManager;
 
     public GelViewerTopComponent() {
         associateLookup(new AbstractLookup(ic));
@@ -98,26 +105,24 @@ public final class GelViewerTopComponent extends TopComponent implements
         setToolTipText(NbBundle.getMessage(GelViewerTopComponent.class,
                 "HINT_GelViewerTopComponent"));
 
-        IGel gel = CentralLookup.getDefault().lookup(IGel.class);
-        if (gel != null) {
-            setGel(gel);
-        }
+//        IGel gel = CentralLookup.getDefault().lookup(IGel.class);
+//        if (gel != null) {
+//            setGel(gel);
+//        }
         SpotSelectionListener all = new SpotSelectionListener(
                 ISpot.class, getLookup());
         all.register(Utilities.actionsGlobalContext());
         lookupListeners = Arrays.asList(
-                new AbstractLookupListener[]{all});
+                new AbstractLookupResultListener[]{all});
     }
 
     public void setGel(IGel gel) {
         System.out.println("Setting gel " + gel);
         if (getLookup().lookup(IGel.class) == null && gel != null) {
             this.ic.add(gel);
-            CentralLookup.getDefault().remove(gel);
+            //CentralLookup.getDefault().remove(gel);
             setDisplayName(gel.getName());
-            addHeatmapPanel(gel);//deregister
-            result.removeLookupListener(this);
-            putClientProperty("print.printable", Boolean.TRUE);
+            addHeatmapPanel(this, gel);//deregister
         } else if (gel == null) {
             putClientProperty("print.printable", Boolean.FALSE);
             throw new IllegalStateException("Gel can not be null!");
@@ -128,78 +133,85 @@ public final class GelViewerTopComponent extends TopComponent implements
         }
     }
 
-    private void addHeatmapPanel(IGel gel) {
-        System.out.println("Loading gel " + gel.getFilename());
-        File file = new File(gel.getFilename());
-        if (file.isAbsolute()) {
-            if (!file.exists()) {
-                Exceptions.printStackTrace(new FileNotFoundException("Could not find referenced file " + file.getPath() + " for gel " + gel.getName()));
-                return;
-            }
-        } else {//resolve relative gel path
-            System.out.println("Resolving gel path agains project basedir!");
-            IProteomicProject p = Utilities.actionsGlobalContext().lookup(
-                    IProteomicProject.class);
-            System.out.println("Using project: " + p);
-            file = new File(FileUtil.toFile(p.getProjectDirectory()), file.getPath());
-        }
-        HeatmapDataset<ISpot> hmd = null;
-        hmd = new HeatmapDataset<ISpot>(new GelSpotDataProvider(file, gel));
-
-        ic.add(hmd);
-        jl = new HeatmapPanel<ISpot>(
-                hmd);
-        hmd.addPropertyChangeListener(this);
-
-        for (ISpot spot : gel.getSpots()) {
-            spot.addPropertyChangeListener(jl);
-            Annotation<ISpot> ann = new SpotAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()), spot);
-
-            hmd.addAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()),
-                    ann);
-        }
-        final IDataProvider hdp = hmd.getDataProvider();
-        //create a tooltip painter for the payload type (here: List<Float>)
-        ToolTipPainter<ISpot, JPanel> tooltipPainter = new ToolTipPainter<ISpot, JPanel>() {
+    private void addHeatmapPanel(final GelViewerTopComponent tc, final IGel gel) {
+        RequestProcessor rp = new RequestProcessor("Gel Loader", 1);
+        RequestProcessor.Task task = rp.create(new Runnable() {
 
             @Override
-            public String getStringFor(Annotation<ISpot> t) {
-                Point2D dataCoord = hdp.getViewToModelTransform().
-                        transform(t.getPosition(), null);
-                return String.format("[x=%.2f|y=%.2f] ",
-                        dataCoord.getX(), dataCoord.getY()) + " Label: " + t.getPayload().getLabel() + " " + t.getPayload().getStatus();//"x="+t.getPosition().getX()+" values: "+t.getPayload();
-            }
-        };
-        //register ToolTipPainter to receive events from dataset
-        hmd.addPropertyChangeListener(tooltipPainter);
-        ic.add(tooltipPainter);
+            public void run() {
+                System.out.println("Loading gel " + gel.getFilename());
+                File file = new File(gel.getFilename());
+                IProteomicProject p = Utilities.actionsGlobalContext().lookup(
+                        IProteomicProject.class);
+                if (file.isAbsolute()) {
+                    if (!file.exists()) {
+                        Exceptions.printStackTrace(new FileNotFoundException("Could not find referenced file " + file.getPath() + " for gel " + gel.getName()));
+                        return;
+                    }
+                } else {//resolve relative gel path
+                    System.out.println("Resolving gel path agains project basedir!");
 
-        //create an annotation painter
-        AnnotationPainter<ISpot, JPanel> annotationPainter = new AnnotationPainter<ISpot, JPanel>(
-                hmd) {
-        };
-        annotationPainter.setSearchRadius(10.0d);
+                    System.out.println("Using project: " + p);
+                    file = new File(FileUtil.toFile(p.getProjectDirectory()), file.getPath());
+                }
+                HeatmapDataset<ISpot> hmd = null;
+                hmd = new HeatmapDataset<ISpot>(new GelSpotDataProvider(file, gel));
 
-        //wire tooltip painter to annotation painter, to display selected annotations
+                ic.add(hmd);
+                jl = new HeatmapPanel<ISpot>(
+                        hmd);
+                hmd.addPropertyChangeListener(tc);
+                annotationManager = new AnnotationManager(p, gel, hmd, jl);
+                annotationManager.open();
+//        for (ISpot spot : gel.getSpots()) {
+//            spot.addPropertyChangeListener(jl);
+//            Annotation<ISpot> ann = new SpotAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()), spot);
+//
+//            hmd.addAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()),
+//                    ann);
+//        }
+                final IDataProvider hdp = hmd.getDataProvider();
+                //create a tooltip painter for the payload type (here: List<Float>)
+                ToolTipPainter<ISpot, JPanel> tooltipPainter = new ToolTipPainter<ISpot, JPanel>() {
+
+                    @Override
+                    public String getStringFor(Annotation<ISpot> t) {
+                        Point2D dataCoord = hdp.getViewToModelTransform().
+                                transform(t.getPosition(), null);
+                        return String.format("[x=%.2f|y=%.2f] ",
+                                dataCoord.getX(), dataCoord.getY()) + " Label: " + t.getPayload().getLabel() + " " + t.getPayload().getStatus();//"x="+t.getPosition().getX()+" values: "+t.getPayload();
+                    }
+                };
+                //register ToolTipPainter to receive events from dataset
+                hmd.addPropertyChangeListener(tooltipPainter);
+                ic.add(tooltipPainter);
+
+                //create an annotation painter
+                AnnotationPainter<ISpot, JPanel> annotationPainter = new AnnotationPainter<ISpot, JPanel>(
+                        hmd) {
+                };
+                annotationPainter.setSearchRadius(10.0d);
+
+                //wire tooltip painter to annotation painter, to display selected annotations
 //                tooltipPainter.addPropertyChangeListener(annotationPainter);
-        annotationPainter.addPropertyChangeListener(tooltipPainter);
-        annotationPainter.addPropertyChangeListener(this);
+                annotationPainter.addPropertyChangeListener(tooltipPainter);
+                annotationPainter.addPropertyChangeListener(tc);
 
-        ic.add(annotationPainter);
+                ic.add(annotationPainter);
 
-        //the PointSelectionProcessor will handle selection of single points
-        PointSelectionProcessor pointSelectionProcessor = new PointSelectionProcessor();
-        //register tooltip painter to receive events only, if shift is down
-        pointSelectionProcessor.addListener(tooltipPainter,
-                MouseEvent.BUTTON1_DOWN_MASK | MouseEvent.SHIFT_DOWN_MASK);
+                //the PointSelectionProcessor will handle selection of single points
+                PointSelectionProcessor pointSelectionProcessor = new PointSelectionProcessor();
+                //register tooltip painter to receive events only, if shift is down
+                pointSelectionProcessor.addListener(tooltipPainter,
+                        MouseEvent.BUTTON1_DOWN_MASK | MouseEvent.SHIFT_DOWN_MASK);
 //        pointSelectionProcessor.addListener(tooltipPainter,
 //                );
-        //register annotation painter to receive all events
-        pointSelectionProcessor.addListener(annotationPainter,
-                MouseEvent.BUTTON1_DOWN_MASK);
+                //register annotation painter to receive all events
+                pointSelectionProcessor.addListener(annotationPainter,
+                        MouseEvent.BUTTON1_DOWN_MASK);
 //        pointSelectionProcessor.addListener(annotationPainter,
 //                MouseEvent.BUTTON1_DOWN_MASK);
-        ic.add(pointSelectionProcessor);
+                ic.add(pointSelectionProcessor);
 
 //        //create actions
 //        //add an annotation at active position
@@ -220,45 +232,45 @@ public final class GelViewerTopComponent extends TopComponent implements
 //        RectangularSelectionProcessor rsp = new RectangularSelectionProcessor();
 //        rsp.addListener(srp);
 
-        //create a zoom processor
-        ZoomProcessor zoomProcessor = new ZoomProcessor();
-        //register dataset for zoom events
-        zoomProcessor.addListener(hmd);
-        zoomProcessor.setMinZoom(0.25d);
-        zoomProcessor.setMaxZoom(4.0d);
-        zoomProcessor.setZoomDelta(0.25d);
-        zoomProcessor.addListener(this);
-        ic.add(zoomProcessor);
+                //create a zoom processor
+                ZoomProcessor zoomProcessor = new ZoomProcessor();
+                //register dataset for zoom events
+                zoomProcessor.addListener(hmd);
+                zoomProcessor.setMinZoom(0.25d);
+                zoomProcessor.setMaxZoom(4.0d);
+                zoomProcessor.setZoomDelta(0.25d);
+                zoomProcessor.addListener(tc);
+                ic.add(zoomProcessor);
 
-        //set up the mouse event processor chain with zoomProcessor and pointSelectionProcessor
-        MouseEventProcessorChain mouseEventProcessorChain = new MouseEventProcessorChain(
-                zoomProcessor, pointSelectionProcessor);
+                //set up the mouse event processor chain with zoomProcessor and pointSelectionProcessor
+                MouseEventProcessorChain mouseEventProcessorChain = new MouseEventProcessorChain(
+                        zoomProcessor, pointSelectionProcessor);
 
-        //Compound painter and jxlayer
-        CompoundPainter<JComponent> compoundPainter = new CompoundPainter<JComponent>(
-                annotationPainter, tooltipPainter);
-        PainterLayerUI<JComponent> plui = new PainterLayerUI<JComponent>(
-                compoundPainter);
-        layer = new JXLayer<JComponent>(jl,
-                plui);
+                //Compound painter and jxlayer
+                CompoundPainter<JComponent> compoundPainter = new CompoundPainter<JComponent>(
+                        annotationPainter, tooltipPainter);
+                PainterLayerUI<JComponent> plui = new PainterLayerUI<JComponent>(
+                        compoundPainter);
+                layer = new JXLayer<JComponent>(jl,
+                        plui);
 
-        //register layer ui with HeatmapPanel for transformation events
-        jl.addPropertyChangeListener(HeatmapDataset.PROP_TRANSFORM, plui);
-        //register mouse and key listeners
-        jl.addMouseListener(mouseEventProcessorChain);
-        jl.addMouseMotionListener(mouseEventProcessorChain);
-        jl.addMouseWheelListener(mouseEventProcessorChain);
-        layer.addKeyListener(pointSelectionProcessor);
+                //register layer ui with HeatmapPanel for transformation events
+                jl.addPropertyChangeListener(HeatmapDataset.PROP_TRANSFORM, plui);
+                //register mouse and key listeners
+                jl.addMouseListener(mouseEventProcessorChain);
+                jl.addMouseMotionListener(mouseEventProcessorChain);
+                jl.addMouseWheelListener(mouseEventProcessorChain);
+                layer.addKeyListener(pointSelectionProcessor);
 
-        //Property change support for repaints at CompoundPainter
-        compoundPainter.addPropertyChangeListener(layer);
+                //Property change support for repaints at CompoundPainter
+                compoundPainter.addPropertyChangeListener(layer);
 
-        //Frame setup
-        JScrollPane jsp = new JScrollPane(layer);//, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        jsp.getVerticalScrollBar().getAccessibleContext().
-                addPropertyChangeListener(annotationPainter);
-        jsp.getHorizontalScrollBar().getAccessibleContext().
-                addPropertyChangeListener(annotationPainter);
+                //Frame setup
+                JScrollPane jsp = new JScrollPane(layer);//, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                jsp.getVerticalScrollBar().getAccessibleContext().
+                        addPropertyChangeListener(annotationPainter);
+                jsp.getHorizontalScrollBar().getAccessibleContext().
+                        addPropertyChangeListener(annotationPainter);
 
 //                Rule columnView = new Rule(hmd,Rule.HORIZONTAL, true);
 //                Rule rowView = new Rule(hmd,Rule.VERTICAL, true);
@@ -272,29 +284,51 @@ public final class GelViewerTopComponent extends TopComponent implements
 ////
 //                jsp.setColumnHeaderView(columnView);
 //                jsp.setRowHeaderView(rowView);
-        jsp.setWheelScrollingEnabled(true);
+                jsp.setWheelScrollingEnabled(true);
 
-        jsp.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+                jsp.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 
-        jsp.setCorner(JScrollPane.UPPER_LEFT_CORNER, new Corner());
-        jsp.setCorner(JScrollPane.LOWER_RIGHT_CORNER,
-                new Corner());
-        jsp.setCorner(JScrollPane.LOWER_LEFT_CORNER,
-                new Corner());
-        jsp.setCorner(JScrollPane.UPPER_RIGHT_CORNER,
-                new Corner());
+                jsp.setCorner(JScrollPane.UPPER_LEFT_CORNER, new Corner());
+                jsp.setCorner(JScrollPane.LOWER_RIGHT_CORNER,
+                        new Corner());
+                jsp.setCorner(JScrollPane.LOWER_LEFT_CORNER,
+                        new Corner());
+                jsp.setCorner(JScrollPane.UPPER_RIGHT_CORNER,
+                        new Corner());
 
-        add(jsp, BorderLayout.CENTER);
+                tc.add(jsp, BorderLayout.CENTER);
 
 //        } catch (IOException ex) {
 //            Exceptions.printStackTrace(ex);
 //        }
-        jToolBar1.add(new ExportGelAction("Save", jl, annotationPainter,
-                gel));
-        requestFocusInWindow(true);
-        jl.requestFocusInWindow();
-        ic.add(jl);
-        revalidate();
+                jToolBar1.add(new ExportGelAction("Save", jl, annotationPainter,
+                        gel));
+
+                jl.requestFocusInWindow();
+                ic.add(jl);
+                result.removeLookupListener(tc);
+                tc.putClientProperty("print.printable", Boolean.TRUE);
+                tc.requestFocusInWindow(true);
+                tc.revalidate();
+            }
+        });
+        final ProgressHandle ph = ProgressHandleFactory.createHandle("Loading gel " + gel.getName(), task);
+        task.addTaskListener(new TaskListener() {
+
+            @Override
+            public void taskFinished(org.openide.util.Task task) {
+                //make sure that we get rid of the ProgressHandle
+                //when the task is finished
+                ph.finish();
+            }
+        });
+
+        //start the progresshandle the progress UI will show 500s after
+        ph.start();
+
+        //this actually start the task
+        task.schedule(0);
+
 //        repaint();
     }
 
@@ -449,36 +483,43 @@ public final class GelViewerTopComponent extends TopComponent implements
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         ThemeManager tm = ThemeManager.getInstance();
         HeatmapDataset ds = getLookup().lookup(HeatmapDataset.class);
-        if (ds != null) {
-            SpotAnnotation sa = null;
-            Iterator<?> iter = ds.getAnnotationIterator();
-            while (iter.hasNext() && sa == null) {
-                Tuple2D<Point2D, Annotation<?>> tple = (Tuple2D<Point2D, Annotation<?>>)iter.next();
-                sa = (SpotAnnotation)tple.getSecond();
-            }
+        if (ds != null && annotation!=null) {
+            SpotAnnotation sa = (SpotAnnotation)annotation.getSecond();
             PropertySheet ps = new PropertySheet();
             try {
                 ps.setNodes(new Node[]{new BeanNode(sa)});
             } catch (IntrospectionException ex) {
                 Exceptions.printStackTrace(ex);
             }
-            NotifyDescriptor nd = new NotifyDescriptor.Confirmation(ps, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE);
+            JPanel jp = new JPanel();
+            BoxLayout bl = new BoxLayout(jp,BoxLayout.Y_AXIS);
+            jp.setLayout(bl);
+            jp.add(ps);
+            final JCheckBox applyToAll = new JCheckBox("Apply Settings to All Spots", true);
+            jp.add(applyToAll);
+            NotifyDescriptor nd = new NotifyDescriptor.Confirmation(jp, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE);
             Object obj = DialogDisplayer.getDefault().notify(nd);
             if (obj == NotifyDescriptor.OK_OPTION) {
-                Iterator<?> iter2 = ds.getAnnotationIterator();
-                while (iter2.hasNext()) {
-                    Tuple2D<Point2D, Annotation<?>> tple = (Tuple2D<Point2D, Annotation<?>>)iter2.next();
-                    SpotAnnotation spot = (SpotAnnotation) tple.getSecond();
-                    spot.setFillColor(sa.getFillColor());
-                    spot.setLineColor(sa.getLineColor());
-                    spot.setFont(sa.getFont());
-                    spot.setSelectedFillColor(sa.getSelectedFillColor());
-                    spot.setSelectedStrokeColor(sa.getSelectedStrokeColor());
-                    spot.setSelectionCrossColor(sa.getSelectionCrossColor());
-                    spot.setStrokeColor(sa.getStrokeColor());
-                    spot.setTextColor(sa.getTextColor());
-                    spot.setDrawSpotBox(sa.isDrawSpotBox());
-                    spot.setDrawSpotID(sa.isDrawSpotID());
+                if (applyToAll.isSelected()) {
+                    Iterator<?> iter2 = ds.getAnnotationIterator();
+                    while (iter2.hasNext()) {
+                        Tuple2D<Point2D, Annotation<?>> tple = (Tuple2D<Point2D, Annotation<?>>) iter2.next();
+                        SpotAnnotation spot = (SpotAnnotation) tple.getSecond();
+                        spot.setFillColor(sa.getFillColor());
+                        spot.setLineColor(sa.getLineColor());
+                        spot.setFont(sa.getFont());
+                        spot.setSelectedFillColor(sa.getSelectedFillColor());
+                        spot.setSelectedStrokeColor(sa.getSelectedStrokeColor());
+                        spot.setSelectionCrossColor(sa.getSelectionCrossColor());
+                        spot.setStrokeColor(sa.getStrokeColor());
+                        spot.setTextColor(sa.getTextColor());
+                        spot.setDrawSpotBox(sa.isDrawSpotBox());
+                        spot.setDrawSpotId(sa.isDrawSpotId());
+                        spot.setDisplacementX(sa.getDisplacementX());
+                        spot.setDisplacementY(sa.getDisplacementY());
+                        spot.setFillAlpha(sa.getFillAlpha());
+                        spot.setStrokeAlpha(sa.getStrokeAlpha());
+                    }
                 }
                 repaint();
             }
@@ -495,38 +536,37 @@ public final class GelViewerTopComponent extends TopComponent implements
     private javax.swing.JTextField zoomDisplay;
     // End of variables declaration//GEN-END:variables
 
-    /**
-     * Gets default instance. Do not use directly: reserved for *.settings files only,
-     * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
-     * To obtain the singleton instance, use {@link #findInstance}.
-     */
-    public static synchronized GelViewerTopComponent getDefault() {
-        if (instance == null) {
-            instance = new GelViewerTopComponent();
-        }
-        return instance;
-    }
-
-    /**
-     * Obtain the GelViewerTopComponent instance. Never call {@link #getDefault} directly!
-     */
-    public static synchronized GelViewerTopComponent findInstance() {
-        TopComponent win = WindowManager.getDefault().findTopComponent(
-                PREFERRED_ID);
-        if (win == null) {
-            Logger.getLogger(GelViewerTopComponent.class.getName()).warning(
-                    "Cannot find " + PREFERRED_ID + " component. It will not be located properly in the window system.");
-            return getDefault();
-        }
-        if (win instanceof GelViewerTopComponent) {
-            return (GelViewerTopComponent) win;
-        }
-        Logger.getLogger(GelViewerTopComponent.class.getName()).warning(
-                "There seem to be multiple components with the '" + PREFERRED_ID
-                + "' ID. That is a potential source of errors and unexpected behavior.");
-        return getDefault();
-    }
-
+//    /**
+//     * Gets default instance. Do not use directly: reserved for *.settings files only,
+//     * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
+//     * To obtain the singleton instance, use {@link #findInstance}.
+//     */
+//    public static synchronized GelViewerTopComponent getDefault() {
+//        if (instance == null) {
+//            instance = new GelViewerTopComponent();
+//        }
+//        return instance;
+//    }
+//
+//    /**
+//     * Obtain the GelViewerTopComponent instance. Never call {@link #getDefault} directly!
+//     */
+//    public static synchronized GelViewerTopComponent findInstance() {
+//        TopComponent win = WindowManager.getDefault().findTopComponent(
+//                PREFERRED_ID);
+//        if (win == null) {
+//            Logger.getLogger(GelViewerTopComponent.class.getName()).warning(
+//                    "Cannot find " + PREFERRED_ID + " component. It will not be located properly in the window system.");
+//            return getDefault();
+//        }
+//        if (win instanceof GelViewerTopComponent) {
+//            return (GelViewerTopComponent) win;
+//        }
+//        Logger.getLogger(GelViewerTopComponent.class.getName()).warning(
+//                "There seem to be multiple components with the '" + PREFERRED_ID
+//                + "' ID. That is a potential source of errors and unexpected behavior.");
+//        return getDefault();
+//    }
     @Override
     public int getPersistenceType() {
         return TopComponent.PERSISTENCE_NEVER;
@@ -540,7 +580,7 @@ public final class GelViewerTopComponent extends TopComponent implements
 //        spotSelection = Utilities.actionsGlobalContext().lookupResult(
 //                ISpot.class);
 //        spotSelection.addLookupListener(this);
-        for (AbstractLookupListener all : lookupListeners) {
+        for (AbstractLookupResultListener all : lookupListeners) {
             all.register(Utilities.actionsGlobalContext());
         }
         requestActive();
@@ -551,8 +591,12 @@ public final class GelViewerTopComponent extends TopComponent implements
         if (result != null) {
             result.removeLookupListener(this);
         }
-        for (AbstractLookupListener all : lookupListeners) {
+        for (AbstractLookupResultListener all : lookupListeners) {
             all.deregister();
+        }
+        IGel gel = getLookup().lookup(IGel.class);
+        if (gel != null) {
+            Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().closeTopComponent(gel);
         }
     }
 
@@ -600,39 +644,54 @@ public final class GelViewerTopComponent extends TopComponent implements
     public void propertyChange(PropertyChangeEvent evt) {
         if ("annotationPointSelection".equals(evt.getPropertyName())) {
             Tuple2D<Point2D, Annotation<ISpot>> newAnnotation = (Tuple2D<Point2D, Annotation<ISpot>>) evt.getNewValue();
-            //reset current selection
-            if (newAnnotation == null) {
-                if (annotation != null) {
-                    ic.remove(annotation.getSecond().getPayload());
-                }
-            } else {
-                if (annotation != null) {
-                    ISpot oldSpot = annotation.getSecond().getPayload();
-                    for(ISpot otherOldSpot:oldSpot.getGroup().getSpots()) {
-                        ic.remove(otherOldSpot);
-                    }
-                    System.out.println("Setting new annotation");
-                    ISpot spot = newAnnotation.getSecond().getPayload();
-                    for(ISpot otherSpot:spot.getGroup().getSpots()) {
-                        ic.add(otherSpot);
-                    }
-                } else {
-                    System.out.println("Setting new annotation");
-                    ISpot spot = newAnnotation.getSecond().getPayload();
-                    for(ISpot otherSpot:spot.getGroup().getSpots()) {
-                        ic.add(otherSpot);
-                    }
-                    ic.add(newAnnotation.getSecond().getPayload());
-                }
-                annotation = newAnnotation;
-//                Rectangle2D.Double rect = new Rectangle2D.Double(annotation.getFirst().getX() - jl.getBounds().width / 2.0d, annotation.getFirst().getY() - jl.getBounds().height / 2.0d, jl.getBounds().width, jl.getBounds().height);
-//                if (jl != null) {
-//                    jl.scrollRectToVisible(rect.getBounds());
-//                }
-            }
+            //adjust current selection
+            setSelection(newAnnotation);
         } else {
             repaint();
         }
+    }
+
+    protected void setSelection(Tuple2D<Point2D, Annotation<ISpot>> newAnnotation) {
+        if (newAnnotation == null) {
+            resetSelection();
+        } else {
+            if (annotation != null) {
+                resetSelection();
+            }
+            Annotation<ISpot> sa = newAnnotation.getSecond();
+            if (sa != null) {
+                ic.add(sa);
+                ISpot spot = newAnnotation.getSecond().getPayload();
+                if (spot != null) {
+                    ic.add(spot);
+                    ISpotGroup group = spot.getGroup();
+                    if (group != null) {
+                        ic.add(group);
+                    }
+                }
+                annotation = newAnnotation;
+                sa.addPropertyChangeListener(this);
+            }
+        }
+    }
+
+    protected void resetSelection() {
+        if (annotation != null) {
+            Annotation<ISpot> sa = annotation.getSecond();
+            if (sa != null) {
+                sa.removePropertyChangeListener(this);
+                ic.remove(sa);
+                ISpot oldSpot = sa.getPayload();
+                if (oldSpot != null) {
+                    ic.remove(oldSpot);
+                    ISpotGroup group = oldSpot.getGroup();
+                    if (group != null) {
+                        ic.remove(group);
+                    }
+                }
+            }
+        }
+        annotation = null;
     }
 
     @Override

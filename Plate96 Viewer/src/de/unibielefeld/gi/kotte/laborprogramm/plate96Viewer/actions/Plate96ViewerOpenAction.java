@@ -15,11 +15,11 @@ import org.openide.util.Lookup;
  * @author hoffmann
  */
 public final class Plate96ViewerOpenAction implements ActionListener {
-//    private final IPlate96 context;
+    private final IPlate96 context;
 
     public Plate96ViewerOpenAction(IPlate96 context) {
         assert context != null;
-//        this.context = context;
+        this.context = context;
     }
 
     @Override

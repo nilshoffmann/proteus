@@ -14,7 +14,7 @@ import org.openide.util.Utilities;
  *
  * @author nilshoffmann
  */
-public abstract class AbstractLookupResultListener<T> implements LookupListener {
+public abstract class AbstractLookupResultListener<T> implements LookupListener, ILookupResultListener {
 
     private Result<? extends T> result;
 
@@ -31,11 +31,13 @@ public abstract class AbstractLookupResultListener<T> implements LookupListener 
         this.contentProviderLookup = contentProviderLookup;
     }
 
+    @Override
     public void register(Lookup targetLookup) {
         result = targetLookup.lookupResult(typeToListenFor);
         result.addLookupListener(this);
     }
 
+    @Override
     public void deregister() {
         result.removeLookupListener(this);
         result = null;

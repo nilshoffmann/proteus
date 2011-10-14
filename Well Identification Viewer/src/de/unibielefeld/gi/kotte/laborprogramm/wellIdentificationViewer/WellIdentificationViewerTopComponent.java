@@ -2,19 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.unibielefeld.gi.kotte.laborprogramm.spotDetailViewer;
+package de.unibielefeld.gi.kotte.laborprogramm.wellIdentificationViewer;
 
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IWellIdentification;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import java.awt.BorderLayout;
 import java.beans.IntrospectionException;
-import java.beans.PropertyEditorManager;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
-import org.openide.util.Exceptions;
-import org.openide.util.LookupEvent;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -22,7 +18,9 @@ import org.openide.windows.WindowManager;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.explorer.propertysheet.PropertySheet;
 import org.openide.nodes.BeanNode;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup.Result;
+import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.Utilities;
 
@@ -30,33 +28,29 @@ import org.openide.util.Utilities;
  * Top component which displays something.
  */
 @ConvertAsProperties(
-dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.spotDetailViewer//SpotDetailViewer//EN",
+dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.wellIdentificationViewer//WellIdentificationViewer//EN",
 autostore = false)
-public final class SpotDetailViewerTopComponent extends TopComponent implements
-        LookupListener {
+public final class WellIdentificationViewerTopComponent extends TopComponent
+        implements LookupListener {
 
-    static {
-         PropertyEditorManager.registerEditor(IGel.class, GelPropertyEditor.class);
-         PropertyEditorManager.registerEditor(ISpotGroup.class, SpotGroupPropertyEditor.class);
-    }
-
-    private static SpotDetailViewerTopComponent instance;
+    private static WellIdentificationViewerTopComponent instance;
     /** path to the icon used by the component and its open action */
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
-    private static final String PREFERRED_ID = "SpotDetailViewerTopComponent";
+    private static final String PREFERRED_ID = "WellIdentificationViewerTopComponent";
     private PropertySheet ps;
-    private Result<ISpot> result;
+    private Result<IWell384> result;
 
-    public SpotDetailViewerTopComponent() {
+    public WellIdentificationViewerTopComponent() {
         initComponents();
-        setName(NbBundle.getMessage(SpotDetailViewerTopComponent.class,
-                "CTL_SpotDetailViewerTopComponent"));
-        setToolTipText(NbBundle.getMessage(SpotDetailViewerTopComponent.class,
-                "HINT_SpotDetailViewerTopComponent"));
+        setName(NbBundle.getMessage(WellIdentificationViewerTopComponent.class,
+                "CTL_WellIdentificationViewerTopComponent"));
+        setToolTipText(NbBundle.getMessage(
+                WellIdentificationViewerTopComponent.class,
+                "HINT_WellIdentificationViewerTopComponent"));
 //        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
         ps = new PropertySheet();
         add(ps, BorderLayout.CENTER);
-        result = Utilities.actionsGlobalContext().lookupResult(ISpot.class);
+        result = Utilities.actionsGlobalContext().lookupResult(IWell384.class);
     }
 
     /** This method is called from within the constructor to
@@ -67,7 +61,16 @@ public final class SpotDetailViewerTopComponent extends TopComponent implements
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setLayout(new java.awt.BorderLayout());
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -77,29 +80,31 @@ public final class SpotDetailViewerTopComponent extends TopComponent implements
      * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
      * To obtain the singleton instance, use {@link #findInstance}.
      */
-    public static synchronized SpotDetailViewerTopComponent getDefault() {
+    public static synchronized WellIdentificationViewerTopComponent getDefault() {
         if (instance == null) {
-            instance = new SpotDetailViewerTopComponent();
+            instance = new WellIdentificationViewerTopComponent();
         }
         return instance;
     }
 
     /**
-     * Obtain the SpotDetailViewerTopComponent instance. Never call {@link #getDefault} directly!
+     * Obtain the WellIdentificationViewerTopComponent instance. Never call {@link #getDefault} directly!
      */
-    public static synchronized SpotDetailViewerTopComponent findInstance() {
+    public static synchronized WellIdentificationViewerTopComponent findInstance() {
         TopComponent win = WindowManager.getDefault().findTopComponent(
                 PREFERRED_ID);
         if (win == null) {
-            Logger.getLogger(SpotDetailViewerTopComponent.class.getName()).
+            Logger.getLogger(
+                    WellIdentificationViewerTopComponent.class.getName()).
                     warning(
                     "Cannot find " + PREFERRED_ID + " component. It will not be located properly in the window system.");
             return getDefault();
         }
-        if (win instanceof SpotDetailViewerTopComponent) {
-            return (SpotDetailViewerTopComponent) win;
+        if (win instanceof WellIdentificationViewerTopComponent) {
+            return (WellIdentificationViewerTopComponent) win;
         }
-        Logger.getLogger(SpotDetailViewerTopComponent.class.getName()).warning(
+        Logger.getLogger(WellIdentificationViewerTopComponent.class.getName()).
+                warning(
                 "There seem to be multiple components with the '" + PREFERRED_ID
                 + "' ID. That is a potential source of errors and unexpected behavior.");
         return getDefault();
@@ -148,11 +153,14 @@ public final class SpotDetailViewerTopComponent extends TopComponent implements
     @Override
     public void resultChanged(LookupEvent ev) {
         List<BeanNode> nodeList = new LinkedList<BeanNode>();
-        for (ISpot spot : result.allInstances()) {
-            try {
-                nodeList.add(new BeanNode(spot));
-            } catch (IntrospectionException ex) {
-                Exceptions.printStackTrace(ex);
+        for (IWell384 spot : result.allInstances()) {
+            IWellIdentification ident = spot.getIdentification();
+            if (ident != null && !ident.getIdentifications().isEmpty()) {
+                try {
+                    nodeList.add(new WellIdentificationNode(ident));
+                } catch (IntrospectionException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
         }
         if (!nodeList.isEmpty()) {

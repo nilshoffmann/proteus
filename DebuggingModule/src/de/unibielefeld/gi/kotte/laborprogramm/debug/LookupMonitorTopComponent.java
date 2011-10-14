@@ -31,9 +31,7 @@ public final class LookupMonitorTopComponent extends TopComponent implements
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
     private static final String PREFERRED_ID = "LookupMonitorTopComponent";
     private Result<Object> r = null;
-    private Result<Object> centralLookupResult = null;
     private DefaultListModel dlm = new DefaultListModel();
-    private DefaultListModel dlm2 = new DefaultListModel();
 
     public LookupMonitorTopComponent() {
         initComponents();
@@ -56,9 +54,6 @@ public final class LookupMonitorTopComponent extends TopComponent implements
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList();
-        jLabel2 = new javax.swing.JLabel();
 
         jList1.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -69,15 +64,6 @@ public final class LookupMonitorTopComponent extends TopComponent implements
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(LookupMonitorTopComponent.class, "LookupMonitorTopComponent.jLabel1.text")); // NOI18N
 
-        jList2.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane2.setViewportView(jList2);
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(LookupMonitorTopComponent.class, "LookupMonitorTopComponent.jLabel2.text")); // NOI18N
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -86,9 +72,7 @@ public final class LookupMonitorTopComponent extends TopComponent implements
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
-                    .addComponent(jLabel1)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
-                    .addComponent(jLabel2))
+                    .addComponent(jLabel1))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -98,20 +82,13 @@ public final class LookupMonitorTopComponent extends TopComponent implements
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JList jList1;
-    private javax.swing.JList jList2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -155,18 +132,12 @@ public final class LookupMonitorTopComponent extends TopComponent implements
     public void componentOpened() {
         r = Utilities.actionsGlobalContext().lookupResult(Object.class);
         r.addLookupListener(this);
-        centralLookupResult = CentralLookup.getDefault().lookupResult(
-                Object.class);
-        centralLookupResult.addLookupListener(this);
     }
 
     @Override
     public void componentClosed() {
         if(r!=null) {
             r.removeLookupListener(this);
-        }
-        if(centralLookupResult!=null) {
-            centralLookupResult.removeLookupListener(this);
         }
     }
 
@@ -201,13 +172,6 @@ public final class LookupMonitorTopComponent extends TopComponent implements
                 dlm.addElement(obj);
             }
             jList1.setModel(dlm);
-        }
-        if (centralLookupResult != null) {
-            dlm2 = new DefaultListModel();
-            for (Object obj : centralLookupResult.allInstances()) {
-                dlm2.addElement(obj);
-            }
-            jList2.setModel(dlm2);
         }
     }
 }

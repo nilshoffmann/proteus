@@ -1,6 +1,5 @@
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 
-import de.unibielefeld.gi.kotte.laborprogramm.centralLookup.CentralLookup;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.CreatePlate384Action;
 import de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.CreatePlate96Action;
@@ -60,9 +59,6 @@ public class ProjectNode extends AbstractNode implements PropertyChangeListener,
         // adds the node to our own lookup
         this.content.add(this);
         this.content.add(ipp);
-        //CentralLookup.getDefault().addActionsGlobalContextListener(IProteomicProject.class);
-//        result = ipp.getLookup().lookupResult(SaveCookie.class);
-//        result.addLookupListener(this);
     }
 
     @Override

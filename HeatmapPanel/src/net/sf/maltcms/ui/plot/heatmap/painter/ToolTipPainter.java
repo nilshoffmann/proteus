@@ -102,6 +102,10 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
             Paint fill = new Color(250, 250, 210, 240);
             Paint border = new Color(218, 165, 32, 240);
             String label = getStringFor(a.getSecond());
+            AffineTransform origTrans = g.getTransform();
+
+            //return to standard coordinate system
+            g.setTransform(AffineTransform.getTranslateInstance(0, 0));
             Tuple2D<Rectangle2D, Point2D> tple = PainterTools.getBoundingBox(fill, border, label, g, 10);
             Rectangle2D r = tple.getFirst();
             double lshift = margin;
@@ -116,14 +120,12 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
             double finaly = Math.max(margin, lineCross.getY() + ushift - r.getY());
 
             AffineTransform transl = AffineTransform.getTranslateInstance(finalx, finaly);
-            transl.concatenate(at);
-//            AffineTransform transf = g.getTransform();
-            //transforms.push(g.getTransform());
-//            transforms.push(at);
             g.setTransform(transl);
 
             drawLabelBox(g, fill, r, border, label, tple);
+            g.setTransform(origTrans);
             g.setTransform(transforms.pop());
+
         }
         g.setClip(clip);
     }

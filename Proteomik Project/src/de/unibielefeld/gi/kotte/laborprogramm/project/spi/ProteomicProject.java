@@ -1,30 +1,20 @@
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi;
 
 //import de.unibielefeld.gi.kotte.laborprogramm.centralLookup.CentralLookup;
-import de.unibielefeld.gi.kotte.laborprogramm.centralLookup.CentralLookup;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroup;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroup;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
+import de.unibielefeld.gi.kotte.laborprogramm.topComponentRegistry.api.IRegistryFactory;
 import java.awt.BorderLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
@@ -50,7 +40,6 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
-import org.openide.util.NotImplementedException;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 
@@ -291,12 +280,7 @@ public class ProteomicProject implements IProteomicProject {
                 activeProject = getFromDB();
             }else{
                 ics.create(activeProject);
-//                showOverwriteDatabaseDialog(activeProject);
-//                throw new IllegalStateException("activeProject database is not null! Call close() before opening a new session!");
             }
-//            } else {
-//                this.activeProject = showOverwriteDatabaseDialog(ics.retrieve(IProject.class));
-//            }
             instanceContent.add(activeProject);
             instanceContent.add(this);
         }
@@ -321,6 +305,7 @@ public class ProteomicProject implements IProteomicProject {
         instanceContent.remove(activeProject);
         instanceContent.remove(this);
         activeProject = null;
+        Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().closeTopComponentsFor(this);
         //CentralLookup.getDefault().remove(this);
     }
 

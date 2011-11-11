@@ -81,6 +81,15 @@
                 <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
                 <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384"/><!--org.openide.cookies.OpenCookie"/>-->
             </file>
+            <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-DeleteIdentificationsAction.instance">
+                <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
+                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.Bundle#CTL_DeleteIdentificationsAction"/>
+                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.DeleteIdentificationsAction"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+                <attr name="selectionType" stringvalue="ANY"/>
+                <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384"/>
+            </file>
             <file name="org-openide-actions-ToolsAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
                 <attr name="position" intvalue="100"/>

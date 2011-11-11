@@ -1,11 +1,14 @@
 package de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer;
 
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.topComponentRegistry.api.IRegistryFactory;
 import java.awt.BorderLayout;
 import java.util.Iterator;
+import java.util.List;
 import org.openide.util.LookupEvent;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
@@ -35,6 +38,7 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
     private static final String PREFERRED_ID = "Plate384ViewerTopComponentTopComponent";
     private Result<IPlate384> result = null;
     private Result<IWell96> well96Result = null;
+    private Result<ISpot> spotResult = null;
     private Result<IPlate96> plate96Result = null;
     private IWell96 well96 = null;
     private IPlate96 autoPickedPlate = null;
@@ -45,6 +49,7 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
         result = Utilities.actionsGlobalContext().lookupResult(IPlate384.class);
         well96Result = Utilities.actionsGlobalContext().lookupResult(IWell96.class);
         plate96Result = Utilities.actionsGlobalContext().lookupResult(IPlate96.class);
+        spotResult = Utilities.actionsGlobalContext().lookupResult(ISpot.class);
         initComponents();
         setName(NbBundle.getMessage(Plate384ViewerTopComponent.class, "CTL_Plate384ViewerTopComponent"));
         setToolTipText(NbBundle.getMessage(Plate384ViewerTopComponent.class, "HINT_Plate384ViewerTopComponent"));
@@ -154,7 +159,7 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
 //            remove(platePanel);
 //        }
             instanceContent.add(plate);
-            platePanel = new Plate384Panel(plate, instanceContent,getLookup());
+            platePanel = new Plate384Panel(plate, instanceContent, getLookup());
             setDisplayName("384 Well Plate: " + plate.getName());
             add(platePanel, BorderLayout.CENTER);
 //            CentralLookup.getDefault().remove(plate);
@@ -207,6 +212,9 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
         if (plate96Result != null) {
             plate96Result.addLookupListener(this);
         }
+        if (spotResult != null) {
+            spotResult.addLookupListener(this);
+        }
     }
 
     @Override
@@ -219,6 +227,9 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
         }
         if (plate96Result != null) {
             plate96Result.removeLookupListener(this);
+        }
+        if (spotResult != null) {
+            spotResult.removeLookupListener(this);
         }
         IPlate384 plate = getLookup().lookup(IPlate384.class);
         if (plate != null) {
@@ -271,6 +282,22 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
         Iterator<? extends IPlate96> plate96Instances = plate96Result.allInstances().iterator();
         if (plate96Instances.hasNext()) {
             autoPickedPlate = plate96Instances.next();
+        }
+
+        Iterator<? extends ISpot> spotInstances = spotResult.allInstances().iterator();
+        while (spotInstances.hasNext()) {
+            ISpot spot = spotInstances.next();
+            IWell96 well96 = spot.getWell();
+            if (well96 != null) {
+                List<IWell384> wells = well96.get384Wells();
+                if (wells != null) {
+                    for (IWell384 well384 : wells) {
+                        if(well384.getParent()==getLookup().lookup(IPlate384.class)) {
+                            platePanel.setButtonForWell96Active(well96);
+                        }
+                    }
+                }
+            }
         }
     }
 }

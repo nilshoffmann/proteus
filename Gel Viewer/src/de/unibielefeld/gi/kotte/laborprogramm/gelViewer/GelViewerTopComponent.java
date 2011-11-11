@@ -8,17 +8,22 @@ import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.dataProvider.GelSpotData
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.lookup.SpotSelectionListener;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.theme.ThemeManager;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
+import de.unibielefeld.gi.kotte.laborprogramm.project.api.cookies.IPlate384OpenCookie;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.cookies.IPlate96OpenCookie;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import de.unibielefeld.gi.kotte.laborprogramm.topComponentRegistry.api.IRegistryFactory;
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
 import java.awt.Graphics;
-import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.IntrospectionException;
@@ -84,8 +89,7 @@ import org.openide.util.lookup.InstanceContent;
  * Top component that displays a gel with spot annotations and allows selection
  * of associated ISpot objects.
  */
-@ConvertAsProperties(
-dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.gelViewer//GelViewer//EN",
+@ConvertAsProperties(dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.gelViewer//GelViewer//EN",
 autostore = false)
 public final class GelViewerTopComponent extends TopComponent implements
         LookupListener, PropertyChangeListener,
@@ -154,8 +158,7 @@ public final class GelViewerTopComponent extends TopComponent implements
                         IProteomicProject.class);
                 if (file.isAbsolute()) {
                     if (!file.exists()) {
-                        Exceptions.printStackTrace(new FileNotFoundException("Could not find referenced file " + file.
-                                getPath() + " for gel " + gel.getName()));
+                        Exceptions.printStackTrace(new FileNotFoundException("Could not find referenced file " + file.getPath() + " for gel " + gel.getName()));
                         return;
                     }
                 } else {//resolve relative gel path
@@ -163,8 +166,7 @@ public final class GelViewerTopComponent extends TopComponent implements
                             "Resolving gel path agains project basedir!");
 
                     System.out.println("Using project: " + p);
-                    file = new File(FileUtil.toFile(p.getProjectDirectory()), file.
-                            getPath());
+                    file = new File(FileUtil.toFile(p.getProjectDirectory()), file.getPath());
                 }
                 HeatmapDataset<ISpot> hmd = null;
                 hmd = new HeatmapDataset<ISpot>(new GelSpotDataProvider(file,
@@ -192,8 +194,7 @@ public final class GelViewerTopComponent extends TopComponent implements
                         Point2D dataCoord = hdp.getViewToModelTransform().
                                 transform(t.getPosition(), null);
                         return String.format("[x=%.2f|y=%.2f] ",
-                                dataCoord.getX(), dataCoord.getY()) + " Label: " + t.
-                                getPayload().getLabel() + " " + t.getPayload().
+                                dataCoord.getX(), dataCoord.getY()) + " Label: " + t.getPayload().getLabel() + " " + t.getPayload().
                                 getStatus();//"x="+t.getPosition().getX()+" values: "+t.getPayload();
                     }
                 };
@@ -328,8 +329,7 @@ public final class GelViewerTopComponent extends TopComponent implements
                 //tc.revalidate();
             }
         });
-        final ProgressHandle ph = ProgressHandleFactory.createHandle("Loading gel " + gel.
-                getName(), task);
+        final ProgressHandle ph = ProgressHandleFactory.createHandle("Loading gel " + gel.getName(), task);
         task.addTaskListener(new TaskListener() {
 
             @Override
@@ -393,6 +393,7 @@ public final class GelViewerTopComponent extends TopComponent implements
         jCheckBox1 = new javax.swing.JCheckBox();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         jButton3 = new javax.swing.JButton();
+        showPickedSpots = new javax.swing.JCheckBox();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -452,6 +453,17 @@ public final class GelViewerTopComponent extends TopComponent implements
         });
         jToolBar1.add(jButton3);
 
+        org.openide.awt.Mnemonics.setLocalizedText(showPickedSpots, org.openide.util.NbBundle.getMessage(GelViewerTopComponent.class, "GelViewerTopComponent.showPickedSpots.text")); // NOI18N
+        showPickedSpots.setToolTipText(org.openide.util.NbBundle.getMessage(GelViewerTopComponent.class, "GelViewerTopComponent.showPickedSpots.toolTipText")); // NOI18N
+        showPickedSpots.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        showPickedSpots.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        showPickedSpots.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showPickedSpotsActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(showPickedSpots);
+
         add(jToolBar1, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -463,8 +475,7 @@ public final class GelViewerTopComponent extends TopComponent implements
             public void run() {
                 Rectangle2D dataBounds = getLookup().lookup(HeatmapDataset.class).
                         getDataBounds();
-                getLookup().lookup(ZoomProcessor.class).zoomIn(new Point2D.Double(dataBounds.
-                        getCenterX(), dataBounds.getCenterY()));
+                getLookup().lookup(ZoomProcessor.class).zoomIn(new Point2D.Double(dataBounds.getCenterX(), dataBounds.getCenterY()));
                 zoomDisplay.setText(String.format("%1.2f", getLookup().lookup(
                         HeatmapDataset.class).getZoom().getSecond()));
             }
@@ -482,8 +493,7 @@ public final class GelViewerTopComponent extends TopComponent implements
                         getDataBounds();
 
                 getLookup().lookup(ZoomProcessor.class).zoomOut(
-                        new Point2D.Double(dataBounds.getCenterX(), dataBounds.
-                        getCenterY()));
+                        new Point2D.Double(dataBounds.getCenterX(), dataBounds.getCenterY()));
                 zoomDisplay.setText(String.format("%1.2f", getLookup().lookup(
                         HeatmapDataset.class).getZoom().getSecond()));
             }
@@ -523,8 +533,7 @@ public final class GelViewerTopComponent extends TopComponent implements
                 if (applyToAll.isSelected()) {
                     Iterator<?> iter2 = ds.getAnnotationIterator();
                     while (iter2.hasNext()) {
-                        Tuple2D<Point2D, Annotation<?>> tple = (Tuple2D<Point2D, Annotation<?>>) iter2.
-                                next();
+                        Tuple2D<Point2D, Annotation<?>> tple = (Tuple2D<Point2D, Annotation<?>>) iter2.next();
                         SpotAnnotation spot = (SpotAnnotation) tple.getSecond();
                         spot.setFillColor(sa.getFillColor());
                         spot.setLineColor(sa.getLineColor());
@@ -546,6 +555,29 @@ public final class GelViewerTopComponent extends TopComponent implements
             }
         }
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void showPickedSpotsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showPickedSpotsActionPerformed
+
+        HeatmapDataset ds = getLookup().lookup(HeatmapDataset.class);
+        if (ds != null) {
+            Iterator<?> iter2 = ds.getAnnotationIterator();
+            while (iter2.hasNext()) {
+                if (showPickedSpots.isSelected()) {
+                    Tuple2D<Point2D, Annotation<?>> tple = (Tuple2D<Point2D, Annotation<?>>) iter2.next();
+                    SpotAnnotation spot = (SpotAnnotation) tple.getSecond();
+                    boolean isPicked = (spot.getPayload().getStatus() == SpotStatus.PICKED);
+                    spot.setDrawSpotBox(isPicked);
+                    spot.setDrawSpotId(isPicked);
+                } else {
+                    Tuple2D<Point2D, Annotation<?>> tple = (Tuple2D<Point2D, Annotation<?>>) iter2.next();
+                    SpotAnnotation spot = (SpotAnnotation) tple.getSecond();
+                    spot.setDrawSpotBox(true);
+                    spot.setDrawSpotId(true);
+                }
+            }
+            layer.repaint();
+        }
+    }//GEN-LAST:event_showPickedSpotsActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -553,6 +585,7 @@ public final class GelViewerTopComponent extends TopComponent implements
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JCheckBox showPickedSpots;
     private javax.swing.JTextField zoomDisplay;
     // End of variables declaration//GEN-END:variables
 
@@ -657,8 +690,7 @@ public final class GelViewerTopComponent extends TopComponent implements
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("annotationPointSelection".equals(evt.getPropertyName())) {
-            Tuple2D<Point2D, Annotation<ISpot>> newAnnotation = (Tuple2D<Point2D, Annotation<ISpot>>) evt.
-                    getNewValue();
+            Tuple2D<Point2D, Annotation<ISpot>> newAnnotation = (Tuple2D<Point2D, Annotation<ISpot>>) evt.getNewValue();
             //adjust current selection
             setSelection(newAnnotation);
         } else {
@@ -687,6 +719,16 @@ public final class GelViewerTopComponent extends TopComponent implements
                 }
                 annotation = newAnnotation;
                 sa.addPropertyChangeListener(this);
+                HeatmapDataset hd = getLookup().lookup(HeatmapDataset.class);
+                AffineTransform transform = hd.getTransform();
+                Point2D transformedCenter;
+                try {
+                    transformedCenter = transform.inverseTransform(annotation.getFirst(), null);
+                    jl.scrollRectToVisible(new Rectangle((int)(transformedCenter.getX()-10),(int)(transformedCenter.getY()-10),20,20));
+                } catch (NoninvertibleTransformException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                
             }
         }
     }
@@ -718,7 +760,7 @@ public final class GelViewerTopComponent extends TopComponent implements
 
     @Override
     public void mouseClicked(MouseEvent me) {
-        if (me.isPopupTrigger() || me.getButton()==MouseEvent.BUTTON3) {
+        if (me.isPopupTrigger() || me.getButton() == MouseEvent.BUTTON3) {
             if (annotation != null) {
 
                 final ISpot spot = annotation.getSecond().getPayload();
@@ -729,14 +771,30 @@ public final class GelViewerTopComponent extends TopComponent implements
 
                         @Override
                         public void actionPerformed(ActionEvent ae) {
-                            IPlate96OpenCookie plate96OpenCookie = Lookup.
-                                    getDefault().
+                            IPlate96OpenCookie plate96OpenCookie = Lookup.getDefault().
                                     lookup(IPlate96OpenCookie.class);
                             ic.add(spot.getWell().getParent());
                             plate96OpenCookie.open();
                             ic.remove(spot.getWell().getParent());
                         }
                     });
+                    if (spot.getWell().get384Wells() != null && !spot.getWell().get384Wells().isEmpty()) {
+                        popup.add(new AbstractAction(
+                                "Open 384 Well Plates") {
+
+                            @Override
+                            public void actionPerformed(ActionEvent ae) {
+                                for (IWell384 well384 : spot.getWell().get384Wells()) {
+                                    IPlate384OpenCookie plate384OpenCookie = Lookup.getDefault().
+                                            lookup(IPlate384OpenCookie.class);
+                                    ic.add(well384.getParent());
+                                    //TODO add project to lookup
+                                    plate384OpenCookie.open();
+                                    ic.remove(well384.getParent());
+                                }
+                            }
+                        });
+                    }
                     popup.show(me.getComponent(), me.getX(), me.getY());
                 }
             }

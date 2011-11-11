@@ -1,6 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
+import java.beans.PropertyChangeEvent;
 import javax.swing.JPanel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
@@ -9,6 +10,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
 import java.awt.GridLayout;
+import java.beans.PropertyChangeListener;
 import javax.swing.JLabel;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -20,7 +22,7 @@ import org.openide.util.lookup.InstanceContent;
  *
  * @author kotte
  */
-public class Plate384Panel extends JPanel {
+public class Plate384Panel extends JPanel implements PropertyChangeListener {
 
     private IWell96 well96 = null;
     private boolean autoAssign96Wells = false;
@@ -58,7 +60,9 @@ public class Plate384Panel extends JPanel {
                     add(jl); //add leftmost column label
                 } else {
                     //create button for the current well on the plate grid
-                    Well384Button button = new Well384Button(plate.getWell(c, i),
+                    IWell384 well = plate.getWell(c, i);
+                    well.addPropertyChangeListener(this);
+                    Well384Button button = new Well384Button(well,
                             this);
                     //we want the buttons to be indexed by increasing x
                     buttons[plate.posToIndex(c, i)] = button;
@@ -225,5 +229,10 @@ public class Plate384Panel extends JPanel {
                 }
             }
         }
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        repaint();
     }
 }

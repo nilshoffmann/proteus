@@ -8,11 +8,13 @@ import cross.datastructures.tuple.Tuple2D;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import java.awt.geom.Point2D;
+import java.beans.PropertyChangeEvent;
 import java.util.Collection;
 import java.util.List;
 import net.sf.maltcms.chromaui.lookupResultListener.api.AbstractLookupResultListener;
 import net.sf.maltcms.ui.plot.heatmap.Annotation;
 import net.sf.maltcms.ui.plot.heatmap.painter.AnnotationPainter;
+import net.sf.maltcms.ui.plot.heatmap.painter.ToolTipPainter;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 
@@ -40,27 +42,22 @@ public class SpotSelectionListener extends AbstractLookupResultListener<ISpot> {
             for (ISpot spot : spots) {
                 //retrieve annotation painter from private lookup
                 AnnotationPainter ap = getContentProviderLookup().lookup(AnnotationPainter.class);
+//                ToolTipPainter tp = getContentProviderLookup().lookup(ToolTipPainter.class);
                 IGel gel = getContentProviderLookup().lookup(IGel.class);
                 //this is our own spot
                 if (gel.equals(spot.getGel())) {
+                    System.out.println("Spot is on gel");
                     //let's find the one that belongs to us
                     if (ap != null) {
+                        System.out.println("Annotation painter is not null");
                         ISpot privateActiveSpot = getContentProviderLookup().lookup(ISpot.class);
-                        //we have no active spot/annotation
-                        if (privateActiveSpot == null) {
-                        } else {//we have an active spot
-                            //try to retrieve the annotation for the spot
-                            Annotation ann = ap.getAnnotation(spot);
-                            //annotation is present in painter
-                            if (ann != null) {
-                                List<Tuple2D<Point2D, Annotation>> annotations = ap.getAnnotations();
-                                for (Tuple2D<Point2D, Annotation> t : annotations) {
-                                    t.getSecond().setSelected(false);
-                                }
-                            }
-                            ap.setActivePoint(new Point2D.Double(privateActiveSpot.getPosX(), privateActiveSpot.getPosY()));
-                            ap.selectAnnotation();
+                        Point2D oldPoint = null;
+                        if (privateActiveSpot != null) {//we have an active spot
+                            System.out.println("Active spot is not null");
+                            oldPoint = new Point2D.Double(privateActiveSpot.getPosX(), privateActiveSpot.getPosY());
                         }
+                        Point2D newPoint = new Point2D.Double(spot.getPosX(), spot.getPosY());
+                        ap.propertyChange(new PropertyChangeEvent(this, "point", oldPoint, newPoint));
                     } else {
                         System.out.println("Annotation Painter is null!");
                     }

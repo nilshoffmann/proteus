@@ -41,7 +41,7 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
     private AffineTransform at = AffineTransform.getTranslateInstance(0, 0);
     private Point2D activeModelPoint = null;
     private HeatmapDataset<T> hm;
-    private double searchRadius = 2.0d;
+    private double searchRadius = 10.0d;
     private Point2D activeViewPoint = null;
     private Tuple2D<Point2D, Annotation<T>> activeSelection = null;
 

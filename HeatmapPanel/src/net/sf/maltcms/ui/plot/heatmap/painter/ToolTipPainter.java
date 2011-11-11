@@ -6,6 +6,7 @@ package net.sf.maltcms.ui.plot.heatmap.painter;
 
 import cross.datastructures.tuple.Tuple2D;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Shape;
@@ -36,6 +37,7 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
     private Tuple2D<Point2D,Annotation<T>> a = null;
     private boolean drawLabels = true;
     private AffineTransform at = AffineTransform.getTranslateInstance(1.0d, 1.0d);
+    private float labelFontSize = 14.0f;
 
     public ToolTipPainter() {
         setCacheable(false);
@@ -106,6 +108,9 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
 
             //return to standard coordinate system
             g.setTransform(AffineTransform.getTranslateInstance(0, 0));
+            Font currentFont = g.getFont();
+            Font labelFont = currentFont.deriveFont(labelFontSize);
+            g.setFont(labelFont);
             Tuple2D<Rectangle2D, Point2D> tple = PainterTools.getBoundingBox(fill, border, label, g, 10);
             Rectangle2D r = tple.getFirst();
             double lshift = margin;
@@ -123,6 +128,7 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
             g.setTransform(transl);
 
             drawLabelBox(g, fill, r, border, label, tple);
+            g.setFont(currentFont);
             g.setTransform(origTrans);
             g.setTransform(transforms.pop());
 

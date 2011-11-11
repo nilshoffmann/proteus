@@ -4,13 +4,22 @@
  */
 package de.unibielefeld.gi.kotte.laborprogramm.wellIdentificationViewer;
 
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentification;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IWellIdentification;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.beans.IntrospectionException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -18,6 +27,7 @@ import org.openide.windows.WindowManager;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.explorer.propertysheet.PropertySheet;
 import org.openide.nodes.BeanNode;
+import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup.Result;
 import org.openide.util.LookupEvent;
@@ -27,8 +37,7 @@ import org.openide.util.Utilities;
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(
-dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.wellIdentificationViewer//WellIdentificationViewer//EN",
+@ConvertAsProperties(dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.wellIdentificationViewer//WellIdentificationViewer//EN",
 autostore = false)
 public final class WellIdentificationViewerTopComponent extends TopComponent
         implements LookupListener {
@@ -37,8 +46,84 @@ public final class WellIdentificationViewerTopComponent extends TopComponent
     /** path to the icon used by the component and its open action */
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
     private static final String PREFERRED_ID = "WellIdentificationViewerTopComponent";
-    private PropertySheet ps;
     private Result<IWell384> result;
+    private DefaultComboBoxModel dcbm = new DefaultComboBoxModel();
+    private List<WellIdentificationNode> nodeList = new ArrayList<WellIdentificationNode>();
+    private IIdentificationComboBoxRenderer renderer = new IIdentificationComboBoxRenderer(IIdentification.class);
+    private IWellIdentification ident = null;
+
+    private abstract class TypedComboBoxRenderer<T> extends JLabel
+            implements ListCellRenderer {
+
+        private Class<? extends T> typeClass;
+
+        public TypedComboBoxRenderer(Class<? extends T> typeClass) {
+            setOpaque(true);
+            this.typeClass = typeClass;
+        }
+
+        @Override
+        public Component getListCellRendererComponent(
+                JList list,
+                Object value,
+                int index,
+                boolean isSelected,
+                boolean cellHasFocus) {
+            //Get the selected index. (The index param isn't
+            //always valid, so just use the value.)
+            int selectedIndex = index;
+
+            if (isSelected) {
+                setBackground(list.getSelectionBackground());
+                setForeground(list.getSelectionForeground());
+            } else {
+                setBackground(list.getBackground());
+                setForeground(list.getForeground());
+            }
+            if (value != null) {
+                try {
+                    T t = typeClass.cast(value);
+
+                    String name = getStringForComponent(t);
+                    if (name != null) {
+                        setText(name);
+                    } else {
+                        setText("N.N.");
+                    }
+                    ImageIcon img = getImageIconForComponent(t);
+                    if (img != null) {
+                        setIcon(img);
+                    }
+                } catch (ClassCastException cce) {
+                }
+            }else{
+                setText("");
+                setIcon(null);
+            }
+            return this;
+        }
+
+        public abstract String getStringForComponent(T t);
+
+        public abstract ImageIcon getImageIconForComponent(T t);
+    }
+
+    private class IIdentificationComboBoxRenderer extends TypedComboBoxRenderer<IIdentification> {
+
+        public IIdentificationComboBoxRenderer(Class<? extends IIdentification> typeClass) {
+            super(typeClass);
+        }
+
+        @Override
+        public String getStringForComponent(IIdentification t) {
+            return t.getName();
+        }
+
+        @Override
+        public ImageIcon getImageIconForComponent(IIdentification t) {
+            return null;
+        }
+    }
 
     public WellIdentificationViewerTopComponent() {
         initComponents();
@@ -48,8 +133,6 @@ public final class WellIdentificationViewerTopComponent extends TopComponent
                 WellIdentificationViewerTopComponent.class,
                 "HINT_WellIdentificationViewerTopComponent"));
 //        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
-        ps = new PropertySheet();
-        add(ps, BorderLayout.CENTER);
         result = Utilities.actionsGlobalContext().lookupResult(IWell384.class);
     }
 
@@ -61,20 +144,118 @@ public final class WellIdentificationViewerTopComponent extends TopComponent
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+        jPanel1 = new javax.swing.JPanel();
+        jComboBox1 = new javax.swing.JComboBox();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        propertySheet1 = new org.openide.explorer.propertysheet.PropertySheet();
+
+        setLayout(new java.awt.BorderLayout());
+
+        jComboBox1.setModel(dcbm);
+        jComboBox1.setRenderer(renderer);
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(WellIdentificationViewerTopComponent.class, "WellIdentificationViewerTopComponent.jButton1.text")); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(WellIdentificationViewerTopComponent.class, "WellIdentificationViewerTopComponent.jButton2.text")); // NOI18N
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addComponent(jComboBox1, 0, 279, Short.MAX_VALUE)
+                .addGap(1, 1, 1)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jButton1, jButton2});
+
+        add(jPanel1, java.awt.BorderLayout.NORTH);
+        add(propertySheet1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        IIdentification selectedIdent = (IIdentification) jComboBox1.getSelectedItem();
+        setActiveNode(selectedIdent);
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        dcbm.removeAllElements();
+        jComboBox1.setModel(dcbm);
+        setActiveNode(null);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        Object obj = jComboBox1.getSelectedItem();
+        if (obj != null && ident != null) {
+            IIdentification identif = (IIdentification) obj;
+            List<IIdentification> idents = ident.getIdentifications();
+            idents.remove(identif);
+            ident.setIdentifications(idents);
+            setData(ident);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JPanel jPanel1;
+    private org.openide.explorer.propertysheet.PropertySheet propertySheet1;
     // End of variables declaration//GEN-END:variables
+
+    private void setData(IWellIdentification iwi) {
+        dcbm.removeAllElements();
+        jComboBox1.setModel(dcbm);
+        ident = iwi;
+        if (ident != null && !ident.getIdentifications().isEmpty()) {
+            for (IIdentification identification : ident.getIdentifications()) {
+                dcbm.addElement(identification);
+            }
+            setActiveNode((IIdentification)dcbm.getElementAt(0));
+        }else{
+            setActiveNode(null);
+        }
+    }
+
+    private void setActiveNode(IIdentification selectedIdent) {
+        if (selectedIdent != null) {
+            try {
+                propertySheet1.setNodes(new Node[]{new WellIdentificationNode(selectedIdent)});
+            } catch (IntrospectionException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }else{
+             propertySheet1.setNodes(new Node[]{});
+        }
+    }
+
     /**
      * Gets default instance. Do not use directly: reserved for *.settings files only,
      * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
@@ -152,19 +333,13 @@ public final class WellIdentificationViewerTopComponent extends TopComponent
 
     @Override
     public void resultChanged(LookupEvent ev) {
-        List<BeanNode> nodeList = new LinkedList<BeanNode>();
         for (IWell384 spot : result.allInstances()) {
-            IWellIdentification ident = spot.getIdentification();
-            if (ident != null && !ident.getIdentifications().isEmpty()) {
-                try {
-                    nodeList.add(new WellIdentificationNode(ident));
-                } catch (IntrospectionException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
+//            nodeList.clear();
+            setData(spot.getIdentification());
+            return;
         }
-        if (!nodeList.isEmpty()) {
-            ps.setNodes(nodeList.toArray(new BeanNode[]{}));
-        }
+//        if (!nodeList.isEmpty()) {
+//
+//        }
     }
 }

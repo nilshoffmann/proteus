@@ -22,9 +22,11 @@ public final class DeleteIdentificationsAction implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ev) {
         for (IPlate384 iPlate384 : context) {
-            for(IWell384 well:iPlate384.getWells()) {
+            for (IWell384 well : iPlate384.getWells()) {
                 well.getIdentification().getIdentifications().clear();
-                well.setStatus(Well384Status.FILLED);
+                if (well.getStatus() != Well384Status.EMPTY && well.getStatus() != Well384Status.ERROR) {
+                    well.setStatus(Well384Status.FILLED);
+                }
             }
         }
     }

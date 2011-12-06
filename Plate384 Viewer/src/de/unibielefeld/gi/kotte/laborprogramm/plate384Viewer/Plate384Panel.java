@@ -1,6 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationMethod;
 import java.beans.PropertyChangeEvent;
 import javax.swing.JPanel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
@@ -11,6 +12,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
 import java.awt.GridLayout;
 import java.beans.PropertyChangeListener;
+import java.util.Iterator;
 import javax.swing.JLabel;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -82,7 +84,11 @@ public class Plate384Panel extends JPanel implements PropertyChangeListener {
                     well96.setStatus(Well96Status.FILLED);
                 }
             }
-            button.getWell().getIdentification().getIdentifications().clear();
+            for (Iterator<IIdentificationMethod> it = button.getWell().getIdentification().getMethods().iterator(); it.hasNext();) {
+                IIdentificationMethod method = it.next();
+                method.getIdentifications().clear();
+            }
+            button.getWell().getIdentification().getMethods().clear();
             button.getWell().setStatus(Well384Status.EMPTY);
         }
         currentPlateIndex = 0;

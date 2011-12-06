@@ -2,6 +2,8 @@ package de.unibielefeld.gi.kotte.laborprogramm.BTRImporter;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384Factory;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.Well384Status;
 import java.io.File;
 import javax.swing.JFileChooser;
 import org.openide.util.Lookup;
@@ -13,7 +15,7 @@ import org.openide.util.Lookup;
  */
 public class BTRReaderTest {
 
-    private final static boolean FILECHOOSER = false;
+    private final static boolean FILECHOOSER = true;
 
     public static void main(String[] args) {
         File f = null;
@@ -29,7 +31,14 @@ public class BTRReaderTest {
                 f = jfc.getSelectedFile();
             }
         }
-        IPlate384 plate384 = Lookup.getDefault().lookup(IPlate384Factory.class).createPlate384();
-        BTRReader.readBTRFile(f, plate384);
+
+        //create new (filled!) plate for the test run
+        IPlate384 plate = Lookup.getDefault().lookup(IPlate384Factory.class).createPlate384();
+        for(IWell384 well: plate.getWells()) {
+            well.setStatus(Well384Status.FILLED);
+        }
+
+        BTRReader.readBTRFile(f, plate);
+        System.out.println(plate.toFullyRecursiveString());
     }
 }

@@ -82,6 +82,7 @@ public class BTRReader {
                             identification.setScore(Float.parseFloat(data[i]));
                             break;
                         case METHOD:
+                            //if method field is empty use last method
                             if(!data[i].trim().isEmpty()) {
                                 method = data[i];
                             }
@@ -138,13 +139,11 @@ public class BTRReader {
                 }
                 //add identification to well
                 System.out.println(identification);
-                if (well != null) {
-                    if(well.getStatus() != Well384Status.EMPTY || well.getStatus() == Well384Status.ERROR) {
+                if (well != null && well.getStatus() != Well384Status.EMPTY || well.getStatus() == Well384Status.ERROR) {
                         well.getIdentification().addIdentification(identification);
-                    }
                 } else {
-                    System.out.println("Can not add identification data to " + well + " in state "+well.getStatus());
-                    //TODO Fehler melden
+                    System.out.println("Can not add identification data to: " + well);
+                    //TODO Fehler behandeln
                 }
             }
             checkStatus(plate);

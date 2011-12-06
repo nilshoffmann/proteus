@@ -11,7 +11,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.List;
 
 /**
- * Default implementation of IIdentification
+ * Default implementation of IIdentification.
  *
  * @author kotte, hoffmann
  */
@@ -70,6 +70,7 @@ public class Identification implements IIdentification, Activatable {
     private String name;
     private List<String> keggNumbers = new ActivatableArrayList<String>();
     private int gendbId = -1;
+    private String gendbProject;
     private float proteinMolecularWeight = Float.NaN;
     private float piValue = Float.NaN;
     private int coverage = -1;
@@ -153,6 +154,19 @@ public class Identification implements IIdentification, Activatable {
         activate(ActivationPurpose.WRITE);
         this.gendbId = gendbId;
         getPropertyChangeSupport().firePropertyChange(PROPERTY_GENDB_ID, null, gendbId);
+    }
+
+    @Override
+    public String getGendbProject() {
+        activate(ActivationPurpose.READ);
+        return gendbProject;
+    }
+
+    @Override
+    public void setGendbProject(String gendbProject) {
+        activate(ActivationPurpose.WRITE);
+        this.gendbProject = gendbProject;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_GENDB_PROJECT, null, gendbProject);
     }
 
     @Override

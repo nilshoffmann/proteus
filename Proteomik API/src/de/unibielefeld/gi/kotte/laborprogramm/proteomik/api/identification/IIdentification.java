@@ -15,6 +15,7 @@ public interface IIdentification extends IPropertyChangeSource {
     public static final String PROPERTY_NAME = "name";
     public static final String PROPERTY_KEGG = "Kegg number";
     public static final String PROPERTY_GENDB_ID = "GenDB-ID";
+    public static final String PROPERTY_GENDB_PROJECT = "GenDB-Project";
     public static final String PROPERTY_PROTEIN_MW = "protein molecular weight";
     public static final String PROPERTY_PI_VALUE = "pi value";
     public static final String PROPERTY_COVERAGE = "MS coverage";
@@ -34,6 +35,8 @@ public interface IIdentification extends IPropertyChangeSource {
     public void setDifference(int difference);
     public int getGendbId();
     public void setGendbId(int gendbId);
+    public String getGendbProject();
+    public void setGendbProject(String gendbProject);
     public List<String> getKeggNumbers();
     public void addKeggNumber(String keggNumber);
     public void setKeggNumbers(List<String> keggNumbers);

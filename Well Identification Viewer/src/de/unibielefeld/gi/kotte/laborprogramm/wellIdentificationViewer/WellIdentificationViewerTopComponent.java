@@ -5,6 +5,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.wellIdentificationViewer;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentification;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationMethod;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IWellIdentification;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import java.awt.BorderLayout;
@@ -50,7 +51,7 @@ public final class WellIdentificationViewerTopComponent extends TopComponent
     private DefaultComboBoxModel dcbm = new DefaultComboBoxModel();
     private List<WellIdentificationNode> nodeList = new ArrayList<WellIdentificationNode>();
     private IIdentificationComboBoxRenderer renderer = new IIdentificationComboBoxRenderer(IIdentification.class);
-    private IWellIdentification ident = null;
+    private IWellIdentification wellIdentification = null;
 
     private abstract class TypedComboBoxRenderer<T> extends JLabel
             implements ListCellRenderer {
@@ -214,12 +215,13 @@ public final class WellIdentificationViewerTopComponent extends TopComponent
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         Object obj = jComboBox1.getSelectedItem();
-        if (obj != null && ident != null) {
+        if (obj != null && wellIdentification != null) {
             IIdentification identif = (IIdentification) obj;
-            List<IIdentification> idents = ident.getIdentifications();
+            IIdentificationMethod method = identif.getMethod();
+            List<IIdentification> idents = wellIdentification.getMethodByName(method.getName()).getIdentifications();
             idents.remove(identif);
-            ident.setIdentifications(idents);
-            setData(ident);
+            wellIdentification.getMethodByName(method.getName()).setIdentifications(idents);
+            setData(wellIdentification);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -230,13 +232,15 @@ public final class WellIdentificationViewerTopComponent extends TopComponent
     private org.openide.explorer.propertysheet.PropertySheet propertySheet1;
     // End of variables declaration//GEN-END:variables
 
-    private void setData(IWellIdentification iwi) {
+    private void setData(IWellIdentification wellIdentification) {
         dcbm.removeAllElements();
         jComboBox1.setModel(dcbm);
-        ident = iwi;
-        if (ident != null && !ident.getIdentifications().isEmpty()) {
-            for (IIdentification identification : ident.getIdentifications()) {
-                dcbm.addElement(identification);
+        this.wellIdentification = wellIdentification;
+        if (wellIdentification != null) {
+            for (IIdentificationMethod method : wellIdentification.getMethods()) {
+                for (IIdentification identification : method.getIdentifications()) {
+                    dcbm.addElement(identification);
+                }
             }
             setActiveNode((IIdentification)dcbm.getElementAt(0));
         }else{

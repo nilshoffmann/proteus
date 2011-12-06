@@ -2,6 +2,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.BTRImporter;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentification;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationFactory;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationMethod;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.Well384Status;
@@ -11,10 +12,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -48,7 +46,7 @@ public class BTRReader {
             Pattern gendbProjectPattern = Pattern.compile("\\(GenDB-Project=(\\d+)\\)");
             Pattern keggPattern = Pattern.compile("(\\d+\\.\\d+\\.\\d+\\.[\\d\\-]+)");
             IWell384 well = null;
-            String method = null;
+            IIdentificationMethod method = null;
             while ((line = in.readLine()) != null) {
                 //line = line.trim();
                 System.out.println(line);
@@ -84,7 +82,7 @@ public class BTRReader {
                         case METHOD:
                             //if method field is empty use last method
                             if(!data[i].trim().isEmpty()) {
-                                method = data[i];
+                                method = well.getIdentification().getMethodByName(data[i]);
                             }
                             identification.setMethod(method);
                             break;
@@ -134,13 +132,13 @@ public class BTRReader {
                             identification.setKeggNumbers(keggNumbers);
                             break;
                         default:
-
                     }
                 }
                 //add identification to well
                 System.out.println(identification);
                 if (well != null && well.getStatus() != Well384Status.EMPTY || well.getStatus() == Well384Status.ERROR) {
-                        well.getIdentification().addIdentification(identification);
+                    method = identification.getMethod();
+                    well.getIdentification().getMethodByName(method.getName()).addIdentification(identification);
                 } else {
                     System.out.println("Can not add identification data to: " + well);
                     //TODO Fehler behandeln
@@ -155,12 +153,11 @@ public class BTRReader {
     public static void checkStatus(IPlate384 plate) {
         for (IWell384 well : plate.getWells()) {
             if (well.getStatus() == Well384Status.FILLED) {
-                List<IIdentification> identifications = well.getIdentification().getIdentifications();
-                if (identifications.isEmpty()) {
+                List<IIdentificationMethod> methods = well.getIdentification().getMethods();
+                if (methods.isEmpty()) {
                     well.setStatus(Well384Status.UNIDENTIFIED);
-                } else if (identifications.size() > 1) {
-                    well.setStatus(Well384Status.MULTIPLE_IDENTIFICATIONS);
                 } else {
+                    //TODO: check if there is a valid identification (-> status!)
                     well.setStatus(Well384Status.IDENTIFIED);
                 }
             }

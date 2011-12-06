@@ -1,10 +1,11 @@
-package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
+package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification;
 
 import com.db4o.activation.ActivationPurpose;
 import com.db4o.activation.Activator;
 import com.db4o.collections.ActivatableArrayList;
 import com.db4o.ta.Activatable;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentification;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationMethod;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
@@ -74,7 +75,7 @@ public class Identification implements IIdentification, Activatable {
     private int coverage = -1;
     private int difference = -1;
     private float score = Float.NaN;
-    private String method;
+    private IIdentificationMethod method;
 
     @Override
     public String getAbbreviation() {
@@ -214,13 +215,13 @@ public class Identification implements IIdentification, Activatable {
     }
 
     @Override
-    public String getMethod() {
+    public IIdentificationMethod getMethod() {
         activate(ActivationPurpose.READ);
         return method;
     }
 
     @Override
-    public void setMethod(String method) {
+    public void setMethod(IIdentificationMethod method) {
         activate(ActivationPurpose.WRITE);
         this.method = method;
         getPropertyChangeSupport().firePropertyChange(PROPERTY_METHOD, null, method);
@@ -228,6 +229,6 @@ public class Identification implements IIdentification, Activatable {
 
     @Override
     public String toString() {
-        return "Identification{accession=" + accession + " abbreviation=" + abbreviation + " name=" + name + " keggNumber=" + keggNumbers + " gendbId=" + gendbId + " proteinMolecularWeight=" + proteinMolecularWeight + " piValue=" + piValue + " coverage=" + coverage + " difference=" + difference + " score=" + score + " method=" + method + '}';
+        return "Identification{accession=" + accession + " abbreviation=" + abbreviation + " name=" + name + " keggNumber=" + keggNumbers + " gendbId=" + gendbId + " proteinMolecularWeight=" + proteinMolecularWeight + " piValue=" + piValue + " coverage=" + coverage + " difference=" + difference + " score=" + score + '}';
     }
 }

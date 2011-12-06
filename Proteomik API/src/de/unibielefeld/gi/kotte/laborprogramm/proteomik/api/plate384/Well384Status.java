@@ -22,18 +22,10 @@ public enum Well384Status {
      */
     IDENTIFIED,
     /**
-     * This filled well has an uncertain identification.
-     */
-    UNCERTAIN,
-    /**
      * This filled well has been attempted to identify,
      * but has no valid identification result.
      */
     UNIDENTIFIED,
-    /**
-     * This filled well has multiple identifications.
-     */
-    MULTIPLE_IDENTIFICATIONS,
     /**
      * This well is in an errand state.
      */
@@ -45,12 +37,8 @@ public enum Well384Status {
                 return Color.BLUE;
             case IDENTIFIED:
                 return Color.GREEN;
-            case UNCERTAIN:
-                return Color.CYAN;
             case UNIDENTIFIED:
                 return Color.MAGENTA;
-            case MULTIPLE_IDENTIFICATIONS:
-                return Color.YELLOW;
             case ERROR:
                 return Color.RED;
             default:

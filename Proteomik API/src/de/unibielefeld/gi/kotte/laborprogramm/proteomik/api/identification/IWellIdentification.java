@@ -7,21 +7,24 @@ import java.util.List;
 /**
  * Set of possible protein identifications for a Well384.
  *
- * @author hoffmann
+ * @author hoffmann, kotte
  */
 public interface IWellIdentification extends IPropertyChangeSource{
+
+    public static final String PROPERTY_PARENT = "parent";
+
+    public static final String PROPERTY_METHODS = "methods";
     
-    public static final String PROPERTY_WELL = "well";
-    public static final String PROPERTY_IDENTIFICATIONS = "identifications";
+    public IWell384 getParent();
     
-    public IWell384 getWell();
+    public void setParent(IWell384 well);
     
-    public void setWell(IWell384 well);
+    public List<IIdentificationMethod> getMethods();
+
+    public IIdentificationMethod getMethodByName(String name);
     
-    public List<IIdentification> getIdentifications();
+    public void setMethods(List<IIdentificationMethod> method);
     
-    public void setIdentifications(List<IIdentification> identifications);
-    
-    public void addIdentification(IIdentification identification);
+    public void addMethod(IIdentificationMethod method);
     
 }

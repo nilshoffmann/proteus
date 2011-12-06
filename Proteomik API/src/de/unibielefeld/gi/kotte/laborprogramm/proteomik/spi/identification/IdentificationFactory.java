@@ -1,4 +1,4 @@
-package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
+package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentification;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationFactory;

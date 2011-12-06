@@ -4,7 +4,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPropertyChangeSourc
 import java.util.List;
 
 /**
- * Identification of a protein.
+ * possible Identification of a protein.
  *
  * @author kotte, hoffmann
  */
@@ -43,7 +43,7 @@ public interface IIdentification extends IPropertyChangeSource {
     public void setProteinMolecularWeight(float proteinMolecularWeight);
     public float getScore();
     public void setScore(float score);
-    public String getMethod();
-    public void setMethod(String method);
+    public IIdentificationMethod getMethod();
+    public void setMethod(IIdentificationMethod method);
 
 }

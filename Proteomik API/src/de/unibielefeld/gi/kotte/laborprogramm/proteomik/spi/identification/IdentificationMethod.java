@@ -1,22 +1,21 @@
-package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi;
+package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification;
 
 import com.db4o.activation.ActivationPurpose;
 import com.db4o.activation.Activator;
 import com.db4o.collections.ActivatableArrayList;
 import com.db4o.ta.Activatable;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentification;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationMethod;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IWellIdentification;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
 
 /**
- * Default implementation of IWellIdentification
  *
- * @author kotte, hoffmann
+ * @author kotte
  */
-public class WellIdentification implements IWellIdentification, Activatable {
+public class IdentificationMethod implements IIdentificationMethod, Activatable{
 
     /**
      * PropertyChangeSupport ala JavaBeans(tm)
@@ -62,51 +61,33 @@ public class WellIdentification implements IWellIdentification, Activatable {
             activator.activate(activationPurpose);
         }
     }
+
     /**
      * Object definition
      */
-    private IWell384 well;
-    private List<IIdentification> identifications = new ActivatableArrayList<IIdentification>();
+    IWellIdentification parent = null;
+    String name;
+    List<IIdentification> identifications = new ActivatableArrayList<IIdentification>();
 
-    /**
-     * Get the value of well
-     *
-     * @return the value of well
-     */
     @Override
-    public IWell384 getWell() {
-        activate(ActivationPurpose.READ);
-        return well;
-    }
-
-    /**
-     * Set the value of well
-     *
-     * @param well new value of well
-     */
-    @Override
-    public void setWell(IWell384 well) {
+    public void addIdentification(IIdentification identification) {
         activate(ActivationPurpose.WRITE);
-        this.well = well;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_WELL, null, well);
+        this.identifications.add(identification);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_IDENTIFICATIONS, null, this.identifications);
     }
 
-    /**
-     * Get the value of identifications
-     *
-     * @return the value of identifications
-     */
     @Override
     public List<IIdentification> getIdentifications() {
         activate(ActivationPurpose.READ);
         return identifications;
     }
 
-    /**
-     * Set the value of identifications
-     *
-     * @param identifications new value of identifications
-     */
+    @Override
+    public IWellIdentification getParent() {
+        activate(ActivationPurpose.READ);
+        return parent;
+    }
+
     @Override
     public void setIdentifications(List<IIdentification> identifications) {
         activate(ActivationPurpose.WRITE);
@@ -115,17 +96,34 @@ public class WellIdentification implements IWellIdentification, Activatable {
     }
 
     @Override
-    public void addIdentification(IIdentification identification) {
+    public void setParent(IWellIdentification parent) {
         activate(ActivationPurpose.WRITE);
-        this.identifications.add(identification);
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_IDENTIFICATIONS, null, identifications);
+        this.parent = parent;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null, parent);
+    }
+
+    @Override
+    public String getName() {
+        activate(ActivationPurpose.READ);
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        activate(ActivationPurpose.WRITE);
+        this.name = name;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_NAME, null, name);
     }
 
     @Override
     public String toString() {
-        String str = "well identifications:";
+        String str;
+        if(identifications.isEmpty()) {
+            str = "empty identification method";
+        }
+        str = "identification method '" + name + "' found the following identifications:";
         for (IIdentification identification : identifications) {
-            str += "\n        > " + identification.toString();
+            str += "\n          > " + identification.toString();
         }
         return str;
     }

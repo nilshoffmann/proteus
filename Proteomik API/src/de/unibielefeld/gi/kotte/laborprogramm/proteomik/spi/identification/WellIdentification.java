@@ -103,6 +103,13 @@ public class WellIdentification implements IWellIdentification, Activatable {
         return methods;
     }
 
+    /**
+     * Gets the Method specified by the given name.
+     * Creates a new method if there is no method with the given name.
+     *
+     * @param name the name of the method
+     * @return the IIdentificationMethod object of the method spesified by the name
+     */
     @Override
     public IIdentificationMethod getMethodByName(String name) {
         activate(ActivationPurpose.READ);
@@ -113,10 +120,13 @@ public class WellIdentification implements IWellIdentification, Activatable {
                 return method;
             }
         }
+        activate(ActivationPurpose.WRITE);
         //create new method
         method = new IdentificationMethod();
         method.setName(name);
         method.setParent(this);
+        methods.add(method);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_METHODS, null, methods);
         return method;
     }
 

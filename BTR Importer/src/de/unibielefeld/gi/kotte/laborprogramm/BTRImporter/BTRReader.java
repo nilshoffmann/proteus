@@ -58,7 +58,6 @@ public class BTRReader {
                 for (int i = 0; i < data.length; i++) {
                     BtrColumn column = BtrColumn.normalizeColumnName(header[i]);
                     //TODO data[4] gibt den Status an (Identified/Undefined/Error)
-                    //TODO im Augenblick wird von exakt einer Identification pro WellIdentification ausgegangen
                     System.out.println("Parsing column: "+column+" with value: "+data[i]);
                     switch (column) {
                         case POS_ON_SCOUT:
@@ -80,11 +79,10 @@ public class BTRReader {
                             identification.setScore(Float.parseFloat(data[i]));
                             break;
                         case METHOD:
-                            //if method field is empty use last method
+                            //read in method, if there is a new one
                             if(!data[i].trim().isEmpty()) {
                                 method = well.getIdentification().getMethodByName(data[i]);
                             }
-                            identification.setMethod(method);
                             break;
                         case MS_COVERAGE:
                             identification.setCoverage(Integer.parseInt(data[i]));
@@ -119,25 +117,29 @@ public class BTRReader {
                             String genDbProject = "";
                             Matcher genDbProjectMatcher = gendbProjectPattern.matcher(data[2]);
                             if (genDbProjectMatcher.find()) {
-                                genDbProject = gendbMatcher.group();
+                                genDbProject = genDbProjectMatcher.group();
                             }
                             List<String> keggNumbers = new ArrayList<String>();
                             Matcher keggMatcher = keggPattern.matcher(data[2]);
                             while (keggMatcher.find()) {
                                 keggNumbers.add(keggMatcher.group(1));
                             }
+
+                            //TODO clean up name
                             identification.setAbbreviation(abbreviation);
                             identification.setName(name);
                             identification.setGendbId(gendbId);
+                            identification.setGendbProject(genDbProject);
                             identification.setKeggNumbers(keggNumbers);
                             break;
                         default:
                     }
                 }
+                //set method
+                identification.setMethod(method);
                 //add identification to well
                 System.out.println(identification);
                 if (well != null && well.getStatus() != Well384Status.EMPTY || well.getStatus() == Well384Status.ERROR) {
-                    method = identification.getMethod();
                     well.getIdentification().getMethodByName(method.getName()).addIdentification(identification);
                 } else {
                     System.out.println("Can not add identification data to: " + well);

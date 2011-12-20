@@ -544,7 +544,7 @@ public final class GelViewerTopComponent extends TopComponent implements
             jp.setLayout(bl);
             jp.add(ps);
             final JCheckBox applyToAll = new JCheckBox(
-                    "Apply Settings to All Spots", true);
+                    "Apply Settings to All Spots", false);
             jp.add(applyToAll);
             NotifyDescriptor nd = new NotifyDescriptor.Confirmation(jp,
                     NotifyDescriptor.OK_CANCEL_OPTION,

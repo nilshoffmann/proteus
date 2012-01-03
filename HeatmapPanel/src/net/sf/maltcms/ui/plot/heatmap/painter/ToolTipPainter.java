@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Paint;
+import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
@@ -18,7 +19,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Stack;
 import javax.swing.JComponent;
 import net.sf.maltcms.ui.plot.heatmap.Annotation;
 import net.sf.maltcms.ui.plot.heatmap.HeatmapDataset;
@@ -69,33 +69,40 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
     protected void doPaint(Graphics2D g, JComponent t, int width, int height) {
         Shape clip = g.getClip();
 //        Rectangle2D bounds = at.createTransformedShape(t.getBounds()).getBounds2D();
-//        if (p != null && a==null) {
+//        Point2D lineCross = p;
+//        if (p != null) {
+//            AffineTransform origTransform = g.getTransform();
+//            g.setTransform(at);
 //            g.setClip(t.getVisibleRect());
 //            Line2D.Double l1 = new Line2D.Double(0, p.getY(), t.getWidth(), p.getY());
 //            Line2D.Double l2 = new Line2D.Double(p.getX(), 0, p.getX(), t.getHeight());
 //            g.setColor(Color.BLACK);
 //            g.draw(l1);
 //            g.draw(l2);
+//            g.setTransform(origTransform);
 //        }
         if ((a != null && p != null && drawLabels)) {
-            Shape annotationClipShape = a.getSecond().getShape();
+            AffineTransform origTransform = g.getTransform();
+//            Stack<AffineTransform> transforms = new Stack<AffineTransform>();
+//            transforms.push();
+            //g.setClip(t.getVisibleRect());
+//            g.setTransform(at);
+//            g.setTransform(AffineTransform.getTranslateInstance(0, 0));
+            Shape annotationClipShape = at.createTransformedShape(a.getSecond().getShape());
             Area area = new Area(g.getClip());
             area.subtract(new Area(annotationClipShape));
-            g.setClip(area);
+//            g.setClip(area);
 //            Color fillColor = new Color(255,255,255,225);
 //            g.setColor(fillColor);
 //            g.fill(clip);
-            Stack<AffineTransform> transforms = new Stack<AffineTransform>();
-            //g.setClip(t.getVisibleRect());
-            transforms.push(g.getTransform());
 //            transforms.push(at);
-            Point2D lineCross = at.transform(a.getFirst(), null);
+            Point2D lineCross = at.transform(a.getFirst(),null);
             Line2D.Double l1 = new Line2D.Double(0, lineCross.getY(), t.getWidth(), lineCross.getY());
             Line2D.Double l2 = new Line2D.Double(lineCross.getX(), 0, lineCross.getX(), t.getHeight());
             g.setColor(Color.BLACK);
             g.draw(l1);
             g.draw(l2);
-            g.setTransform(at);
+//            g.setTransform(at);
             int margin = 10;
             a.getSecond().draw(g);
 //            AffineTransform translateToBoxOrigin = AffineTransform.getTranslateInstance(width, width)
@@ -104,10 +111,11 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
             Paint fill = new Color(250, 250, 210, 240);
             Paint border = new Color(218, 165, 32, 240);
             String label = getStringFor(a.getSecond());
-            AffineTransform origTrans = g.getTransform();
+            
+//            AffineTransform origTrans = transforms.pop();
 
             //return to standard coordinate system
-            g.setTransform(AffineTransform.getTranslateInstance(0, 0));
+//            g.setTransform(AffineTransform.getTranslateInstance(0, 0));
             Font currentFont = g.getFont();
             Font labelFont = currentFont.deriveFont(labelFontSize);
             g.setFont(labelFont);
@@ -123,14 +131,15 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
             }
             double finalx = Math.max(margin, lineCross.getX() + lshift - r.getX());
             double finaly = Math.max(margin, lineCross.getY() + ushift - r.getY());
-
             AffineTransform transl = AffineTransform.getTranslateInstance(finalx, finaly);
+            transl.concatenate(at);
             g.setTransform(transl);
-
+//            g.setTransform(transl);
             drawLabelBox(g, fill, r, border, label, tple);
+
             g.setFont(currentFont);
-            g.setTransform(origTrans);
-            g.setTransform(transforms.pop());
+//            g.setTransform(origTrans);
+            g.setTransform(origTransform);
 
         }
         g.setClip(clip);
@@ -184,6 +193,7 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
 //                setDrawLabels(false);
             }
         } else if (pce.getPropertyName().equals(HeatmapDataset.PROP_TRANSFORM)) {
+            System.out.println("Received transform change event!");
             this.at = (AffineTransform) pce.getNewValue();
             setDirty(true);
         }

@@ -137,6 +137,7 @@ public class BTRReader {
                 }
                 //set method
                 identification.setMethod(method);
+                identification.setSource(f.getCanonicalPath());
                 //add identification to well
                 System.out.println(identification);
                 if (well != null && well.getStatus() != Well384Status.EMPTY || well.getStatus() == Well384Status.ERROR) {

@@ -22,6 +22,7 @@ public interface IIdentification extends IPropertyChangeSource {
     public static final String PROPERTY_DIFFERENCE = "difference";
     public static final String PROPERTY_SCORE = "score";
     public static final String PROPERTY_METHOD = "method";
+    public static final String PROPERTY_SOURCE = "source";
 
     public String getAbbreviation();
     public void setAbbreviation(String abbreviation);
@@ -48,5 +49,7 @@ public interface IIdentification extends IPropertyChangeSource {
     public void setScore(float score);
     public IIdentificationMethod getMethod();
     public void setMethod(IIdentificationMethod method);
+    public String getSource();
+    public void setSource(String source);
 
 }

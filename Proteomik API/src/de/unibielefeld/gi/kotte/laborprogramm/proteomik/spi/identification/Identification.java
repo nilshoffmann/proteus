@@ -77,6 +77,7 @@ public class Identification implements IIdentification, Activatable {
     private int difference = -1;
     private float score = Float.NaN;
     private IIdentificationMethod method;
+    private String source;
 
     @Override
     public String getAbbreviation() {
@@ -239,6 +240,19 @@ public class Identification implements IIdentification, Activatable {
         activate(ActivationPurpose.WRITE);
         this.method = method;
         getPropertyChangeSupport().firePropertyChange(PROPERTY_METHOD, null, method);
+    }
+
+    @Override
+    public String getSource() {
+        activate(ActivationPurpose.READ);
+        return source;
+    }
+
+    @Override
+    public void setSource(String source) {
+        activate(ActivationPurpose.WRITE);
+        this.source = source;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_SOURCE, null, source);
     }
 
     @Override

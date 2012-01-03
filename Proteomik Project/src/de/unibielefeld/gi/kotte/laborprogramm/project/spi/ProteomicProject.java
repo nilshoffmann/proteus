@@ -82,6 +82,7 @@ public class ProteomicProject implements IProteomicProject {
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
         System.out.println("Received property change event");
+
 //        persist();
         //due to a but in Netbeans RCP, multiple SaveCookie instances in
         //lookup will disable the save action
@@ -95,7 +96,7 @@ public class ProteomicProject implements IProteomicProject {
 ////            ics.create(Arrays.asList(pce.getNewValue()));
 //            //activeProject = getFromDB();
 //        }
-//        getLookup().lookup(ProjectState.class).markModified();
+        getLookup().lookup(Info.class).firePropertyChange(pce.getPropertyName(), pce.getOldValue(), pce.getNewValue());
     }
 
     private IProject showOverwriteDatabaseDialog(IProject project) throws AuthenticationException {
@@ -160,7 +161,9 @@ public class ProteomicProject implements IProteomicProject {
             throw new IllegalArgumentException(
                     "Failed to find an instance of IProject in project database!");
         }
-        return projects.iterator().next();
+        IProject project = projects.iterator().next();
+        project.addPropertyChangeListener(this);
+        return project;
 //        try {
 //            IProject project = projects.iterator().next();
 //            //initialize project listeners

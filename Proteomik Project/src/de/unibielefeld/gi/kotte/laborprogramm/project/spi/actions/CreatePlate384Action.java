@@ -5,9 +5,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384Factory;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import javax.swing.Action;
+import java.awt.event.ActionListener;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Lookup;
@@ -17,45 +15,12 @@ import org.openide.util.Lookup;
  *
  * @author kotte
  */
-public class CreatePlate384Action implements Action {
+public class CreatePlate384Action implements ActionListener {
+
     private final IProject proj;
-    private PropertyChangeListener listener;
 
     public CreatePlate384Action(IProject proj) {
         this.proj = proj;
-    }
-
-    @Override
-    public Object getValue(String key) {
-        //System.out.println("CreatePlate384Action.getValue() called with key: " + key);
-        if(key.equals("Name")) {
-            return "Erstelle 384 Well Platte";
-        }
-        return null;
-    }
-
-    @Override
-    public void putValue(String key, Object value) {
-        //throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setEnabled(boolean b) {
-        //throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    @Override
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        this.listener = listener;
-    }
-
-    @Override
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
     }
 
     @Override
@@ -83,13 +48,14 @@ public class CreatePlate384Action implements Action {
         if (DialogDisplayer.getDefault().notify(nd) == NotifyDescriptor.OK_OPTION) {
             // user clicked yes, do something here, for example:
             //     System.out.println(myPanel.getNameFieldValue());
-            IPlate384 plate384 = Lookup.getDefault().lookup(IPlate384Factory.class).createPlate384();
-        this.proj.add384Plate(plate384);
-        plate384.setParent(this.proj);
+            IPlate384 plate384 = Lookup.getDefault().lookup(
+                    IPlate384Factory.class).createPlate384();
+            this.proj.add384Plate(plate384);
+            plate384.setParent(this.proj);
             plate384.setName(dialog.getNameText());
-            System.out.println("Firing PropertyChangeEvent: PLATE384_CREATED");
-            listener.propertyChange(new PropertyChangeEvent(this,"PLATE384_CREATED",null,plate384));
+//            System.out.println("Firing PropertyChangeEvent: PLATE384_CREATED");
+//            listener.propertyChange(new PropertyChangeEvent(this,
+//                    "PLATE384_CREATED", null, plate384));
         }
     }
-
 }

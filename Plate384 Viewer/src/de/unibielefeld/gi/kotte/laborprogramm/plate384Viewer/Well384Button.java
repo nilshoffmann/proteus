@@ -10,8 +10,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Ellipse2D;
 import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -97,7 +99,8 @@ public class Well384Button extends JButton implements MouseInputListener {
         public Well384StatusSelectMenu(Well384Status status) {
             ButtonGroup group = new ButtonGroup();
             for (Well384Status s : Well384Status.values()) {
-                JRadioButtonMenuItem jrbmi = new JRadioButtonMenuItem(new Well384StatusSelectRadioButtonAction(s));
+                JRadioButtonMenuItem jrbmi = new JRadioButtonMenuItem(new Well384StatusSelectRadioButtonAction(
+                        s));
                 jrbmi.setText(s.toString());
                 jrbmi.setEnabled(StateMachine.isTransitionAllowed(status, s));
                 if (s.equals(Well384Status.FILLED) && (panel.getWell96() == null)) {
@@ -112,9 +115,10 @@ public class Well384Button extends JButton implements MouseInputListener {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                     String text = well.toString();
+                    String text = well.toString();
                     if (well.getWell96() != null) {
-                        text = text+"\nAssigned to well: " + well.getWell96() + " on plate " + well.getWell96().getParent().getName();
+                        text = text + "\nAssigned to well: " + well.getWell96() + " on plate " + well.
+                                getWell96().getParent().getName();
                     }
                     JTextArea jl = new JTextArea(text);
                     NotifyDescriptor nd = new NotifyDescriptor(
@@ -170,6 +174,7 @@ public class Well384Button extends JButton implements MouseInputListener {
         Well384Status currentStatus = well.getStatus();
         if (!well.getStatus().equals(nextStatus)) {
             IWell96 well96 = null;
+            System.out.println("Next status: " + nextStatus);
             if (StateMachine.isTransitionAllowed(currentStatus, nextStatus)) {
                 switch (nextStatus) {
                     case EMPTY:
@@ -186,7 +191,8 @@ public class Well384Button extends JButton implements MouseInputListener {
                     case FILLED:
                         well96 = panel.getWell96();
                         //only processed wells that are filled (or processed), ignore empty or errand well96s
-                        if (well96.getStatus() == Well96Status.FILLED || well96.getStatus() == Well96Status.PROCESSED) {
+                        if (well96.getStatus() == Well96Status.FILLED || well96.
+                                getStatus() == Well96Status.PROCESSED) {
                             well96.add384Well(well);
                             well96.setStatus(Well96Status.PROCESSED);
                             well.setWell96(well96);
@@ -211,7 +217,9 @@ public class Well384Button extends JButton implements MouseInputListener {
                 panel.setButtonForWell96Active(well96);
                 repaint();
             } else {
-                Exceptions.printStackTrace(new IllegalStateException("Illegal transition attempted: tried to transit from " + currentStatus + " to " + nextStatus));
+                Exceptions.printStackTrace(
+                        new IllegalStateException(
+                        "Illegal transition attempted: tried to transit from " + currentStatus + " to " + nextStatus));
             }
         }
     }
@@ -220,18 +228,45 @@ public class Well384Button extends JButton implements MouseInputListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
         Color originalColor = g2.getColor();
+        Shape originalClip = g2.getClip();
         g2.setColor(Color.WHITE);
         g2.fillRect(0, 0, getWidth(), getHeight());
         g2.setColor(well.getStatus().getColor());
+        Ellipse2D.Double e2d = new Ellipse2D.Double(2, 2, getWidth() - 4,
+                getHeight() - 4);
+        if (isSelected()) {
+            g2.fill(e2d);
+            g2.setColor(Color.BLACK);
+            g2.draw(e2d);
+            //g2.fillOval(2, 2, getWidth() - 4, getHeight() - 4);//getInsets().left, getInsets().top, width, height);
+        } else {
+            g2.draw(e2d);
+            //g2.drawOval(2, 2, getWidth() - 4, getHeight() - 4);//getInsets().left, getInsets().top, width, height);
+        }
+        switch (well.getStatus()) {
+            case EMPTY:
 //        int width = getWidth() - (getInsets().left + getInsets().right);
 //        int height = getHeight() - (getInsets().top + getInsets().bottom);
-        if (isSelected()) {
-            g2.fillOval(2, 2, getWidth() - 4, getHeight() - 4);//getInsets().left, getInsets().top, width, height);
-        } else {
-            g2.drawOval(2, 2, getWidth() - 4, getHeight() - 4);//getInsets().left, getInsets().top, width, height);
+
+                break;
+            case ERROR:
+                g2.setClip(e2d);
+                if(isSelected()) {
+                    g2.setColor(Color.BLACK);
+                }
+                g2.drawLine(0, 0, getWidth(), getHeight());
+                g2.drawLine(getWidth(), 0, 0, getHeight());
+                break;
+            case FILLED:
+                break;
+            case IDENTIFIED:
+                break;
+            case UNIDENTIFIED:
         }
+        g2.setClip(originalClip);
         g2.setColor(originalColor);
     }
 

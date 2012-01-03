@@ -22,8 +22,8 @@ public class ProjectChildNodeFactory extends ChildFactory<NodeGroup> implements 
 
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
-        System.out.println("Received property change event: "+pce);
-        ipp.propertyChange(pce);
+        System.out.println("ProjectChildNodeFactory: Received property change event: "+pce);
+        //ipp.propertyChange(pce);
         refresh(true);
     }
 
@@ -34,13 +34,14 @@ public class ProjectChildNodeFactory extends ChildFactory<NodeGroup> implements 
 
     public ProjectChildNodeFactory(IProteomicProject ipp) {
         this.ipp = ipp;
+        this.ipp.addPropertyChangeListener(this);
     }
 
     @Override
     protected boolean createKeys(List<NodeGroup> toPopulate) {
         for (NodeGroup s : NodeGroup.values()) {
             if (Thread.interrupted()) {
-                return true;
+                return false;
             } else {
                 toPopulate.add(s);
             }

@@ -721,8 +721,14 @@ public final class GelViewerTopComponent extends TopComponent implements
         if ("annotationPointSelection".equals(evt.getPropertyName())) {
             Tuple2D<Point2D, Annotation<ISpot>> newAnnotation = (Tuple2D<Point2D, Annotation<ISpot>>) evt.
                     getNewValue();
+            Tuple2D<Point2D, Annotation<ISpot>> oldAnnotation = (Tuple2D<Point2D, Annotation<ISpot>>) evt.
+                    getOldValue();
+            if (oldAnnotation != null) {
+                removeAnnotation(oldAnnotation.getSecond());
+            }
             //adjust current selection
             setSelection(newAnnotation);
+            repaint();
         } else {
             repaint();
         }
@@ -733,9 +739,9 @@ public final class GelViewerTopComponent extends TopComponent implements
         if (newAnnotation == null) {
             resetSelection();
         } else {
-            if (annotation != null) {
-                resetSelection();
-            }
+//            if (annotation != null) {
+            resetSelection();
+//            }
             Annotation<ISpot> sa = newAnnotation.getSecond();
             if (sa != null) {
                 ic.add(sa);
@@ -753,17 +759,32 @@ public final class GelViewerTopComponent extends TopComponent implements
                     HeatmapDataset hd = getLookup().lookup(HeatmapDataset.class);
                     AffineTransform transform = hd.getTransform();
                     Point2D transformedCenter;
-                    try {
-                        transformedCenter = transform.inverseTransform(annotation.
-                                getFirst(), null);
-                        jl.scrollRectToVisible(new Rectangle((int) (transformedCenter.
-                                getX() - jl.getVisibleRect().width / 2), (int) (transformedCenter.
-                                getY() - jl.getVisibleRect().height / 2), jl.
-                                getVisibleRect().width,
-                                jl.getVisibleRect().height));
-                    } catch (NoninvertibleTransformException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+//                    try {
+                    transformedCenter = transform.transform(
+                            annotation.getFirst(), null);
+                    jl.scrollRectToVisible(new Rectangle((int) (transformedCenter.
+                            getX() - jl.getVisibleRect().width / 2), (int) (transformedCenter.
+                            getY() - jl.getVisibleRect().height / 2), jl.
+                            getVisibleRect().width,
+                            jl.getVisibleRect().height));
+//                    } catch (NoninvertibleTransformException ex) {
+//                        Exceptions.printStackTrace(ex);
+//                    }
+                }
+            }
+        }
+    }
+
+    protected void removeAnnotation(Annotation<ISpot> sa) {
+        if (sa != null) {
+            sa.removePropertyChangeListener(this);
+            ic.remove(sa);
+            ISpot oldSpot = sa.getPayload();
+            if (oldSpot != null) {
+                ic.remove(oldSpot);
+                ISpotGroup group = oldSpot.getGroup();
+                if (group != null) {
+                    ic.remove(group);
                 }
             }
         }
@@ -771,19 +792,7 @@ public final class GelViewerTopComponent extends TopComponent implements
 
     protected void resetSelection() {
         if (annotation != null) {
-            Annotation<ISpot> sa = annotation.getSecond();
-            if (sa != null) {
-                sa.removePropertyChangeListener(this);
-                ic.remove(sa);
-                ISpot oldSpot = sa.getPayload();
-                if (oldSpot != null) {
-                    ic.remove(oldSpot);
-                    ISpotGroup group = oldSpot.getGroup();
-                    if (group != null) {
-                        ic.remove(group);
-                    }
-                }
-            }
+            removeAnnotation(annotation.getSecond());
         }
         annotation = null;
     }

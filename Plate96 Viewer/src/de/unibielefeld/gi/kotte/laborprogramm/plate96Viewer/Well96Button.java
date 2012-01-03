@@ -10,8 +10,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Ellipse2D;
 import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -287,16 +289,48 @@ public class Well96Button extends JButton implements MouseInputListener {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
         Color originalColor = g2.getColor();
+        Shape originalClip = g2.getClip();
         g2.setColor(Color.WHITE);
         g2.fillRect(0, 0, getWidth(), getHeight());
         g2.setColor(well.getStatus().getColor());
 //        int width = getWidth() - (getInsets().left + getInsets().right);
 //        int height = getHeight() - (getInsets().top + getInsets().bottom);
+//        if (isSelected()) {
+//            g2.fillOval(2, 2, getWidth() - 4, getHeight() - 4);//getInsets().left, getInsets().top, width, height);
+//        } else {
+//            g2.drawOval(2, 2, getWidth() - 4, getHeight() - 4);//getInsets().left, getInsets().top, width, height);
+//        }
+        Ellipse2D.Double e2d = new Ellipse2D.Double(2, 2, getWidth() - 4,
+                getHeight() - 4);
         if (isSelected()) {
-            g2.fillOval(2, 2, getWidth() - 4, getHeight() - 4);//getInsets().left, getInsets().top, width, height);
+            g2.fill(e2d);
+            g2.setColor(Color.BLACK);
+            g2.draw(e2d);
+            //g2.fillOval(2, 2, getWidth() - 4, getHeight() - 4);//getInsets().left, getInsets().top, width, height);
         } else {
-            g2.drawOval(2, 2, getWidth() - 4, getHeight() - 4);//getInsets().left, getInsets().top, width, height);
+            g2.draw(e2d);
+            //g2.drawOval(2, 2, getWidth() - 4, getHeight() - 4);//getInsets().left, getInsets().top, width, height);
         }
+        switch (well.getStatus()) {
+            case EMPTY:
+//        int width = getWidth() - (getInsets().left + getInsets().right);
+//        int height = getHeight() - (getInsets().top + getInsets().bottom);
+
+                break;
+            case ERROR:
+                g2.setClip(e2d);
+                if (isSelected()) {
+                    g2.setColor(Color.BLACK);
+                }
+                g2.drawLine(0, 0, getWidth(), getHeight());
+                g2.drawLine(getWidth(), 0, 0, getHeight());
+                break;
+            case FILLED:
+                break;
+            case PROCESSED:
+                break;
+        }
+        g2.setClip(originalClip);
         g2.setColor(originalColor);
     }
 

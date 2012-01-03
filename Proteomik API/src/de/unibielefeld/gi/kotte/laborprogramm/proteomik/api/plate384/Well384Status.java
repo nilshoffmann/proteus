@@ -12,39 +12,52 @@ public enum Well384Status {
     /**
      * This well is empty.
      */
-    EMPTY,
+    EMPTY {
+
+        @Override
+        public Color getColor() {
+            return Color.BLACK;
+        }
+    },
     /**
      * This well is filled and has a corresponding well on a 96 well plate.
      */
-    FILLED,
+    FILLED {
+        @Override
+        public Color getColor() {
+            return Color.BLUE;
+        }
+    },
     /**
      * This filled well has been successfully identified.
      */
-    IDENTIFIED,
+    IDENTIFIED {
+        @Override
+        public Color getColor() {
+            return Color.GREEN;
+        }
+    },
     /**
      * This filled well has been attempted to identify,
      * but has no valid identification result.
      */
-    UNIDENTIFIED,
+    UNIDENTIFIED {
+        @Override
+        public Color getColor() {
+            return Color.YELLOW;
+        }
+    },
     /**
      * This well is in an errand state.
      */
-    ERROR;
-
-    public Color getColor() {
-        switch(this) {
-            case FILLED:
-                return Color.BLUE;
-            case IDENTIFIED:
-                return Color.GREEN;
-            case UNIDENTIFIED:
-                return Color.MAGENTA;
-            case ERROR:
-                return Color.RED;
-            default:
-                return Color.BLACK;
+    ERROR {
+        @Override
+        public Color getColor() {
+            return Color.RED;
         }
-    }
+    };
+
+    public abstract Color getColor();
 
     @Override
     public String toString() {

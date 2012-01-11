@@ -13,6 +13,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Default implementation for IProject.
@@ -86,14 +87,16 @@ public class Project implements IProject, Activatable {
     public void setGelGroups(List<ILogicalGelGroup> groups) {
         activate(ActivationPurpose.WRITE);
         this.gelgroups = groups;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_GELGROUPS, null, groups);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_GELGROUPS, null,
+                groups);
     }
 
     @Override
     public void addGelGroup(ILogicalGelGroup group) {
         activate(ActivationPurpose.WRITE);
         this.gelgroups.add(group);
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_GELGROUPS, null, this.gelgroups);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_GELGROUPS, null,
+                this.gelgroups);
     }
 
     @Override
@@ -106,14 +109,16 @@ public class Project implements IProject, Activatable {
     public void setSpotGroups(List<ISpotGroup> groups) {
         activate(ActivationPurpose.WRITE);
         this.spotgroups = groups;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_SPOTGROUPS, null, groups);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_SPOTGROUPS, null,
+                groups);
     }
 
     @Override
     public void addSpotGroup(ISpotGroup group) {
         activate(ActivationPurpose.WRITE);
         this.spotgroups.add(group);
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_SPOTGROUPS, null, this.spotgroups);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_SPOTGROUPS, null,
+                this.spotgroups);
     }
 
     @Override
@@ -139,7 +144,8 @@ public class Project implements IProject, Activatable {
     public void setOwner(String owner) {
         activate(ActivationPurpose.WRITE);
         this.owner = owner;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_OWNER, null, owner);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_OWNER, null,
+                owner);
     }
 
     @Override
@@ -152,7 +158,8 @@ public class Project implements IProject, Activatable {
     public void setDescription(String description) {
         activate(ActivationPurpose.WRITE);
         this.description = description;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_DESCRIPTION, null, description);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_DESCRIPTION, null,
+                description);
     }
 
     @Override
@@ -165,7 +172,8 @@ public class Project implements IProject, Activatable {
     public void set96Plates(List<IPlate96> plates) {
         activate(ActivationPurpose.WRITE);
         this.plates96 = plates;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_PLATES96, null, plates);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PLATES96, null,
+                plates);
     }
 
     @Override
@@ -178,21 +186,40 @@ public class Project implements IProject, Activatable {
     public void set384Plates(List<IPlate384> plates) {
         activate(ActivationPurpose.WRITE);
         this.plates384 = plates;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_PLATES384, null, plates);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PLATES384, null,
+                plates);
     }
 
     @Override
     public void add96Plate(IPlate96 plate) {
         activate(ActivationPurpose.WRITE);
         this.plates96.add(plate);
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_PLATES96, null, this.plates96);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PLATES96, null,
+                this.plates96);
     }
 
     @Override
     public void add384Plate(IPlate384 plate) {
         activate(ActivationPurpose.WRITE);
         this.plates384.add(plate);
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_PLATES384, null, this.plates384);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PLATES384, null,
+                this.plates384);
+    }
+
+    @Override
+    public void remove96Plate(IPlate96 plate) {
+        activate(ActivationPurpose.WRITE);
+        this.plates96.remove(plate);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PLATES96, null,
+                this.plates96);
+    }
+
+    @Override
+    public void remove384Plate(IPlate384 plate) {
+        activate(ActivationPurpose.WRITE);
+        this.plates384.remove(plate);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PLATES384, null,
+                this.plates384);
     }
 
     @Override
@@ -205,7 +232,8 @@ public class Project implements IProject, Activatable {
         String str = "project '" + getName() + "' from " + getOwner() + ": " + getDescription();
         if (!gelgroups.isEmpty()) {
             ILogicalGelGroup group = null;
-            for (Iterator<ILogicalGelGroup> it = gelgroups.iterator(); it.hasNext();) {
+            for (Iterator<ILogicalGelGroup> it = gelgroups.iterator(); it.
+                    hasNext();) {
                 group = it.next();
                 str += "\n  > " + group.toFullyRecursiveString();
             }
@@ -240,5 +268,29 @@ public class Project implements IProject, Activatable {
             str += "\n  no spot groups";
         }
         return str;
+    }
+    private UUID objectId = UUID.randomUUID();
+
+    @Override
+    public UUID getId() {
+        activate(ActivationPurpose.READ);
+        return objectId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Project other = (Project) obj;
+        return getId().equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
     }
 }

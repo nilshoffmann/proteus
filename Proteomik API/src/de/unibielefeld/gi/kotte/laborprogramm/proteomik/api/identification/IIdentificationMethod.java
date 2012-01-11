@@ -1,6 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPropertyChangeSource;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IUniqueObject;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
  *
  * @author kotte
  */
-public interface IIdentificationMethod extends IPropertyChangeSource{
+public interface IIdentificationMethod extends IPropertyChangeSource, IUniqueObject {
 
     public static final String PROPERTY_PARENT = "parent";
 

@@ -24,7 +24,7 @@ class LogicalGelGroupChildNodeFactory extends ChildFactory<IBioRepGelGroup> {
         List<IBioRepGelGroup> ibrggs = lkp.lookup(ILogicalGelGroup.class).getGelGroups();
         for (IBioRepGelGroup ibrgg : ibrggs) {
             if (Thread.interrupted()) {
-                return true;
+                return false;
             } else {
                 toPopulate.add(ibrgg);
             }

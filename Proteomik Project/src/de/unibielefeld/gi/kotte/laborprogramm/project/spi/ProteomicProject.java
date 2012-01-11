@@ -58,6 +58,7 @@ public class ProteomicProject implements IProteomicProject {
     Lookup lookup = null;
     URL dblocation = null;
     SaveCookie singletonSaveCookie = null;
+    PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/ProjectIcon.png";
 
     public ProteomicProject() {
@@ -68,7 +69,6 @@ public class ProteomicProject implements IProteomicProject {
 //        this();
 //        this.activeProject = project;
 //    }
-
     private ICrudSession getCrudSession() {
         openSession();
         return ics;
@@ -81,7 +81,7 @@ public class ProteomicProject implements IProteomicProject {
 //    }
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
-        System.out.println("Received property change event");
+        System.out.println("Received property change event in ProteomicsProject!");
 
 //        persist();
         //due to a but in Netbeans RCP, multiple SaveCookie instances in
@@ -96,11 +96,12 @@ public class ProteomicProject implements IProteomicProject {
 ////            ics.create(Arrays.asList(pce.getNewValue()));
 //            //activeProject = getFromDB();
 //        }
-        getLookup().lookup(Info.class).firePropertyChange(pce.getPropertyName(), pce.getOldValue(), pce.getNewValue());
+        pcs.firePropertyChange(pce.getPropertyName(), pce.
+                getOldValue(), pce.getNewValue());
     }
 
     private IProject showOverwriteDatabaseDialog(IProject project) throws AuthenticationException {
-        if (project!=null && activeProject != null) {
+        if (project != null && activeProject != null) {
             JPanel jp = new JPanel();
             jp.add(new JLabel(
                     "A project is already present in the database, discard and overwrite?"),
@@ -122,7 +123,7 @@ public class ProteomicProject implements IProteomicProject {
                 //singletonSaveCookie = null;
                 return project;
             }
-        } else if (project!=null && activeProject == null) {
+        } else if (project != null && activeProject == null) {
             ics.create(Arrays.asList(project));
             //instanceContent.remove(singletonSaveCookie);
             //singletonSaveCookie = null;
@@ -138,7 +139,6 @@ public class ProteomicProject implements IProteomicProject {
 //            showOverwriteDatabaseDialog(Arrays.asList(activeProject));
 //        }
 //    }
-
     @Override
     public synchronized <T> Collection<T> retrieve(Class<T> c) {
         Collection<T> coll = getCrudSession().retrieve(c);
@@ -281,7 +281,7 @@ public class ProteomicProject implements IProteomicProject {
             ics.open();
             if (activeProject == null) {
                 activeProject = getFromDB();
-            }else{
+            } else {
                 ics.create(activeProject);
             }
             instanceContent.add(activeProject);
@@ -308,7 +308,8 @@ public class ProteomicProject implements IProteomicProject {
         instanceContent.remove(activeProject);
         instanceContent.remove(this);
         activeProject = null;
-        Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().closeTopComponentsFor(this);
+        Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().
+                closeTopComponentsFor(this);
         //CentralLookup.getDefault().remove(this);
     }
 
@@ -413,8 +414,9 @@ public class ProteomicProject implements IProteomicProject {
 
     @Override
     public void setProjectData(IProject project) {
-        if(activeProject!=null) {
-            throw new IllegalArgumentException("Project is already activated, can not replace project!");
+        if (activeProject != null) {
+            throw new IllegalArgumentException(
+                    "Project is already activated, can not replace project!");
         }
         activeProject = project;
         openSession();
@@ -423,7 +425,7 @@ public class ProteomicProject implements IProteomicProject {
     @Override
     public String toString() {
         if (activeProject != null) {
-            return "IProteomicProject: "+activeProject.getName();
+            return "IProteomicProject: " + activeProject.getName();
         }
         return "<NOT INITIALIZED>";
     }

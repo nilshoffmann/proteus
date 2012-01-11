@@ -10,12 +10,13 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IWell
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
+import java.util.UUID;
 
 /**
  *
  * @author kotte
  */
-public class IdentificationMethod implements IIdentificationMethod, Activatable{
+public class IdentificationMethod implements IIdentificationMethod, Activatable {
 
     /**
      * PropertyChangeSupport ala JavaBeans(tm)
@@ -61,7 +62,6 @@ public class IdentificationMethod implements IIdentificationMethod, Activatable{
             activator.activate(activationPurpose);
         }
     }
-
     /**
      * Object definition
      */
@@ -73,7 +73,8 @@ public class IdentificationMethod implements IIdentificationMethod, Activatable{
     public void addIdentification(IIdentification identification) {
         activate(ActivationPurpose.WRITE);
         this.identifications.add(identification);
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_IDENTIFICATIONS, null, this.identifications);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_IDENTIFICATIONS,
+                null, this.identifications);
     }
 
     @Override
@@ -92,14 +93,16 @@ public class IdentificationMethod implements IIdentificationMethod, Activatable{
     public void setIdentifications(List<IIdentification> identifications) {
         activate(ActivationPurpose.WRITE);
         this.identifications = identifications;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_IDENTIFICATIONS, null, identifications);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_IDENTIFICATIONS,
+                null, identifications);
     }
 
     @Override
     public void setParent(IWellIdentification parent) {
         activate(ActivationPurpose.WRITE);
         this.parent = parent;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null, parent);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null,
+                parent);
     }
 
     @Override
@@ -118,13 +121,37 @@ public class IdentificationMethod implements IIdentificationMethod, Activatable{
     @Override
     public String toString() {
         String str;
-        if(identifications.isEmpty()) {
+        if (getIdentifications().isEmpty()) {
             str = "empty identification method";
         }
-        str = "identification method '" + name + "' found the following identifications:";
-        for (IIdentification identification : identifications) {
+        str = "identification method '" + getName() + "' found the following identifications:";
+        for (IIdentification identification : getIdentifications()) {
             str += "\n          > " + identification.toString();
         }
         return str;
+    }
+    private UUID objectId = UUID.randomUUID();
+
+    @Override
+    public UUID getId() {
+        activate(ActivationPurpose.READ);
+        return objectId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final IdentificationMethod other = (IdentificationMethod) obj;
+        return getId().equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
     }
 }

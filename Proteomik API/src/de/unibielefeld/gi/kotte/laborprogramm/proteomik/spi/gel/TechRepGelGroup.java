@@ -11,6 +11,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGe
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Iterator;
+import java.util.UUID;
 
 /**
  * Default implementation for ITechRepGelGroup.
@@ -26,22 +27,23 @@ public class TechRepGelGroup implements ITechRepGelGroup, Activatable {
     private transient PropertyChangeSupport pcs = null;
 
     @Override
-    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
+    public synchronized void removePropertyChangeListener(
+            PropertyChangeListener listener) {
         getPropertyChangeSupport().removePropertyChangeListener(listener);
     }
 
     @Override
-    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
+    public synchronized void addPropertyChangeListener(
+            PropertyChangeListener listener) {
         getPropertyChangeSupport().addPropertyChangeListener(listener);
     }
 
     private PropertyChangeSupport getPropertyChangeSupport() {
-        if(this.pcs == null) {
+        if (this.pcs == null) {
             this.pcs = new PropertyChangeSupport(this);
         }
         return this.pcs;
     }
-
     private transient Activator activator;
 
     @Override
@@ -62,7 +64,6 @@ public class TechRepGelGroup implements ITechRepGelGroup, Activatable {
             activator.activate(activationPurpose);
         }
     }
-    
     /**
      * Object definition
      */
@@ -81,7 +82,8 @@ public class TechRepGelGroup implements ITechRepGelGroup, Activatable {
     public void setDescription(String description) {
         activate(ActivationPurpose.WRITE);
         this.description = description;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_DESCRIPTION, null, description);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_DESCRIPTION, null,
+                description);
     }
 
     @Override
@@ -120,14 +122,16 @@ public class TechRepGelGroup implements ITechRepGelGroup, Activatable {
     public void setParent(IBioRepGelGroup parent) {
         activate(ActivationPurpose.WRITE);
         this.parent = parent;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null, parent);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null,
+                parent);
     }
 
     @Override
     public void addGel(IGel gel) {
         activate(ActivationPurpose.WRITE);
         this.gels.add(gel);
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_GELS, null, this.gels);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_GELS, null,
+                this.gels);
     }
 
     @Override
@@ -148,5 +152,29 @@ public class TechRepGelGroup implements ITechRepGelGroup, Activatable {
             str += "\n        no gels";
         }
         return str;
+    }
+    private UUID objectId = UUID.randomUUID();
+
+    @Override
+    public UUID getId() {
+        activate(ActivationPurpose.READ);
+        return objectId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TechRepGelGroup other = (TechRepGelGroup) obj;
+        return getId().equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
     }
 }

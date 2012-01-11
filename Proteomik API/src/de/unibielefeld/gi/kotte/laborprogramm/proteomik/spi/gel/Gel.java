@@ -11,6 +11,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Default implementation for IGel.
@@ -26,22 +27,23 @@ public class Gel implements IGel, Activatable {
     private transient PropertyChangeSupport pcs = null;
 
     @Override
-    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
+    public synchronized void removePropertyChangeListener(
+            PropertyChangeListener listener) {
         getPropertyChangeSupport().removePropertyChangeListener(listener);
     }
 
     @Override
-    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
+    public synchronized void addPropertyChangeListener(
+            PropertyChangeListener listener) {
         getPropertyChangeSupport().addPropertyChangeListener(listener);
     }
 
     private PropertyChangeSupport getPropertyChangeSupport() {
-        if(this.pcs == null) {
+        if (this.pcs == null) {
             this.pcs = new PropertyChangeSupport(this);
         }
         return this.pcs;
     }
-
     private transient Activator activator;
 
     @Override
@@ -62,7 +64,6 @@ public class Gel implements IGel, Activatable {
             activator.activate(activationPurpose);
         }
     }
-
     /**
      * Object definition
      */
@@ -83,7 +84,8 @@ public class Gel implements IGel, Activatable {
     public void setParent(ITechRepGelGroup parent) {
         activate(ActivationPurpose.WRITE);
         this.parent = parent;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null, parent);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null,
+                parent);
     }
 
     @Override
@@ -96,7 +98,8 @@ public class Gel implements IGel, Activatable {
     public void setDescription(String description) {
         activate(ActivationPurpose.WRITE);
         this.description = description;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_DESCRIPTION, null, description);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_DESCRIPTION, null,
+                description);
     }
 
     @Override
@@ -109,7 +112,8 @@ public class Gel implements IGel, Activatable {
     public void setFilename(String filename) {
         activate(ActivationPurpose.WRITE);
         this.filename = filename;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_FILENAME, null, filename);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_FILENAME, null,
+                filename);
     }
 
     @Override
@@ -135,34 +139,37 @@ public class Gel implements IGel, Activatable {
     public void addSpot(ISpot spot) {
         activate(ActivationPurpose.WRITE);
         this.spots.add(spot);
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_SPOTS, null, this.spots);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_SPOTS, null,
+                this.spots);
     }
 
     @Override
     public void setSpots(List<ISpot> spots) {
         activate(ActivationPurpose.WRITE);
         this.spots = spots;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_SPOTS, null, spots);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_SPOTS, null,
+                spots);
     }
 
     @Override
-    public boolean isVirtual(){
+    public boolean isVirtual() {
         activate(ActivationPurpose.READ);
         return this.virtual;
     }
 
     @Override
-    public void setVirtual(boolean virtual){
+    public void setVirtual(boolean virtual) {
         activate(ActivationPurpose.WRITE);
         this.virtual = virtual;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_VIRTUAL, null, virtual);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_VIRTUAL, null,
+                virtual);
     }
 
     @Override
     public String toString() {
         return "gel '" + getName() + "' from file '" + getFilename() + "': " + getDescription();
     }
-    
+
     @Override
     public String toFullyRecursiveString() {
         String str = "gel '" + getName() + "' from file '" + getFilename() + "': " + getDescription();
@@ -176,5 +183,29 @@ public class Gel implements IGel, Activatable {
             str += "\n          no spots";
         }
         return str;
+    }
+    private UUID objectId = UUID.randomUUID();
+
+    @Override
+    public UUID getId() {
+        activate(ActivationPurpose.READ);
+        return objectId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Gel other = (Gel) obj;
+        return getId().equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
     }
 }

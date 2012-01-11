@@ -24,7 +24,7 @@ class TechRepGelGroupChildNodeFactory extends ChildFactory<IGel> {
         List<IGel> gels = lkp.lookup(ITechRepGelGroup.class).getGels();
         for (IGel gel : gels) {
             if (Thread.interrupted()) {
-                return true;
+                return false;
             } else {
                 toPopulate.add(gel);
             }

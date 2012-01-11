@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author kotte
  */
-public interface IProject extends IPropertyChangeSource {
+public interface IProject extends IPropertyChangeSource, IUniqueObject {
 
     public static final String PROPERTY_DESCRIPTION = "description";
 
@@ -62,6 +62,10 @@ public interface IProject extends IPropertyChangeSource {
     public void add96Plate(IPlate96 plate);
 
     public void add384Plate(IPlate384 plate);
+
+    public void remove384Plate(IPlate384 plate);
+
+    public void remove96Plate(IPlate96 plate);
 
     public String toFullyRecursiveString();
 }

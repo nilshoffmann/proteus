@@ -5,9 +5,8 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96Factory;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
-import javax.swing.Action;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Lookup;
@@ -16,48 +15,48 @@ import org.openide.util.Lookup;
  *
  * @author kotte
  */
-public class CreatePlate96Action implements Action {
+public class CreatePlate96Action implements ActionListener {
 
     private final IProject proj;
-    private PropertyChangeListener listener;
+//    private PropertyChangeListener listener;
 
     public CreatePlate96Action(IProject proj) {
         this.proj = proj;
     }
 
-    @Override
-    public Object getValue(String key) {
-        System.out.println("CreatePlate96Action.getValue() called with key: " + key);
-        if (key.equals("Name")) {
-            return "Erstelle 96 Well Platte";
-        }
-        return null;
-    }
-
-    @Override
-    public void putValue(String key, Object value) {
-        //throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setEnabled(boolean b) {
-        //throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    @Override
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        this.listener = listener;
-    }
-
-    @Override
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        //throw new UnsupportedOperationException("Not supported yet.");
-    }
+//    @Override
+//    public Object getValue(String key) {
+//        System.out.println("CreatePlate96Action.getValue() called with key: " + key);
+//        if (key.equals("Name")) {
+//            return "Erstelle 96 Well Platte";
+//        }
+//        return null;
+//    }
+//
+//    @Override
+//    public void putValue(String key, Object value) {
+//        //throw new UnsupportedOperationException("Not supported yet.");
+//    }
+//
+//    @Override
+//    public void setEnabled(boolean b) {
+//        //throw new UnsupportedOperationException("Not supported yet.");
+//    }
+//
+//    @Override
+//    public boolean isEnabled() {
+//        return true;
+//    }
+//
+//    @Override
+//    public void addPropertyChangeListener(PropertyChangeListener listener) {
+//        this.listener = listener;
+//    }
+//
+//    @Override
+//    public void removePropertyChangeListener(PropertyChangeListener listener) {
+//        //throw new UnsupportedOperationException("Not supported yet.");
+//    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -83,8 +82,8 @@ public class CreatePlate96Action implements Action {
             this.proj.add96Plate(plate96);
             plate96.setParent(this.proj);
             plate96.setName(dialog.getNameText());
-            System.out.println("Firing PropertyChangeEvent: PLATE96_CREATED");
-            listener.propertyChange(new PropertyChangeEvent(this,"PLATE96_CREATED",null,plate96));
+            //System.out.println("Firing PropertyChangeEvent: PLATE96_CREATED");
+            //listener.propertyChange(new PropertyChangeEvent(this,"PLATE96_CREATED",null,plate96));
         }
 
     }

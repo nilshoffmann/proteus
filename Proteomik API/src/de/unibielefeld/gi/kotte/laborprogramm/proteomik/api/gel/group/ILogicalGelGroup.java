@@ -2,6 +2,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPropertyChangeSource;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IUniqueObject;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ import java.util.List;
  *
  * @author kotte
  */
-public interface ILogicalGelGroup extends IPropertyChangeSource {
+public interface ILogicalGelGroup extends IPropertyChangeSource, IUniqueObject {
 
     public static final String PROPERTY_PARENT = "parent";
 

@@ -11,6 +11,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.Well384Status;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.UUID;
 
 /**
  * Default implementation for IWell384.
@@ -26,22 +27,23 @@ public class Well384 implements IWell384, Activatable {
     private transient PropertyChangeSupport pcs = null;
 
     @Override
-    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
+    public synchronized void removePropertyChangeListener(
+            PropertyChangeListener listener) {
         getPropertyChangeSupport().removePropertyChangeListener(listener);
     }
 
     @Override
-    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
+    public synchronized void addPropertyChangeListener(
+            PropertyChangeListener listener) {
         getPropertyChangeSupport().addPropertyChangeListener(listener);
     }
 
     private PropertyChangeSupport getPropertyChangeSupport() {
-        if(this.pcs == null) {
+        if (this.pcs == null) {
             this.pcs = new PropertyChangeSupport(this);
         }
         return this.pcs;
     }
-
     private transient Activator activator;
 
     @Override
@@ -62,7 +64,6 @@ public class Well384 implements IWell384, Activatable {
             activator.activate(activationPurpose);
         }
     }
-
     /**
      * Object definition
      */
@@ -121,7 +122,7 @@ public class Well384 implements IWell384, Activatable {
     @Override
     public IWellIdentification getIdentification() {
         activate(ActivationPurpose.READ);
-        if(identification==null) {
+        if (identification == null) {
             setIdentification(new WellIdentification());
         }
         return identification;
@@ -131,53 +132,83 @@ public class Well384 implements IWell384, Activatable {
     public void setIdentification(IWellIdentification identification) {
         activate(ActivationPurpose.WRITE);
         this.identification = identification;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_IDENTIFICATION, null, identification);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_IDENTIFICATION,
+                null, identification);
     }
 
     @Override
     public void setParent(IPlate384 parent) {
         activate(ActivationPurpose.WRITE);
         this.parent = parent;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null, parent);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null,
+                parent);
     }
 
     @Override
     public void setRow(char posX) {
         activate(ActivationPurpose.WRITE);
         this.row = posX;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_POSITION, null, getWellPosition());
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_POSITION, null,
+                getWellPosition());
     }
 
     @Override
     public void setColumn(int posY) {
         activate(ActivationPurpose.WRITE);
         this.column = posY;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_POSITION, null, getWellPosition());
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_POSITION, null,
+                getWellPosition());
     }
 
     @Override
     public void setStatus(Well384Status status) {
         activate(ActivationPurpose.WRITE);
         this.status = status;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_STATUS, null, status);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_STATUS, null,
+                status);
     }
 
     @Override
     public void setWell96(IWell96 well96) {
         activate(ActivationPurpose.WRITE);
         this.well96 = well96;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_WELL96, null, well96);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_WELL96, null,
+                well96);
     }
 
     @Override
     public String toString() {
-        return "well " + getRow()+ getColumn() + " is " + getStatus();
+        return "well " + getRow() + getColumn() + " is " + getStatus();
     }
 
     @Override
-    public String toFullyRecursiveString(){
-        String str = "well " + getRow()+ getColumn() + " is " + getStatus();
+    public String toFullyRecursiveString() {
+        String str = "well " + getRow() + getColumn() + " is " + getStatus();
         str += "\n      > " + identification;
         return str;
+    }
+    private UUID objectId = UUID.randomUUID();
+
+    @Override
+    public UUID getId() {
+        activate(ActivationPurpose.READ);
+        return objectId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Well384 other = (Well384) obj;
+        return getId().equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
     }
 }

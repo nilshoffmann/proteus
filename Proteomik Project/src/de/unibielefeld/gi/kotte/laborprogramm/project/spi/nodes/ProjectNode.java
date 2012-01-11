@@ -1,9 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
-import de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.CreatePlate384Action;
-import de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.CreatePlate96Action;
-import de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.ExportSpotTableAction;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -22,12 +19,8 @@ import org.openide.nodes.PropertySupport.ReadWrite;
 import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
-import org.openide.util.LookupEvent;
-import org.openide.util.LookupListener;
 import org.openide.util.Utilities;
-import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
-import org.openide.util.lookup.ProxyLookup;
 
 /**
  * Node representing a Proteomik Project.
@@ -42,6 +35,7 @@ public class ProjectNode extends AbstractNode implements PropertyChangeListener 
     public ProjectNode(IProteomicProject ipp) {
         super(Children.create(new ProjectChildNodeFactory(ipp), true), ipp.getLookup());
 //        this(ipp, new InstanceContent(), ipp.getLookup());
+        //ipp.addPropertyChangeListener(this);
     }
 
     /**
@@ -177,9 +171,9 @@ public class ProjectNode extends AbstractNode implements PropertyChangeListener 
 //
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        System.out.println("Received change event: "+evt);
+        System.out.println("Received change event on ProjectNode: "+evt);
         //getLookup().lookup(IProteomicProject.class).propertyChange(evt);
-        setChildren(Children.create(new ProjectChildNodeFactory(getLookup().lookup(IProteomicProject.class)), true));
+        //setChildren(Children.create(new ProjectChildNodeFactory(getLookup().lookup(IProteomicProject.class)), true));
     }
 
 //    @Override

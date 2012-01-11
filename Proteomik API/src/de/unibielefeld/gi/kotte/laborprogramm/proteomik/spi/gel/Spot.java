@@ -10,6 +10,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.UUID;
 
 /**
  * Default implementation for ISpot.
@@ -25,22 +26,23 @@ public class Spot implements ISpot, Activatable {
     private transient PropertyChangeSupport pcs = null;
 
     @Override
-    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
+    public synchronized void removePropertyChangeListener(
+            PropertyChangeListener listener) {
         getPropertyChangeSupport().removePropertyChangeListener(listener);
     }
 
     @Override
-    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
+    public synchronized void addPropertyChangeListener(
+            PropertyChangeListener listener) {
         getPropertyChangeSupport().addPropertyChangeListener(listener);
     }
 
     private PropertyChangeSupport getPropertyChangeSupport() {
-        if(this.pcs == null) {
+        if (this.pcs == null) {
             this.pcs = new PropertyChangeSupport(this);
         }
         return this.pcs;
     }
-
     private transient Activator activator;
 
     @Override
@@ -61,7 +63,6 @@ public class Spot implements ISpot, Activatable {
             activator.activate(activationPurpose);
         }
     }
-    
     /**
      * Object definition
      */
@@ -126,14 +127,16 @@ public class Spot implements ISpot, Activatable {
     public void setLabel(String label) {
         activate(ActivationPurpose.WRITE);
         this.label = label;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_LABEL, null, label);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_LABEL, null,
+                label);
     }
 
     @Override
     public void setNumber(int number) {
         activate(ActivationPurpose.WRITE);
         this.number = number;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_NUMBER, null, number);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_NUMBER, null,
+                number);
     }
 
     @Override
@@ -161,7 +164,8 @@ public class Spot implements ISpot, Activatable {
     public void setStatus(SpotStatus status) {
         activate(ActivationPurpose.WRITE);
         this.status = status;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_STATUS, null, status);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_STATUS, null,
+                status);
     }
 
     @Override
@@ -173,11 +177,36 @@ public class Spot implements ISpot, Activatable {
     public void setGroup(ISpotGroup group) {
         activate(ActivationPurpose.WRITE);
         this.group = group;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_GROUP, null, group);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_GROUP, null,
+                group);
     }
 
     @Override
     public String toString() {
         return "spot #" + getNumber() + " labeled '" + getLabel() + "' at position " + getPosX() + "/" + getPosY() + " is " + getStatus();
+    }
+    private UUID objectId = UUID.randomUUID();
+
+    @Override
+    public UUID getId() {
+        activate(ActivationPurpose.READ);
+        return objectId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Spot other = (Spot) obj;
+        return getId().equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
     }
 }

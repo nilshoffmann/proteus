@@ -1,6 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPropertyChangeSource;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IUniqueObject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 
@@ -9,7 +10,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
  *
  * @author kotte
  */
-public interface ISpot extends IPropertyChangeSource{
+public interface ISpot extends IPropertyChangeSource, IUniqueObject {
 
     public static final String PROPERTY_LABEL = "label";
 

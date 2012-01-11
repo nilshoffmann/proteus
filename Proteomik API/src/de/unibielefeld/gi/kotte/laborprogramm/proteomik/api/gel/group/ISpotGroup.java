@@ -2,6 +2,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPropertyChangeSource;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IUniqueObject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  *
  * @author kotte
  */
-public interface ISpotGroup extends IPropertyChangeSource {
+public interface ISpotGroup extends IPropertyChangeSource, IUniqueObject {
 
     public static final String PROPERTY_LABEL = "user defined label";
 

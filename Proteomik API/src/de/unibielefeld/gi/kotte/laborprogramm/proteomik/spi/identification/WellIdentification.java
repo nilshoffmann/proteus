@@ -11,6 +11,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Default implementation of IWellIdentification
@@ -89,7 +90,8 @@ public class WellIdentification implements IWellIdentification, Activatable {
     public void setParent(IWell384 well) {
         activate(ActivationPurpose.WRITE);
         this.well = well;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null, well);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null,
+                well);
     }
 
     /**
@@ -126,7 +128,8 @@ public class WellIdentification implements IWellIdentification, Activatable {
         method.setName(name);
         method.setParent(this);
         methods.add(method);
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_METHODS, null, methods);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_METHODS, null,
+                methods);
         return method;
     }
 
@@ -139,26 +142,52 @@ public class WellIdentification implements IWellIdentification, Activatable {
     public void setMethods(List<IIdentificationMethod> methods) {
         activate(ActivationPurpose.WRITE);
         this.methods = methods;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_METHODS, null, methods);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_METHODS, null,
+                methods);
     }
 
     @Override
     public void addMethod(IIdentificationMethod method) {
         activate(ActivationPurpose.WRITE);
         this.methods.add(method);
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_METHODS, null, methods);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_METHODS, null,
+                methods);
     }
 
     @Override
     public String toString() {
         String str;
-        if(methods.isEmpty()) {
+        if (getMethods().isEmpty()) {
             str = "empty well identification (unidentified well)";
         }
         str = "well identification with methods:";
-        for (IIdentificationMethod method : methods) {
+        for (IIdentificationMethod method : getMethods()) {
             str += "\n        > " + method.toString();
         }
         return str;
+    }
+    private UUID objectId = UUID.randomUUID();
+
+    @Override
+    public UUID getId() {
+        activate(ActivationPurpose.READ);
+        return objectId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final WellIdentification other = (WellIdentification) obj;
+        return getId().equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
     }
 }

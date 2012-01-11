@@ -9,6 +9,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIden
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Default implementation of IIdentification.
@@ -89,7 +90,8 @@ public class Identification implements IIdentification, Activatable {
     public void setAbbreviation(String abbreviation) {
         activate(ActivationPurpose.WRITE);
         this.abbreviation = abbreviation;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_ABBREVIATION, null, abbreviation);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_ABBREVIATION,
+                null, abbreviation);
     }
 
     @Override
@@ -102,7 +104,8 @@ public class Identification implements IIdentification, Activatable {
     public void setAccession(String accession) {
         activate(ActivationPurpose.WRITE);
         this.accession = accession;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_ACCESSION, null, accession);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_ACCESSION, null,
+                accession);
     }
 
     @Override
@@ -128,7 +131,8 @@ public class Identification implements IIdentification, Activatable {
     public void setCoverage(int coverage) {
         activate(ActivationPurpose.WRITE);
         this.coverage = coverage;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_COVERAGE, null, coverage);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_COVERAGE, null,
+                coverage);
     }
 
     @Override
@@ -141,7 +145,8 @@ public class Identification implements IIdentification, Activatable {
     public void setDifference(int difference) {
         activate(ActivationPurpose.WRITE);
         this.difference = difference;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_DIFFERENCE, null, difference);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_DIFFERENCE, null,
+                difference);
     }
 
     @Override
@@ -154,7 +159,8 @@ public class Identification implements IIdentification, Activatable {
     public void setGendbId(int gendbId) {
         activate(ActivationPurpose.WRITE);
         this.gendbId = gendbId;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_GENDB_ID, null, gendbId);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_GENDB_ID, null,
+                gendbId);
     }
 
     @Override
@@ -167,7 +173,8 @@ public class Identification implements IIdentification, Activatable {
     public void setGendbProject(String gendbProject) {
         activate(ActivationPurpose.WRITE);
         this.gendbProject = gendbProject;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_GENDB_PROJECT, null, gendbProject);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_GENDB_PROJECT,
+                null, gendbProject);
     }
 
     @Override
@@ -180,14 +187,16 @@ public class Identification implements IIdentification, Activatable {
     public void addKeggNumber(String keggNumber) {
         activate(ActivationPurpose.WRITE);
         this.keggNumbers.add(keggNumber);
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_KEGG, null, keggNumbers);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_KEGG, null,
+                keggNumbers);
     }
 
     @Override
     public void setKeggNumbers(List<String> keggNumbers) {
         activate(ActivationPurpose.WRITE);
         this.keggNumbers = keggNumbers;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_KEGG, null, keggNumbers);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_KEGG, null,
+                keggNumbers);
     }
 
     @Override
@@ -200,7 +209,8 @@ public class Identification implements IIdentification, Activatable {
     public void setPiValue(float piValue) {
         activate(ActivationPurpose.WRITE);
         this.piValue = piValue;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_PI_VALUE, null, piValue);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PI_VALUE, null,
+                piValue);
     }
 
     @Override
@@ -213,7 +223,8 @@ public class Identification implements IIdentification, Activatable {
     public void setProteinMolecularWeight(float proteinMolecularWeight) {
         activate(ActivationPurpose.WRITE);
         this.proteinMolecularWeight = proteinMolecularWeight;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_PROTEIN_MW, null, proteinMolecularWeight);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PROTEIN_MW, null,
+                proteinMolecularWeight);
     }
 
     @Override
@@ -226,7 +237,8 @@ public class Identification implements IIdentification, Activatable {
     public void setScore(float score) {
         activate(ActivationPurpose.WRITE);
         this.score = score;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_SCORE, null, score);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_SCORE, null,
+                score);
     }
 
     @Override
@@ -239,7 +251,8 @@ public class Identification implements IIdentification, Activatable {
     public void setMethod(IIdentificationMethod method) {
         activate(ActivationPurpose.WRITE);
         this.method = method;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_METHOD, null, method);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_METHOD, null,
+                method);
     }
 
     @Override
@@ -252,11 +265,36 @@ public class Identification implements IIdentification, Activatable {
     public void setSource(String source) {
         activate(ActivationPurpose.WRITE);
         this.source = source;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_SOURCE, null, source);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_SOURCE, null,
+                source);
     }
 
     @Override
     public String toString() {
-        return "Identification{accession=" + accession + " abbreviation=" + abbreviation + " name=" + name + " keggNumber=" + keggNumbers + " gendbId=" + gendbId + " proteinMolecularWeight=" + proteinMolecularWeight + " piValue=" + piValue + " coverage=" + coverage + " difference=" + difference + " score=" + score + '}';
+        return "Identification{accession=" + getAccession() + " abbreviation=" + getAbbreviation() + " name=" + getName() + " keggNumber=" + getKeggNumbers() + " gendbId=" + getGendbId() + " proteinMolecularWeight=" + getProteinMolecularWeight() + " piValue=" + getPiValue() + " coverage=" + getCoverage() + " difference=" + getDifference() + " score=" + getScore() + '}';
+    }
+    private UUID objectId = UUID.randomUUID();
+
+    @Override
+    public UUID getId() {
+        activate(ActivationPurpose.READ);
+        return objectId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Identification other = (Identification) obj;
+        return getId().equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
     }
 }

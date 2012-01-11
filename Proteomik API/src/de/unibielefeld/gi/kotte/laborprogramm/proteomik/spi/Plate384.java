@@ -8,6 +8,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.UUID;
 
 /**
  * Default implementation for IPlate384.
@@ -69,6 +70,7 @@ public class Plate384 implements IPlate384, Activatable {
     private String description;
     private IWell384[] wells;
     private IProject parent;
+    
 
     @Override
     public String getDescription() {
@@ -176,4 +178,31 @@ public class Plate384 implements IPlate384, Activatable {
 
         return x + (column - 1) * 16;
     }
+
+    private UUID objectId = UUID.randomUUID();
+
+    @Override
+    public UUID getId() {
+        activate(ActivationPurpose.READ);
+        return objectId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Plate384 other = (Plate384) obj;
+        return getId().equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
+
+    
 }

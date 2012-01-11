@@ -85,6 +85,10 @@ public class Plate96Panel extends JPanel {
         repaint();
     }
 
+    protected InstanceContent getInstanceContent() {
+        return this.instanceContent;
+    }
+
     public void setActiveWellButton(Well96Button wellButton) {
         if (activeButton != null) {
             ISpot spot = lookup.lookup(ISpot.class);

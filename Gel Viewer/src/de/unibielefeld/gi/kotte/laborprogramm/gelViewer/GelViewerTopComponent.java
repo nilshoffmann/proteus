@@ -5,6 +5,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.actions.ExportGelAction;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.AnnotationManager;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.dataProvider.GelSpotDataProvider;
+import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.lookup.SpotGroupSelectionListener;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.lookup.SpotSelectionListener;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.theme.ThemeManager;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
@@ -23,7 +24,6 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.IntrospectionException;
@@ -128,6 +128,8 @@ public final class GelViewerTopComponent extends TopComponent implements
         SpotSelectionListener all = new SpotSelectionListener(
                 ISpot.class, getLookup());
         lookupListeners.add(all);
+        SpotGroupSelectionListener sgsl = new SpotGroupSelectionListener(ISpotGroup.class, getLookup());
+        lookupListeners.add(sgsl);
     }
 
     public void setGel(IGel gel) {

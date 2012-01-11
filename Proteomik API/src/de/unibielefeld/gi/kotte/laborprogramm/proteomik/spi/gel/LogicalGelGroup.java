@@ -11,6 +11,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGel
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Iterator;
+import java.util.UUID;
 
 /**
  * Default implementation for ILogicalGelGroup.
@@ -26,22 +27,23 @@ public class LogicalGelGroup implements ILogicalGelGroup, Activatable {
     private transient PropertyChangeSupport pcs = null;
 
     @Override
-    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
+    public synchronized void removePropertyChangeListener(
+            PropertyChangeListener listener) {
         getPropertyChangeSupport().removePropertyChangeListener(listener);
     }
 
     @Override
-    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
+    public synchronized void addPropertyChangeListener(
+            PropertyChangeListener listener) {
         getPropertyChangeSupport().addPropertyChangeListener(listener);
     }
 
     private PropertyChangeSupport getPropertyChangeSupport() {
-        if(this.pcs == null) {
+        if (this.pcs == null) {
             this.pcs = new PropertyChangeSupport(this);
         }
         return this.pcs;
     }
-
     private transient Activator activator;
 
     @Override
@@ -62,7 +64,6 @@ public class LogicalGelGroup implements ILogicalGelGroup, Activatable {
             activator.activate(activationPurpose);
         }
     }
-
     /**
      * Object definition
      */
@@ -81,7 +82,8 @@ public class LogicalGelGroup implements ILogicalGelGroup, Activatable {
     public void setDescription(String description) {
         activate(ActivationPurpose.WRITE);
         this.description = description;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_DESCRIPTION, null, description);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_DESCRIPTION, null,
+                description);
     }
 
     @Override
@@ -94,7 +96,8 @@ public class LogicalGelGroup implements ILogicalGelGroup, Activatable {
     public void setGelGroups(List<IBioRepGelGroup> groups) {
         activate(ActivationPurpose.WRITE);
         this.groups = groups;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_GROUPS, null, groups);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_GROUPS, null,
+                groups);
     }
 
     @Override
@@ -120,14 +123,16 @@ public class LogicalGelGroup implements ILogicalGelGroup, Activatable {
     public void setParent(IProject parent) {
         activate(ActivationPurpose.WRITE);
         this.parent = parent;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null, parent);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null,
+                parent);
     }
 
     @Override
     public void addGelGroup(IBioRepGelGroup group) {
         activate(ActivationPurpose.WRITE);
         this.groups.add(group);
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_GROUPS, null, this.groups);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_GROUPS, null,
+                this.groups);
     }
 
     @Override
@@ -140,7 +145,8 @@ public class LogicalGelGroup implements ILogicalGelGroup, Activatable {
         String str = "logical gel group '" + getName() + "': " + getDescription();
         if (!getGelGroups().isEmpty()) {
             IBioRepGelGroup group = null;
-            for (Iterator<IBioRepGelGroup> it = getGelGroups().iterator(); it.hasNext();) {
+            for (Iterator<IBioRepGelGroup> it = getGelGroups().iterator(); it.
+                    hasNext();) {
                 group = it.next();
                 str += "\n    > " + group.toString();
             }
@@ -148,5 +154,29 @@ public class LogicalGelGroup implements ILogicalGelGroup, Activatable {
             str += "\n    no bio rep gel groups";
         }
         return str;
+    }
+    private UUID objectId = UUID.randomUUID();
+
+    @Override
+    public UUID getId() {
+        activate(ActivationPurpose.READ);
+        return objectId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final LogicalGelGroup other = (LogicalGelGroup) obj;
+        return getId().equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
     }
 }

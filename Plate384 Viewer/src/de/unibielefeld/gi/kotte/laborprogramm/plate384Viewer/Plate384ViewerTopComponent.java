@@ -1,5 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer;
 
+import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
@@ -50,6 +51,11 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
         well96Result = Utilities.actionsGlobalContext().lookupResult(IWell96.class);
         plate96Result = Utilities.actionsGlobalContext().lookupResult(IPlate96.class);
         spotResult = Utilities.actionsGlobalContext().lookupResult(ISpot.class);
+        IProteomicProject project = Utilities.actionsGlobalContext().lookup(IProteomicProject.class);
+        if(project==null) {
+            throw new IllegalArgumentException("Instance of IProteomicProject must not be null!");
+        }
+        instanceContent.add(project);
         initComponents();
         setName(NbBundle.getMessage(Plate384ViewerTopComponent.class, "CTL_Plate384ViewerTopComponent"));
         setToolTipText(NbBundle.getMessage(Plate384ViewerTopComponent.class, "HINT_Plate384ViewerTopComponent"));

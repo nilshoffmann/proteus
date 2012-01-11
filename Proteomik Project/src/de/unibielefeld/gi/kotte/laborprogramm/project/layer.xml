@@ -91,6 +91,15 @@
             </file>
         </folder>
         <folder name="Plate96Node">
+            <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-RemovePlate96Action.instance">
+                <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
+                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.Bundle#CTL_RemovePlate96Action"/>
+                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.RemovePlate96Action"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+                <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
+                <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96"/>
+            </file>
             <file name="org-openide-actions-ToolsAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
                 <attr name="position" intvalue="100"/>

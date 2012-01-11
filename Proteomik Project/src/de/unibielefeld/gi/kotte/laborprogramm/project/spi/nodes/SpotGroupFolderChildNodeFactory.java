@@ -42,7 +42,7 @@ class SpotGroupFolderChildNodeFactory extends ChildFactory<ISpotGroup> implement
         }
         for (ISpotGroup isg : l) {
             if (Thread.interrupted()) {
-                return true;
+                return false;
             } else {
                 toPopulate.add(isg);
             }

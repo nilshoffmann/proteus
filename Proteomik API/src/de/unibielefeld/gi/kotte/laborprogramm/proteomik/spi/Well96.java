@@ -12,6 +12,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Default implementation for IWell96.
@@ -114,28 +115,32 @@ public class Well96 implements IWell96, Activatable {
     public void setParent(IPlate96 parent) {
         activate(ActivationPurpose.WRITE);
         this.parent = parent;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null, parent);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_PARENT, null,
+                parent);
     }
 
     @Override
     public void setRow(char posX) {
         activate(ActivationPurpose.WRITE);
         this.row = posX;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_POSITION, null, getWellPosition());
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_POSITION, null,
+                getWellPosition());
     }
 
     @Override
     public void setColumn(int posY) {
         activate(ActivationPurpose.WRITE);
         this.column = posY;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_POSITION, null, getWellPosition());
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_POSITION, null,
+                getWellPosition());
     }
 
     @Override
     public void setStatus(Well96Status status) {
         activate(ActivationPurpose.WRITE);
         this.status = status;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_STATUS, null, status);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_STATUS, null,
+                status);
     }
 
     @Override
@@ -155,18 +160,45 @@ public class Well96 implements IWell96, Activatable {
     public void set384Wells(List<IWell384> wells) {
         activate(ActivationPurpose.WRITE);
         this.wells384 = wells;
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_WELLS384, null, wells);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_WELLS384, null,
+                wells);
     }
 
     @Override
     public void add384Well(IWell384 well) {
         activate(ActivationPurpose.WRITE);
         this.wells384.add(well);
-        getPropertyChangeSupport().firePropertyChange(PROPERTY_WELLS384, null, this.wells384);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_WELLS384, null,
+                this.wells384);
     }
 
     @Override
     public String toString() {
-        return "well " + getRow() + getColumn() + " is " + getStatus()+" on plate "+getParent().getName();
+        return "well " + getRow() + getColumn() + " is " + getStatus() + " on plate " + getParent().
+                getName();
+    }
+    private UUID objectId = UUID.randomUUID();
+
+    @Override
+    public UUID getId() {
+        activate(ActivationPurpose.READ);
+        return objectId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Well96 other = (Well96) obj;
+        return getId().equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
     }
 }

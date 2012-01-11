@@ -53,7 +53,11 @@ public class Registry implements IRegistry {
     @Override
     public void closeTopComponent(Object object) {
         for (Map<Object, TopComponent> map : typeToTopComponent.values()) {
-            map.remove(object);
+            TopComponent tc = map.remove(object);
+            if(tc!=null) {
+                System.out.println("Closing TopComponent for Object: "+object.getClass());
+                tc.close();
+            }
         }
     }
 

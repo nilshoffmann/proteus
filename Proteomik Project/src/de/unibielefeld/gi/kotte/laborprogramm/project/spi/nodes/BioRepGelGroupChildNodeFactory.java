@@ -24,7 +24,7 @@ class BioRepGelGroupChildNodeFactory extends ChildFactory<ITechRepGelGroup> {
         List<ITechRepGelGroup> itrggs = lkp.lookup(IBioRepGelGroup.class).getGelGroups();
         for (ITechRepGelGroup itrgg : itrggs) {
             if (Thread.interrupted()) {
-                return true;
+                return false;
             } else {
                 toPopulate.add(itrgg);
             }

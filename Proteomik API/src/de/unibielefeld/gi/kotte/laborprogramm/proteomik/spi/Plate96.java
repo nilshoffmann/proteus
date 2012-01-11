@@ -8,6 +8,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.UUID;
 
 /**
  * Default implementation for IPlate96.
@@ -67,6 +68,7 @@ public class Plate96 implements IPlate96, Activatable {
     private String description;
     private IWell96[] wells;
     private IProject parent;
+    private UUID objectId = UUID.randomUUID();
 
     @Override
     public String getDescription() {
@@ -174,4 +176,29 @@ public class Plate96 implements IPlate96, Activatable {
 
         return x + (column - 1) * 8;
     }
+
+    @Override
+    public UUID getId() {
+        activate(ActivationPurpose.READ);
+        return objectId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Plate96 other = (Plate96) obj;
+        return getId().equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
+
+
 }

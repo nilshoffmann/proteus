@@ -2,13 +2,14 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPropertyChangeSource;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IUniqueObject;
 
 /**
  * A 384 well microplate.
  *
  * @author kotte
  */
-public interface IPlate384 extends IPropertyChangeSource {
+public interface IPlate384 extends IPropertyChangeSource, IUniqueObject {
 
     public static final String PROPERTY_DESCRIPTION = "description";
 

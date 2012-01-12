@@ -11,6 +11,7 @@
                 <attr name="noIconInMenu" boolvalue="false"/>
                 <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
                 <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384"/>
+                <attr name="position" intvalue="2"/>
             </file>
         </folder>
     </folder>

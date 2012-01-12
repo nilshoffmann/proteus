@@ -99,6 +99,7 @@
                 <attr name="noIconInMenu" boolvalue="false"/>
                 <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
                 <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96"/>
+                <attr name="position" intvalue="1"/>
             </file>
             <file name="org-openide-actions-ToolsAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
@@ -118,6 +119,7 @@
                 <attr name="noIconInMenu" boolvalue="false"/>
                 <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
                 <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384"/><!--org.openide.cookies.OpenCookie"/>-->
+                <attr name="position" intvalue="1"/>
             </file>
             <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-DeleteIdentificationsAction.instance">
                 <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
@@ -127,6 +129,7 @@
                 <attr name="noIconInMenu" boolvalue="false"/>
                 <attr name="selectionType" stringvalue="ANY"/>
                 <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384"/>
+                <attr name="position" intvalue="3"/>
             </file>
             <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-RemovePlate384Action.instance">
                 <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
@@ -136,6 +139,7 @@
                 <attr name="noIconInMenu" boolvalue="false"/>
                 <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
                 <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384"/>
+                <attr name="position" intvalue="4"/>
             </file>
             <file name="org-openide-actions-ToolsAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>

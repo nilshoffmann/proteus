@@ -101,6 +101,15 @@ public class Plate96Node extends AbstractNode implements PropertyChangeListener 
     }
 
     @Override
+    public Action getPreferredAction() {
+        Action[] actions = getActions(false);
+        if(actions.length>0) {
+            return actions[0];
+        }
+        return null;
+    }
+
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("name")) {
             this.fireDisplayNameChange(null, getDisplayName());

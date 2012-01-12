@@ -96,6 +96,15 @@ public class Plate384Node extends AbstractNode implements PropertyChangeListener
         List<Action> allActions = new LinkedList<Action>(actions);
         return allActions.toArray(new Action[allActions.size()]);
     }
+
+    @Override
+    public Action getPreferredAction() {
+        Action[] actions = getActions(false);
+        if(actions.length>0) {
+            return actions[0];
+        }
+        return null;
+    }
     
     @Override
     public void propertyChange(PropertyChangeEvent evt) {

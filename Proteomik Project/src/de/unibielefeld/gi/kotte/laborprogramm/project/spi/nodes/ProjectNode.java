@@ -32,8 +32,10 @@ public class ProjectNode extends AbstractNode implements PropertyChangeListener 
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/ProjectIcon.png";
 //    private Result<SaveCookie> result = null;
     private InstanceContent content = null;
+
     public ProjectNode(IProteomicProject ipp) {
-        super(Children.create(new ProjectChildNodeFactory(ipp), true), ipp.getLookup());
+        super(Children.create(new ProjectChildNodeFactory(ipp), true), ipp.
+                getLookup());
 //        this(ipp, new InstanceContent(), ipp.getLookup());
         //ipp.addPropertyChangeListener(this);
     }
@@ -58,7 +60,6 @@ public class ProjectNode extends AbstractNode implements PropertyChangeListener 
 //        ipp.addPropertyChangeListener(this);
 //        //ipp.getLookup().lookup(IProject.class).addPropertyChangeListener(this);
 //    }
-
     @Override
     public Action[] getActions(boolean arg0) {
         Action[] nodeActions = new Action[6];
@@ -165,17 +166,21 @@ public class ProjectNode extends AbstractNode implements PropertyChangeListener 
 
     @Override
     public String getDisplayName() {
-        return getLookup().lookup(IProteomicProject.class).getProjectDirectory().
-                getName();
+        IProteomicProject project = getLookup().lookup(IProteomicProject.class);
+        if (project != null) {
+            return project.getProjectDirectory().
+                    getName();
+        }
+        return "<NA>";
     }
 //
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        System.out.println("Received change event on ProjectNode: "+evt);
+        System.out.println("Received change event on ProjectNode: " + evt);
         //getLookup().lookup(IProteomicProject.class).propertyChange(evt);
         //setChildren(Children.create(new ProjectChildNodeFactory(getLookup().lookup(IProteomicProject.class)), true));
     }
-
 //    @Override
 //    public void resultChanged(LookupEvent ev) {
 //    }

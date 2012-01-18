@@ -1,4 +1,8 @@
-package de.unibielefeld.gi.kotte.laborprogramm.spotTableExporter.actions;
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;

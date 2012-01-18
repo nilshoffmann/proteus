@@ -3,15 +3,6 @@
 <filesystem>
     <folder name="Actions">
         <folder name="ProteomicProject">
-            <file name="de-unibielefeld-gi-kotte-laborprogramm-spotTableExporter-actions-ExportSpotTableAction.instance">
-                <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
-                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.spotTableExporter.actions.Bundle#CTL_ExportSpotTableAction"/>
-                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.spotTableExporter.actions.ExportSpotTableAction"/>
-                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
-                <attr name="noIconInMenu" boolvalue="false"/>
-                <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
-                <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject"/>
-            </file>
             <file name="de-unibielefeld-gi-kotte-laborprogramm-spotTableExporter-ExportOptionsWizardAction.instance">
                 <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
                 <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.spotTableExporter.Bundle#CTL_ExportOptionsWizardAction"/>

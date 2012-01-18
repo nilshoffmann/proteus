@@ -47,7 +47,15 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
             return false;
         }
         //Werte ueberpruefen
-        if (!(component.isSpotGroupId() || component.isIdentificationName())) {
+        if (component.getFileName().isEmpty()) {
+            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Dateinamen angeben.");
+            return false;
+        }
+        if (component.getDirectory() == null) {
+            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Ausgabeverzeichnis auswaehlen.");
+            return false;
+        }
+        if (!(component.isUserDefinedLabel() || component.isIdentificationName())) {
             descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte mindestens eine Spalte auswaehlen.");
             return false;
         }
@@ -89,8 +97,13 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
 
     @Override
     public void storeSettings(Object settings) {
-        ((WizardDescriptor) settings).putProperty(ExportOptionsVisualPanel1.PROPERTY_SPOT_GROUP_ID, ((ExportOptionsVisualPanel1) getComponent()).isSpotGroupId());
-        ((WizardDescriptor) settings).putProperty(ExportOptionsVisualPanel1.PROPERTY_IDENTIFICATION_NAME, ((ExportOptionsVisualPanel1) getComponent()).isIdentificationName());
+        WizardDescriptor s = (WizardDescriptor) settings;
+        ExportOptionsVisualPanel1 eovp = (ExportOptionsVisualPanel1) getComponent();
+
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_DIRECTORY, eovp.getDirectory());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_FILENAME, eovp.getFileName());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_USER_DEFINED_LABEL, eovp.isUserDefinedLabel());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_IDENTIFICATION_NAME, eovp.isIdentificationName());
     }
 
     @Override

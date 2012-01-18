@@ -1,8 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions;
+package de.unibielefeld.gi.kotte.laborprogramm.spotTableExporter.actions;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
@@ -33,6 +29,10 @@ import java.util.Set;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 
+/**
+ *
+ * @author kotte
+ */
 public final class ExportSpotTableAction implements ActionListener {
 
     private final IProteomicProject context;

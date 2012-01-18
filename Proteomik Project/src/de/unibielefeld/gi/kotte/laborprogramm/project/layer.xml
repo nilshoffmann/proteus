@@ -21,15 +21,6 @@
                 <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
                 <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject"/>
             </file>
-            <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-ExportSpotTableAction.instance">
-                <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
-                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.Bundle#CTL_ExportSpotTableAction"/>
-                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.ExportSpotTableAction"/>
-                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
-                <attr name="noIconInMenu" boolvalue="false"/>
-                <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
-                <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject"/>
-            </file>
         </folder>
         <folder name="File">
             <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-ProjectSaveAction.instance">

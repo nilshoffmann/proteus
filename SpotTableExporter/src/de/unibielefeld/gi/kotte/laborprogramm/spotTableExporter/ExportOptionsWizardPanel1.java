@@ -1,8 +1,11 @@
 package de.unibielefeld.gi.kotte.laborprogramm.spotTableExporter;
 
+import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -92,8 +95,14 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
 
     @Override
     public void readSettings(WizardDescriptor settings) {
+        //get descriptor
         this.descriptor = settings;
-        //andere Initialisierungen
+        //get directory path
+        IProteomicProject project = (IProteomicProject) this.descriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_PROJECT);
+        String path = project.getProjectDirectory().getPath();
+        path += File.separator + "export" + File.separator + "spotTables";
+        File dir = new File(path);
+        ((ExportOptionsVisualPanel1) getComponent()).setDirectory(dir);
     }
 
     @Override

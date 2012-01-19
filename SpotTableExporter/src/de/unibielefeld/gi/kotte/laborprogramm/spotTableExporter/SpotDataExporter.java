@@ -33,8 +33,11 @@ import org.openide.util.Exceptions;
  */
 public class SpotDataExporter {
 
-    public static void export(WizardDescriptor wizardDescriptor, IProteomicProject context) {
+    public static void export(WizardDescriptor wizardDescriptor) {
         System.out.println("Exporting spot annotations");
+
+        //get project
+        IProteomicProject context = (IProteomicProject) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_PROJECT);
 
         //get output file
         File directory = (File) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_DIRECTORY);

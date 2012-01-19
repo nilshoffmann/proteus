@@ -18,7 +18,6 @@ import org.openide.WizardDescriptor;
 public final class ExportOptionsWizardAction implements ActionListener {
 
     private WizardDescriptor.Panel[] panels;
-
     private final IProteomicProject context;
 
     public ExportOptionsWizardAction(IProteomicProject context) {
@@ -32,14 +31,14 @@ public final class ExportOptionsWizardAction implements ActionListener {
         // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
         wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
         wizardDescriptor.setTitle("Export Optionen auswaehlen");
-        // hier das project in den wizardDescriptor stecken
+        wizardDescriptor.putProperty(ExportOptionsVisualPanel1.PROPERTY_PROJECT, context);
         Dialog dialog = DialogDisplayer.getDefault().createDialog(wizardDescriptor);
         dialog.setVisible(true);
         dialog.toFront();
         boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
         if (!cancelled) {
             //create data export
-            SpotDataExporter.export(wizardDescriptor, context);
+            SpotDataExporter.export(wizardDescriptor);
         }
     }
 

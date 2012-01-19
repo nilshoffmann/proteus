@@ -1,6 +1,10 @@
 package de.unibielefeld.gi.kotte.laborprogramm.spotTableExporter;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationMethod;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -104,8 +108,15 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
         path += File.separator + "export" + File.separator + "spotTables";
         File dir = new File(path);
         ((ExportOptionsVisualPanel1) getComponent()).setDirectory(dir);
-        //TODO Liste der Methoden anhand der vorhandenen Identifikationen erstellen
-        Set<String> methods = new LinkedHashSet<String>(Arrays.asList(new String[]{"Lift MSMS_XCC_B100_C", "XccB100_100_0_C_Ella"}));
+        //Liste der Methoden anhand der vorhandenen Identifikationen erstellen
+        Set<String> methods = new LinkedHashSet<String>();
+        for (IPlate384 plate384 : project.getLookup().lookup(IProject.class).get384Plates()) {
+            for (IWell384 well384 : plate384.getWells()) {
+                for (IIdentificationMethod method : well384.getIdentification().getMethods()) {
+                    methods.add(method.getName());
+                }
+            }
+        }
         ((ExportOptionsVisualPanel1) getComponent()).setAvailableMethods(methods);
     }
 

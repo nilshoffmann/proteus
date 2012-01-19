@@ -1,6 +1,9 @@
 package de.unibielefeld.gi.kotte.laborprogramm.spotTableExporter;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
@@ -12,6 +15,7 @@ import javax.swing.JPanel;
 public final class ExportOptionsVisualPanel1 extends JPanel {
 
     public static final String PROPERTY_PROJECT = "project";
+    public static final String PROPERTY_METHODS = "methods";
     public static final String PROPERTY_USER_DEFINED_LABEL = "user defined label";
     public static final String PROPERTY_IDENTIFICATION_NAME = "identification name";
     public static final String PROPERTY_FILENAME = "filename";
@@ -35,10 +39,26 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
         return this.directory;
     }
 
-    public void setDirectory(File directory) {
+    protected void setDirectory(File directory) {
         this.directory = directory;
         fileDirectoryTextField.setText(directory.getAbsolutePath());
         filePathTextField.setText(directory.getAbsolutePath() + File.separator + fileNameTextField.getText() + ".csv");
+    }
+
+    protected void setAvailableMethods(Set<String> methods) {
+        //put methods in JList
+        methodsList.setListData(methods.toArray());
+        //select all JList entries
+        int[] indices = new int[methods.size()];
+        for (int i = 0; i < indices.length; i++) {
+            indices[i] = i;
+        }
+        methodsList.setSelectedIndices(indices);
+    }
+
+    public Set<String> getSelectedMethods() {
+        String[] methods = (String[]) methodsList.getSelectedValues();
+        return new LinkedHashSet<String>(Arrays.asList(methods));
     }
 
     /** Creates new form ExportOptionsVisualPanel1 */
@@ -59,6 +79,8 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList();
         headingLabel = new javax.swing.JLabel();
         userDefinedLabelBox = new javax.swing.JCheckBox();
         identificationNameBox = new javax.swing.JCheckBox();
@@ -69,6 +91,16 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
         filePathTextField = new javax.swing.JTextField();
         fileNameTextField = new javax.swing.JTextField();
         fileNameLabel = new javax.swing.JLabel();
+        methodsLabel = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        methodsList = new javax.swing.JList();
+
+        jList1.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(jList1);
 
         org.openide.awt.Mnemonics.setLocalizedText(headingLabel, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.headingLabel.text")); // NOI18N
 
@@ -115,6 +147,15 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(fileNameLabel, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.fileNameLabel.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(methodsLabel, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.methodsLabel.text")); // NOI18N
+
+        methodsList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(methodsList);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -127,30 +168,34 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(fileNameLabel)
-                        .addContainerGap(242, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(fileNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
-                        .addGap(93, 93, 93))
+                        .addContainerGap(238, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(fileDirectoryLabel)
-                        .addContainerGap(219, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(fileDirectoryTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fileChooserButton)
-                        .addContainerGap())
+                        .addContainerGap(221, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(filePathLabel)
-                        .addContainerGap(303, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(filePathTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
-                        .addContainerGap())
+                        .addContainerGap(289, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(headingLabel)
-                        .addContainerGap(161, Short.MAX_VALUE))
+                        .addContainerGap(168, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(identificationNameBox)
-                        .addContainerGap(245, Short.MAX_VALUE))))
+                        .addContainerGap(238, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(methodsLabel)
+                        .addContainerGap(241, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+                            .addComponent(filePathTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(fileNameTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+                            .addComponent(fileDirectoryTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fileChooserButton)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -175,7 +220,11 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
                 .addComponent(userDefinedLabelBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(identificationNameBox)
-                .addContainerGap(99, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(methodsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -217,6 +266,11 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
     private javax.swing.JTextField filePathTextField;
     private javax.swing.JLabel headingLabel;
     private javax.swing.JCheckBox identificationNameBox;
+    private javax.swing.JList jList1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel methodsLabel;
+    private javax.swing.JList methodsList;
     private javax.swing.JCheckBox userDefinedLabelBox;
     // End of variables declaration//GEN-END:variables
 }

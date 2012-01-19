@@ -1,13 +1,14 @@
 package de.unibielefeld.gi.kotte.laborprogramm.spotTableExporter;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -103,6 +104,9 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
         path += File.separator + "export" + File.separator + "spotTables";
         File dir = new File(path);
         ((ExportOptionsVisualPanel1) getComponent()).setDirectory(dir);
+        //TODO Liste der Methoden anhand der vorhandenen Identifikationen erstellen
+        Set<String> methods = new LinkedHashSet<String>(Arrays.asList(new String[]{"Lift MSMS_XCC_B100_C", "XccB100_100_0_C_Ella"}));
+        ((ExportOptionsVisualPanel1) getComponent()).setAvailableMethods(methods);
     }
 
     @Override
@@ -110,6 +114,7 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
         WizardDescriptor s = settings;
         ExportOptionsVisualPanel1 eovp = (ExportOptionsVisualPanel1) getComponent();
 
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_METHODS, eovp.getSelectedMethods());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_DIRECTORY, eovp.getDirectory());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_FILENAME, eovp.getFileName());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_USER_DEFINED_LABEL, eovp.isUserDefinedLabel());

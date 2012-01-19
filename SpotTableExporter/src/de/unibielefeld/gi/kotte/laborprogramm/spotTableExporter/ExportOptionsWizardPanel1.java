@@ -17,7 +17,7 @@ import org.openide.util.HelpCtx;
  *
  * @author kotte
  */
-public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPanel, PropertyChangeListener {
+public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPanel<WizardDescriptor>, PropertyChangeListener {
 
     private WizardDescriptor descriptor;
     private ExportOptionsVisualPanel1 component;
@@ -91,13 +91,14 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
     }
 
     @Override
-    public void readSettings(Object settings) {
-        this.descriptor = (WizardDescriptor) settings;
+    public void readSettings(WizardDescriptor settings) {
+        this.descriptor = settings;
+        //andere Initialisierungen
     }
 
     @Override
-    public void storeSettings(Object settings) {
-        WizardDescriptor s = (WizardDescriptor) settings;
+    public void storeSettings(WizardDescriptor settings) {
+        WizardDescriptor s = settings;
         ExportOptionsVisualPanel1 eovp = (ExportOptionsVisualPanel1) getComponent();
 
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_DIRECTORY, eovp.getDirectory());

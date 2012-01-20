@@ -4,7 +4,6 @@
  */
 package de.unibielefeld.gi.kotte.laborprogramm.debug;
 
-import de.unibielefeld.gi.kotte.laborprogramm.centralLookup.CentralLookup;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import org.openide.util.LookupEvent;
@@ -32,6 +31,7 @@ public final class LookupMonitorTopComponent extends TopComponent implements
     private static final String PREFERRED_ID = "LookupMonitorTopComponent";
     private Result<Object> r = null;
     private DefaultListModel dlm = new DefaultListModel();
+    private boolean keepContent = false;
 
     public LookupMonitorTopComponent() {
         initComponents();
@@ -54,6 +54,7 @@ public final class LookupMonitorTopComponent extends TopComponent implements
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
+        jCheckBox1 = new javax.swing.JCheckBox();
 
         jList1.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -64,6 +65,13 @@ public final class LookupMonitorTopComponent extends TopComponent implements
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(LookupMonitorTopComponent.class, "LookupMonitorTopComponent.jLabel1.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(LookupMonitorTopComponent.class, "LookupMonitorTopComponent.jCheckBox1.text")); // NOI18N
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -72,20 +80,31 @@ public final class LookupMonitorTopComponent extends TopComponent implements
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
-                    .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 122, Short.MAX_VALUE)
+                        .addComponent(jCheckBox1)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jCheckBox1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        keepContent = jCheckBox1.isSelected();
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JList jList1;
     private javax.swing.JScrollPane jScrollPane1;
@@ -166,7 +185,7 @@ public final class LookupMonitorTopComponent extends TopComponent implements
 
     @Override
     public void resultChanged(LookupEvent ev) {
-        if (r != null) {
+        if (r != null && !keepContent) {
             dlm = new DefaultListModel();
             for (Object obj : r.allInstances()) {
                 dlm.addElement(obj);

@@ -1,7 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.spotTableExporter;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationMethod;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
@@ -9,7 +8,7 @@ import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -110,12 +109,17 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
         ((ExportOptionsVisualPanel1) getComponent()).setDirectory(dir);
         //Liste der Methoden anhand der vorhandenen Identifikationen erstellen
         Set<String> methods = new LinkedHashSet<String>();
-        for (IPlate384 plate384 : project.getLookup().lookup(IProject.class).get384Plates()) {
-            for (IWell384 well384 : plate384.getWells()) {
-                for (IIdentificationMethod method : well384.getIdentification().getMethods()) {
-                    methods.add(method.getName());
-                }
-            }
+//        for (IPlate384 plate384 : .get384Plates()) {
+//            for (IWell384 well384 : plate384.getWells()) {
+//                for (IIdentificationMethod method : well384.getIdentification().getMethods()) {
+//                    methods.add(method.getName());
+//                }
+//            }
+//        }
+        //this is much faster
+        Collection<IIdentificationMethod> identificationMethod = project.retrieve(IIdentificationMethod.class);
+        for(IIdentificationMethod method:identificationMethod) {
+            methods.add(method.getName());
         }
         ((ExportOptionsVisualPanel1) getComponent()).setAvailableMethods(methods);
     }

@@ -57,8 +57,12 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
     }
 
     public Set<String> getSelectedMethods() {
-        String[] methods = (String[]) methodsList.getSelectedValues();
-        return new LinkedHashSet<String>(Arrays.asList(methods));
+        Object[] methods = (Object[]) methodsList.getSelectedValues();
+        LinkedHashSet<String> methodsSet = new LinkedHashSet<String>();
+        for(Object obj:methods) {
+            methodsSet.add(obj.toString());
+        }
+        return methodsSet;
     }
 
     /** Creates new form ExportOptionsVisualPanel1 */

@@ -18,6 +18,7 @@ public class IdentificationBeanInfo extends SimpleBeanInfo {
     private static BeanDescriptor getBdescriptor(){//GEN-HEADEREND:BeanDescriptor
 
 
+
     // Here you can add code for customizing the BeanDescriptor.
 
          return beanDescriptor;     }//GEN-LAST:BeanDescriptor
@@ -30,35 +31,35 @@ public class IdentificationBeanInfo extends SimpleBeanInfo {
     private static final int PROPERTY_difference = 3;
     private static final int PROPERTY_gendbId = 4;
     private static final int PROPERTY_gendbProject = 5;
-    private static final int PROPERTY_id = 6;
-    private static final int PROPERTY_keggNumbers = 7;
-    private static final int PROPERTY_method = 8;
-    private static final int PROPERTY_name = 9;
-    private static final int PROPERTY_piValue = 10;
-    private static final int PROPERTY_proteinMolecularWeight = 11;
-    private static final int PROPERTY_score = 12;
-    private static final int PROPERTY_source = 13;
+    private static final int PROPERTY_keggNumbers = 6;
+    private static final int PROPERTY_method = 7;
+    private static final int PROPERTY_name = 8;
+    private static final int PROPERTY_piValue = 9;
+    private static final int PROPERTY_proteinMolecularWeight = 10;
+    private static final int PROPERTY_score = 11;
+    private static final int PROPERTY_source = 12;
 
     // Property array 
     /*lazy PropertyDescriptor*/
     private static PropertyDescriptor[] getPdescriptor(){
-        PropertyDescriptor[] properties = new PropertyDescriptor[14];
+        PropertyDescriptor[] properties = new PropertyDescriptor[13];
     
         try {
             properties[PROPERTY_abbreviation] = new PropertyDescriptor ( "abbreviation", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getAbbreviation", "setAbbreviation" ); // NOI18N
-            properties[PROPERTY_accession] = new PropertyDescriptor ( "accession", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getAccession", "setAccession" ); // NOI18N
-            properties[PROPERTY_coverage] = new PropertyDescriptor ( "coverage", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getCoverage", "setCoverage" ); // NOI18N
-            properties[PROPERTY_difference] = new PropertyDescriptor ( "difference", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getDifference", "setDifference" ); // NOI18N
-            properties[PROPERTY_gendbId] = new PropertyDescriptor ( "gendbId", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getGendbId", "setGendbId" ); // NOI18N
-            properties[PROPERTY_gendbProject] = new PropertyDescriptor ( "gendbProject", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getGendbProject", "setGendbProject" ); // NOI18N
-            properties[PROPERTY_id] = new PropertyDescriptor ( "id", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getId", null ); // NOI18N
-            properties[PROPERTY_keggNumbers] = new PropertyDescriptor ( "keggNumbers", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getKeggNumbers", "setKeggNumbers" ); // NOI18N
-            properties[PROPERTY_method] = new PropertyDescriptor ( "method", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getMethod", "setMethod" ); // NOI18N
+            properties[PROPERTY_accession] = new PropertyDescriptor ( "accession", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getAccession", null ); // NOI18N
+            properties[PROPERTY_coverage] = new PropertyDescriptor ( "coverage", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getCoverage", null ); // NOI18N
+            properties[PROPERTY_difference] = new PropertyDescriptor ( "difference", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getDifference", null ); // NOI18N
+            properties[PROPERTY_gendbId] = new PropertyDescriptor ( "gendbId", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getGendbId", null ); // NOI18N
+            properties[PROPERTY_gendbProject] = new PropertyDescriptor ( "gendbProject", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getGendbProject", null ); // NOI18N
+            properties[PROPERTY_keggNumbers] = new PropertyDescriptor ( "keggNumbers", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getKeggNumbers", null ); // NOI18N
+            properties[PROPERTY_keggNumbers].setPropertyEditorClass ( de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.KeggNumbersPropertyEditor.class );
+            properties[PROPERTY_method] = new PropertyDescriptor ( "method", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getMethod", null ); // NOI18N
+            properties[PROPERTY_method].setPropertyEditorClass ( de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.MethodPropertyEditor.class );
             properties[PROPERTY_name] = new PropertyDescriptor ( "name", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getName", "setName" ); // NOI18N
-            properties[PROPERTY_piValue] = new PropertyDescriptor ( "piValue", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getPiValue", "setPiValue" ); // NOI18N
-            properties[PROPERTY_proteinMolecularWeight] = new PropertyDescriptor ( "proteinMolecularWeight", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getProteinMolecularWeight", "setProteinMolecularWeight" ); // NOI18N
-            properties[PROPERTY_score] = new PropertyDescriptor ( "score", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getScore", "setScore" ); // NOI18N
-            properties[PROPERTY_source] = new PropertyDescriptor ( "source", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getSource", "setSource" ); // NOI18N
+            properties[PROPERTY_piValue] = new PropertyDescriptor ( "piValue", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getPiValue", null ); // NOI18N
+            properties[PROPERTY_proteinMolecularWeight] = new PropertyDescriptor ( "proteinMolecularWeight", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getProteinMolecularWeight", null ); // NOI18N
+            properties[PROPERTY_score] = new PropertyDescriptor ( "score", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getScore", null ); // NOI18N
+            properties[PROPERTY_source] = new PropertyDescriptor ( "source", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getSource", null ); // NOI18N
         }
         catch(IntrospectionException e) {
             e.printStackTrace();

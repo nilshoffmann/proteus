@@ -229,7 +229,7 @@ public class HeatmapPanel<T> extends JComponent implements
                 //create an annotation painter
                 AnnotationPainter<List<Integer>, JPanel> annotationPainter = new AnnotationPainter<List<Integer>, JPanel>(
                         hmd);
-                annotationPainter.setSearchRadius(5.0d);
+                annotationPainter.setSearchRadius(20.0d);
 
                 //wire tooltip painter to annotation painter, to display selected annotations
 //                tooltipPainter.addPropertyChangeListener(annotationPainter);
@@ -272,9 +272,9 @@ public class HeatmapPanel<T> extends JComponent implements
                 ZoomProcessor zoomProcessor = new ZoomProcessor();
                 //register dataset for zoom events
                 zoomProcessor.addListener(hmd);
-                zoomProcessor.setMinZoom(0.25d);
-                zoomProcessor.setMaxZoom(4.0d);
-                zoomProcessor.setZoomDelta(0.25d);
+                zoomProcessor.setMinZoom(0.5d);
+                zoomProcessor.setMaxZoom(2.0d);
+                zoomProcessor.setZoomDelta(0.5d);
 
                 //set up the mouse event processor chain with zoomProcessor and pointSelectionProcessor
                 MouseEventProcessorChain mouseEventProcessorChain = new MouseEventProcessorChain(

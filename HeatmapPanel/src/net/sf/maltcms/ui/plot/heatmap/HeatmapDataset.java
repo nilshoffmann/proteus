@@ -6,7 +6,9 @@ package net.sf.maltcms.ui.plot.heatmap;
 
 import cross.datastructures.tuple.Tuple2D;
 import java.awt.Point;
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -190,5 +192,23 @@ public class HeatmapDataset<T> implements IProcessorResultListener<Tuple2D<Point
         System.out.println("HeatmapDataset received mouse event information!");           
         setZoom(t);
 //        }
+    }
+
+    public Point2D toModelPoint(Point2D view) throws NoninvertibleTransformException {
+        return getTransform().inverseTransform(view, null);
+    }
+
+    public Shape toModelShape(Shape view) throws NoninvertibleTransformException {
+        AffineTransform inv = getTransform().createInverse();
+        return inv.createTransformedShape(view);
+    }
+
+
+    public Point2D toViewPoint(Point2D model) {
+        return getTransform().transform(model, null);
+    }
+
+    public Shape toViewShape(Shape s) {
+        return getTransform().createTransformedShape(s);
     }
 }

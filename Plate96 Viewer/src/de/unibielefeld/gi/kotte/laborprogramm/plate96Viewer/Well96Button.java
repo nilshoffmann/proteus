@@ -99,7 +99,7 @@ public class Well96Button extends JButton implements MouseInputListener {
     private class Well96StatusSelectMenu extends JPopupMenu {
 
         public Well96StatusSelectMenu(Well96Status status) {
-            if(status!=Well96Status.EMPTY) {
+            if (status != Well96Status.EMPTY) {
                 add(new AbstractAction(
                         "Open Gel") {
 
@@ -109,11 +109,13 @@ public class Well96Button extends JButton implements MouseInputListener {
                                 lookup(IGelOpenCookie.class);
                         panel.getInstanceContent().add(well.getSpot().getGel());
                         gelOpenCookie.open();
-                        panel.getInstanceContent().remove(well.getSpot().getGel());
-                        }
-                    });
+                        panel.getInstanceContent().remove(
+                                well.getSpot().getGel());
+                    }
+                });
+                add(new JSeparator(JSeparator.HORIZONTAL));
             }
-            add(new JSeparator(JSeparator.HORIZONTAL));
+
             ButtonGroup group = new ButtonGroup();
             for (Well96Status s : Well96Status.values()) {
                 JRadioButtonMenuItem jrbmi = new JRadioButtonMenuItem(new Well96StatusSelectRadioButtonAction(

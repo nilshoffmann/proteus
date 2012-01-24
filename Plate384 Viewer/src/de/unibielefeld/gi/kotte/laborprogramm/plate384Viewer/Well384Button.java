@@ -1,5 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer;
 
+import de.unibielefeld.gi.kotte.laborprogramm.project.api.cookies.IGelOpenCookie;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.Well384Status;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
@@ -26,6 +27,7 @@ import javax.swing.event.MouseInputListener;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 
 /**
  * Button to be placed on a Plate96Panel. Represents a IWell96 and offers actions to set the wells status.
@@ -97,6 +99,22 @@ public class Well384Button extends JButton implements MouseInputListener {
     private class Well384StatusSelectMenu extends JPopupMenu {
 
         public Well384StatusSelectMenu(Well384Status status) {
+            if (status != Well384Status.EMPTY) {
+                add(new AbstractAction(
+                        "Open Gel") {
+
+                    @Override
+                    public void actionPerformed(ActionEvent ae) {
+                        IGelOpenCookie gelOpenCookie = Lookup.getDefault().
+                                lookup(IGelOpenCookie.class);
+                        panel.getInstanceContent().add(well.getWell96().getSpot().getGel());
+                        gelOpenCookie.open();
+                        panel.getInstanceContent().remove(
+                                well.getWell96().getSpot().getGel());
+                    }
+                });
+                add(new JSeparator(JSeparator.HORIZONTAL));
+            }
             ButtonGroup group = new ButtonGroup();
             for (Well384Status s : Well384Status.values()) {
                 JRadioButtonMenuItem jrbmi = new JRadioButtonMenuItem(new Well384StatusSelectRadioButtonAction(

@@ -21,6 +21,16 @@ import org.openide.util.LookupEvent;
  */
 public class SpotGroupSelectionListener extends AbstractLookupResultListener<ISpotGroup> {
 
+    public static final class SyncOnSpotGroupToken {
+        private boolean sync = true;
+        public void setSyncOnSpotGroup(boolean sync) {
+            this.sync = sync;
+        }
+        public boolean isSyncOnSpotGroup() {
+            return this.sync;
+        }
+    }
+
     public SpotGroupSelectionListener(
             Class<? extends ISpotGroup> typeToListenFor,
             Lookup contentProvider) {
@@ -34,7 +44,7 @@ public class SpotGroupSelectionListener extends AbstractLookupResultListener<ISp
 
     @Override
     public void resultChanged(LookupEvent ev) {
-        if (getResult() != null) {
+        if (getResult() != null && getContentProviderLookup().lookup(SyncOnSpotGroupToken.class).isSyncOnSpotGroup()) {
             //receive spots from external lookup
             Collection<? extends ISpotGroup> spotGroups = getResult().
                     allInstances();

@@ -213,7 +213,7 @@ public class HeatmapPanel<T> extends JComponent implements
                 hmd.addPropertyChangeListener(jl);
                 final IDataProvider hdp = hmd.getDataProvider();
                 //create a tooltip painter for the payload type (here: List<Float>)
-                ToolTipPainter<List<Integer>, JPanel> tooltipPainter = new ToolTipPainter<List<Integer>, JPanel>() {
+                ToolTipPainter<List<Integer>, JPanel> tooltipPainter = new ToolTipPainter<List<Integer>, JPanel>(hmd) {
 
                     @Override
                     public String getStringFor(Annotation<List<Integer>> t) {

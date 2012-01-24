@@ -74,6 +74,10 @@ public class Plate384Panel extends JPanel implements PropertyChangeListener {
         }
     }
 
+    protected InstanceContent getInstanceContent() {
+        return this.instanceContent;
+    }
+
     public void clear() {
         for (Well384Button button : buttons) {
             IWell96 well96 = button.getWell().getWell96();

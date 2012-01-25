@@ -1,6 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification;
 
 import java.beans.*;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -16,8 +17,12 @@ public class KeggNumbersPropertyEditor extends PropertyEditorSupport {
     public String getAsText() {
         List<String> keggNumbers = (List<String>) getValue();
         String str = "";
-        for (String number : keggNumbers) {
-            str += number;
+        Iterator<String> it = keggNumbers.iterator();
+        if(it.hasNext()) {
+            str = it.next();
+        }
+        for (; it.hasNext();) {
+            str += ", " + it.next();
         }
         return str;
     }

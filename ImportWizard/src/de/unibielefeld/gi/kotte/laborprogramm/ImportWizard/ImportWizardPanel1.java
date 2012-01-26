@@ -48,32 +48,32 @@ public class ImportWizardPanel1 implements WizardDescriptor.ValidatingPanel, Pro
         }
         //Infomeldungen setzen fuer noch nicht eingegebene Werte
         if (component.getProjectName().isEmpty()) {
-            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Projektnamen angeben.");
+            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Please pick a project name.");
             return false;
         }
         if (component.getProjectParentDirectoryFile() == null) {
-            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Verzeichnis zum anlegen des Projekts auswählen.");
+            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Please choose a project directory.");
             return false;
         }
         File baseDirectoryFile = component.getBaseDirectoryFile();
         if (baseDirectoryFile == null) {
-            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Basisverzeichnis auswählen.");
+            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Please choose a base directory.");
             return false;
         }
         String projectDataPath = baseDirectoryFile.getAbsolutePath() + File.separator + "projects" + File.separator + "projects.xml";
         File projectDataFile = new File(projectDataPath);
         if (!projectDataFile.exists()) {
-            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, projectDataPath + " existiert nicht.");
+            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, projectDataPath + " does not exist.");
             return false;
         }
         String gelDataPath = baseDirectoryFile.getAbsolutePath() + File.separator + "gelImages" + File.separator + "gelImages.xml";
         File gelDataFile = new File(gelDataPath);
         if (!gelDataFile.exists()) {
-            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, gelDataPath + " existiert nicht.");
+            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, gelDataPath + " does not exist.");
             return false;
         }
         if (component.getExcelDataFile() == null) {
-            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Excel Export Datei auswählen.");
+            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Please choose Excel Report file.");
             return false;
         }
         //wenn Werte vollstaendig, Infomeldung zuruecksetzen

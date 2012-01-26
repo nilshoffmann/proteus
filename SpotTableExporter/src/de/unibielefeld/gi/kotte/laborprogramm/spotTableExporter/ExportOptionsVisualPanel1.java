@@ -72,7 +72,7 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
 
     @Override
     public String getName() {
-        return "Ausgabeoptionen fuer Spot Data Export";
+        return "Output options for Spot Data Export";
     }
 
     /** This method is called from within the constructor to
@@ -242,7 +242,7 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
 
     private void fileChooserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileChooserButtonActionPerformed
         JFileChooser jfc = new JFileChooser(directory);
-        jfc.setDialogTitle("Verzeichnis für Spotgruppen Export auswaehlen");
+        jfc.setDialogTitle("Choose directory for spotgroup export");
         jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         jfc.setAcceptAllFileFilterUsed(false);
         int status = jfc.showOpenDialog(null);

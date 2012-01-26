@@ -47,7 +47,7 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
 
     @Override
     public String getName() {
-        return "Datei Import für neue Proteomik Projekte";
+        return "Proteomic Project creation wizard";
     }
 
     /** This method is called from within the constructor to
@@ -189,7 +189,7 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
     private void baseDirectoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_baseDirectoryButtonActionPerformed
         JFileChooser jfc = new JFileChooser(lastActiveDirectory);
         //jfc.setCurrentDirectory(new java.io.File("."));
-        jfc.setDialogTitle("Basisverzeichnis auswählen");
+        jfc.setDialogTitle("choose base directory");
         jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         jfc.setAcceptAllFileFilterUsed(false);
         int status = jfc.showOpenDialog(null);
@@ -205,7 +205,7 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
     private void projectParentDirectoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_projectParentDirectoryButtonActionPerformed
         JFileChooser jfc = new JFileChooser(lastActiveDirectory);
         //jfc.setCurrentDirectory(new java.io.File("."));
-        jfc.setDialogTitle("Verzeichnis für Projekt auswählen");
+        jfc.setDialogTitle("choose project directory");
         jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         jfc.setAcceptAllFileFilterUsed(false);
         int status = jfc.showOpenDialog(null);
@@ -240,7 +240,7 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
                 return ".xlsx";
             }
         };//"xlsx";
-        jfc.setDialogTitle("Delta2d Excel Export auswählen");
+        jfc.setDialogTitle("choose Delta2D Excel Report file");
         jfc.setFileFilter(ff);
         int status = jfc.showOpenDialog(null);
         if (status == JFileChooser.APPROVE_OPTION) {

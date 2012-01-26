@@ -30,7 +30,7 @@ public final class ExportOptionsWizardAction implements ActionListener {
         WizardDescriptor wizardDescriptor = new WizardDescriptor(getPanels());
         // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
         wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
-        wizardDescriptor.setTitle("Export Optionen auswaehlen");
+        wizardDescriptor.setTitle("Output options for Spot Data Export");
         wizardDescriptor.putProperty(ExportOptionsVisualPanel1.PROPERTY_PROJECT, context);
         Dialog dialog = DialogDisplayer.getDefault().createDialog(wizardDescriptor);
         dialog.setVisible(true);

@@ -2,8 +2,6 @@ package de.unibielefeld.gi.kotte.laborprogramm.spotTableExporter;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationMethod;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -55,15 +53,15 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
         }
         //Werte ueberpruefen
         if (component.getFileName().isEmpty()) {
-            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Dateinamen angeben.");
+            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Please enter a filename.");
             return false;
         }
         if (component.getDirectory() == null) {
-            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte Ausgabeverzeichnis auswaehlen.");
+            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Please pick an output directory.");
             return false;
         }
         if (!(component.isUserDefinedLabel() || component.isIdentificationName())) {
-            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Bitte mindestens eine Spalte auswaehlen.");
+            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Please pick at least one output column.");
             return false;
         }
 

@@ -18,13 +18,12 @@ import java.awt.geom.Rectangle2D;
  */
 public class PainterTools {
 
-    public static Tuple2D<Rectangle2D,Point2D> getBoundingBox(Paint fill, Paint stroke, String text, Graphics2D g, int insets) {
+    public static Tuple2D<Rectangle2D,Point2D> getBoundingBox(String text, Graphics2D g, int insets) {
         FontMetrics fm = g.getFontMetrics();
         Rectangle2D bounds = fm.getStringBounds(text, g);
-        g.setPaint(fill);
         Point2D.Double textBase = new Point2D.Double(bounds.getX(),0); 
-
-        bounds.setFrame(bounds.getX()-insets, bounds.getY()-insets, bounds.getWidth()+(2*insets), bounds.getHeight()+(2*insets));
+        double scaledInsets = insets/g.getTransform().getScaleX();
+        bounds.setFrame(bounds.getX()-scaledInsets, bounds.getY()-scaledInsets, bounds.getWidth()+(2*scaledInsets), bounds.getHeight()+(2*scaledInsets));
         Tuple2D<Rectangle2D,Point2D> tp = new Tuple2D<Rectangle2D, Point2D>(bounds,textBase);
         return tp;
     }

@@ -12,14 +12,12 @@ import java.awt.Paint;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JComponent;
-import maltcms.ui.viewer.datastructures.tree.ElementNotFoundException;
 import net.sf.maltcms.ui.plot.heatmap.Annotation;
 import net.sf.maltcms.ui.plot.heatmap.HeatmapDataset;
 import net.sf.maltcms.ui.plot.heatmap.event.IProcessorResultListener;
@@ -39,46 +37,54 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
     private float labelFontSize = 14.0f;
     private double margin = 5.0f;
     private HeatmapDataset<T> hm;
-    private Point2D viewPoint;
-    private Point2D modelPoint;
-    private Shape annotationShape;
+//    private Point2D viewPoint;
+//    private Point2D modelPoint;
+//    private Shape annotationShape;
 
     public ToolTipPainter(HeatmapDataset<T> hm) {
         setCacheable(false);
         this.hm = hm;
     }
 
-    public void setPoint(Point2D viewPoint) {
-        this.viewPoint = viewPoint;
-        try {
-            this.modelPoint = hm.toModelPoint(viewPoint);
-            try {
-                a = hm.getClosestInRadius(
-                        this.modelPoint, 50);
-                if (a != null) {
-                    System.out.println(
-                            "Found annotation within radius 50 around " + this.modelPoint);
-                    this.annotationShape = hm.toViewShape(
-                            a.getSecond().getShape());
-                } else {
-                    System.out.println(
-                            "Could not find annotation in search radius 50 around " + this.modelPoint);
-                }
-            } catch (ElementNotFoundException enfe) {
-                System.out.println(
-                        "Could not find annotation in search radius 50 around " + this.modelPoint);
-                a = null;
-            }
-        } catch (NoninvertibleTransformException ex) {
-//            Logger.getLogger(AnnotationPainter.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        setDirty(true);
-    }
-
-    public Point2D getPoint() {
-        return this.viewPoint;
-    }
-
+//    public void setPoint(Point2D viewPoint) {
+//        if (viewPoint != this.viewPoint) {
+//            this.viewPoint = viewPoint;
+//            if (this.viewPoint == null) {
+//                this.a = null;
+//            } else {
+//                try {
+//                    this.modelPoint = hm.toModelPoint(viewPoint);
+//                    try {
+//                        a = hm.getClosestInRadius(
+//                                this.modelPoint, 50);
+//                        if (a != null) {
+////                    System.out.println(
+////                            "Found annotation within radius 50 around " + this.modelPoint);
+////                        this.annotationShape = hm.toViewShape(
+////                                a.getSecond().getShape());
+////                        this.annotationShape = a.getSecond().getShape();
+//                        } else {
+////                        this.annotationShape = null;
+////                    System.out.println(
+////                            "Could not find annotation in search radius 50 around " + this.modelPoint);
+//                        }
+//                    } catch (ElementNotFoundException enfe) {
+////                System.out.println(
+////                        "Could not find annotation in search radius 50 around " + this.modelPoint);
+//                        a = null;
+////                    this.annotationShape = null;
+//                    }
+//                } catch (NoninvertibleTransformException ex) {
+////            Logger.getLogger(AnnotationPainter.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//            setDirty(true);
+//        }
+//    }
+//
+//    public Point2D getPoint() {
+//        return this.viewPoint;
+//    }
     public boolean isDrawLabels() {
         return drawLabels;
     }
@@ -92,15 +98,18 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
 
     @Override
     protected void doPaint(Graphics2D g, JComponent t, int width, int height) {
-        if (a != null && annotationShape != null && drawLabels) {
+        if (a != null && drawLabels) {
+            Shape annotationShape = a.getSecond().getShape();
+//            System.out.println("ToolTipPainter: drawing annotations");
             AffineTransform originalTransform = g.getTransform();
-
+            g.setTransform(hm.getTransform());
             Point2D lineCross = new Point2D.Double(annotationShape.getBounds2D().
                     getCenterX(), annotationShape.getBounds2D().getCenterY());
             Line2D.Double l1 = new Line2D.Double(0, lineCross.getY(),
-                    t.getWidth(), lineCross.getY());
+                    hm.getDataBounds().getWidth(), lineCross.getY());
             Line2D.Double l2 = new Line2D.Double(lineCross.getX(), 0, lineCross.
-                    getX(), t.getHeight());
+                    getX(), hm.getDataBounds().getHeight());
+//            System.out.println("Line cross at " + lineCross);
             g.setColor(Color.BLACK);
             g.draw(l1);
             g.draw(l2);
@@ -114,10 +123,11 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
             //return to standard coordinate system
 //            g.setTransform(AffineTransform.getTranslateInstance(0, 0));
             Font currentFont = g.getFont();
-            Font labelFont = currentFont.deriveFont(labelFontSize);
+            Font labelFont = currentFont.deriveFont((float) (labelFontSize / hm.
+                    getTransform().getScaleX()));
             g.setFont(labelFont);
             Tuple2D<Rectangle2D, Point2D> tple = PainterTools.getBoundingBox(
-                    fill, border, label, g, 10);
+                    label, g, 10);
             Rectangle2D r = tple.getFirst();
             double lshift = margin;
             double ushift = margin;
@@ -135,6 +145,7 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
                     lineCross.getY() + ushift - r.getY());
             AffineTransform transl = AffineTransform.getTranslateInstance(finalx,
                     finaly);
+            transl.preConcatenate(hm.getTransform());
             g.setTransform(transl);
             drawLabelBox(g, fill, r, border, label, tple);
 
@@ -146,9 +157,11 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
     private void drawLabelBox(Graphics2D g, Paint fill, Rectangle2D r,
             Paint border, String label, Tuple2D<Rectangle2D, Point2D> tple) {
         //            Shape s = at.createTransformedShape(r);
+        //g.scale(g.getTransform().getScaleX(), g.getTransform().getScaleY());
         g.setPaint(fill);
+        double radius = 10.0d/g.getTransform().getScaleX();
         RoundRectangle2D boxArea = new RoundRectangle2D.Double(r.getX(),
-                r.getY(), r.getWidth(), r.getHeight(), 10, 10);
+                r.getY(), r.getWidth(), r.getHeight(), radius, radius);
         g.fill(boxArea);
         g.setPaint(border);
         g.draw(boxArea);
@@ -159,7 +172,7 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
 
     @Override
     public void listen(Point2D t, MouseEvent et) {
-        setPoint(t);
+//        setPoint(t);
     }
 
     public abstract String getStringFor(Annotation<T> t);
@@ -170,31 +183,45 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
      */
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
-        if (pce.getPropertyName().equals("point")) {
-
-//            Point2D oldPoint = (Point2D) pce.getOldValue();
-            Point2D newPoint = (Point2D) pce.getNewValue();
-            setPoint(newPoint);
-        }
+//        if (pce.getPropertyName().equals("point")) {
+//
+////            Point2D oldPoint = (Point2D) pce.getOldValue();
+//            Point2D newPoint = (Point2D) pce.getNewValue();
+//            setPoint(newPoint);
+//        }
 
 ////        System.out.println("ToolTipPainter Event: " + pce.getPropertyName());
-//        if (pce.getPropertyName().equals("annotationPointSelection")) {
-//////            System.out.println("ToolTipPainter received annotationPointSelection received for old: " + pce.getOldValue() + " new: " + pce.getNewValue());
-////            Tuple2D<Point2D, Annotation<T>> oldVal = (Tuple2D<Point2D, Annotation<T>>) pce.getOldValue();
-////            Tuple2D<Point2D, Annotation<T>> newVal = (Tuple2D<Point2D, Annotation<T>>) pce.getNewValue();
-////            if (oldVal != null) {
-////                oldVal.getSecond().setSelected(false);
-////            }
-////            if (newVal != null) {
-////                this.a = newVal;
-////                this.a.getSecond().setSelected(true);
-////                setPoint(this.a.getFirst());
-//////                setDrawLabels(true);
-////            } else {
-////                this.a = null;
-////                setPoint(null);
-//////                setDrawLabels(false);
-//        }
+        if (pce.getPropertyName().equals("annotationPointSelection")) {
+//            System.out.println("ToolTipPainter received annotationPointSelection: " + pce.
+//                    getNewValue());
+            Tuple2D<Point2D, Annotation<T>> annotation = (Tuple2D<Point2D, Annotation<T>>) pce.
+                    getNewValue();
+            if (annotation == null) {
+//                setPoint(null);
+//                a = null;
+            } else {
+                a = annotation;
+
+            }
+            setDirty(true);
+//            if (annotation) ////            System.out.println("ToolTipPainter received annotationPointSelection received for old: " + pce.getOldValue() + " new: " + pce.getNewValue());
+            //            Tuple2D<Point2D, Annotation<T>> oldVal = (Tuple2D<Point2D, Annotation<T>>) pce.getOldValue();
+            //            Tuple2D<Point2D, Annotation<T>> newVal = (Tuple2D<Point2D, Annotation<T>>) pce.getNewValue();
+            //            if (oldVal != null) {
+            //                oldVal.getSecond().setSelected(false);
+            //            }
+            //            if (newVal != null) {
+            //                this.a = newVal;
+            //                this.a.getSecond().setSelected(true);
+            //                setPoint(this.a.getFirst());
+            ////                setDrawLabels(true);
+            //            } else {
+            //                this.a = null;
+            //                setPoint(null);
+            ////                setDrawLabels(false);
+//            {
+        }
+
 //        } else if (pce.getPropertyName().equals(HeatmapDataset.PROP_TRANSFORM)) {
 //            System.out.println("Received transform change event!");
 //            this.at = (AffineTransform) pce.getNewValue();
@@ -202,4 +229,3 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
 //        }
     }
 }
-

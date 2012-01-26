@@ -32,6 +32,7 @@ public class HeatmapDataset<T> implements IProcessorResultListener<Tuple2D<Point
     private AffineTransform transform = AffineTransform.getTranslateInstance(0, 0);
     private Tuple2D<Point2D, Double> zoom = new Tuple2D<Point2D, Double>(new Point(0, 0), 1.0d);
     private final QuadTree<Annotation<T>> quadTree;
+    private Tuple2D<Point2D, Annotation<T>> lastAnnotation;
 
     public Tuple2D<Point2D, Double> getZoom() {
         return zoom;
@@ -76,10 +77,18 @@ public class HeatmapDataset<T> implements IProcessorResultListener<Tuple2D<Point
     }
 
     public Tuple2D<Point2D, Annotation<T>> getClosestInRadius(Point2D p, double radius) {
+        //shortcut
+        if(lastAnnotation!=null && lastAnnotation.getSecond().getPosition().distance(p)<=radius) {
+            return lastAnnotation;
+        }
+
         try {
-            return this.quadTree.getClosestInRadius(p, radius);
+            lastAnnotation = this.quadTree.getClosestInRadius(p, radius);
+            return lastAnnotation;
         } catch (ElementNotFoundException enfe) {
-            return new Tuple2D<Point2D, Annotation<T>>(p, new Annotation<T>(p, getItemAt(p)));
+            lastAnnotation = null;
+            return null;
+//            return new Tuple2D<Point2D, Annotation<T>>(p, new Annotation<T>(p, getItemAt(p)));
         }
     }
 

@@ -5,10 +5,7 @@
 package net.sf.maltcms.ui.plot.heatmap.painter;
 
 import cross.datastructures.tuple.Tuple2D;
-import java.awt.AlphaComposite;
-import java.awt.Composite;
 import java.awt.Graphics2D;
-import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
@@ -32,16 +29,16 @@ import org.jdesktop.swingx.painter.AbstractPainter;
 public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<U>
         implements IProcessorResultListener<Point2D>, PropertyChangeListener {
 
-    private AffineTransform at = AffineTransform.getTranslateInstance(0, 0);
+//    private AffineTransform at = AffineTransform.getTranslateInstance(0, 0);
     private Point2D activeModelPoint = null;
     private HeatmapDataset<T> hm;
     private double searchRadius = 10.0d;
-    private Point2D activeViewPoint = null;
-    private Tuple2D<Point2D, Annotation<T>> activeSelection = null;
+//    private Point2D activeViewPoint = null;
+//    private Tuple2D<Point2D, Annotation<T>> activeSelection = null;
     private Point2D viewPoint;
     private Point2D modelPoint;
     private Tuple2D<Point2D, Annotation<T>> a = null;
-    private Shape annotationShape;
+//    private Shape annotationShape;
 
     public AnnotationPainter(HeatmapDataset<T> hm) {
 //        annotations = qt;
@@ -137,64 +134,15 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
     @Override
     protected void doPaint(Graphics2D g, JComponent t, int width, int height) {
         if (this.hm != null) {
-
-
-
             AffineTransform old = g.getTransform();
             g.setTransform(hm.getTransform());
-//            AffineTransform activeTransform = null;
-//            if (t == null) {
-//                activeTransform = AffineTransform.getTranslateInstance(0, 0);
-//            } else {
-//                activeTransform = at;
-//            }
-//            g.setTransform(activeTransform);
-//            Shape clip = g.getClip();
-//            Composite c = g.getComposite();
-//            AlphaComposite ac = AlphaComposite.getInstance(
-//                    AlphaComposite.SRC_OVER, 0.3f);
-//            g.setComposite(ac);
-//
-//            AffineTransform inverseTransf = null;
-//            Rectangle2D selection = null;
-//
-//            try {
-//                inverseTransf = activeTransform.createInverse();
-//                if (t != null) {
-//                    selection = inverseTransf.createTransformedShape(t.
-//                            getVisibleRect()).getBounds2D();
-//                    g.setClip(selection);
-//                } else {
-//                    if (clip != null) {
-//                        selection = inverseTransf.createTransformedShape(clip).
-//                                getBounds2D();
-//                        g.setClip(selection);
-//                    }
-//                }
-//            } catch (NoninvertibleTransformException ex) {
-//                Logger.getLogger(AnnotationPainter.class.getName()).log(
-//                        Level.SEVERE, null, ex);
-//            }
-//
             Iterator<Tuple2D<Point2D, Annotation<T>>> iter = null;//this.annotations.getChildrenInRange(selection.getBounds2D()).iterator();
-//
-//            if (selection == null) {
             iter = this.hm.getAnnotationIterator();
-////                System.out.println("Drawing all annotations");
-//            } else {
-//                List<Tuple2D<Point2D, Annotation<T>>> list = this.hm.
-//                        getChildrenInRange(selection);
-////                System.out.println("Drawing " + list.size() + " annotations in active viewport");
-//                iter = list.iterator();
-//            }
             while (iter.hasNext()) {
                 Tuple2D<Point2D, Annotation<T>> tple = iter.next();
-//                Annotation<T> a = ;
                 drawAnnotation(g, tple.getSecond());//, activeAnnotations);
             }
-//            g.setClip(clip);
-//            g.setComposite(c);
-//            g.setTransform(old);
+            g.setTransform(old);
         }
     }
 
@@ -216,12 +164,12 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
 ////            Logger.getLogger(AnnotationPainter.class.getName()).log(Level.SEVERE, null, ex);
 ////        }
 //        if (et.getMet() == MouseEventType.CLICKED) {
-        
+
 //        }
         selectAnnotation(t);
     }
 
-    private void selectAnnotation(Point2D viewPoint) {
+    public void selectAnnotation(Point2D viewPoint) {
         Tuple2D<Point2D, Annotation<T>> old = a;
         if (old != null) {
             old.getSecond().setSelected(false);
@@ -234,101 +182,34 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
                 a = hm.getClosestInRadius(
                         this.modelPoint, searchRadius);
                 if (a != null) {
-//                    System.out.println(
-//                            "Found annotation within radius 50 around " + this.modelPoint);
-                    this.annotationShape = hm.toViewShape(
-                            a.getSecond().getShape());
+                    System.out.println(
+                            "Found annotation within radius "+searchRadius+" around " + this.modelPoint);
+//                    this.annotationShape = hm.toViewShape(
+//                            a.getSecond().getShape());
                     this.a.getSecond().setSelected(true);
                 } else {
-//                    System.out.println(
-//                            "Could not find annotation in search radius 50 around " + this.modelPoint);
+                    System.out.println(
+                            "Could not find annotation in search radius "+searchRadius+" around " + this.modelPoint);
                 }
             } catch (ElementNotFoundException enfe) {
-//                System.out.println(
-//                        "Could not find annotation in search radius 50 around " + this.modelPoint);
+                System.out.println(
+                        "Element not found exception: Could not find annotation in search radius "+searchRadius+" around " + this.modelPoint);
                 a = null;
             }
+            firePropertyChange("annotationPointSelection", old, a);
+            //firePropertyChange("point", oldViewPoint, viewPoint);
+//            setDirty(true);
         } catch (NoninvertibleTransformException ex) {
 //            Logger.getLogger(AnnotationPainter.class.getName()).log(Level.SEVERE, null, ex);
         }
-        firePropertyChange("annotationPointSelection", old, a);
-        firePropertyChange("point", oldViewPoint, viewPoint);
-        setDirty(true);
+
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
-//        System.out.println("AnnotationPainter received event: " + pce.getPropertyName()+" from "+pce.getSource().getClass());
-//        if (pce.getPropertyName().equals("selection")) {
-//            Rectangle2D old = (Rectangle2D) pce.getOldValue();
-//            List<Tuple2D<Point2D, Annotation<T>>> oldSelection = Collections.emptyList();
-//            try {
-//                if (old != null) {
-//                    old = at.createInverse().createTransformedShape(old).getBounds2D();
-//                    oldSelection = this.hm.getChildrenInRange(old);
-//                    for (Tuple2D<Point2D, Annotation<T>> tpl : oldSelection) {
-//                        tpl.getSecond().setSelected(false);
-//                    }
-//                }
-//                Rectangle2D newSel = (Rectangle2D) pce.getNewValue();
-//                List<Tuple2D<Point2D, Annotation<T>>> newSelection = Collections.emptyList();
-//                if (newSel != null) {
-//                    newSel = at.createInverse().createTransformedShape(newSel).getBounds2D();
-//                    newSelection = this.hm.getChildrenInRange(newSel);
-//                    for (Tuple2D<Point2D, Annotation<T>> tpl : newSelection) {
-//                        tpl.getSecond().setSelected(true);
-//                    }
-//                    firePropertyChange("annotationMultiSelection", oldSelection, newSelection);
-//                }
-//
-//            } catch (NoninvertibleTransformException ex) {
-//                Logger.getLogger(AnnotationPainter.class.getName()).log(Level.SEVERE, null, ex);
-//            } catch (ElementNotFoundException enfe) {
-//                firePropertyChange("annotationMultiSelection", oldSelection, Collections.emptyList());
-//            }
-//        } else 
         if (pce.getPropertyName().equals("point")) {
-
-//            Point2D oldPoint = (Point2D) pce.getOldValue();
             Point2D newPoint = (Point2D) pce.getNewValue();
             selectAnnotation(newPoint);
         }
-//            System.out.println("Received point property change");
-//            Point2D old = (Point2D) pce.getOldValue();
-//
-//            Tuple2D<Point2D, Annotation<T>> oldSelection = null;
-//            if (activeSelection != null) {
-//                activeSelection.getSecond().setSelected(false);
-//            }
-//
-//            oldSelection = activeSelection;
-//
-//            Point2D newSel = (Point2D) pce.getNewValue();
-//            Tuple2D<Point2D, Annotation<T>> newSelection = null;
-//            if (newSel != null) {
-//                try {
-//                    newSel = at.inverseTransform(newSel, null);
-//                    try {
-//                        newSelection = this.hm.getClosestInRadius(newSel, this.searchRadius);
-//                        newSelection.getSecond().setSelected(true);
-//                        activeSelection = newSelection;
-//                    } catch (ElementNotFoundException enfe) {
-//                    } catch (IllegalArgumentException iae) {
-//                    }
-//                    System.out.println("New Selection around model coordinates: "+newSel+" view: "+pce.getNewValue());
-//                } catch (NoninvertibleTransformException ex) {
-//                    Logger.getLogger(AnnotationPainter.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//            firePropertyChange("annotationPointSelection", oldSelection, newSelection);
-//        } else if (pce.getPropertyName().equals(HeatmapDataset.PROP_TRANSFORM)) {
-//            this.at = (AffineTransform) pce.getNewValue();
-//            setDirty(true);
-//        } else if (pce.getPropertyName().equals(JScrollPane.AccessibleJComponent.ACCESSIBLE_VALUE_PROPERTY)) {
-//            setDirty(true);
-//        } else {
-//            setDirty(true);
-//        }
-        setDirty(true);
     }
 }

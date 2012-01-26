@@ -7,11 +7,14 @@ package de.unibielefeld.gi.kotte.laborprogramm.gelViewer.lookup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.util.Collection;
 import net.sf.maltcms.chromaui.lookupResultListener.api.AbstractLookupResultListener;
+import net.sf.maltcms.ui.plot.heatmap.HeatmapDataset;
 import net.sf.maltcms.ui.plot.heatmap.painter.AnnotationPainter;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 
@@ -54,14 +57,15 @@ public class SpotGroupSelectionListener extends AbstractLookupResultListener<ISp
                     //retrieve annotation painter from private lookup
                     AnnotationPainter ap = getContentProviderLookup().lookup(
                             AnnotationPainter.class);
+                    HeatmapDataset hd = getContentProviderLookup().lookup(HeatmapDataset.class);
 //                ToolTipPainter tp = getContentProviderLookup().lookup(ToolTipPainter.class);
                     IGel gel = getContentProviderLookup().lookup(IGel.class);
                     //this is our own spot
                     if (gel.equals(spot.getGel())) {
-                        System.out.println("Spot is on gel");
+//                        System.out.println("Spot is on gel");
                         //let's find the one that belongs to us
                         if (ap != null) {
-                            System.out.println("Annotation painter is not null");
+//                            System.out.println("Annotation painter is not null");
                             ISpot privateActiveSpot = getContentProviderLookup().
                                     lookup(ISpot.class);
                             Point2D oldPoint = null;
@@ -72,8 +76,13 @@ public class SpotGroupSelectionListener extends AbstractLookupResultListener<ISp
                             }
                             Point2D newPoint = new Point2D.Double(spot.getPosX(), spot.
                                     getPosY());
-                            ap.propertyChange(new PropertyChangeEvent(this,
-                                    "point", oldPoint, newPoint));
+//                            try {
+                                ap.selectAnnotation(hd.toViewPoint(newPoint));
+                                //                                    "point", oldPoint, newPoint));
+                                //                                    "point", oldPoint, newPoint));
+//                            } catch (NoninvertibleTransformException ex) {
+//                                Exceptions.printStackTrace(ex);
+//                            }
                         } else {
                             System.out.println("Annotation Painter is null!");
                         }

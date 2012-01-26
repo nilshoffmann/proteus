@@ -337,7 +337,7 @@ public class SpotAnnotation extends Annotation<ISpot> implements Activatable {
                 setFont(g.getFont().deriveFont(10.0f));
             }
             g.setFont(getFont());
-            Tuple2D<Rectangle2D, Point2D> tple = PainterTools.getBoundingBox(fill, stroke, sb.toString(), g, 5);
+            Tuple2D<Rectangle2D, Point2D> tple = PainterTools.getBoundingBox(sb.toString(), g, 5);
             AffineTransform at = AffineTransform.getTranslateInstance(getPosition().getX() + getDisplacementX(), getPosition().getY() + getDisplacementY());
             Point2D textOrigin = at.transform(tple.getSecond(), null);
 //            g.setColor(fill);

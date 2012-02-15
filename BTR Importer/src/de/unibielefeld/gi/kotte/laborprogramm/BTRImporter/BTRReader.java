@@ -41,7 +41,7 @@ public class BTRReader {
 
             //Pattern definition (re-usable)
             Pattern abbreviationPattern = Pattern.compile("^(\\w{3,4}) ");
-            Pattern namePattern = Pattern.compile("(.*)");//TODO sinnvolle Loesung...
+            Pattern namePattern = Pattern.compile("([\\w/\\- ]*)");
             Pattern gendbPattern = Pattern.compile("\\(GenDB-ID=(\\d+)\\)");
             Pattern gendbProjectPattern = Pattern.compile("\\(GenDB-Project=(\\d+)\\)");
             Pattern keggPattern = Pattern.compile("(\\d+\\.\\d+\\.\\d+\\.[\\d\\-]+)");
@@ -70,7 +70,12 @@ public class BTRReader {
                             }
                             break;
                         case ACCESSION:
-                            identification.setAccession(data[1]);
+                            String accession = data[1];
+                            // "lcl|" am Start rausschmeissen
+                            if(accession.startsWith("lcl|")) {
+                                accession = accession.substring(4);
+                            }
+                            identification.setAccession(accession);
                             break;
                         case DIFFERENCE:
                             identification.setDifference(Integer.parseInt(data[i]));
@@ -125,7 +130,17 @@ public class BTRReader {
                                 keggNumbers.add(keggMatcher.group(1));
                             }
 
-                            //TODO clean up name
+                            //clean up name
+                            if(!abbreviation.isEmpty()) {
+                                //name.replaceFirst(abbreviation, "");
+                                name = name.substring(abbreviation.length());
+                            }
+                            if(!keggNumbers.isEmpty()) {
+                                name = name.substring(0, name.length()-2);
+                            }
+                            name = name.trim();
+
+                            //set values parsed from name
                             identification.setAbbreviation(abbreviation);
                             identification.setName(name);
                             identification.setGendbId(gendbId);

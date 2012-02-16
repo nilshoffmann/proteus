@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-OpenIDE-Module: de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer
+OpenIDE-Module: de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer/1
 OpenIDE-Module-Layer: de/unibielefeld/gi/kotte/laborprogramm/plate96Viewer/layer.xml
 OpenIDE-Module-Localizing-Bundle: de/unibielefeld/gi/kotte/laborprogramm/plate96Viewer/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.0

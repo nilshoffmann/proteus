@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-OpenIDE-Module: net.sf.maltcms.ui.heatmapPanel
+OpenIDE-Module: net.sf.maltcms.ui.heatmapPanel/1
 OpenIDE-Module-Localizing-Bundle: net/sf/maltcms/ui/plot/heatmap/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.0
 

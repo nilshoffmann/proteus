@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-OpenIDE-Module: de.unibielefeld.gi.kotte.laborprogramm.wellIdentificationViewer
+OpenIDE-Module: de.unibielefeld.gi.kotte.laborprogramm.wellIdentificationViewer/1
 OpenIDE-Module-Layer: de/unibielefeld/gi/kotte/laborprogramm/wellIdentificationViewer/layer.xml
 OpenIDE-Module-Localizing-Bundle: de/unibielefeld/gi/kotte/laborprogramm/wellIdentificationViewer/Bundle.properties
 OpenIDE-Module-Requires: org.openide.windows.WindowManager

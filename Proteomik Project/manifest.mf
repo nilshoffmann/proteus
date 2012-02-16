@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-OpenIDE-Module: de.unibielefeld.gi.kotte.laborprogramm.project
+OpenIDE-Module: de.unibielefeld.gi.kotte.laborprogramm.project/1
 OpenIDE-Module-Layer: de/unibielefeld/gi/kotte/laborprogramm/project/layer.xml
 OpenIDE-Module-Localizing-Bundle: de/unibielefeld/gi/kotte/laborprogramm/project/Bundle.properties
 OpenIDE-Module-Requires: net.sf.maltcms.chromaui.db.api.ICrudProviderFactory

@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-OpenIDE-Module: de.unibielefeld.gi.kotte.laborprogramm.spotTableExporter
+OpenIDE-Module: de.unibielefeld.gi.kotte.laborprogramm.spotTableExporter/1
 OpenIDE-Module-Layer: de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/layer.xml
 OpenIDE-Module-Localizing-Bundle: de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.0

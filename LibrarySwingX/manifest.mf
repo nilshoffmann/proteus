@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-OpenIDE-Module: org.jdesktop
+OpenIDE-Module: org.jdesktop/1
 OpenIDE-Module-Localizing-Bundle: org/jdesktop/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.0
 

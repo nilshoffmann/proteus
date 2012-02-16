@@ -48,20 +48,40 @@ public class AnnotationManager {
         return gsa;
     }
 
+    public static Collection<GelSpotAnnotations> getAnnotations(IProteomicProject project) {
+        return project.retrieve(GelSpotAnnotations.class);
+    }
+
+    public static GelSpotAnnotations getAnnotationsForGel(IProteomicProject project, IGel gel) {
+        for (GelSpotAnnotations gsa : getAnnotations(project)) {
+            if (gsa.getGel().getFilename().equals(gel.getFilename())) {
+                System.out.println("Found existing GelSpotAnnotations for gel " + gel.getFilename());
+                return gsa;
+            }
+        }
+        return null;
+    }
+
+    public static SpotAnnotation getSpotAnnotation(IProteomicProject project, ISpot spot) {
+        GelSpotAnnotations annotations = getAnnotationsForGel(project, spot.getGel());
+        for (Annotation ann : annotations.getSpotAnnotations()) {
+            SpotAnnotation sann = (SpotAnnotation)ann;
+            if(sann.getPayload() == spot) {
+                return sann;
+            }
+        }
+        return null;
+    }
+
     public void open() {
 
-        Collection<GelSpotAnnotations> gelSpotAnnotations = project.retrieve(GelSpotAnnotations.class);
+        Collection<GelSpotAnnotations> gelSpotAnnotations = getAnnotations(project);
 
         if (gelSpotAnnotations.isEmpty()) {
             System.out.println("Did not find any spot GelSpotAnnotations in database!");
             gelSpotAnnotation = addAnnotations();
         } else {
-            for (GelSpotAnnotations gsa : gelSpotAnnotations) {
-                if (gsa.getGel().getFilename().equals(gel.getFilename())) {
-                    System.out.println("Found existing GelSpotAnnotations for gel " + gel.getFilename());
-                    gelSpotAnnotation = gsa;
-                }
-            }
+            gelSpotAnnotation = getAnnotationsForGel(project, gel);
             if (gelSpotAnnotation == null) {
                 System.out.println("Could not find existing GelSpotAnnotations for gel " + gel.getFilename());
                 gelSpotAnnotation = addAnnotations();
@@ -71,8 +91,8 @@ public class AnnotationManager {
         for (Annotation ann : gelSpotAnnotation.getSpotAnnotations()) {
             SpotAnnotation annotation = (SpotAnnotation) ann;
             ISpot spot = annotation.getPayload();
-            if(spot==null) {
-                System.err.println("Spot for annotation: "+annotation+" was null!");
+            if (spot == null) {
+                System.err.println("Spot for annotation: " + annotation + " was null!");
             }
             spot.addPropertyChangeListener(hp);
             annotation.addPropertyChangeListener(hp);

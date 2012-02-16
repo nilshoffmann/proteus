@@ -21,11 +21,10 @@ import de.unibielefeld.gi.kotte.laborprogramm.topComponentRegistry.api.IRegistry
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.IntrospectionException;
@@ -38,10 +37,11 @@ import java.util.Collection;
 import java.util.Iterator;
 import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
+import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.SwingUtilities;
@@ -867,46 +867,71 @@ public final class GelViewerTopComponent extends TopComponent implements
                             BoxLayout bl = new BoxLayout(jp, BoxLayout.Y_AXIS);
                             jp.setLayout(bl);
                             jp.add(ps);
-                            final JCheckBox applyToAll = new JCheckBox(
+                            ButtonGroup bg = new ButtonGroup();
+                            final JRadioButton applyToCurrent = new JRadioButton(
+                                    "Apply Settings to Active Spot",true);
+                            final JRadioButton applyToAll = new JRadioButton(
                                     "Apply Settings to All Spots", false);
-                            jp.add(applyToAll);
+                            final JRadioButton applyToSpotsInGroup = new JRadioButton(
+                                    "Apply Settings to Spot Group", false);
+                            bg.add(applyToCurrent);
+                            bg.add(applyToAll);
+                            bg.add(applyToSpotsInGroup);
+
+                            JPanel radioPanel = new JPanel(new GridLayout(0, 1));
+                            radioPanel.add(applyToCurrent);
+                            radioPanel.add(applyToSpotsInGroup);
+                            radioPanel.add(applyToAll);
+                            jp.add(radioPanel);
                             NotifyDescriptor nd = new NotifyDescriptor.Confirmation(
                                     jp,
                                     NotifyDescriptor.OK_CANCEL_OPTION,
                                     NotifyDescriptor.PLAIN_MESSAGE);
                             Object obj = DialogDisplayer.getDefault().notify(nd);
                             if (obj == NotifyDescriptor.OK_OPTION) {
-                                if (applyToAll.isSelected()) {
+                                if(applyToSpotsInGroup.isSelected()) {
+                                    ISpot spot = annotation.getSecond().getPayload();
+                                    SpotAnnotation templateSpotAnnotation = (SpotAnnotation)annotation.getSecond();
+                                    ISpotGroup spotGroup = spot.getGroup();
+                                    if(spotGroup!=null) {
+                                        for(ISpot other:spotGroup.getSpots()) {
+                                            if(other!=spot) {
+
+                                                SpotAnnotation otherSpotAnnotation = AnnotationManager.getSpotAnnotation(getLookup().lookup(IProteomicProject.class), other);
+                                                setSpotProperties(otherSpotAnnotation, templateSpotAnnotation);
+                                            }
+                                        }
+                                    }
+                                }else if (applyToAll.isSelected()) {
                                     Iterator<?> iter2 = ds.getAnnotationIterator();
                                     while (iter2.hasNext()) {
                                         Tuple2D<Point2D, Annotation<?>> tple = (Tuple2D<Point2D, Annotation<?>>) iter2.
                                                 next();
                                         SpotAnnotation spot = (SpotAnnotation) tple.
                                                 getSecond();
-                                        spot.setFillColor(sa.getFillColor());
-                                        spot.setLineColor(sa.getLineColor());
-                                        spot.setFont(sa.getFont());
-                                        spot.setSelectedFillColor(sa.
-                                                getSelectedFillColor());
-                                        spot.setSelectedStrokeColor(sa.
-                                                getSelectedStrokeColor());
-                                        spot.setSelectionCrossColor(sa.
-                                                getSelectionCrossColor());
-                                        spot.setStrokeColor(sa.getStrokeColor());
-                                        spot.setTextColor(sa.getTextColor());
-                                        spot.setDrawSpotBox(sa.isDrawSpotBox());
-                                        spot.setDrawSpotId(sa.isDrawSpotId());
-                                        spot.setDisplacementX(sa.
-                                                getDisplacementX());
-                                        spot.setDisplacementY(sa.
-                                                getDisplacementY());
-                                        spot.setFillAlpha(sa.getFillAlpha());
-                                        spot.setStrokeAlpha(sa.getStrokeAlpha());
+                                        setSpotProperties(spot, sa);
                                     }
                                 }
                                 repaint();
                             }
                         }
+                    }
+
+                    private void setSpotProperties(SpotAnnotation spot, SpotAnnotation template) {
+                        spot.setFillColor(template.getFillColor());
+                        spot.setLineColor(template.getLineColor());
+                        spot.setFont(template.getFont());
+                        spot.setSelectedFillColor(template.getSelectedFillColor());
+                        spot.setSelectedStrokeColor(template.getSelectedStrokeColor());
+                        spot.setSelectionCrossColor(template.getSelectionCrossColor());
+                        spot.setStrokeColor(template.getStrokeColor());
+                        spot.setTextColor(template.getTextColor());
+                        spot.setDrawSpotBox(template.isDrawSpotBox());
+                        spot.setDrawSpotId(template.isDrawSpotId());
+                        spot.setDisplacementX(template.getDisplacementX());
+                        spot.setDisplacementY(template.getDisplacementY());
+                        spot.setFillAlpha(template.getFillAlpha());
+                        spot.setStrokeAlpha(template.getStrokeAlpha());
                     }
                 });
             }

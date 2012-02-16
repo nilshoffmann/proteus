@@ -3,20 +3,19 @@
  * and open the template in the editor.
  */
 
-package de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations;
+package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel;
 
 import java.beans.*;
 
 /**
  *
- * @author nilshoffmann
+ * @author hoffmann
  */
-public class SpotAnnotationBeanInfo extends SimpleBeanInfo {
+public class SpotBeanInfo extends SimpleBeanInfo {
 
     // Bean descriptor information will be obtained from introspection.//GEN-FIRST:BeanDescriptor
     private static BeanDescriptor beanDescriptor = null;
     private static BeanDescriptor getBdescriptor(){//GEN-HEADEREND:BeanDescriptor
-
 
 
     // Here you can add code for customizing the BeanDescriptor.
@@ -25,54 +24,31 @@ public class SpotAnnotationBeanInfo extends SimpleBeanInfo {
 
 
     // Property identifiers//GEN-FIRST:Properties
-    private static final int PROPERTY_displacementX = 0;
-    private static final int PROPERTY_displacementY = 1;
-    private static final int PROPERTY_drawSpotBox = 2;
-    private static final int PROPERTY_drawSpotId = 3;
-    private static final int PROPERTY_fillAlpha = 4;
-    private static final int PROPERTY_fillColor = 5;
-    private static final int PROPERTY_font = 6;
-    private static final int PROPERTY_lineColor = 7;
-    private static final int PROPERTY_payload = 8;
-    private static final int PROPERTY_position = 9;
-    private static final int PROPERTY_selected = 10;
-    private static final int PROPERTY_selectedFillColor = 11;
-    private static final int PROPERTY_selectedStrokeColor = 12;
-    private static final int PROPERTY_selectionCrossColor = 13;
-    private static final int PROPERTY_shape = 14;
-    private static final int PROPERTY_strokeAlpha = 15;
-    private static final int PROPERTY_strokeColor = 16;
-    private static final int PROPERTY_textColor = 17;
+    private static final int PROPERTY_gel = 0;
+    private static final int PROPERTY_group = 1;
+    private static final int PROPERTY_id = 2;
+    private static final int PROPERTY_label = 3;
+    private static final int PROPERTY_number = 4;
+    private static final int PROPERTY_posX = 5;
+    private static final int PROPERTY_posY = 6;
+    private static final int PROPERTY_status = 7;
+    private static final int PROPERTY_well = 8;
 
     // Property array 
     /*lazy PropertyDescriptor*/
     private static PropertyDescriptor[] getPdescriptor(){
-        PropertyDescriptor[] properties = new PropertyDescriptor[18];
+        PropertyDescriptor[] properties = new PropertyDescriptor[9];
     
         try {
-            properties[PROPERTY_displacementX] = new PropertyDescriptor ( "displacementX", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getDisplacementX", "setDisplacementX" ); // NOI18N
-            properties[PROPERTY_displacementY] = new PropertyDescriptor ( "displacementY", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getDisplacementY", "setDisplacementY" ); // NOI18N
-            properties[PROPERTY_drawSpotBox] = new PropertyDescriptor ( "drawSpotBox", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "isDrawSpotBox", "setDrawSpotBox" ); // NOI18N
-            properties[PROPERTY_drawSpotId] = new PropertyDescriptor ( "drawSpotId", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "isDrawSpotId", "setDrawSpotId" ); // NOI18N
-            properties[PROPERTY_fillAlpha] = new PropertyDescriptor ( "fillAlpha", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getFillAlpha", "setFillAlpha" ); // NOI18N
-            properties[PROPERTY_fillColor] = new PropertyDescriptor ( "fillColor", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getFillColor", "setFillColor" ); // NOI18N
-            properties[PROPERTY_font] = new PropertyDescriptor ( "font", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getFont", "setFont" ); // NOI18N
-            properties[PROPERTY_lineColor] = new PropertyDescriptor ( "lineColor", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getLineColor", "setLineColor" ); // NOI18N
-            properties[PROPERTY_payload] = new PropertyDescriptor ( "payload", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getPayload", "setPayload" ); // NOI18N
-            properties[PROPERTY_payload].setHidden ( true );
-            properties[PROPERTY_position] = new PropertyDescriptor ( "position", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getPosition", "setPosition" ); // NOI18N
-            properties[PROPERTY_position].setHidden ( true );
-            properties[PROPERTY_selected] = new PropertyDescriptor ( "selected", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "isSelected", "setSelected" ); // NOI18N
-            properties[PROPERTY_selected].setHidden ( true );
-            properties[PROPERTY_selectedFillColor] = new PropertyDescriptor ( "selectedFillColor", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getSelectedFillColor", "setSelectedFillColor" ); // NOI18N
-            properties[PROPERTY_selectedStrokeColor] = new PropertyDescriptor ( "selectedStrokeColor", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getSelectedStrokeColor", "setSelectedStrokeColor" ); // NOI18N
-            properties[PROPERTY_selectionCrossColor] = new PropertyDescriptor ( "selectionCrossColor", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getSelectionCrossColor", "setSelectionCrossColor" ); // NOI18N
-            properties[PROPERTY_shape] = new PropertyDescriptor ( "shape", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getShape", "setShape" ); // NOI18N
-            properties[PROPERTY_shape].setHidden ( true );
-            properties[PROPERTY_strokeAlpha] = new PropertyDescriptor ( "strokeAlpha", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getStrokeAlpha", "setStrokeAlpha" ); // NOI18N
-            properties[PROPERTY_strokeColor] = new PropertyDescriptor ( "strokeColor", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getStrokeColor", "setStrokeColor" ); // NOI18N
-            properties[PROPERTY_strokeColor].setHidden ( true );
-            properties[PROPERTY_textColor] = new PropertyDescriptor ( "textColor", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getTextColor", "setTextColor" ); // NOI18N
+            properties[PROPERTY_gel] = new PropertyDescriptor ( "gel", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Spot.class, "getGel", null ); // NOI18N
+            properties[PROPERTY_group] = new PropertyDescriptor ( "group", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Spot.class, "getGroup", null ); // NOI18N
+            properties[PROPERTY_id] = new PropertyDescriptor ( "id", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Spot.class, "getId", null ); // NOI18N
+            properties[PROPERTY_label] = new PropertyDescriptor ( "label", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Spot.class, "getLabel", "setLabel" ); // NOI18N
+            properties[PROPERTY_number] = new PropertyDescriptor ( "number", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Spot.class, "getNumber", null ); // NOI18N
+            properties[PROPERTY_posX] = new PropertyDescriptor ( "posX", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Spot.class, "getPosX", null ); // NOI18N
+            properties[PROPERTY_posY] = new PropertyDescriptor ( "posY", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Spot.class, "getPosY", null ); // NOI18N
+            properties[PROPERTY_status] = new PropertyDescriptor ( "status", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Spot.class, "getStatus", null ); // NOI18N
+            properties[PROPERTY_well] = new PropertyDescriptor ( "well", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Spot.class, "getWell", null ); // NOI18N
         }
         catch(IntrospectionException e) {
             e.printStackTrace();

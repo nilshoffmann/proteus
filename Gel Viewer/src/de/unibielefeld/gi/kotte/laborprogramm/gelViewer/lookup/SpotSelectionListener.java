@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import net.sf.maltcms.chromaui.lookupResultListener.api.AbstractLookupResultListener;
 import net.sf.maltcms.ui.plot.heatmap.Annotation;
+import net.sf.maltcms.ui.plot.heatmap.HeatmapDataset;
 import net.sf.maltcms.ui.plot.heatmap.painter.AnnotationPainter;
 import net.sf.maltcms.ui.plot.heatmap.painter.ToolTipPainter;
 import org.openide.util.Lookup;
@@ -42,13 +43,14 @@ public class SpotSelectionListener extends AbstractLookupResultListener<ISpot> {
             for (ISpot spot : spots) {
                 //retrieve annotation painter from private lookup
                 AnnotationPainter ap = getContentProviderLookup().lookup(AnnotationPainter.class);
+                HeatmapDataset hd = getContentProviderLookup().lookup(HeatmapDataset.class);
 //                ToolTipPainter tp = getContentProviderLookup().lookup(ToolTipPainter.class);
                 IGel gel = getContentProviderLookup().lookup(IGel.class);
                 //this is our own spot
                 if (gel.equals(spot.getGel())) {
                     System.out.println("Spot is on gel");
                     //let's find the one that belongs to us
-                    if (ap != null) {
+                    if (ap != null && hd!=null) {
                         System.out.println("Annotation painter is not null");
                         ISpot privateActiveSpot = getContentProviderLookup().lookup(ISpot.class);
                         Point2D oldPoint = null;
@@ -57,7 +59,10 @@ public class SpotSelectionListener extends AbstractLookupResultListener<ISpot> {
                             oldPoint = new Point2D.Double(privateActiveSpot.getPosX(), privateActiveSpot.getPosY());
                         }
                         Point2D newPoint = new Point2D.Double(spot.getPosX(), spot.getPosY());
-                        ap.propertyChange(new PropertyChangeEvent(this, "point", oldPoint, newPoint));
+//                            try {
+                        ap.selectAnnotation(hd.toViewPoint(newPoint));
+//                        Point2D newPoint = new Point2D.Double(spot.getPosX(), spot.getPosY());
+//                        ap.propertyChange(new PropertyChangeEvent(this, "point", oldPoint, newPoint));
                     } else {
                         System.out.println("Annotation Painter is null!");
                     }

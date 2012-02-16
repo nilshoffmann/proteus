@@ -130,9 +130,9 @@ public final class GelViewerTopComponent extends TopComponent implements
 
         lookupListeners = new LookupResultListeners();
 
-//        SpotSelectionListener all = new SpotSelectionListener(
-//                ISpot.class, getLookup());
-//        lookupListeners.add(all);
+        SpotSelectionListener all = new SpotSelectionListener(
+                ISpot.class, getLookup());
+        lookupListeners.add(all);
         SpotGroupSelectionListener sgsl = new SpotGroupSelectionListener(
                 ISpotGroup.class, getLookup());
         lookupListeners.add(sgsl);

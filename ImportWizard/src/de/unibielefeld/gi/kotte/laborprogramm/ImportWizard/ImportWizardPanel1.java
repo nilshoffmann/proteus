@@ -55,9 +55,17 @@ public class ImportWizardPanel1 implements WizardDescriptor.ValidatingPanel, Pro
             descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Please choose a project directory.");
             return false;
         }
+        System.out.println(component.getProjectDirectory());
+        File[] kids = component.getProjectDirectory().listFiles();
+        if (component.getProjectDirectory().exists() && kids != null && kids.length > 0) {
+            // Folder exists and is not empty
+            descriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE,
+                    "Project Folder already exists and is not empty.");
+            return false;
+        }
         File baseDirectoryFile = component.getBaseDirectoryFile();
         if (baseDirectoryFile == null) {
-            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Please choose a base directory.");
+            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Please choose a Delta2D project directory.");
             return false;
         }
         String projectDataPath = baseDirectoryFile.getAbsolutePath() + File.separator + "projects" + File.separator + "projects.xml";

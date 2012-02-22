@@ -74,6 +74,7 @@ public final class DB4oCrudProvider implements ICrudProvider {
         System.out.println("Using class loader: " + domainClassLoader);
         this.domainClassLoader = domainClassLoader;
         this.factory = factory;
+        this.sessionCache = new HashSet<ICrudSession>();
     }
 
     @Override
@@ -88,7 +89,7 @@ public final class DB4oCrudProvider implements ICrudProvider {
             ec.common().add(new TransparentActivationSupport());
             ec.common().add(new TransparentPersistenceSupport());
             eoc = Db4oEmbedded.openFile(ec, projectDBLocation.getAbsolutePath());
-            sessionCache = new HashSet<ICrudSession>();
+//            sessionCache = new HashSet<ICrudSession>();
         }
     }
 

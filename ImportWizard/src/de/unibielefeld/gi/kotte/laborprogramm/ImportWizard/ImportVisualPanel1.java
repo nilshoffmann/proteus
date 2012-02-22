@@ -6,6 +6,9 @@ import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.text.Document;
+import org.openide.filesystems.FileChooserBuilder;
+import org.openide.filesystems.FileUtil;
 
 /**
  * Visual Panel for the Project creation wizard.
@@ -21,7 +24,6 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
     private File baseDirectoryFile;
     private File projectParentDirectoryFile;
     private File excelDataFile;
-    private File lastActiveDirectory = new File(".");
 
     public String getProjectName() {
         return projectNameTextField.getText();
@@ -29,6 +31,10 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
 
     public File getBaseDirectoryFile() {
         return baseDirectoryFile;
+    }
+
+    public File getProjectDirectory() {
+        return new File(getProjectParentDirectoryFile(),getProjectName());
     }
 
     public File getProjectParentDirectoryFile() {
@@ -39,10 +45,11 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
         return excelDataFile;
     }
 
-
     /** Creates new form ImportVisualPanel1 */
     public ImportVisualPanel1() {
         initComponents();
+        projectNameTextField.getDocument().addDocumentListener(this);
+        projectParentDirectoryTextField.getDocument().addDocumentListener(this);
     }
 
     @Override
@@ -129,22 +136,22 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
                     .addComponent(projectNameLabel)
                     .addComponent(projectParentDirectoryLabel)
                     .addComponent(projectDirectoryLabel)
-                    .addComponent(separator, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
+                    .addComponent(separator, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
                     .addComponent(baseDirectoryLabel)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(baseDirectoryTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+                        .addComponent(baseDirectoryTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(baseDirectoryButton))
                     .addComponent(excelDataLabel)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(excelDataTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+                        .addComponent(excelDataTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(excelDataButton))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(projectNameTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
-                            .addComponent(projectDirectoryTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
-                            .addComponent(projectParentDirectoryTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE))
+                            .addComponent(projectNameTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
+                            .addComponent(projectDirectoryTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
+                            .addComponent(projectParentDirectoryTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(projectParentDirectoryButton)))
                 .addContainerGap())
@@ -187,49 +194,54 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
     }// </editor-fold>//GEN-END:initComponents
 
     private void baseDirectoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_baseDirectoryButtonActionPerformed
-        JFileChooser jfc = new JFileChooser(lastActiveDirectory);
+        FileChooserBuilder fcb = new FileChooserBuilder(getClass());
+        fcb.setTitle("Choose base directory");
+        fcb.setDirectoriesOnly(true);
         //jfc.setCurrentDirectory(new java.io.File("."));
-        jfc.setDialogTitle("choose base directory");
-        jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        JFileChooser jfc = fcb.createFileChooser();
         jfc.setAcceptAllFileFilterUsed(false);
-        int status = jfc.showOpenDialog(null);
+        int status = jfc.showOpenDialog(this);
         if (status == JFileChooser.APPROVE_OPTION) {
             File oldFile = baseDirectoryFile;
             baseDirectoryFile = jfc.getSelectedFile();
-            lastActiveDirectory = baseDirectoryFile;
+//            lastActiveDirectory = baseDirectoryFile;
             baseDirectoryTextField.setText(baseDirectoryFile.getAbsolutePath());
-            firePropertyChange(PROPERTY_BASE_DIRECTORY, oldFile, baseDirectoryFile);
+            firePropertyChange(PROPERTY_BASE_DIRECTORY, oldFile,
+                    baseDirectoryFile);
         }
     }//GEN-LAST:event_baseDirectoryButtonActionPerformed
 
     private void projectParentDirectoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_projectParentDirectoryButtonActionPerformed
-        JFileChooser jfc = new JFileChooser(lastActiveDirectory);
-        //jfc.setCurrentDirectory(new java.io.File("."));
-        jfc.setDialogTitle("choose project directory");
-        jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        jfc.setAcceptAllFileFilterUsed(false);
-        int status = jfc.showOpenDialog(null);
+        FileChooserBuilder fcb = new FileChooserBuilder(getClass());
+        fcb.setTitle("Choose project directory");
+        fcb.setDirectoriesOnly(true);
+        JFileChooser jfc = fcb.createFileChooser();
+        int status = jfc.showOpenDialog(this);
         if (status == JFileChooser.APPROVE_OPTION) {
             File oldFile = projectParentDirectoryFile;
             projectParentDirectoryFile = jfc.getSelectedFile();
-            lastActiveDirectory = projectParentDirectoryFile;
-            projectParentDirectoryTextField.setText(projectParentDirectoryFile.getAbsolutePath());
-            projectDirectoryTextField.setText(projectParentDirectoryFile.getAbsolutePath() + File.separator + projectNameTextField.getText());
-            firePropertyChange(PROPERTY_PROJECT_PARENT_DIRECTORY, oldFile, projectParentDirectoryFile);
+            projectParentDirectoryTextField.setText(projectParentDirectoryFile.
+                    getAbsolutePath());
+            projectDirectoryTextField.setText(projectParentDirectoryFile.
+                    getAbsolutePath() + File.separator + projectNameTextField.
+                    getText());
+            firePropertyChange(PROPERTY_PROJECT_PARENT_DIRECTORY, oldFile,
+                    projectParentDirectoryFile);
         }
     }//GEN-LAST:event_projectParentDirectoryButtonActionPerformed
 
     private void excelDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excelDataButtonActionPerformed
-        JFileChooser jfc = new JFileChooser(lastActiveDirectory);
+        FileChooserBuilder fcb = new FileChooserBuilder(getClass());
+        fcb.setTitle("Choose Delta2D Excel Report file");
         //jfc.setCurrentDirectory(new java.io.File("."));
         FileFilter ff = new FileFilter() {
 
             @Override
             public boolean accept(File file) {
-                if(file.isDirectory()) {
+                if (file.isDirectory()) {
                     return true;
                 }
-                if(file.getName().toLowerCase().endsWith("xlsx")) {
+                if (file.getName().toLowerCase().endsWith("xlsx")) {
                     return true;
                 }
                 return false;
@@ -240,18 +252,16 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
                 return ".xlsx";
             }
         };//"xlsx";
-        jfc.setDialogTitle("choose Delta2D Excel Report file");
-        jfc.setFileFilter(ff);
-        int status = jfc.showOpenDialog(null);
+        fcb.setFileFilter(ff);
+        JFileChooser jfc = fcb.createFileChooser();
+        int status = jfc.showOpenDialog(this);
         if (status == JFileChooser.APPROVE_OPTION) {
             File oldFile = excelDataFile;
             excelDataFile = jfc.getSelectedFile();
-            lastActiveDirectory = excelDataFile.getParentFile();
             excelDataTextField.setText(excelDataFile.getAbsolutePath());
             firePropertyChange(PROPERTY_EXCEL_DATA_FILE, oldFile, excelDataFile);
         }
     }//GEN-LAST:event_excelDataButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton baseDirectoryButton;
     private javax.swing.JLabel baseDirectoryLabel;
@@ -271,16 +281,33 @@ public final class ImportVisualPanel1 extends JPanel implements DocumentListener
 
     @Override
     public void insertUpdate(DocumentEvent e) {
+        updateTexts(e);
         firePropertyChange("fileChange", 0, 1);
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
+        updateTexts(e);
         firePropertyChange("fileChange", 0, 1);
     }
 
     @Override
     public void changedUpdate(DocumentEvent e) {
+        updateTexts(e);
         firePropertyChange("fileChange", 0, 1);
+    }
+
+    /** Handles changes in the Project name and project directory, */
+    private void updateTexts(DocumentEvent e) {
+        Document doc = e.getDocument();
+        if (doc == projectNameTextField.getDocument() || doc == projectParentDirectoryTextField.
+                getDocument()) {
+            // Change in the project name
+            String projectName = projectNameTextField.getText();
+            String projectFolder = projectParentDirectoryTextField.getText();
+
+            projectDirectoryTextField.setText(
+                    projectFolder + File.separatorChar + projectName);
+        }
     }
 }

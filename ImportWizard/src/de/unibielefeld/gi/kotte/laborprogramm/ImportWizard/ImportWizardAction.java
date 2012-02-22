@@ -13,6 +13,8 @@ import java.awt.Dialog;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.List;
 import javax.swing.JComponent;
@@ -31,7 +33,8 @@ import org.openide.util.actions.CallableSystemAction;
  *
  * @author kotte
  */
-public final class ImportWizardAction extends CallableSystemAction implements ActionListener {
+public final class ImportWizardAction extends CallableSystemAction implements
+        ActionListener {
 
     private WizardDescriptor.Panel[] panels;
 
@@ -41,7 +44,8 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
         // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
         wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
         wizardDescriptor.setTitle("Datei Import fuer neues Proteomik Projekt");
-        Dialog dialog = DialogDisplayer.getDefault().createDialog(wizardDescriptor);
+        Dialog dialog = DialogDisplayer.getDefault().createDialog(
+                wizardDescriptor);
         dialog.setVisible(true);
         dialog.toFront();
         File parent = createProject(wizardDescriptor);
@@ -54,42 +58,68 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
         boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
         if (!cancelled) {
             //get files
-            File projectParentDirectoryFile = (File) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_PROJECT_PARENT_DIRECTORY);
-            String projectName = (String) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_PROJECT_NAME);
-            File projectDirectoryFile = new File(projectParentDirectoryFile, projectName);
+            File projectParentDirectoryFile = (File) wizardDescriptor.
+                    getProperty(
+                    ImportVisualPanel1.PROPERTY_PROJECT_PARENT_DIRECTORY);
+            String projectName = (String) wizardDescriptor.getProperty(
+                    ImportVisualPanel1.PROPERTY_PROJECT_NAME);
+            File projectDirectoryFile = new File(projectParentDirectoryFile,
+                    projectName);
             projectDirectoryFile.mkdir();
-            File baseDirectoryFile = (File) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_BASE_DIRECTORY);
-            File projectDataFile = new File(baseDirectoryFile.getAbsolutePath() + File.separator + "projects" + File.separator + "projects.xml");
-            File gelDataFile = new File(baseDirectoryFile.getAbsolutePath() + File.separator + "gelImages" + File.separator + "gelImages.xml");
-            File excelDataFile = (File) wizardDescriptor.getProperty(ImportVisualPanel1.PROPERTY_EXCEL_DATA_FILE);
+            File baseDirectoryFile = (File) wizardDescriptor.getProperty(
+                    ImportVisualPanel1.PROPERTY_BASE_DIRECTORY);
+            File projectDataFile = new File(
+                    baseDirectoryFile.getAbsolutePath() + File.separator + "projects" + File.separator + "projects.xml");
+            File gelDataFile = new File(
+                    baseDirectoryFile.getAbsolutePath() + File.separator + "gelImages" + File.separator + "gelImages.xml");
+            File excelDataFile = (File) wizardDescriptor.getProperty(
+                    ImportVisualPanel1.PROPERTY_EXCEL_DATA_FILE);
 
             //build project structure
             ProjectBuilder pb = new ProjectBuilder();
             IProject p = null;
             try {
-                List<IProject> l = pb.buildProject(projectDataFile, gelDataFile, excelDataFile);
+                List<IProject> l = pb.buildProject(projectDataFile, gelDataFile,
+                        excelDataFile);
                 p = l.iterator().next();
                 //System.out.println(p);//TEST: komplette Projekt Daten ausgeben (langsam)
                 System.out.println("Creating project in " + projectDirectoryFile);
-                
+
                 //copy gel images
-                File gelDirectoryFile = new File(projectDirectoryFile.getAbsolutePath() + File.separator + "gels");
+                File gelDirectoryFile = new File(projectDirectoryFile.
+                        getAbsolutePath() + File.separator + "gels");
                 gelDirectoryFile.mkdir();
                 for (ILogicalGelGroup illgg : p.getGelGroups()) {
                     for (IBioRepGelGroup ibrgg : illgg.getGelGroups()) {
                         for (ITechRepGelGroup itrgg : ibrgg.getGelGroups()) {
                             for (IGel gel : itrgg.getGels()) {
-                                String oldPath = baseDirectoryFile.getAbsolutePath() + File.separator + "gelImages" + File.separator + gel.getFilename();
-                                FileObject originalFileObject = FileUtil.toFileObject(new File(oldPath));
-                                FileObject gelFileObject = FileUtil.copyFile(originalFileObject, FileUtil.toFileObject(gelDirectoryFile), gel.getName());
-                                gel.setFilename("gels"+File.separator+gelFileObject.getNameExt());
+                                String oldPath = baseDirectoryFile.
+                                        getAbsolutePath() + File.separator + "gelImages" + File.separator + gel.
+                                        getFilename();
+                                FileObject originalFileObject = FileUtil.
+                                        toFileObject(new File(oldPath));
+                                FileObject gelFileObject = FileUtil.copyFile(
+                                        originalFileObject, FileUtil.
+                                        toFileObject(gelDirectoryFile), gel.
+                                        getName());
+                                gel.setFilename(gelFileObject.getNameExt());
+                                //create a relative file uri
+                                File relativeGelsFolder = new File("gels");
+                                File relativeGelFile = new File(
+                                        relativeGelsFolder, gelFileObject.
+                                        getNameExt());
+                                System.out.println("Gel location:" +relativeGelFile.getPath());
+                                gel.setLocation(relativeGelFile);
+
                             }
                         }
                     }
                 }
                 //create Project
-                IProteomicProjectFactory ippf = Lookup.getDefault().lookup(IProteomicProjectFactory.class);
-                IProteomicProject pp = ippf.createProject(projectDirectoryFile, p);
+                IProteomicProjectFactory ippf = Lookup.getDefault().lookup(
+                        IProteomicProjectFactory.class);
+                IProteomicProject pp = ippf.createProject(projectDirectoryFile,
+                        p);
                 pp.close();
             } catch (IllegalArgumentException iae) {
                 Exceptions.printStackTrace(iae);
@@ -122,15 +152,19 @@ public final class ImportWizardAction extends CallableSystemAction implements Ac
                 if (c instanceof JComponent) { // assume Swing components
                     JComponent jc = (JComponent) c;
                     // Sets step number of a component
-                    jc.putClientProperty("WizardPanel_contentSelectedIndex", new Integer(i));
+                    jc.putClientProperty("WizardPanel_contentSelectedIndex", new Integer(
+                            i));
                     // Sets steps names for a panel
                     jc.putClientProperty("WizardPanel_contentData", steps);
                     // Turn on subtitle creation on each step
-                    jc.putClientProperty("WizardPanel_autoWizardStyle", Boolean.TRUE);
+                    jc.putClientProperty("WizardPanel_autoWizardStyle",
+                            Boolean.TRUE);
                     // Show steps on the left side with the image on the background
-                    jc.putClientProperty("WizardPanel_contentDisplayed", Boolean.FALSE);
+                    jc.putClientProperty("WizardPanel_contentDisplayed",
+                            Boolean.FALSE);
                     // Turn on numbering of all steps
-                    jc.putClientProperty("WizardPanel_contentNumbered", Boolean.TRUE);
+                    jc.putClientProperty("WizardPanel_contentNumbered",
+                            Boolean.TRUE);
                 }
             }
         }

@@ -2,9 +2,11 @@ package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroup;
+import java.beans.IntrospectionException;
 import java.util.List;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
 /**
@@ -36,7 +38,11 @@ class TechRepGelGroupChildNodeFactory extends ChildFactory<IGel> {
     @Override
     protected Node createNodeForKey(IGel key) {
         if(key!=null) {
-            return new GelNode(key,lkp);
+            try {
+                return new GelNode(key, lkp);
+            } catch (IntrospectionException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
         return Node.EMPTY;
     }

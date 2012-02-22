@@ -11,7 +11,6 @@ import java.beans.PropertyChangeListener;
 import java.util.List;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
-import org.openide.util.Lookup;
 import org.openide.util.WeakListeners;
 
 /**
@@ -36,7 +35,10 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> implements Pro
 
     public ProjectChildNodeFactory(IProteomicProject ipp) {
         this.ipp = ipp;
-        ipp.getLookup().lookup(IProject.class).addPropertyChangeListener(this);
+        IProject project = ipp.getLookup().lookup(IProject.class);
+        if(project!=null) {
+            WeakListeners.propertyChange(this, project);
+        }
     }
 
     @Override

@@ -9,12 +9,15 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
@@ -28,13 +31,16 @@ import net.sf.maltcms.chromaui.db.api.NoAuthCredentials;
 import net.sf.maltcms.chromaui.db.api.exceptions.AuthenticationException;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.DeleteOperationImplementation;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.cookies.SaveCookie;
+import org.openide.filesystems.FileAlreadyLockedException;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -59,6 +65,7 @@ public class ProteomicProject implements IProteomicProject {
     URL dblocation = null;
     SaveCookie singletonSaveCookie = null;
     PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    File lock;
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/ProjectIcon.png";
 
     public ProteomicProject() {
@@ -70,7 +77,7 @@ public class ProteomicProject implements IProteomicProject {
 //        this.activeProject = project;
 //    }
     private ICrudSession getCrudSession() {
-        openSession();
+//        openSession();
         return ics;
     }
 
@@ -81,7 +88,8 @@ public class ProteomicProject implements IProteomicProject {
 //    }
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
-        System.out.println("Received property change event in ProteomicsProject!");
+        System.out.println(
+                "Received property change event in ProteomicsProject!");
 
 //        persist();
         //due to a but in Netbeans RCP, multiple SaveCookie instances in
@@ -96,8 +104,8 @@ public class ProteomicProject implements IProteomicProject {
 ////            ics.create(Arrays.asList(pce.getNewValue()));
 //            //activeProject = getFromDB();
 //        }
-        pcs.firePropertyChange(pce.getPropertyName(), pce.
-                getOldValue(), pce.getNewValue());
+        pcs.firePropertyChange(pce.getPropertyName(), pce.getOldValue(), pce.
+                getNewValue());
     }
 
     private IProject showOverwriteDatabaseDialog(IProject project) throws AuthenticationException {
@@ -247,14 +255,40 @@ public class ProteomicProject implements IProteomicProject {
 
                 @Override
                 public void notifyDeleted() throws IllegalStateException {
-                    throw new UnsupportedOperationException(
-                            "Deletion is not supported yet.");
+                    System.out.println("Deleting project!");
                 }
             });
             instanceContent.add(new ActionProviderImpl());
             instanceContent.add(new OpenCloseHook());
             instanceContent.add(new Info());
             instanceContent.add(new ProteomicProjectLogicalView(this));
+            instanceContent.add(new DeleteOperationImplementation() {
+
+                @Override
+                public void notifyDeleting() throws IOException {
+                }
+
+                @Override
+                public void notifyDeleted() throws IOException {
+                }
+
+                @Override
+                public List<FileObject> getMetadataFiles() {
+//                    throw new UnsupportedOperationException("Not supported yet.");
+                    return Collections.emptyList();
+                }
+
+                @Override
+                public List<FileObject> getDataFiles() {
+                    ArrayList<FileObject> dataFiles = new ArrayList<FileObject>();
+                    Enumeration<? extends FileObject> enumeration = getProjectDirectory().
+                            getChildren(true);
+                    while (enumeration.hasMoreElements()) {
+                        dataFiles.add(enumeration.nextElement());
+                    }
+                    return dataFiles;
+                }
+            });
         }
         return lookup;
     }
@@ -272,31 +306,54 @@ public class ProteomicProject implements IProteomicProject {
     }
 
     private synchronized void openSession() {
-        if (icp == null || ics == null) {
-            icp = Lookup.getDefault().lookup(ICrudProviderFactory.class).
-                    getCrudProvider(dblocation, new NoAuthCredentials());
-            Logger.getLogger(getClass().getName()).log(Level.INFO,
-                    "Using {0} as CRUD provider", icp.getClass().getName());
-            ics = icp.createSession();
-            ics.open();
-            if (activeProject == null) {
-                activeProject = getFromDB();
-            } else {
-                ics.create(activeProject);
+        try {
+            File lockFile = new File(new File(dblocation.toURI()).getParentFile(), "lock");
+            if (lockFile.exists()) {
+                closeSession();
+                throw new RuntimeException("Project database is already in use. If there is no open project, please delete the lock file " + lockFile.
+                        getAbsolutePath());
             }
-            instanceContent.add(activeProject);
-            instanceContent.add(this);
+            try {
+                lockFile.createNewFile();
+                lockFile.deleteOnExit();
+                lock = lockFile;
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } catch (URISyntaxException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        if (icp == null || ics == null) {
+            try {
+                icp = Lookup.getDefault().lookup(ICrudProviderFactory.class).
+                        getCrudProvider(dblocation, new NoAuthCredentials());
+                Logger.getLogger(getClass().getName()).log(Level.INFO,
+                        "Using {0} as CRUD provider", icp.getClass().getName());
+                ics = icp.createSession();
+                ics.open();
+                if (activeProject == null) {
+                    activeProject = getFromDB();
+                } else {
+                    ics.create(activeProject);
+                }
+                instanceContent.add(activeProject);
+                instanceContent.add(this);
+            } catch (RuntimeException re) {
+                closeSession();
+                throw new RuntimeException("Project database is already in use. If there is no open project, please delete the lock file!");
+            }
         }
     }
 
     private synchronized void closeSession() {
         Logger.getLogger(getClass().getName()).log(Level.INFO,
-                "Closing database for project ", dblocation);
+                "Closing session for project ", dblocation);
         //we are saving anyway, so remove SaveCookie
         //instanceContent.remove(SaveCookie.class);
-        getCrudSession().update(Arrays.asList(activeProject));
+//        getCrudSession()
         //allow gc of all session related objects
         if (ics != null) {
+            ics.update(Arrays.asList(activeProject));
             ics.close();
             ics = null;
         }
@@ -304,12 +361,17 @@ public class ProteomicProject implements IProteomicProject {
             icp.close();
             icp = null;
         }
-        activeProject.removePropertyChangeListener(this);
-        instanceContent.remove(activeProject);
+        if (activeProject != null) {
+            activeProject.removePropertyChangeListener(this);
+            instanceContent.remove(activeProject);
+            activeProject = null;
+        }
         instanceContent.remove(this);
-        activeProject = null;
         Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().
                 closeTopComponentsFor(this);
+        if(lock!=null && lock.exists()) {
+            lock.delete();
+        }
         //CentralLookup.getDefault().remove(this);
     }
 

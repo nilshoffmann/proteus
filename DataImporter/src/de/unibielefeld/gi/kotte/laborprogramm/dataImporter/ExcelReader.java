@@ -216,7 +216,7 @@ public class ExcelReader {
                             spot.setNumber((int) cell.getNumericCellValue());
                             break;
                         case LABEL:
-                            assert (cell.getCellType() == Cell.CELL_TYPE_STRING);
+                            System.out.println(typeToString(cell));
                             spot.setLabel(cell.getStringCellValue());
                             break;
                         case XPOS:
@@ -238,5 +238,24 @@ public class ExcelReader {
             //add spot group to project
             project.addSpotGroup(group);
         }
+    }
+
+    public static String typeToString(Cell cell) {
+        int cellType = cell.getCellType();
+        switch(cellType) {
+            case Cell.CELL_TYPE_BLANK:
+                return "blank";
+            case Cell.CELL_TYPE_BOOLEAN:
+                return "boolean";
+            case Cell.CELL_TYPE_ERROR:
+                return "error";
+            case Cell.CELL_TYPE_FORMULA:
+                return "formula";
+            case Cell.CELL_TYPE_NUMERIC:
+                return "numeric";
+            case Cell.CELL_TYPE_STRING:
+                return "string";
+        }
+        return "unknown";
     }
 }

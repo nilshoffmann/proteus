@@ -9,6 +9,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroup;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -71,6 +72,7 @@ public class Gel implements IGel, Activatable {
     private String name = "";
     private String description = "";
     private String filename = "";
+    private File location;
     private List<ISpot> spots = new ActivatableArrayList<ISpot>();
     private boolean virtual = false;
 
@@ -114,6 +116,20 @@ public class Gel implements IGel, Activatable {
         this.filename = filename;
         getPropertyChangeSupport().firePropertyChange(PROPERTY_FILENAME, null,
                 filename);
+    }
+
+    @Override
+    public File getLocation() {
+        activate(ActivationPurpose.READ);
+        return location;
+    }
+
+    @Override
+    public void setLocation(File location) {
+        activate(ActivationPurpose.WRITE);
+        this.location = location;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_LOCATION, null,
+                location);
     }
 
     @Override

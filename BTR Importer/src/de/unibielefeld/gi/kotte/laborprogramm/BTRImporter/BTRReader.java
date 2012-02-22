@@ -43,50 +43,58 @@ public class BTRReader {
             Pattern abbreviationPattern = Pattern.compile("^(\\w{3,4}) ");
             Pattern namePattern = Pattern.compile("([\\w/\\- ]*)");
             Pattern gendbPattern = Pattern.compile("\\(GenDB-ID=(\\d+)\\)");
-            Pattern gendbProjectPattern = Pattern.compile("\\(GenDB-Project=(\\d+)\\)");
-            Pattern keggPattern = Pattern.compile("(\\d+\\.\\d+\\.\\d+\\.[\\d\\-]+)");
+            Pattern gendbProjectPattern = Pattern.compile(
+                    "\\(GenDB-Project=(\\d+)\\)");
+            Pattern keggPattern = Pattern.compile(
+                    "(\\d+\\.\\d+\\.\\d+\\.[\\d\\-]+)");
             IWell384 well = null;
             IIdentificationMethod method = null;
             while ((line = in.readLine()) != null) {
                 //line = line.trim();
                 System.out.println(line);
                 //create identification
-                IIdentification identification = Lookup.getDefault().lookup(IIdentificationFactory.class).createIdentification();
+                IIdentification identification = Lookup.getDefault().lookup(
+                        IIdentificationFactory.class).createIdentification();
                 String[] data = line.split("\t");
 //                data = line.split("\t");
-                System.out.println("Parsing line: "+Arrays.toString(data));
+                System.out.println("Parsing line: " + Arrays.toString(data));
                 for (int i = 0; i < data.length; i++) {
                     BtrColumn column = BtrColumn.normalizeColumnName(header[i]);
                     //TODO data[4] gibt den Status an (Identified/Undefined/Error)
-                    System.out.println("Parsing column: "+column+" with value: "+data[i]);
+                    System.out.println(
+                            "Parsing column: " + column + " with value: " + data[i]);
                     switch (column) {
                         case POS_ON_SCOUT:
                             //only assign well, if entry is non empty, otherwise we are processing a previously identified well
-                            if(!data[i].trim().isEmpty()) {
+                            if (!data[i].trim().isEmpty()) {
                                 String[] coordinates = data[i].split(":");
-                                if(coordinates.length==2) {
-                                    well = plate.getWell(coordinates[0].charAt(0), Integer.parseInt(coordinates[1]));
+                                if (coordinates.length == 2) {
+                                    well = plate.getWell(
+                                            coordinates[0].charAt(0), Integer.
+                                            parseInt(coordinates[1]));
                                 }
                             }
                             break;
                         case ACCESSION:
                             String accession = data[1];
                             // "lcl|" am Start rausschmeissen
-                            if(accession.startsWith("lcl|")) {
+                            if (accession.startsWith("lcl|")) {
                                 accession = accession.substring(4);
                             }
                             identification.setAccession(accession);
                             break;
                         case DIFFERENCE:
-                            identification.setDifference(Integer.parseInt(data[i]));
+                            identification.setDifference(Integer.parseInt(
+                                    data[i]));
                             break;
                         case MASCOT_SCORE:
                             identification.setScore(Float.parseFloat(data[i]));
                             break;
                         case METHOD:
                             //read in method, if there is a new one
-                            if(!data[i].trim().isEmpty()) {
-                                method = well.getIdentification().getMethodByName(data[i]);
+                            if (!data[i].trim().isEmpty()) {
+                                method = well.getIdentification().
+                                        getMethodByName(data[i]);
                             }
                             break;
                         case MS_COVERAGE:
@@ -96,17 +104,21 @@ public class BTRReader {
                             identification.setPiValue(Float.parseFloat(data[i]));
                             break;
                         case PROTEIN_MW:
-                            identification.setProteinMolecularWeight(Float.parseFloat(data[i]));
+                            identification.setProteinMolecularWeight(Float.
+                                    parseFloat(data[i]));
                             break;
                         case STATUS:
                             break;
                         case TITLE:
                             //parse data
                             String abbreviation = "";
-                            Matcher abbreviationMatcher = abbreviationPattern.matcher(data[2].replaceAll("\"",""));
+                            Matcher abbreviationMatcher = abbreviationPattern.
+                                    matcher(data[2].replaceAll("\"", ""));
                             if (abbreviationMatcher.find()) {
                                 abbreviation = abbreviationMatcher.group(1);
-                                abbreviation = Character.toUpperCase(abbreviation.charAt(0)) + abbreviation.substring(1, abbreviation.length());
+                                abbreviation = Character.toUpperCase(abbreviation.
+                                        charAt(0)) + abbreviation.substring(1, abbreviation.
+                                        length());
                             }
                             String name = "";
                             Matcher nameMatcher = namePattern.matcher(data[2]);
@@ -120,7 +132,8 @@ public class BTRReader {
                             }
 
                             String genDbProject = "";
-                            Matcher genDbProjectMatcher = gendbProjectPattern.matcher(data[2]);
+                            Matcher genDbProjectMatcher = gendbProjectPattern.
+                                    matcher(data[2]);
                             if (genDbProjectMatcher.find()) {
                                 genDbProject = genDbProjectMatcher.group();
                             }
@@ -131,12 +144,13 @@ public class BTRReader {
                             }
 
                             //clean up name
-                            if(!abbreviation.isEmpty()) {
+                            if (!abbreviation.isEmpty()) {
                                 //name.replaceFirst(abbreviation, "");
                                 name = name.substring(abbreviation.length());
                             }
-                            if(!keggNumbers.isEmpty()) {
-                                name = name.substring(0, name.length()-2);
+                            if (!keggNumbers.isEmpty()) {
+                                //FIXME throws IndexOutOfBoundsException
+                                name = name.substring(0, Math.max(0,name.length() - 2));
                             }
                             name = name.trim();
 
@@ -155,30 +169,40 @@ public class BTRReader {
                 identification.setSource(f.getCanonicalPath());
                 //add identification to well
                 System.out.println(identification);
-                if (well != null && well.getStatus() != Well384Status.EMPTY || well.getStatus() == Well384Status.ERROR) {
-                    well.getIdentification().getMethodByName(method.getName()).addIdentification(identification);
+                if (well != null && well.getStatus() != Well384Status.EMPTY || well.
+                        getStatus() == Well384Status.ERROR) {
+                    well.getIdentification().getMethodByName(method.getName()).
+                            addIdentification(identification);
+                    checkWellStatus(well);
                 } else {
-                    System.out.println("Can not add identification data to: " + well);
+                    System.out.println(
+                            "Can not add identification data to: " + well);
                     //TODO Fehler behandeln
                 }
             }
             checkStatus(plate);
         } catch (IOException ex) {
-            Logger.getLogger(BTRReader.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BTRReader.class.getName()).log(Level.SEVERE, null,
+                    ex);
+        }
+    }
+
+    public static void checkWellStatus(IWell384 well) {
+        if (well.getStatus() == Well384Status.FILLED) {
+            List<IIdentificationMethod> methods = well.getIdentification().
+                    getMethods();
+            if (methods.isEmpty()) {
+                well.setStatus(Well384Status.UNIDENTIFIED);
+            } else {
+                //TODO: check if there is a valid identification (-> status!)
+                well.setStatus(Well384Status.IDENTIFIED);
+            }
         }
     }
 
     public static void checkStatus(IPlate384 plate) {
         for (IWell384 well : plate.getWells()) {
-            if (well.getStatus() == Well384Status.FILLED) {
-                List<IIdentificationMethod> methods = well.getIdentification().getMethods();
-                if (methods.isEmpty()) {
-                    well.setStatus(Well384Status.UNIDENTIFIED);
-                } else {
-                    //TODO: check if there is a valid identification (-> status!)
-                    well.setStatus(Well384Status.IDENTIFIED);
-                }
-            }
+            checkWellStatus(well);
         }
     }
 }

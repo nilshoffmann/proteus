@@ -3,6 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPropertyChangeSource;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IUniqueObject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroup;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -17,6 +18,8 @@ public interface IGel extends IPropertyChangeSource, IUniqueObject {
     public static final String PROPERTY_DESCRIPTION = "description";
 
     public static final String PROPERTY_FILENAME = "image file name";
+
+    public static final String PROPERTY_LOCATION = "location";
 
     public static final String PROPERTY_NAME = "name";
 
@@ -35,6 +38,10 @@ public interface IGel extends IPropertyChangeSource, IUniqueObject {
     public String getFilename();
 
     public void setFilename(String filename);
+
+    public File getLocation();
+
+    public void setLocation(File file);
 
     public String getName();
 

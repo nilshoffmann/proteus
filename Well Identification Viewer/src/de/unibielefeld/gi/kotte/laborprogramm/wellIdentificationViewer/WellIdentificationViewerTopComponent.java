@@ -8,16 +8,13 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIden
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationMethod;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IWellIdentification;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.beans.IntrospectionException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
@@ -26,8 +23,6 @@ import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 //import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.openide.explorer.propertysheet.PropertySheet;
-import org.openide.nodes.BeanNode;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup.Result;
@@ -135,6 +130,7 @@ public final class WellIdentificationViewerTopComponent extends TopComponent
                 "HINT_WellIdentificationViewerTopComponent"));
 //        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
         result = Utilities.actionsGlobalContext().lookupResult(IWell384.class);
+//        resultChanged(new LookupEvent(result));
     }
 
     /** This method is called from within the constructor to

@@ -57,6 +57,7 @@ public final class SpotDetailViewerTopComponent extends TopComponent implements
         ps = new PropertySheet();
         add(ps, BorderLayout.CENTER);
         result = Utilities.actionsGlobalContext().lookupResult(ISpot.class);
+        resultChanged(new LookupEvent(result));
     }
 
     /** This method is called from within the constructor to

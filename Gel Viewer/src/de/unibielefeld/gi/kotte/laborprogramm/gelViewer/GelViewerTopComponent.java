@@ -3,6 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.gelViewer;
 import cross.datastructures.tuple.Tuple2D;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.actions.ExportGelAction;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.AnnotationManager;
+import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.GelSpotAnnotations;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.dataProvider.GelSpotDataProvider;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.lookup.SpotGroupSelectionListener;
@@ -216,7 +217,8 @@ public final class GelViewerTopComponent extends TopComponent implements
 
                 ic.add(annotationPainter);
 
-                LocationRectanglePainter locationRectanglePainter = new LocationRectanglePainter(hmd);
+                LocationRectanglePainter locationRectanglePainter = new LocationRectanglePainter(
+                        hmd);
                 ic.add(locationRectanglePainter);
                 //the PointSelectionProcessor will handle selection of single points
                 PointSelectionProcessor pointSelectionProcessor = new PointSelectionProcessor();
@@ -244,7 +246,7 @@ public final class GelViewerTopComponent extends TopComponent implements
                 //Compound painter and jxlayer
                 CompoundPainter<JComponent> compoundPainter = new CompoundPainter<JComponent>(
                         annotationPainter,
-                        tooltipPainter,locationRectanglePainter);//, mvcr);
+                        tooltipPainter, locationRectanglePainter);//, mvcr);
                 PainterLayerUI<JComponent> plui = new PainterLayerUI<JComponent>(
                         compoundPainter);
                 layer = new JXLayer<JComponent>(jl,
@@ -567,9 +569,9 @@ public final class GelViewerTopComponent extends TopComponent implements
     }//GEN-LAST:event_unpickedSpotsCheckBoxActionPerformed
 
     private void locationIndicatorCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_locationIndicatorCheckBoxActionPerformed
-        getLookup().lookup(LocationRectanglePainter.class).setDrawLocationIndicator(locationIndicatorCheckBox.isSelected());
+        getLookup().lookup(LocationRectanglePainter.class).
+                setDrawLocationIndicator(locationIndicatorCheckBox.isSelected());
     }//GEN-LAST:event_locationIndicatorCheckBoxActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBoxMenuItem centerCheckBox;
     private javax.swing.JButton jButton1;
@@ -727,6 +729,7 @@ public final class GelViewerTopComponent extends TopComponent implements
         } else {
 //            repaint();
         }
+        repaint();
     }
 
 //    private Point2D interpolate(Point2D start, Point2D stop, int step) {
@@ -880,17 +883,21 @@ public final class GelViewerTopComponent extends TopComponent implements
                             ButtonGroup bg = new ButtonGroup();
                             final JRadioButton applyToCurrent = new JRadioButton(
                                     "Apply Settings to Active Spot", true);
-                            final JRadioButton applyToAll = new JRadioButton(
-                                    "Apply Settings to All Spots", false);
+                            final JRadioButton applyToAllOnGel = new JRadioButton(
+                                    "Apply Settings to All Spots On Gel", false);
                             final JRadioButton applyToSpotsInGroup = new JRadioButton(
                                     "Apply Settings to Spot Group", false);
+                            final JRadioButton applyToAll = new JRadioButton(
+                                    "Apply Settings to All Spots", false);
                             bg.add(applyToCurrent);
-                            bg.add(applyToAll);
                             bg.add(applyToSpotsInGroup);
+                            bg.add(applyToAllOnGel);
+                            bg.add(applyToAll);
 
                             JPanel radioPanel = new JPanel(new GridLayout(0, 1));
                             radioPanel.add(applyToCurrent);
                             radioPanel.add(applyToSpotsInGroup);
+                            radioPanel.add(applyToAllOnGel);
                             radioPanel.add(applyToAll);
                             jp.add(radioPanel);
                             NotifyDescriptor nd = new NotifyDescriptor.Confirmation(
@@ -914,13 +921,15 @@ public final class GelViewerTopComponent extends TopComponent implements
                                                         lookup(
                                                         IProteomicProject.class),
                                                         other);
-                                                setSpotProperties(
-                                                        otherSpotAnnotation,
-                                                        templateSpotAnnotation);
+                                                if (otherSpotAnnotation != null) {
+                                                    setSpotProperties(
+                                                            otherSpotAnnotation,
+                                                            templateSpotAnnotation);
+                                                }
                                             }
                                         }
                                     }
-                                } else if (applyToAll.isSelected()) {
+                                } else if (applyToAllOnGel.isSelected()) {
                                     Iterator<?> iter2 = ds.getAnnotationIterator();
                                     while (iter2.hasNext()) {
                                         Tuple2D<Point2D, Annotation<?>> tple = (Tuple2D<Point2D, Annotation<?>>) iter2.
@@ -928,6 +937,20 @@ public final class GelViewerTopComponent extends TopComponent implements
                                         SpotAnnotation spot = (SpotAnnotation) tple.
                                                 getSecond();
                                         setSpotProperties(spot, sa);
+                                    }
+                                } else if (applyToAll.isSelected()) {
+                                    SpotAnnotation templateSpotAnnotation = (SpotAnnotation) annotation.
+                                            getSecond();
+                                    for (GelSpotAnnotations gsa : AnnotationManager.
+                                            getAnnotations(getLookup().
+                                            lookup(
+                                            IProteomicProject.class))) {
+                                        for (SpotAnnotation sann : gsa.
+                                                getSpotAnnotations()) {
+                                            setSpotProperties(
+                                                    sann,
+                                                    templateSpotAnnotation);
+                                        }
                                     }
                                 }
                                 repaint();

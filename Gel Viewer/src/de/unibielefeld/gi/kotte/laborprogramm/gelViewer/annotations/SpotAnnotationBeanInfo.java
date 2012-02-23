@@ -19,6 +19,7 @@ public class SpotAnnotationBeanInfo extends SimpleBeanInfo {
 
 
 
+
     // Here you can add code for customizing the BeanDescriptor.
 
          return beanDescriptor;     }//GEN-LAST:BeanDescriptor
@@ -67,6 +68,7 @@ public class SpotAnnotationBeanInfo extends SimpleBeanInfo {
             properties[PROPERTY_selectedFillColor] = new PropertyDescriptor ( "selectedFillColor", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getSelectedFillColor", "setSelectedFillColor" ); // NOI18N
             properties[PROPERTY_selectedStrokeColor] = new PropertyDescriptor ( "selectedStrokeColor", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getSelectedStrokeColor", "setSelectedStrokeColor" ); // NOI18N
             properties[PROPERTY_selectionCrossColor] = new PropertyDescriptor ( "selectionCrossColor", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getSelectionCrossColor", "setSelectionCrossColor" ); // NOI18N
+            properties[PROPERTY_selectionCrossColor].setHidden ( true );
             properties[PROPERTY_shape] = new PropertyDescriptor ( "shape", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getShape", "setShape" ); // NOI18N
             properties[PROPERTY_shape].setHidden ( true );
             properties[PROPERTY_strokeAlpha] = new PropertyDescriptor ( "strokeAlpha", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getStrokeAlpha", "setStrokeAlpha" ); // NOI18N

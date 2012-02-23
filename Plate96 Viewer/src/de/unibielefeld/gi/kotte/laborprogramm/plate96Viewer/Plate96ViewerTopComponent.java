@@ -61,6 +61,9 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         WindowManager mgr = WindowManager.getDefault();
         Mode mode = mgr.findMode("output"); //TODO "tools" returns null (this is where we REALLY want our window to be)
         mode.dockInto(this);
+        resultChanged(new LookupEvent(result));
+        resultChanged(new LookupEvent(spotResult));
+        resultChanged(new LookupEvent(well384Result));
     }
 
     /** This method is called from within the constructor to

@@ -54,7 +54,7 @@ public class AnnotationManager {
 
     public static GelSpotAnnotations getAnnotationsForGel(IProteomicProject project, IGel gel) {
         for (GelSpotAnnotations gsa : getAnnotations(project)) {
-            if (gsa.getGel().getFilename().equals(gel.getFilename())) {
+            if (gsa.getGel().getLocation().equals(gel.getLocation())) {
                 System.out.println("Found existing GelSpotAnnotations for gel " + gel.getFilename());
                 return gsa;
             }
@@ -64,6 +64,9 @@ public class AnnotationManager {
 
     public static SpotAnnotation getSpotAnnotation(IProteomicProject project, ISpot spot) {
         GelSpotAnnotations annotations = getAnnotationsForGel(project, spot.getGel());
+        if(annotations==null) {
+            return null;
+        }
         for (Annotation ann : annotations.getSpotAnnotations()) {
             SpotAnnotation sann = (SpotAnnotation)ann;
             if(sann.getPayload() == spot) {

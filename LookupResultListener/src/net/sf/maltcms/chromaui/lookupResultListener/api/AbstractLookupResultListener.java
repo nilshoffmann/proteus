@@ -7,6 +7,7 @@ package net.sf.maltcms.chromaui.lookupResultListener.api;
 
 import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
+import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.Utilities;
 
@@ -35,6 +36,7 @@ public abstract class AbstractLookupResultListener<T> implements LookupListener,
     public void register(Lookup targetLookup) {
         result = targetLookup.lookupResult(typeToListenFor);
         result.addLookupListener(this);
+        resultChanged(new LookupEvent(result));
     }
 
     @Override

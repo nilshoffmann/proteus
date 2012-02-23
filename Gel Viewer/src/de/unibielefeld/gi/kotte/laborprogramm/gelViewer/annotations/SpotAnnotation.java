@@ -346,7 +346,7 @@ public class SpotAnnotation extends Annotation<ISpot> implements Activatable {
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float)getStrokeAlpha()));
             Line2D.Double line = new Line2D.Double(getPosition(), textOrigin);
             g.draw(line);
-            g.setColor(getLineColor());
+            g.setColor(getTextColor());
             g.drawString(sb.toString(), (float) textOrigin.getX(), (float) textOrigin.getY());
         }
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1.0f));

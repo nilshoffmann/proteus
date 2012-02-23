@@ -68,6 +68,10 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
         WindowManager mgr = WindowManager.getDefault();
         Mode mode = mgr.findMode("output");
         mode.dockInto(this);
+        resultChanged(new LookupEvent(result));
+        resultChanged(new LookupEvent(spotResult));
+        resultChanged(new LookupEvent(plate96Result));
+        resultChanged(new LookupEvent(well96Result));
     }
 
     /** This method is called from within the constructor to

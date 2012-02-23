@@ -4,18 +4,13 @@
  */
 package de.unibielefeld.gi.kotte.laborprogramm.gelViewer.lookup;
 
-import cross.datastructures.tuple.Tuple2D;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import java.awt.geom.Point2D;
-import java.beans.PropertyChangeEvent;
 import java.util.Collection;
-import java.util.List;
 import net.sf.maltcms.chromaui.lookupResultListener.api.AbstractLookupResultListener;
-import net.sf.maltcms.ui.plot.heatmap.Annotation;
 import net.sf.maltcms.ui.plot.heatmap.HeatmapDataset;
 import net.sf.maltcms.ui.plot.heatmap.painter.AnnotationPainter;
-import net.sf.maltcms.ui.plot.heatmap.painter.ToolTipPainter;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 

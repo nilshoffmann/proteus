@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
 OpenIDE-Module: net.sf.maltcms.chromaui.db.spi.db4o/1
 OpenIDE-Module-Localizing-Bundle: net/sf/maltcms/chromaui/db/spi/db4o/Bundle.properties
 OpenIDE-Module-Provides: net.sf.maltcms.chromaui.db.api.ICrudProviderFactory

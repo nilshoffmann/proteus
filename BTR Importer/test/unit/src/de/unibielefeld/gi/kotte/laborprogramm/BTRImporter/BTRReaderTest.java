@@ -15,7 +15,7 @@ import org.openide.util.Lookup;
  */
 public class BTRReaderTest {
 
-    private final static boolean FILECHOOSER = true;
+    private final static boolean FILECHOOSER = false;//true;
 
     public static void main(String[] args) {
         File f = null;

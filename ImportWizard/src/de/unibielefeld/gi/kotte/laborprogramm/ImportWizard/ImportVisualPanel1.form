@@ -25,21 +25,21 @@
                   <Component id="separator" alignment="0" pref="449" max="32767" attributes="0"/>
                   <Component id="baseDirectoryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="baseDirectoryTextField" pref="349" max="32767" attributes="1"/>
+                      <Component id="baseDirectoryTextField" pref="374" max="32767" attributes="1"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="baseDirectoryButton" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="excelDataLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="excelDataTextField" pref="349" max="32767" attributes="1"/>
+                      <Component id="excelDataTextField" pref="374" max="32767" attributes="1"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="excelDataButton" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="projectNameTextField" alignment="0" pref="349" max="32767" attributes="1"/>
-                          <Component id="projectDirectoryTextField" alignment="0" pref="349" max="32767" attributes="1"/>
-                          <Component id="projectParentDirectoryTextField" alignment="1" pref="349" max="32767" attributes="1"/>
+                          <Component id="projectNameTextField" alignment="0" pref="374" max="32767" attributes="1"/>
+                          <Component id="projectDirectoryTextField" alignment="0" pref="374" max="32767" attributes="1"/>
+                          <Component id="projectParentDirectoryTextField" alignment="1" pref="374" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="projectParentDirectoryButton" min="-2" max="-2" attributes="0"/>

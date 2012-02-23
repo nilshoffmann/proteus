@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
 OpenIDE-Module: cross/1
 OpenIDE-Module-Implementation-Version: 3
 OpenIDE-Module-Localizing-Bundle: cross/Bundle.properties

@@ -4,7 +4,6 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGelFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpotFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroupFactory;
@@ -41,7 +40,7 @@ public class ExcelReader {
 
     Map<Integer, String> gelnames = null;
     Map<Integer, SpotDatum> data = null;
-    boolean dummiesInitialized = false;
+//    boolean dummiesInitialized = false;
     ITechRepGelGroup trggDummy = null;
     IBioRepGelGroup brggDummy = null;
     ILogicalGelGroup lggDummy = null;
@@ -83,22 +82,22 @@ public class ExcelReader {
 //        return gel;
     }
 
-    private void initDummies() {
-        if (!this.dummiesInitialized) {
-            trggDummy = Lookup.getDefault().lookup(ITechRepGelGroupFactory.class).createTechRepGelGroup();
-            trggDummy.setDescription("Dummy gel group created by the ExcelReader");
-            brggDummy = Lookup.getDefault().lookup(IBioRepGelGroupFactory.class).createBioRepGelGroup();
-            brggDummy.addGelGroup(trggDummy);
-            trggDummy.setParent(brggDummy);
-            brggDummy.setDescription("Dummy gel group created by the ExcelReader");
-            lggDummy = Lookup.getDefault().lookup(ILogicalGelGroupFactory.class).createLogicalGelGroup();
-            lggDummy.addGelGroup(brggDummy);
-            brggDummy.setParent(lggDummy);
-            lggDummy.setDescription("Dummy gel group created by the ExcelReader");
-
-            this.dummiesInitialized = true;
-        }
-    }
+//    private void initDummies() {
+//        if (!this.dummiesInitialized) {
+//            trggDummy = Lookup.getDefault().lookup(ITechRepGelGroupFactory.class).createTechRepGelGroup();
+//            trggDummy.setDescription("Dummy gel group created by the ExcelReader");
+//            brggDummy = Lookup.getDefault().lookup(IBioRepGelGroupFactory.class).createBioRepGelGroup();
+//            brggDummy.addGelGroup(trggDummy);
+//            trggDummy.setParent(brggDummy);
+//            brggDummy.setDescription("Dummy gel group created by the ExcelReader");
+//            lggDummy = Lookup.getDefault().lookup(ILogicalGelGroupFactory.class).createLogicalGelGroup();
+//            lggDummy.addGelGroup(brggDummy);
+//            brggDummy.setParent(lggDummy);
+//            lggDummy.setDescription("Dummy gel group created by the ExcelReader");
+//
+//            this.dummiesInitialized = true;
+//        }
+//    }
 
     private void parseHeader(Row header) {
         //Pattern definition (re-usable)
@@ -150,8 +149,7 @@ public class ExcelReader {
     private void registerColumnInformation(int column, String gelname, SpotDatum datum) {
         assert gelname != null;
         assert datum != null;
-//        Integer idx = column;
-        System.err.println("Adding column info. idx:" + column + " gel:" + gelname + " type:" + datum);
+//        System.out.println("Adding column info. idx:" + column + " gel:" + gelname + " type:" + datum);
         gelnames.put(column, gelname);
         data.put(column, datum);
     }
@@ -212,23 +210,22 @@ public class ExcelReader {
                         case GREY_VOLUME: //don't read volumes
                             break;
                         case SPOTID:
-                            assert (cell.getCellType() == Cell.CELL_TYPE_NUMERIC);
-                            spot.setNumber((int) cell.getNumericCellValue());
+                            spot.setNumber(cellToInt(cell));
                             break;
                         case LABEL:
-                            System.out.println(typeToString(cell));
-                            spot.setLabel(cell.getStringCellValue());
+                            if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+                                spot.setLabel(cell.getStringCellValue());
+                            } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC){
+                                spot.setLabel("" + (int)cell.getNumericCellValue());
+                            } //else leave label empty
                             break;
                         case XPOS:
-                            assert (cell.getCellType() == Cell.CELL_TYPE_NUMERIC);
-                            spot.setPosX(cell.getNumericCellValue());
+                            spot.setPosX(cellToInt(cell));
                             break;
                         case YPOS:
-                            assert (cell.getCellType() == Cell.CELL_TYPE_NUMERIC);
-                            spot.setPosY(cell.getNumericCellValue());
+                            spot.setPosY(cellToInt(cell));
                             break;
                         default:
-
                             break;
                     }
                 }
@@ -240,22 +237,35 @@ public class ExcelReader {
         }
     }
 
-    public static String typeToString(Cell cell) {
-        int cellType = cell.getCellType();
-        switch(cellType) {
-            case Cell.CELL_TYPE_BLANK:
-                return "blank";
-            case Cell.CELL_TYPE_BOOLEAN:
-                return "boolean";
-            case Cell.CELL_TYPE_ERROR:
-                return "error";
-            case Cell.CELL_TYPE_FORMULA:
-                return "formula";
+    private int cellToInt(Cell cell) {
+        switch(cell.getCellType()) {
             case Cell.CELL_TYPE_NUMERIC:
-                return "numeric";
+                return (int)cell.getNumericCellValue();
+            case Cell.CELL_TYPE_BLANK:
+                return 0;
             case Cell.CELL_TYPE_STRING:
-                return "string";
+                String str = cell.getStringCellValue();
+                return Integer.parseInt(str);
         }
-        return "unknown";
+        throw new IllegalStateException("Cell " + cell.getColumnIndex() + ":" + cell.getRowIndex() + " doesn't contain a numerical value");
     }
+
+//    public static String typeToString(Cell cell) {
+//        int cellType = cell.getCellType();
+//        switch(cellType) {
+//            case Cell.CELL_TYPE_BLANK:
+//                return "blank";
+//            case Cell.CELL_TYPE_BOOLEAN:
+//                return "boolean";
+//            case Cell.CELL_TYPE_ERROR:
+//                return "error";
+//            case Cell.CELL_TYPE_FORMULA:
+//                return "formula";
+//            case Cell.CELL_TYPE_NUMERIC:
+//                return "numeric";
+//            case Cell.CELL_TYPE_STRING:
+//                return "string";
+//        }
+//        return "unknown";
+//    }
 }

@@ -12,7 +12,7 @@ import org.openide.util.Lookup;
  */
 public class ExcelReaderTest {
 
-    private final static boolean FILECHOOSER = true;
+    private final static boolean FILECHOOSER = false;
 
     public static void main(String[] args) {
         File f = null;

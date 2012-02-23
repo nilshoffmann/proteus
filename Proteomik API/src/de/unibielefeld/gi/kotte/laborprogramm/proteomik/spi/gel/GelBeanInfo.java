@@ -18,6 +18,7 @@ public class GelBeanInfo extends SimpleBeanInfo {
     private static BeanDescriptor getBdescriptor(){//GEN-HEADEREND:BeanDescriptor
 
 
+
     // Here you can add code for customizing the BeanDescriptor.
 
          return beanDescriptor;     }//GEN-LAST:BeanDescriptor
@@ -43,13 +44,13 @@ public class GelBeanInfo extends SimpleBeanInfo {
             properties[PROPERTY_filename] = new PropertyDescriptor ( "filename", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Gel.class, "getFilename", null ); // NOI18N
             properties[PROPERTY_id] = new PropertyDescriptor ( "id", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Gel.class, "getId", null ); // NOI18N
             properties[PROPERTY_id].setHidden ( true );
-            properties[PROPERTY_location] = new PropertyDescriptor ( "location", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Gel.class, "getLocation", "setLocation" ); // NOI18N
+            properties[PROPERTY_location] = new PropertyDescriptor ( "location", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Gel.class, "getLocation", null ); // NOI18N
             properties[PROPERTY_name] = new PropertyDescriptor ( "name", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Gel.class, "getName", "setName" ); // NOI18N
             properties[PROPERTY_parent] = new PropertyDescriptor ( "parent", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Gel.class, "getParent", "setParent" ); // NOI18N
             properties[PROPERTY_parent].setHidden ( true );
             properties[PROPERTY_spots] = new PropertyDescriptor ( "spots", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Gel.class, "getSpots", "setSpots" ); // NOI18N
             properties[PROPERTY_spots].setHidden ( true );
-            properties[PROPERTY_virtual] = new PropertyDescriptor ( "virtual", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Gel.class, "isVirtual", "setVirtual" ); // NOI18N
+            properties[PROPERTY_virtual] = new PropertyDescriptor ( "virtual", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Gel.class, "isVirtual", null ); // NOI18N
         }
         catch(IntrospectionException e) {
             e.printStackTrace();

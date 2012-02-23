@@ -242,7 +242,7 @@ public class ExcelReader {
             case Cell.CELL_TYPE_NUMERIC:
                 return (int)cell.getNumericCellValue();
             case Cell.CELL_TYPE_BLANK:
-                return 0;
+                return -1;
             case Cell.CELL_TYPE_STRING:
                 String str = cell.getStringCellValue();
                 return Integer.parseInt(str);

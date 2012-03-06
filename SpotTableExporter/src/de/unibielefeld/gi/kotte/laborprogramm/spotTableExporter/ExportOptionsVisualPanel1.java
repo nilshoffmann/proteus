@@ -1,7 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.spotTableExporter;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.swing.JFileChooser;
@@ -16,8 +15,8 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
 
     public static final String PROPERTY_PROJECT = "project";
     public static final String PROPERTY_METHODS = "methods";
-    public static final String PROPERTY_USER_DEFINED_LABEL = "user defined label";
-    public static final String PROPERTY_IDENTIFICATION_NAME = "identification name";
+    public static final String PROPERTY_SHOW_METHOD_NAME = "show method name";
+    public static final String PROPERTY_SHOW_IDENTIFICATION_NAME = "show identification name";
     public static final String PROPERTY_FILENAME = "filename";
     public static final String PROPERTY_DIRECTORY = "directory";
 
@@ -118,6 +117,7 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
 
         identificationNameBox.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(identificationNameBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.identificationNameBox.text")); // NOI18N
+        identificationNameBox.setEnabled(false);
         identificationNameBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 identificationNameBoxActionPerformed(evt);
@@ -167,12 +167,10 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(userDefinedLabelBox)
                     .addComponent(fileNameLabel)
                     .addComponent(fileDirectoryLabel)
                     .addComponent(filePathLabel)
                     .addComponent(headingLabel)
-                    .addComponent(identificationNameBox)
                     .addComponent(methodsLabel)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
                     .addComponent(filePathTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
@@ -181,7 +179,10 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
                             .addComponent(fileNameTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
                             .addComponent(fileDirectoryTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fileChooserButton)))
+                        .addComponent(fileChooserButton))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(userDefinedLabelBox)
+                        .addComponent(identificationNameBox)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -203,11 +204,11 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
                 .addComponent(filePathTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(headingLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(identificationNameBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(userDefinedLabelBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(identificationNameBox)
-                .addGap(18, 18, 18)
+                .addGap(13, 13, 13)
                 .addComponent(methodsLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -216,11 +217,11 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void userDefinedLabelBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userDefinedLabelBoxActionPerformed
-        firePropertyChange(PROPERTY_USER_DEFINED_LABEL, !userDefinedLabelBox.isSelected(), userDefinedLabelBox.isSelected());
+        firePropertyChange(PROPERTY_SHOW_METHOD_NAME, !userDefinedLabelBox.isSelected(), userDefinedLabelBox.isSelected());
     }//GEN-LAST:event_userDefinedLabelBoxActionPerformed
 
     private void identificationNameBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_identificationNameBoxActionPerformed
-        firePropertyChange(PROPERTY_IDENTIFICATION_NAME, !identificationNameBox.isSelected(), identificationNameBox.isSelected());
+        firePropertyChange(PROPERTY_SHOW_IDENTIFICATION_NAME, !identificationNameBox.isSelected(), identificationNameBox.isSelected());
     }//GEN-LAST:event_identificationNameBoxActionPerformed
 
     private void fileChooserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileChooserButtonActionPerformed

@@ -130,8 +130,8 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_METHODS, eovp.getSelectedMethods());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_DIRECTORY, eovp.getDirectory());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_FILENAME, eovp.getFileName());
-        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_USER_DEFINED_LABEL, eovp.isUserDefinedLabel());
-        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_IDENTIFICATION_NAME, eovp.isIdentificationName());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_METHOD_NAME, eovp.isUserDefinedLabel());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENTIFICATION_NAME, eovp.isIdentificationName());
     }
 
     @Override

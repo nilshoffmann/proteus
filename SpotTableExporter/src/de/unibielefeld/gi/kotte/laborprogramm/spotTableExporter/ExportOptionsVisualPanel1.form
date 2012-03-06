@@ -40,15 +40,13 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="userDefinedLabelBox" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="fileNameLabel" min="-2" max="-2" attributes="0"/>
                   <Component id="fileDirectoryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="filePathLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="headingLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="identificationNameBox" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="methodsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="jScrollPane2" alignment="0" pref="345" max="32767" attributes="0"/>
                   <Component id="filePathTextField" alignment="1" pref="345" max="32767" attributes="1"/>
@@ -59,6 +57,10 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="fileChooserButton" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="103" alignment="0" groupAlignment="1" attributes="0">
+                      <Component id="userDefinedLabelBox" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="identificationNameBox" alignment="1" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -85,11 +87,11 @@
               <Component id="filePathTextField" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="headingLabel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="identificationNameBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="userDefinedLabelBox" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="identificationNameBox" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
               <Component id="methodsLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane2" min="-2" pref="50" max="-2" attributes="0"/>
@@ -123,6 +125,7 @@
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.identificationNameBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="identificationNameBoxActionPerformed"/>

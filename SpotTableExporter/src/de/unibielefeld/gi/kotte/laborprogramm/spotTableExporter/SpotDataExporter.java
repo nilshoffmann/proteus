@@ -48,8 +48,8 @@ public class SpotDataExporter {
         Set<String> methods = (Set<String>) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_METHODS);
 
         //get output parameters
-        boolean showUserDefinedLabels = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_USER_DEFINED_LABEL);
-        boolean showIdentificationName = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_IDENTIFICATION_NAME);
+        boolean showMethodName = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_METHOD_NAME);
+        boolean showIdentificationName = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENTIFICATION_NAME);
 
         //get sorted list of spotGroups
         List<ISpotGroup> spotGroups = context.getLookup().lookup(IProject.class).getSpotGroups();
@@ -64,7 +64,7 @@ public class SpotDataExporter {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(outFile));
             for (ISpotGroup group : spotGroups) {
-                String groupNumber = group.getNumber() + "";
+                //get identifications for output
                 List<ISpot> spots = group.getSpots();
                 Set<IWellIdentification> identifications = new LinkedHashSet<IWellIdentification>();
                 for (ISpot spot : spots) {
@@ -86,7 +86,9 @@ public class SpotDataExporter {
 //                        System.out.println("Skipping unpicked spot " + spot + " in group #" + group.getNumber() + ": " + group.getLabel());
                     }
                 }
-                System.out.println("Processing " + identifications.size() + " identifications of " + spots.size() + " spots in spot group!");
+//                System.out.println("Processing " + identifications.size() + " identifications of " + spots.size() + " spots in spot group!");
+
+                //get set of identification name strings for each Method object
                 Map<IIdentificationMethod, Set<String>> methodToNames = new LinkedHashMap<IIdentificationMethod, Set<String>>();
                 for (IWellIdentification ident : identifications) {
                     for (IIdentificationMethod method : ident.getMethods()) {
@@ -110,18 +112,30 @@ public class SpotDataExporter {
                     }
                 }
 
+                //generate output
                 if (!methodToNames.isEmpty()) {
-                    //write group number
-                    bw.write(groupNumber);
+                    StringBuilder sb = new StringBuilder();
+
+                    //write leftmost column (user defined label)
+                    if(group.getLabel() != null && !group.getLabel().isEmpty()) {
+                        sb.append(group.getLabel());
+                    }
+
                     //write identification name
                     if (showIdentificationName) {
-                        StringBuilder sb = new StringBuilder();
+                        sb.append("\t");
+
                         for (IIdentificationMethod method : methodToNames.keySet()) {
                             Set<String> names = methodToNames.get(method);
                             if (!names.isEmpty()) {
                                 sb.append("[");
-                                sb.append(method.getName());
-                                sb.append(": ");
+
+                                //write method name
+                                if(showMethodName) {
+                                    sb.append(method.getName());
+                                    sb.append(": ");
+                                }
+
                                 int cnt = 0;
                                 for (String name : names) {
                                     sb.append(name);
@@ -135,18 +149,14 @@ public class SpotDataExporter {
                                 System.out.println("Skipping empty method results for " + method.getName());
                             }
                         }
-                        String ident = sb.toString();
-                        bw.write("\t" + ident);
                     }
-                    //write user defined label
-                    if (showUserDefinedLabels && group.getLabel() != null && !group.getLabel().isEmpty()) {
-                        bw.write("\t" + group.getLabel());
-                    }
-                    //end line
+
+                    //write output line
+                    bw.write(sb.toString());
                     bw.newLine();
                 } else {
                     System.out.println(
-                            "Skipping spot group " + groupNumber + " without annotations!");
+                            "Skipping spot group " + group.getNumber() + " without annotations!");
                 }
             }
             bw.flush();

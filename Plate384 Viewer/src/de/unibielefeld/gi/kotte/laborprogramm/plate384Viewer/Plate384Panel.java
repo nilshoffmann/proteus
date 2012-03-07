@@ -80,12 +80,12 @@ public class Plate384Panel extends JPanel implements PropertyChangeListener {
 
     public void clear() {
         for (Well384Button button : buttons) {
-            IWell96 well96 = button.getWell().getWell96();
-            if (well96 != null) {
+            IWell96 well = button.getWell().getWell96();
+            if (well != null) {
                 button.getWell().setWell96(null);
-                well96.get384Wells().remove(button.getWell());
-                if (well96.get384Wells().isEmpty()) {
-                    well96.setStatus(Well96Status.FILLED);
+                well.get384Wells().remove(button.getWell());
+                if (well.get384Wells().isEmpty()) {
+                    well.setStatus(Well96Status.FILLED);
                 }
             }
             for (Iterator<IIdentificationMethod> it = button.getWell().getIdentification().getMethods().iterator(); it.hasNext();) {
@@ -126,8 +126,10 @@ public class Plate384Panel extends JPanel implements PropertyChangeListener {
                 instanceContent.add(wellButton.getWell().getWell96().getSpot());
             }
         }
-
+        //set active button and register its index for autopicking
         activeButton = wellButton;
+        IWell384 well = wellButton.getWell();
+        currentPlateIndex = well.getParent().posToIndex(well.getRow(), well.getColumn());
 
 //        if (activeButton != null) {
 //            ISpot spot = lookup.lookup(ISpot.class);
@@ -224,10 +226,10 @@ public class Plate384Panel extends JPanel implements PropertyChangeListener {
             while (!(this.buttons[currentPlateIndex].getWell().getRow() == 'A')) {
                 currentPlateIndex++;
             }
-            for (IWell96 well96 : plate96.getWells()) {
-                if (well96.getStatus() == Well96Status.FILLED) {
+            for (IWell96 well : plate96.getWells()) {
+                if (well.getStatus() == Well96Status.FILLED) {
                     //set current Well96
-                    this.well96 = well96;
+                    this.well96 = well;
                     //connect the two wells
                     this.buttons[currentPlateIndex].selectStatus(
                             Well384Status.FILLED);

@@ -69,14 +69,14 @@ public class Plate96Panel extends JPanel {
 
     public void clear() {
         for (Well96Button button : buttons) {
-            ISpot spot = button.getWell().getSpot();
-            if (spot != null) {
-                spot.setWell(null);
+            ISpot currentSpot = button.getWell().getSpot();
+            if (currentSpot != null) {
+                currentSpot.setWell(null);
                 button.getWell().setSpot(null);
-                spot.setStatus(SpotStatus.UNPICKED);
-                for (IWell384 well384 : button.getWell().get384Wells()) {
-                    well384.setStatus(Well384Status.EMPTY);
-                    well384.setWell96(null);
+                currentSpot.setStatus(SpotStatus.UNPICKED);
+                for (IWell384 well : button.getWell().get384Wells()) {
+                    well.setStatus(Well384Status.EMPTY);
+                    well.setWell96(null);
                 }
                 button.getWell().get384Wells().clear();
             }
@@ -91,9 +91,9 @@ public class Plate96Panel extends JPanel {
 
     public void setActiveWellButton(Well96Button wellButton) {
         if (activeButton != null) {
-            ISpot spot = lookup.lookup(ISpot.class);
+            ISpot currentSpot = lookup.lookup(ISpot.class);
             try {
-                instanceContent.remove(spot);
+                instanceContent.remove(currentSpot);
             } catch (Exception e) {
             }
             IWell96 oldWell = activeButton.getWell();
@@ -108,7 +108,10 @@ public class Plate96Panel extends JPanel {
         if (wellButton.getWell().getSpot() != null) {
             instanceContent.add(wellButton.getWell().getSpot());
         }
+        //set active button and register its index for autopicking
         activeButton = wellButton;
+        IWell96 well = wellButton.getWell();
+        currentPlateIndex = well.getParent().posToIndex(well.getRow(), well.getColumn());
     }
 
     public ISpot getSpot() {

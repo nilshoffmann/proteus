@@ -100,12 +100,18 @@ public class LogicalGelGroupNode extends AbstractNode implements PropertyChangeL
 
     @Override
     public String getDisplayName() {
+        String description = getLookup().lookup(ILogicalGelGroup.class).getDescription();
+        if(description!=null && !description.isEmpty()) {
+            return description;
+        }
         return getLookup().lookup(ILogicalGelGroup.class).getName();
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("name")) {
+        if (evt.getPropertyName().equals(ILogicalGelGroup.PROPERTY_NAME)) {
+            this.fireDisplayNameChange(null, getDisplayName());
+        }else if (evt.getPropertyName().equals(ILogicalGelGroup.PROPERTY_DESCRIPTION)) {
             this.fireDisplayNameChange(null, getDisplayName());
         } else {
             this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.

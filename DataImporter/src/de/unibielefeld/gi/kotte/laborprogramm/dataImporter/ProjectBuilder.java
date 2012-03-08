@@ -60,17 +60,17 @@ public class ProjectBuilder {
             //read gel groups
             for (Group group : proj.getGroups().getGroup()) {
                 ITechRepGelGroup trgg = Lookup.getDefault().lookup(ITechRepGelGroupFactory.class).createTechRepGelGroup();
-                trgg.setDescription(group.getId());
+                trgg.setDescription(project.getName()+" "+group.getId());
                 trgg.setName(group.getName());
 
                 IBioRepGelGroup brgg = Lookup.getDefault().lookup(IBioRepGelGroupFactory.class).createBioRepGelGroup();
-                brgg.setDescription(group.getId());
+                brgg.setDescription(project.getName()+" "+group.getId());
                 brgg.setName(group.getName());
                 brgg.addGelGroup(trgg);
                 trgg.setParent(brgg);
 
                 ILogicalGelGroup lgg = Lookup.getDefault().lookup(ILogicalGelGroupFactory.class).createLogicalGelGroup();
-                lgg.setDescription(group.getId());
+                lgg.setDescription(project.getName()+" "+group.getId());
                 lgg.setName(group.getName());
                 lgg.addGelGroup(brgg);
                 brgg.setParent(lgg);

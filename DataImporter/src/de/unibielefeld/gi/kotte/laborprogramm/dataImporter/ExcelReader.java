@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,13 +56,15 @@ public class ExcelReader {
         data = new LinkedHashMap<Integer, SpotDatum>();
     }
 
-    private IGel getGelByName(String gelname, IProject project) {
-        for (ILogicalGelGroup lgg : project.getGelGroups()) {
-            for (IBioRepGelGroup brgg : lgg.getGelGroups()) {
-                for (ITechRepGelGroup trgg : brgg.getGelGroups()) {
-                    for (IGel gel : trgg.getGels()) {
-                        if (gel.getName().equals(gelname)) {
-                            return gel;
+    private IGel getGelByName(String gelname, List<IProject> projects) {
+        for (IProject project : projects) {
+            for (ILogicalGelGroup lgg : project.getGelGroups()) {
+                for (IBioRepGelGroup brgg : lgg.getGelGroups()) {
+                    for (ITechRepGelGroup trgg : brgg.getGelGroups()) {
+                        for (IGel gel : trgg.getGels()) {
+                            if (gel.getName().equals(gelname)) {
+                                return gel;
+                            }
                         }
                     }
                 }
@@ -98,7 +101,6 @@ public class ExcelReader {
 //            this.dummiesInitialized = true;
 //        }
 //    }
-
     private void parseHeader(Row header) {
         //Pattern definition (re-usable)
         Pattern normVolPattern = Pattern.compile("normalized volume '(.*)'");
@@ -158,9 +160,9 @@ public class ExcelReader {
      * Parses Excel file f and writes spot group and spot informations to the project.
      *
      * @param f Excel file
-     * @param project Project data object to fill with informations
+     * @param projects List of project data objects to fill with informations
      */
-    public void parseExport(File f, IProject project) {
+    public void parseExport(File f, List<IProject> projects) {
         //open Excel file as workbook
         Workbook workbook = null;
         try {
@@ -182,6 +184,7 @@ public class ExcelReader {
             ISpotGroup group = (Lookup.getDefault().lookup(ISpotGroupFactory.class)).createSpotGroup();
             Map<String, ISpot> spotMap = new HashMap<String, ISpot>();
             Iterator<Cell> iterC = iterR.next().iterator();
+            IProject currentProject = null;
             while (iterC.hasNext()) { //read cells in row
                 Cell cell = iterC.next();
                 if (data.containsKey(cell.getColumnIndex())) {
@@ -197,7 +200,8 @@ public class ExcelReader {
                         spot.setGroup(group);
                         group.addSpot(spot);
                         //add spot to gel
-                        IGel gel = getGelByName(gelnames.get(cell.getColumnIndex()), project);
+                        IGel gel = getGelByName(gelnames.get(cell.getColumnIndex()), projects);
+                        currentProject = gel.getParent().getParent().getParent().getParent();
                         gel.addSpot(spot);
                         spot.setGel(gel);
                     }
@@ -215,8 +219,8 @@ public class ExcelReader {
                         case LABEL:
                             if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
                                 spot.setLabel(cell.getStringCellValue());
-                            } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC){
-                                spot.setLabel("" + (int)cell.getNumericCellValue());
+                            } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                                spot.setLabel("" + (int) cell.getNumericCellValue());
                             } //else leave label empty
                             break;
                         case XPOS:
@@ -228,19 +232,25 @@ public class ExcelReader {
                         default:
                             break;
                     }
+                    
+                    System.out.println("Adding spot "+spot+" to gel "+spot.getGel());
                 }
             }
             //set spot group number to spot ID of first member
             group.setNumber(group.getSpots().iterator().next().getNumber());
             //add spot group to project
-            project.addSpotGroup(group);
+            if(currentProject!=null) {
+                currentProject.addSpotGroup(group);
+            }else{
+                System.err.println("Warning: currentProject is null, could not add spot group: "+group.getNumber());
+            }
         }
     }
 
     private int cellToInt(Cell cell) {
-        switch(cell.getCellType()) {
+        switch (cell.getCellType()) {
             case Cell.CELL_TYPE_NUMERIC:
-                return (int)cell.getNumericCellValue();
+                return (int) cell.getNumericCellValue();
             case Cell.CELL_TYPE_BLANK:
                 return -1;
             case Cell.CELL_TYPE_STRING:
@@ -249,7 +259,6 @@ public class ExcelReader {
         }
         throw new IllegalStateException("Cell " + cell.getColumnIndex() + ":" + cell.getRowIndex() + " doesn't contain a numerical value");
     }
-
 //    public static String typeToString(Cell cell) {
 //        int cellType = cell.getCellType();
 //        switch(cellType) {

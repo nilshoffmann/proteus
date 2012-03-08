@@ -46,6 +46,8 @@ public class ProjectBuilder {
 
         List<IProject> projectList = new ArrayList<IProject>();
 
+        /** stores gel references by gel id */
+        Map<String, IGel> gelMap = new HashMap<String, IGel>();
         //read ProjectData
         for (Project proj : pd.getProjects().getProject()) {
             //init project
@@ -54,44 +56,51 @@ public class ProjectBuilder {
             //System.out.println("creation date: " + proj.getCreationDate());
             project.setDescription(proj.getDescription());
 
-            /** stores gel references by gel id */
-            Map<String, IGel> gelMap = new HashMap<String, IGel>();
-
             //read gel groups
             for (Group group : proj.getGroups().getGroup()) {
                 ITechRepGelGroup trgg = Lookup.getDefault().lookup(ITechRepGelGroupFactory.class).createTechRepGelGroup();
-                trgg.setDescription(project.getName()+" "+group.getId());
+                trgg.setDescription(project.getName() + " " + group.getId());
                 trgg.setName(group.getName());
-
+                
                 IBioRepGelGroup brgg = Lookup.getDefault().lookup(IBioRepGelGroupFactory.class).createBioRepGelGroup();
-                brgg.setDescription(project.getName()+" "+group.getId());
+                brgg.setDescription(project.getName() + " " + group.getId());
                 brgg.setName(group.getName());
                 brgg.addGelGroup(trgg);
                 trgg.setParent(brgg);
-
+                
                 ILogicalGelGroup lgg = Lookup.getDefault().lookup(ILogicalGelGroupFactory.class).createLogicalGelGroup();
-                lgg.setDescription(project.getName()+" "+group.getId());
+                lgg.setDescription(project.getName() + " " + group.getId());
                 lgg.setName(group.getName());
                 lgg.addGelGroup(brgg);
+                lgg.setParent(project);
                 brgg.setParent(lgg);
 
                 //get gels for the group
                 for (Gel gel : group.getGels().getGel()) {
+                    System.out.println("Parsing gel " + gel.getGelid() + " as child of group " + group.getName() + " and project " + proj.getName());
                     IGel gelObj = Lookup.getDefault().lookup(IGelFactory.class).createGel();
-                    gelMap.put(gel.getGelid(), gelObj);
+                    String gelid = gel.getGelid();
+                    System.out.println("Gelid: '" + gelid + "'");
+                    gelMap.put(gelid, gelObj);
                     //add gel to group
                     trgg.addGel(gelObj);
+                    gelObj.setParent(trgg);
                 }
 
                 //add gel group to project
                 project.addGelGroup(lgg);
             }
 
+            projectList.add(project);
+        }
+        for(IProject project:projectList) {
             //read gelData
             for (GelImage gi : gd.getGelImages().getGelImage()) {
-                IGel gel = gelMap.get(gi.getGelImageId().getId());
+                String gelImageId = gi.getGelImageId().getId();
+                System.out.println("GelImageId: '" + gelImageId + "'");
+                IGel gel = gelMap.get(gelImageId);
                 if (gel == null) {
-                    Logger.getLogger(ProjectBuilder.class.getName()).log(Level.WARNING, "Failed to open Gel {}", gi.getGelImageId().getId());
+                    Logger.getLogger(ProjectBuilder.class.getName()).log(Level.WARNING, "Failed to open Gel " + gi.getGelImageId().getId());
                 } else {
                     gel.setName(gi.getName());
                     //if gel is fused image, mark it as virtual
@@ -100,12 +109,9 @@ public class ProjectBuilder {
                     gel.setFilename(gi.getGelImageId().getId());
                 }
             }
-
-            //add spot and spot group information from excel file
-            er.parseExport(excelReport, project);
-
-            projectList.add(project);
         }
+        //add spot and spot group information from excel file
+        er.parseExport(excelReport, projectList);
         return projectList;
     }
 }

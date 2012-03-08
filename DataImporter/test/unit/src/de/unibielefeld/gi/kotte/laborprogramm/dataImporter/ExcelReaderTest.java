@@ -3,6 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.dataImporter;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProjectFactory;
 import java.io.File;
+import java.util.Arrays;
 import javax.swing.JFileChooser;
 import org.openide.util.Lookup;
 
@@ -30,7 +31,7 @@ public class ExcelReaderTest {
         }
         ExcelReader er = new ExcelReader();
         IProject project = Lookup.getDefault().lookup(IProjectFactory.class).createEmptyProject();
-        er.parseExport(f, project);
+        er.parseExport(f, Arrays.asList(project));
         System.out.println(project);
     }
 }

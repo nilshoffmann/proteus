@@ -6,12 +6,9 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpotFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroup;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroupFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroupFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroupFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroup;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroupFactory;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +17,6 @@ import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,21 +52,20 @@ public class ExcelReader {
         data = new LinkedHashMap<Integer, SpotDatum>();
     }
 
-    private IGel getGelByName(String gelname, List<IProject> projects) {
-        for (IProject project : projects) {
-            for (ILogicalGelGroup lgg : project.getGelGroups()) {
-                for (IBioRepGelGroup brgg : lgg.getGelGroups()) {
-                    for (ITechRepGelGroup trgg : brgg.getGelGroups()) {
-                        for (IGel gel : trgg.getGels()) {
-                            if (gel.getName().equals(gelname)) {
-                                return gel;
-                            }
+    private IGel getGelByName(String gelname, IProject project) {
+        for (ILogicalGelGroup lgg : project.getGelGroups()) {
+            for (IBioRepGelGroup brgg : lgg.getGelGroups()) {
+                for (ITechRepGelGroup trgg : brgg.getGelGroups()) {
+                    for (IGel gel : trgg.getGels()) {
+                        assert gelname != null && gel.getName() != null;
+                        if (gel.getName().equals(gelname)) {
+                            return gel;
                         }
                     }
                 }
             }
         }
-        throw new IllegalArgumentException("Mismatch of gel name defined in project! Please check for missing/extraneous gels in Delta2D project and spot export (.xlsx)!");
+        throw new IllegalArgumentException("Mismatch of gel name defined in project! Gel '" + gelname + "' can't be found. Please check for missing/extraneous gels in Delta2D project and spot export (.xlsx)!");
 //        //by now we should have found the gel
 //        Logger.getLogger(ExcelReader.class.getName()).log(Level.WARNING, "ExcelReader creates gel ''{0}''.", gelname);
 //        //if not, set up a new gel
@@ -151,7 +146,7 @@ public class ExcelReader {
     private void registerColumnInformation(int column, String gelname, SpotDatum datum) {
         assert gelname != null;
         assert datum != null;
-//        System.out.println("Adding column info. idx:" + column + " gel:" + gelname + " type:" + datum);
+        System.out.println("Adding column info. idx:" + column + " gel:'" + gelname + "' type:" + datum);
         gelnames.put(column, gelname);
         data.put(column, datum);
     }
@@ -160,9 +155,9 @@ public class ExcelReader {
      * Parses Excel file f and writes spot group and spot informations to the project.
      *
      * @param f Excel file
-     * @param projects List of project data objects to fill with informations
+     * @param project project data objects to fill with informations
      */
-    public void parseExport(File f, List<IProject> projects) {
+    public void parseExport(File f, IProject project) {
         //open Excel file as workbook
         Workbook workbook = null;
         try {
@@ -187,6 +182,7 @@ public class ExcelReader {
             IProject currentProject = null;
             while (iterC.hasNext()) { //read cells in row
                 Cell cell = iterC.next();
+                System.out.println("Column index of cell: " + cell.getColumnIndex());
                 if (data.containsKey(cell.getColumnIndex())) {
                     SpotDatum datum = data.get(cell.getColumnIndex());
 
@@ -200,8 +196,10 @@ public class ExcelReader {
                         spot.setGroup(group);
                         group.addSpot(spot);
                         //add spot to gel
-                        IGel gel = getGelByName(gelnames.get(cell.getColumnIndex()), projects);
+                        IGel gel = getGelByName(gelnames.get(cell.getColumnIndex()), project);
                         currentProject = gel.getParent().getParent().getParent().getParent();
+
+                        System.out.println("Adding spot " + spot + " to gel " + spot.getGel() + " with group " + group);
                         gel.addSpot(spot);
                         spot.setGel(gel);
                     }
@@ -232,17 +230,17 @@ public class ExcelReader {
                         default:
                             break;
                     }
-                    
-                    System.out.println("Adding spot "+spot+" to gel "+spot.getGel());
+
+
                 }
             }
             //set spot group number to spot ID of first member
             group.setNumber(group.getSpots().iterator().next().getNumber());
             //add spot group to project
-            if(currentProject!=null) {
+            if (currentProject != null) {
                 currentProject.addSpotGroup(group);
-            }else{
-                System.err.println("Warning: currentProject is null, could not add spot group: "+group.getNumber());
+            } else {
+                System.err.println("Warning: currentProject is null, could not add spot group: " + group.getNumber());
             }
         }
     }

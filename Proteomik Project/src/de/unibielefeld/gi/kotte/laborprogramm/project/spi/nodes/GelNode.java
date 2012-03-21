@@ -14,7 +14,6 @@ import org.openide.nodes.Children;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
-import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
@@ -28,13 +27,11 @@ public class GelNode extends BeanNode<IGel> implements PropertyChangeListener {
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/GelIcon.png";
 
     public GelNode(IGel gel, Children children, Lookup lkp) throws IntrospectionException {
-        super(gel,Children.LEAF,new ProxyLookup(lkp, Lookups.fixed(gel, Lookup.
-                getDefault().lookup(IGelOpenCookie.class))));
+        super(gel, Children.create(new GelChildNodeFactory(Lookups.fixed(gel)), true), new ProxyLookup(lkp, Lookups.fixed(gel, Lookup.getDefault().lookup(IGelOpenCookie.class))));
     }
 
     public GelNode(IGel gel, Lookup lkp) throws IntrospectionException {
-        super(gel,Children.LEAF,new ProxyLookup(lkp, Lookups.fixed(gel, Lookup.
-                getDefault().lookup(IGelOpenCookie.class))));
+        super(gel, Children.create(new GelChildNodeFactory(Lookups.fixed(gel)), true), new ProxyLookup(lkp, Lookups.fixed(gel, Lookup.getDefault().lookup(IGelOpenCookie.class))));
     }
 
     @Override
@@ -133,7 +130,6 @@ public class GelNode extends BeanNode<IGel> implements PropertyChangeListener {
 //        return sheet;
 //
 //    }
-
     @Override
     public Action[] getActions(boolean arg0) {
         List<? extends Action> actions = Utilities.actionsForPath(
@@ -147,8 +143,7 @@ public class GelNode extends BeanNode<IGel> implements PropertyChangeListener {
         if (evt.getPropertyName().equals("name")) {
             this.fireDisplayNameChange(null, getDisplayName());
         } else {
-            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.
-                    getNewValue());
+            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
         }
     }
 }

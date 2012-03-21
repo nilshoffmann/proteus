@@ -23,7 +23,7 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> implements Pro
 
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
-        System.out.println("ProjectChildNodeFactory: Received property change event: "+pce);
+        System.out.println("ProjectChildNodeFactory: Received property change event: " + pce);
         //ipp.propertyChange(pce);
         refresh(true);
     }
@@ -32,39 +32,41 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> implements Pro
 //
 //        GELGROUPS, PLATES384, PLATES96, SPOTGROUPS
 //    };
-
     public ProjectChildNodeFactory(IProteomicProject ipp) {
         this.ipp = ipp;
         IProject project = ipp.getLookup().lookup(IProject.class);
-        if(project!=null) {
+        if (project != null) {
             WeakListeners.propertyChange(this, project);
         }
     }
 
     @Override
     protected boolean createKeys(List<Object> toPopulate) {
-        for(ILogicalGelGroup ilgg:ipp.getLookup().lookup(IProject.class).getGelGroups()) {
+        for (ILogicalGelGroup ilgg : ipp.getLookup().lookup(IProject.class).getGelGroups()) {
             if (Thread.interrupted()) {
                 return false;
             } else {
                 toPopulate.add(ilgg);
             }
         }
-        for(IPlate384 ilgg:ipp.getLookup().lookup(IProject.class).get384Plates()) {
+        for (IPlate384 ilgg : ipp.getLookup().lookup(IProject.class).get384Plates()) {
             if (Thread.interrupted()) {
                 return false;
             } else {
                 toPopulate.add(ilgg);
             }
         }
-        for(IPlate96 ilgg:ipp.getLookup().lookup(IProject.class).get96Plates()) {
+        for (IPlate96 ilgg : ipp.getLookup().lookup(IProject.class).get96Plates()) {
             if (Thread.interrupted()) {
                 return false;
             } else {
                 toPopulate.add(ilgg);
             }
         }
-        toPopulate.add(ipp.getLookup().lookup(IProject.class).getSpotGroups());
+        List<ISpotGroup> spotGroups = ipp.getLookup().lookup(IProject.class).getSpotGroups();
+        if (!spotGroups.isEmpty()) {
+            toPopulate.add(spotGroups);
+        }
         return true;
     }
 
@@ -73,23 +75,23 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> implements Pro
         Object keyVal = key;
 //        Node[] nodes = null;
 //        int i = 0;
-        if(keyVal instanceof ILogicalGelGroup) {
-            return new LogicalGelGroupNode((ILogicalGelGroup)keyVal,ipp.getLookup());
-        }else if(keyVal instanceof IPlate384) {
-            return new Plate384Node((IPlate384)keyVal,ipp.getLookup());
-        }else if(keyVal instanceof IPlate96) {
-            return new Plate96Node((IPlate96)keyVal,ipp.getLookup());
-        }else if(keyVal instanceof List) {
-            List<?> keyValList = (List)keyVal;
-            if(keyValList.isEmpty()) {
+        if (keyVal instanceof ILogicalGelGroup) {
+            return new LogicalGelGroupNode((ILogicalGelGroup) keyVal, ipp.getLookup());
+        } else if (keyVal instanceof IPlate384) {
+            return new Plate384Node((IPlate384) keyVal, ipp.getLookup());
+        } else if (keyVal instanceof IPlate96) {
+            return new Plate96Node((IPlate96) keyVal, ipp.getLookup());
+        } else if (keyVal instanceof List) {
+            List<?> keyValList = (List) keyVal;
+            if (keyValList.isEmpty()) {
                 return Node.EMPTY;
-            }else{
-                SpotGroupFolderNode sgn = new SpotGroupFolderNode((List<ISpotGroup>)keyVal,ipp.getLookup());
+            } else {
+                SpotGroupFolderNode sgn = new SpotGroupFolderNode((List<ISpotGroup>) keyVal, ipp.getLookup());
                 return sgn;
             }
 
 //            return sgn;
-                    //Node((ISpotGroup)keyVal, ipp.getLookup());
+            //Node((ISpotGroup)keyVal, ipp.getLookup());
         }
 //            case GELGROUPS:
 //                List<ILogicalGelGroup> illgs = ipp.getLookup().lookup(IProject.class).getGelGroups();

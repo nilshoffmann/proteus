@@ -13,10 +13,7 @@ import java.awt.Dialog;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.MessageFormat;
-import java.util.List;
 import javax.swing.JComponent;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.openide.DialogDisplayer;
@@ -58,8 +55,7 @@ public final class ImportWizardAction extends CallableSystemAction implements
         boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
         if (!cancelled) {
             //get files
-            File projectParentDirectoryFile = (File) wizardDescriptor.
-                    getProperty(
+            File projectParentDirectoryFile = (File) wizardDescriptor.getProperty(
                     ImportVisualPanel1.PROPERTY_PROJECT_PARENT_DIRECTORY);
             String projectName = (String) wizardDescriptor.getProperty(
                     ImportVisualPanel1.PROPERTY_PROJECT_NAME);
@@ -77,40 +73,28 @@ public final class ImportWizardAction extends CallableSystemAction implements
 
             //build project structure
             ProjectBuilder pb = new ProjectBuilder();
-            IProject p = null;
+            IProject p = pb.buildProject(projectDataFile, gelDataFile, excelDataFile);
+            //System.out.println(p);//TEST: komplette Projekt Daten ausgeben (langsam)
+            System.out.println("Creating project in " + projectDirectoryFile);
             try {
-                List<IProject> l = pb.buildProject(projectDataFile, gelDataFile,
-                        excelDataFile);
-                p = l.iterator().next();
-                //System.out.println(p);//TEST: komplette Projekt Daten ausgeben (langsam)
-                System.out.println("Creating project in " + projectDirectoryFile);
-
                 //copy gel images
-                File gelDirectoryFile = new File(projectDirectoryFile.
-                        getAbsolutePath() + File.separator + "gels");
+                File gelDirectoryFile = new File(projectDirectoryFile.getAbsolutePath() + File.separator + "gels");
                 gelDirectoryFile.mkdir();
                 for (ILogicalGelGroup illgg : p.getGelGroups()) {
                     for (IBioRepGelGroup ibrgg : illgg.getGelGroups()) {
                         for (ITechRepGelGroup itrgg : ibrgg.getGelGroups()) {
                             for (IGel gel : itrgg.getGels()) {
-                                String oldPath = baseDirectoryFile.
-                                        getAbsolutePath() + File.separator + "gelImages" + File.separator + gel.
-                                        getFilename();
-                                FileObject originalFileObject = FileUtil.
-                                        toFileObject(new File(oldPath));
+                                String oldPath = baseDirectoryFile.getAbsolutePath() + File.separator + "gelImages" + File.separator + gel.getFilename();
+                                FileObject originalFileObject = FileUtil.toFileObject(new File(oldPath));
                                 FileObject gelFileObject = FileUtil.copyFile(
-                                        originalFileObject, FileUtil.
-                                        toFileObject(gelDirectoryFile), gel.
-                                        getName());
+                                        originalFileObject, FileUtil.toFileObject(gelDirectoryFile), gel.getName());
                                 gel.setFilename(gelFileObject.getNameExt());
                                 //create a relative file uri
                                 File relativeGelsFolder = new File("gels");
                                 File relativeGelFile = new File(
-                                        relativeGelsFolder, gelFileObject.
-                                        getNameExt());
-                                System.out.println("Gel location:" +relativeGelFile.getPath());
+                                        relativeGelsFolder, gelFileObject.getNameExt());
+                                System.out.println("Gel location:" + relativeGelFile.getPath());
                                 gel.setLocation(relativeGelFile);
-
                             }
                         }
                     }
@@ -140,8 +124,8 @@ public final class ImportWizardAction extends CallableSystemAction implements
     protected WizardDescriptor.Panel[] getPanels() {
         if (panels == null) {
             panels = new WizardDescriptor.Panel[]{
-                        new ImportWizardPanel1()
-                    };
+                new ImportWizardPanel1()
+            };
             String[] steps = new String[panels.length];
             for (int i = 0; i < panels.length; i++) {
                 Component c = panels[i].getComponent();

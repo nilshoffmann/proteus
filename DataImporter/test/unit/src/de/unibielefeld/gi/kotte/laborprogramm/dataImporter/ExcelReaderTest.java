@@ -31,7 +31,7 @@ public class ExcelReaderTest {
         }
         ExcelReader er = new ExcelReader();
         IProject project = Lookup.getDefault().lookup(IProjectFactory.class).createEmptyProject();
-        er.parseExport(f, Arrays.asList(project));
+        er.parseExport(f, project);
         System.out.println(project);
     }
 }

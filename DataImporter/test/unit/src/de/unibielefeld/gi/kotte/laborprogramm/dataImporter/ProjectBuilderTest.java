@@ -33,9 +33,7 @@ public class ProjectBuilderTest {
 
         //create and run ProjectBuilder
         ProjectBuilder pb = new ProjectBuilder();
-        List<IProject> projectList = pb.buildProject(projects, gelImages, excelReport);
-        for (IProject project : projectList) {
-            System.out.println(project);
-        }
+        IProject project = pb.buildProject(projects, gelImages, excelReport);
+        System.out.println(project);
     }
 }

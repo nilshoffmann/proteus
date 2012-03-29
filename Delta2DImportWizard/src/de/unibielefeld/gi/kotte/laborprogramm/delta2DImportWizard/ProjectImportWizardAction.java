@@ -151,7 +151,7 @@ public final class ProjectImportWizardAction implements ActionListener {
      * Initialize panels representing individual wizard's steps and sets
      * various properties for them influencing wizard appearance.
      */
-    private WizardDescriptor.Panel[] getPanels() {
+    protected WizardDescriptor.Panel[] getPanels() {
         if (panels == null) {
             panels = new WizardDescriptor.Panel[]{
                 new ProjectImportWizardPanel1()

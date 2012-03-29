@@ -20,7 +20,7 @@ public class LabelSpotRelationsDataReader {
     public Map<String, String> parseLabelSpotRelations (File f) {
         Map<String, String> labelSpotRelations = new HashMap<String, String>();
         
-        Pattern labelSpotPattern = Pattern.compile("<isInside label_id=\"(d*)\" spot_id=\"(d*)\"/>");
+        Pattern labelSpotPattern = Pattern.compile("<isInside label_id=\"(\\d+)\" spot_id=\"(\\d+)\"/>");
         try {
             BufferedReader input = new BufferedReader(new FileReader(f));
             String line = null;
@@ -28,6 +28,8 @@ public class LabelSpotRelationsDataReader {
                 Matcher labelSpotMatcher = labelSpotPattern.matcher(line);
                 while(labelSpotMatcher.find()) {
                     labelSpotRelations.put(labelSpotMatcher.group(1), labelSpotMatcher.group(2));
+//                    System.out.println("Pattern found. Group 1: '" + labelSpotMatcher.group(1) +
+//                            "', group 2: '" + labelSpotMatcher.group(2) + "'.");
                 }
             }
             input.close();

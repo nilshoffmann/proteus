@@ -1,6 +1,6 @@
-package de.unibielefeld.gi.kotte.laborprogramm.ImportWizard;
+package de.unibielefeld.gi.kotte.laborprogramm.delta2DImportWizard;
 
-import de.unibielefeld.gi.kotte.laborprogramm.dataImporter.ProjectBuilder;
+import de.unibielefeld.gi.kotte.laborprogramm.delta2DProjectImporter.ProjectBuilder;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProjectFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
@@ -10,39 +10,45 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGe
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroup;
 import java.awt.Component;
 import java.awt.Dialog;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.text.MessageFormat;
 import javax.swing.JComponent;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionRegistration;
 import org.openide.util.Exceptions;
-import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
-import org.openide.util.actions.CallableSystemAction;
 
 /**
- * Wizard Action for the Project creation wizard.
- *
+ * Wizard Action for the Delta2D project import.
+ * 
  * @author kotte
  */
-public final class ImportWizardAction extends CallableSystemAction implements
-        ActionListener {
+//////// TEST Action Registration ////////
+@ActionID(category="Demo", id="org.demo.wizard.DemoWizardAction")
+@ActionRegistration(displayName="Open Demo Wizard")
+@ActionReference(path="Menu/Tools", position=10)
+//////////////////////////////////////////
+public final class ProjectImportWizardAction implements ActionListener {
 
     private WizardDescriptor.Panel[] panels;
 
-    @Override
-    public void performAction() {
+    public @Override
+    void actionPerformed(ActionEvent e) {
         WizardDescriptor wizardDescriptor = new WizardDescriptor(getPanels());
         // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
         wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
         wizardDescriptor.setTitle("Data import for new Proteus projekt");
-        Dialog dialog = DialogDisplayer.getDefault().createDialog(
-                wizardDescriptor);
+        Dialog dialog = DialogDisplayer.getDefault().createDialog(wizardDescriptor);
         dialog.setVisible(true);
         dialog.toFront();
         File parent = createProject(wizardDescriptor);
@@ -55,49 +61,53 @@ public final class ImportWizardAction extends CallableSystemAction implements
         boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
         if (!cancelled) {
             //get files
+            File projectFile = (File) wizardDescriptor.getProperty(
+                    ProjectImportVisualPanel1.PROPERTY_PROJECT_DIRECTORY);
             File projectParentDirectoryFile = (File) wizardDescriptor.getProperty(
-                    ImportVisualPanel1.PROPERTY_PROJECT_PARENT_DIRECTORY);
+                    ProjectImportVisualPanel1.PROPERTY_PROJECT_PARENT_DIRECTORY);
             String projectName = (String) wizardDescriptor.getProperty(
-                    ImportVisualPanel1.PROPERTY_PROJECT_NAME);
-            File projectDirectoryFile = new File(projectParentDirectoryFile,
-                    projectName);
-            projectDirectoryFile.mkdir();
-            File baseDirectoryFile = (File) wizardDescriptor.getProperty(
-                    ImportVisualPanel1.PROPERTY_BASE_DIRECTORY);
-            File projectDataFile = new File(
-                    baseDirectoryFile.getAbsolutePath() + File.separator + "projects" + File.separator + "projects.xml");
-            File gelDataFile = new File(
-                    baseDirectoryFile.getAbsolutePath() + File.separator + "gelImages" + File.separator + "gelImages.xml");
-            File excelDataFile = (File) wizardDescriptor.getProperty(
-                    ImportVisualPanel1.PROPERTY_EXCEL_DATA_FILE);
-
-            //build project structure
+                    ProjectImportVisualPanel1.PROPERTY_PROJECT_NAME);
+            String selectedProjectName = (String) wizardDescriptor.getProperty(
+                    ProjectImportVisualPanel1.PROPERTY_SELECTED_PROJECT_NAME);
+            
             ProjectBuilder pb = new ProjectBuilder();
-            IProject p = pb.buildProject(projectDataFile, gelDataFile, excelDataFile);
-            System.out.println("Creating project in " + projectDirectoryFile);
+            IProject p = pb.buildProject(projectFile, selectedProjectName);
+            
+            File projectDirectoryFile = new File(projectParentDirectoryFile, projectName);
             try {
                 //copy gel images
                 File gelDirectoryFile = new File(projectDirectoryFile.getAbsolutePath() + File.separator + "gels");
-                gelDirectoryFile.mkdir();
+                gelDirectoryFile.mkdirs();
+                File relativeGelsFolder = new File("gels");
                 for (ILogicalGelGroup illgg : p.getGelGroups()) {
                     for (IBioRepGelGroup ibrgg : illgg.getGelGroups()) {
                         for (ITechRepGelGroup itrgg : ibrgg.getGelGroups()) {
                             for (IGel gel : itrgg.getGels()) {
-                                String oldPath = baseDirectoryFile.getAbsolutePath() + File.separator + "gelImages" + File.separator + gel.getFilename();
-                                FileObject originalFileObject = FileUtil.toFileObject(new File(oldPath));
-                                FileObject gelFileObject = FileUtil.copyFile(
-                                        originalFileObject, FileUtil.toFileObject(gelDirectoryFile), gel.getName());
-                                gel.setFilename(gelFileObject.getNameExt());
+//                                String oldPath = projectFile.getParent() + File.separator + "gelImages" + File.separator + gel.getFilename();
+//                                FileObject originalFileObject = FileUtil.toFileObject(new File(oldPath));
+//                                if(originalFileObject == null) {
+//                                    System.out.println("originalFileObject is null! Path: " + oldPath);
+//                                } else {
+//                                FileObject gelFileObject = FileUtil.copyFile(
+//                                        originalFileObject, FileUtil.toFileObject(gelDirectoryFile), gel.getName());
+//                                gel.setFilename(gelFileObject.getNameExt());
+                                File oldGelFile = new File(projectFile + File.separator + "gelImages" + File.separator + gel.getFilename());
+                                File newGelFile = new File(gelDirectoryFile, gel.getFilename());
+                                try {
+                                    copyFile(oldGelFile, newGelFile);
+                                } catch (IOException ex) {
+                                    Exceptions.printStackTrace(ex);
+                                }
+                                
                                 //create a relative file uri
-                                File relativeGelsFolder = new File("gels");
-                                File relativeGelFile = new File(
-                                        relativeGelsFolder, gelFileObject.getNameExt());
+//                                File relativeGelFile = new File(relativeGelsFolder, gelFileObject.getNameExt());
+                                File relativeGelFile = new File(relativeGelsFolder, gel.getFilename());
                                 System.out.println("Gel location:" + relativeGelFile.getPath());
                                 gel.setLocation(relativeGelFile);
+                                }
                             }
                         }
                     }
-                }
                 //create Project
                 IProteomicProjectFactory ippf = Lookup.getDefault().lookup(
                         IProteomicProjectFactory.class);
@@ -107,22 +117,44 @@ public final class ImportWizardAction extends CallableSystemAction implements
                 Exceptions.printStackTrace(iae);
                 projectDirectoryFile.delete();
                 return null;
-            } catch (IOException ioe) {
-                Exceptions.printStackTrace(ioe);
             }
             return projectDirectoryFile;
         }
         return null;
     }
 
+    private static void copyFile(File sourceFile, File destFile) throws IOException {
+        if(!destFile.exists()) {
+            destFile.createNewFile();
+        }
+
+        FileChannel source = null;
+        FileChannel destination = null;
+
+        try {
+            source = new FileInputStream(sourceFile).getChannel();
+            destination = new FileOutputStream(destFile).getChannel();
+            destination.transferFrom(source, 0, source.size());
+        }
+        finally {
+            if(source != null) {
+                source.close();
+            }
+            if(destination != null) {
+                destination.close();
+            }
+        }
+    }
+
+    
     /**
      * Initialize panels representing individual wizard's steps and sets
      * various properties for them influencing wizard appearance.
      */
-    protected WizardDescriptor.Panel[] getPanels() {
+    private WizardDescriptor.Panel[] getPanels() {
         if (panels == null) {
             panels = new WizardDescriptor.Panel[]{
-                new ImportWizardPanel1()
+                new ProjectImportWizardPanel1()
             };
             String[] steps = new String[panels.length];
             for (int i = 0; i < panels.length; i++) {
@@ -134,42 +166,18 @@ public final class ImportWizardAction extends CallableSystemAction implements
                 if (c instanceof JComponent) { // assume Swing components
                     JComponent jc = (JComponent) c;
                     // Sets step number of a component
-                    jc.putClientProperty("WizardPanel_contentSelectedIndex", new Integer(
-                            i));
+                    jc.putClientProperty("WizardPanel_contentSelectedIndex", new Integer(i));
                     // Sets steps names for a panel
                     jc.putClientProperty("WizardPanel_contentData", steps);
                     // Turn on subtitle creation on each step
-                    jc.putClientProperty("WizardPanel_autoWizardStyle",
-                            Boolean.TRUE);
+                    jc.putClientProperty("WizardPanel_autoWizardStyle", Boolean.TRUE);
                     // Show steps on the left side with the image on the background
-                    jc.putClientProperty("WizardPanel_contentDisplayed",
-                            Boolean.FALSE);
+                    jc.putClientProperty("WizardPanel_contentDisplayed", Boolean.FALSE);
                     // Turn on numbering of all steps
-                    jc.putClientProperty("WizardPanel_contentNumbered",
-                            Boolean.TRUE);
+                    jc.putClientProperty("WizardPanel_contentNumbered", Boolean.TRUE);
                 }
             }
         }
         return panels;
-    }
-
-    @Override
-    public String getName() {
-        return "Start Proteus projekt wizard";
-    }
-
-    @Override
-    public String iconResource() {
-        return null;
-    }
-
-    @Override
-    public HelpCtx getHelpCtx() {
-        return HelpCtx.DEFAULT_HELP;
-    }
-
-    @Override
-    protected boolean asynchronous() {
-        return false;
     }
 }

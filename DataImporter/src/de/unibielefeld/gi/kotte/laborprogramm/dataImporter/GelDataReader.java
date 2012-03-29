@@ -11,7 +11,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 /**
- * Reads in gelImages.xml files from Delta2D Export.
+ * Reads in gelImages.xml files from Delta2D projects.
  *
  * @author kotte
  */
@@ -21,8 +21,7 @@ public class GelDataReader {
         try {
             JAXBContext jc = JAXBContext.newInstance("de.unibielefeld.gi.kotte.laborprogramm.xml.gelData");
             Unmarshaller u = jc.createUnmarshaller();
-            GelData gd = (GelData) u.unmarshal(
-                    new FileInputStream(f));
+            GelData gd = (GelData) u.unmarshal(new FileInputStream(f));
             return gd;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(GelDataReader.class.getName()).log(Level.SEVERE, null, ex);

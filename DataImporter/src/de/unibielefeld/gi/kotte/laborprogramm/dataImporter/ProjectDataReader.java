@@ -11,7 +11,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 /**
- * Reads in projects.xml files from Delta2D Export.
+ * Reads in projects.xml files from Delta2D projects.
  *
  * @author kotte
  */
@@ -21,8 +21,7 @@ public class ProjectDataReader {
         try {
             JAXBContext jc = JAXBContext.newInstance("de.unibielefeld.gi.kotte.laborprogramm.xml.projectData");
             Unmarshaller u = jc.createUnmarshaller();
-            ProjectData pd = (ProjectData) u.unmarshal(
-                    new FileInputStream(f));
+            ProjectData pd = (ProjectData) u.unmarshal(new FileInputStream(f));
             return pd;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ProjectDataReader.class.getName()).log(Level.SEVERE, null, ex);

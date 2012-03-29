@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 import org.openide.util.Lookup;
 
 /**
- * Builds up Proteomic Projects from data files.
+ * Builds up Proteus Projects from data files.
  *
  * @author kotte
  */

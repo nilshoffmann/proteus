@@ -55,12 +55,12 @@ public class ImportWizardPanel1 implements WizardDescriptor.ValidatingPanel, Pro
             descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Please choose a project directory.");
             return false;
         }
-        System.out.println(component.getProjectDirectory());
+        //System.out.println(component.getProjectDirectory());
         File[] kids = component.getProjectDirectory().listFiles();
         if (component.getProjectDirectory().exists() && kids != null && kids.length > 0) {
             // Folder exists and is not empty
             descriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE,
-                    "Project Folder already exists and is not empty.");
+                    "Project folder already exists and is not empty.");
             return false;
         }
         File baseDirectoryFile = component.getBaseDirectoryFile();
@@ -81,7 +81,7 @@ public class ImportWizardPanel1 implements WizardDescriptor.ValidatingPanel, Pro
             return false;
         }
         if (component.getExcelDataFile() == null) {
-            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Please choose Excel Report file.");
+            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Please choose Excel report file.");
             return false;
         }
         //wenn Werte vollstaendig, Infomeldung zuruecksetzen

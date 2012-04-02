@@ -8,7 +8,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.text.Document;
 import org.openide.filesystems.FileChooserBuilder;
-import org.openide.filesystems.FileUtil;
 
 /**
  * Visual Panel for the Project creation wizard.

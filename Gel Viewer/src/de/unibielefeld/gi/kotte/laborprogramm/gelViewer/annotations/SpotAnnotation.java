@@ -1,14 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations;
 
 import com.db4o.activation.ActivationPurpose;
 import com.db4o.activation.Activator;
 import com.db4o.ta.Activatable;
 import cross.datastructures.tuple.Tuple2D;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPropertyChangeSource;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import java.awt.AlphaComposite;
@@ -22,8 +17,6 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import net.sf.maltcms.ui.plot.heatmap.Annotation;
 import net.sf.maltcms.ui.plot.heatmap.painter.PainterTools;
 
@@ -96,7 +89,13 @@ public class SpotAnnotation extends Annotation<ISpot> implements Activatable {
 
     public SpotAnnotation(Point2D position, ISpot t) {
         super(position, t);
-        setShape(new RoundRectangle2D.Double(position.getX() - 10, position.getY() - 10, 20, 20, 5, 5));
+        if(t.getShape() == null) {
+            setShape(new RoundRectangle2D.Double(position.getX() - 10, position.getY() - 10, 20, 20, 5, 5));
+        } else {
+            //setShape(new RoundRectangle2D.Double(position.getX() - 10, position.getY() - 10, 20, 20, 5, 5));
+            setShape(t.getShape());
+            //System.out.println("Shape bounds: "+t.getShape().getBounds2D());
+        }
     }
 
     public static final String PROP_DRAWSPOTBOX = "drawSpotBox";

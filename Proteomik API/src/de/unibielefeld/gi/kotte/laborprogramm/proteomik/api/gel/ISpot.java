@@ -4,6 +4,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IPropertyChangeSourc
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IUniqueObject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
+import java.awt.Shape;
 
 /**
  * A spot on a 2D gel.
@@ -27,6 +28,8 @@ public interface ISpot extends IPropertyChangeSource, IUniqueObject {
     public static final String PROPERTY_WELL = "plate96 well";
 
     public static final String PROPERTY_GEL = "gel";
+    
+    public static final String PROPERTY_SHAPE = "shape";
 
     public String getLabel();
 
@@ -43,6 +46,10 @@ public interface ISpot extends IPropertyChangeSource, IUniqueObject {
     public SpotStatus getStatus();
 
     public IWell96 getWell();
+    
+    public Shape getShape();
+    
+    public void setShape(Shape shape);
 
     public void setWell(IWell96 well);
 

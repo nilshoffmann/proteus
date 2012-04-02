@@ -14,6 +14,7 @@ public class SpotFactory implements ISpotFactory {
     @Override
     public ISpot createSpot() {
         ISpot result = new Spot();
+        result.setLabel("");
         return result;
     }
 }

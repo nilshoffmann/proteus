@@ -33,11 +33,6 @@ import org.openide.util.Lookup;
  * 
  * @author kotte
  */
-//////// TEST Action Registration ////////
-@ActionID(category="Demo", id="org.demo.wizard.DemoWizardAction")
-@ActionRegistration(displayName="Open Demo Wizard")
-@ActionReference(path="Menu/Tools", position=10)
-//////////////////////////////////////////
 public final class ProjectImportWizardAction implements ActionListener {
 
     private WizardDescriptor.Panel[] panels;

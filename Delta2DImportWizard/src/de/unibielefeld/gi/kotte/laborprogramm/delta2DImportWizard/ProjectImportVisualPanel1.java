@@ -5,6 +5,9 @@ import java.util.List;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
 import org.openide.filesystems.FileChooserBuilder;
 
 /**
@@ -12,7 +15,7 @@ import org.openide.filesystems.FileChooserBuilder;
  * 
  * @author kotte
  */
-public final class ProjectImportVisualPanel1 extends JPanel {
+public final class ProjectImportVisualPanel1 extends JPanel implements DocumentListener {
 
     public static final String PROPERTY_PROJECT_DIRECTORY = "Delta2D project directory";
     public static final String PROPERTY_PROJECT_PARENT_DIRECTORY = "Proteus project parent directory";
@@ -26,6 +29,8 @@ public final class ProjectImportVisualPanel1 extends JPanel {
     public ProjectImportVisualPanel1() {
         initComponents();
         projectList.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
+        projectNameTextField.getDocument().addDocumentListener(this);
+        projectParentDirectoryTextField.getDocument().addDocumentListener(this);
     }
 
     @Override
@@ -210,4 +215,36 @@ public final class ProjectImportVisualPanel1 extends JPanel {
     private javax.swing.JTextField projectParentDirectoryTextField;
     private javax.swing.JTextField projectTextField;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        updateTexts(e);
+        firePropertyChange("fileChange", 0, 1);
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        updateTexts(e);
+        firePropertyChange("fileChange", 0, 1);
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        updateTexts(e);
+        firePropertyChange("fileChange", 0, 1);
+    }
+    
+    /** Handles changes in the Project name and project directory, */
+    private void updateTexts(DocumentEvent e) {
+        Document doc = e.getDocument();
+        if (doc == projectNameTextField.getDocument() || doc == projectParentDirectoryTextField.
+                getDocument()) {
+            // Change in the project name
+            String projectName = projectNameTextField.getText();
+            String projectFolder = projectParentDirectoryTextField.getText();
+
+            projectDirectoryTextField.setText(
+                    projectFolder + File.separatorChar + projectName);
+        }
+    }
 }

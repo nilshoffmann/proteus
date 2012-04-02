@@ -168,6 +168,7 @@ public class ProjectBuilder {
                     } catch (NumberFormatException e) {
                         Logger.getLogger(ProjectBuilder.class.getName()).log(Level.SEVERE, null, e);
                     }
+                    spotObj.setShape(SpotShaper.shapeSpot(spotData.getBoundary()));
                     spotMap.put(spotData.getId(), spotObj);
                 }
 

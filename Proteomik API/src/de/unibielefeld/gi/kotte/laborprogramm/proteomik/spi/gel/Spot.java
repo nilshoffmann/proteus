@@ -8,6 +8,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
+import java.awt.Shape;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.UUID;
@@ -24,6 +25,7 @@ public class Spot implements ISpot, Activatable {
      * Not persisted!
      */
     private transient PropertyChangeSupport pcs = null;
+    
 
     @Override
     public synchronized void removePropertyChangeListener(
@@ -73,6 +75,7 @@ public class Spot implements ISpot, Activatable {
     String label;
     int number;
     IWell96 well;
+    Shape shape;
 
     @Override
     public String getLabel() {
@@ -170,6 +173,7 @@ public class Spot implements ISpot, Activatable {
 
     @Override
     public ISpotGroup getGroup() {
+        activate(ActivationPurpose.READ);
         return this.group;
     }
 
@@ -208,5 +212,19 @@ public class Spot implements ISpot, Activatable {
     @Override
     public int hashCode() {
         return getId().hashCode();
+    }
+
+    @Override
+    public Shape getShape() {
+        activate(ActivationPurpose.READ);
+        return this.shape;
+    }
+
+    @Override
+    public void setShape(Shape shape) {
+        activate(ActivationPurpose.WRITE);
+        this.shape = shape;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_SHAPE, null,
+                shape);
     }
 }

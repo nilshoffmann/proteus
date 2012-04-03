@@ -31,7 +31,6 @@ import net.sf.maltcms.chromaui.db.api.NoAuthCredentials;
 import net.sf.maltcms.chromaui.db.api.exceptions.AuthenticationException;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
-import org.netbeans.api.project.ProjectManager;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.DeleteOperationImplementation;
 import org.netbeans.spi.project.ProjectState;
@@ -40,12 +39,12 @@ import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.cookies.SaveCookie;
-import org.openide.filesystems.FileAlreadyLockedException;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.WeakListeners;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 
@@ -72,40 +71,15 @@ public class ProteomicProject implements IProteomicProject {
         getLookup();
     }
 
-//    public ProteomicProject(IProject project) {
-//        this();
-//        this.activeProject = project;
-//    }
     private ICrudSession getCrudSession() {
-//        openSession();
         return ics;
     }
 
-//    private synchronized void persist() {
-////        getLookup().lookup(ProjectState.class).markModified();
-//        //instanceContent.remove(activeProject);
-//        instanceContent.add(new ProjectSaveCookie());
-//    }
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
         System.out.println(
                 "Received property change event in ProteomicsProject!");
-
-//        persist();
-        //due to a but in Netbeans RCP, multiple SaveCookie instances in
-        //lookup will disable the save action
-//        if(singletonSaveCookie==null) {
-//            singletonSaveCookie = new ProjectSaveCookie();
-//            instanceContent.add(singletonSaveCookie);
-//        }
-//        if(ics!=null) {
-//            ics.update(Arrays.asList(this.activeProject));
-//            System.out.println("Persisting state of "+pce.getPropertyName()+" "+pce.getNewValue());
-////            ics.create(Arrays.asList(pce.getNewValue()));
-//            //activeProject = getFromDB();
-//        }
-        pcs.firePropertyChange(pce.getPropertyName(), pce.getOldValue(), pce.
-                getNewValue());
+        pcs.firePropertyChange(pce);
     }
 
     private IProject showOverwriteDatabaseDialog(IProject project) throws AuthenticationException {
@@ -170,52 +144,8 @@ public class ProteomicProject implements IProteomicProject {
                     "Failed to find an instance of IProject in project database!");
         }
         IProject project = projects.iterator().next();
-        project.addPropertyChangeListener(this);
+        project.addPropertyChangeListener(WeakListeners.propertyChange(this,project));
         return project;
-//        try {
-//            IProject project = projects.iterator().next();
-//            //initialize project listeners
-//            for (IPlate384 ipl : project.get384Plates()) {
-//                for (IWell384 well : ipl.getWells()) {
-//                    well.addPropertyChangeListener(this);
-//                }
-//                ipl.addPropertyChangeListener(this);
-//            }
-//            System.out.println("Found "+project.get96Plates().size()+" 96WellPlates");
-//            for (IPlate96 ipl : project.get96Plates()) {
-//                for (IWell96 well : ipl.getWells()) {
-//                    well.addPropertyChangeListener(this);
-//                }
-//                ipl.addPropertyChangeListener(this);
-//            }
-//            for (ILogicalGelGroup ilgg : project.getGelGroups()) {
-//                for (IBioRepGelGroup blgg : ilgg.getGelGroups()) {
-//                    for (ITechRepGelGroup trgg : blgg.getGelGroups()) {
-//                        for (IGel gel : trgg.getGels()) {
-//                            for (ISpot spot : gel.getSpots()) {
-//                                spot.addPropertyChangeListener(this);
-//                            }
-//                            gel.addPropertyChangeListener(this);
-//                        }
-//                        trgg.addPropertyChangeListener(this);
-//                    }
-//                    blgg.addPropertyChangeListener(this);
-//                }
-//                ilgg.addPropertyChangeListener(this);
-//            }
-//            for (ISpotGroup sg : project.getSpotGroups()) {
-//                sg.addPropertyChangeListener(this);
-//            }
-//            project.addPropertyChangeListener(this);
-//            return project;
-//        } catch (Exception e) {
-//            Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-//                    "Exception: {0}", e.getLocalizedMessage());
-//        } finally {
-//        }
-//        Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-//                "Could not retrieve Project instance from database");
-//        return null;
     }
 
     @Override
@@ -377,12 +307,12 @@ public class ProteomicProject implements IProteomicProject {
 
     @Override
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
-        getLookup().lookup(Info.class).addPropertyChangeListener(pcl);
+        pcs.addPropertyChangeListener(pcl);
     }
 
     @Override
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
-        getLookup().lookup(Info.class).removePropertyChangeListener(pcl);
+        pcs.removePropertyChangeListener(pcl);
     }
 
     private final class OpenCloseHook extends ProjectOpenedHook {

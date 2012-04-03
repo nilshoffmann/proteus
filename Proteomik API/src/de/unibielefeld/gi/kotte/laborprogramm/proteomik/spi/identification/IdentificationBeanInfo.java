@@ -19,6 +19,7 @@ public class IdentificationBeanInfo extends SimpleBeanInfo {
 
 
 
+
     // Here you can add code for customizing the BeanDescriptor.
 
          return beanDescriptor;     }//GEN-LAST:BeanDescriptor
@@ -52,6 +53,8 @@ public class IdentificationBeanInfo extends SimpleBeanInfo {
             properties[PROPERTY_gendbId] = new PropertyDescriptor ( "gendbId", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getGendbId", null ); // NOI18N
             properties[PROPERTY_gendbProject] = new PropertyDescriptor ( "gendbProject", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getGendbProject", null ); // NOI18N
             properties[PROPERTY_keggNumbers] = new PropertyDescriptor ( "keggNumbers", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getKeggNumbers", null ); // NOI18N
+            properties[PROPERTY_keggNumbers].setDisplayName ( "ecNumber" );
+            properties[PROPERTY_keggNumbers].setShortDescription ( "The EC number of this peptide" );
             properties[PROPERTY_keggNumbers].setPropertyEditorClass ( de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.KeggNumbersPropertyEditor.class );
             properties[PROPERTY_method] = new PropertyDescriptor ( "method", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.Identification.class, "getMethod", null ); // NOI18N
             properties[PROPERTY_method].setPropertyEditorClass ( de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.identification.MethodPropertyEditor.class );

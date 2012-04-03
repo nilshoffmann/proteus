@@ -21,13 +21,13 @@
             </file>
         </folder>
     </folder>
-    <folder name="Menu">
+    <!--<folder name="Menu">
         <folder name="Window">
             <file name="Plate96ViewerTopComponentAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/de-unibielefeld-gi-kotte-laborprogramm-plate96Viewer-Plate96ViewerTopComponentAction.instance"/>
             </file>
         </folder>
-    </folder>
+    </folder>-->
     <folder name="Windows2">
         <folder name="Components">
             <file name="Plate96ViewerTopComponent.settings" url="Plate96ViewerTopComponentSettings.xml"/>

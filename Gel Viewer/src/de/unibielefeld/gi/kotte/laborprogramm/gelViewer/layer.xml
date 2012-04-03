@@ -10,13 +10,13 @@
             </file>
         </folder>
     </folder>
-    <folder name="Menu">
+    <!--<folder name="Menu">
         <folder name="Window">
             <file name="GelViewerAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/de-unibielefeld-gi-kotte-laborprogramm-gelViewer-GelViewerAction.instance"/>
             </file>
         </folder>
-    </folder>
+    </folder>-->
     <folder name="Services">
         <folder name="JavaHelp">
             <file name="gelViewer-helpset.xml" url="gelViewer-helpset.xml">

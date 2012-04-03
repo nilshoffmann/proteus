@@ -37,7 +37,7 @@ public class ProjectNode extends AbstractNode implements PropertyChangeListener 
         super(Children.create(new ProjectChildNodeFactory(ipp), true), ipp.
                 getLookup());
 //        this(ipp, new InstanceContent(), ipp.getLookup());
-        //ipp.addPropertyChangeListener(this);
+        ipp.addPropertyChangeListener(this);
     }
 
     /**

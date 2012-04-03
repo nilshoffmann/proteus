@@ -10,13 +10,20 @@
             </file>
         </folder>
     </folder>
-    <folder name="Menu">
+    <!--<folder name="Menu">
         <folder name="Window">
             <file name="Plate384ViewerTopComponentAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/de-unibielefeld-gi-kotte-laborprogramm-plate384Viewer-Plate384ViewerTopComponentAction.instance"/>
             </file>
         </folder>
-    </folder>
+    </folder>-->
+<!--    <folder name="Services">
+        <folder name="JavaHelp">
+            <file name="plate384Viewer-helpset.xml" url="plate384Viewer-helpset.xml">
+                <attr name="position" intvalue="3668"/>
+            </file>
+        </folder>
+    </folder>-->
     <folder name="Windows2">
         <folder name="Components">
             <file name="Plate384ViewerTopComponent.settings" url="Plate384ViewerTopComponentSettings.xml"/>

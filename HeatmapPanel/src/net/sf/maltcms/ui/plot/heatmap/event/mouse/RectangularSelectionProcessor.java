@@ -24,9 +24,9 @@ public class RectangularSelectionProcessor extends AEventProcessor<Rectangle2D> 
     @Override
     public void processMouseEvent(MouseEvent me, MouseEventType et) {
         super.processMouseEvent(me, et);
-        if(me.isAltDown() || me.isAltGraphDown() || me.isControlDown() || me.isMetaDown()) {
-            return;
-        }
+//        if(me.isAltDown() || me.isAltGraphDown() || me.isControlDown() || me.isMetaDown()) {
+//            return;
+//        }
         boolean changed = false;
         
         switch (et) {
@@ -71,4 +71,5 @@ public class RectangularSelectionProcessor extends AEventProcessor<Rectangle2D> 
     public void keyReleased(KeyEvent ke) {
         //throw new UnsupportedOperationException("Not supported yet.");
     }
+   
 }

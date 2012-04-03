@@ -8,7 +8,6 @@ import cross.datastructures.tuple.Tuple2D;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Paint;
-import java.awt.Shape;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -20,7 +19,6 @@ import net.sf.maltcms.ui.plot.heatmap.Annotation;
 import net.sf.maltcms.ui.plot.heatmap.HeatmapDataset;
 import net.sf.maltcms.ui.plot.heatmap.event.IProcessorResultListener;
 import net.sf.maltcms.ui.plot.heatmap.event.mouse.MouseEvent;
-import net.sf.maltcms.ui.plot.heatmap.event.mouse.MouseEventType;
 import org.jdesktop.swingx.painter.AbstractPainter;
 
 /**
@@ -64,29 +62,30 @@ public class SelectionRectanglePainter<T, U extends JComponent> extends Abstract
 
     @Override
     public void listen(Rectangle2D t, MouseEvent et) {
-        if (et.getMet() == MouseEventType.DRAGGED) {
+        if (et.getMe().isShiftDown() && et.getMe().getID()==java.awt.event.MouseEvent.MOUSE_DRAGGED) {
             try {
                 setSelection(hm.toModelShape(t).getBounds2D());
-                for (Tuple2D<Point2D, Annotation<T>> tpl : hm.getChildrenInRange(
-                        getSelection())) {
+                if (selectedAnnotations != null) {
+                    for (Tuple2D<Point2D, Annotation<T>> tpl : selectedAnnotations) {
+                        tpl.getSecond().setSelected(false);
+                    }
+                }
+                selectedAnnotations = hm.getChildrenInRange(getSelection());
+                for (Tuple2D<Point2D, Annotation<T>> tpl : selectedAnnotations) {
                     tpl.getSecond().setSelected(true);
                 }
             } catch (NoninvertibleTransformException ex) {
                 Logger.getLogger(SelectionRectanglePainter.class.getName()).
                         log(Level.SEVERE, null, ex);
             }
-        } else if (et.getMet() == MouseEventType.RELEASED) {
-            setSelection(null);
-        } else {
-            try {
-                Shape s = hm.toModelShape(t);
-                for (Tuple2D<Point2D, Annotation<T>> tpl : hm.getChildrenInRange(s.
-                        getBounds2D())) {
+        } else if(et.getMe().isShiftDown() && et.getMe().getID()==java.awt.event.MouseEvent.MOUSE_RELEASED) {
+            
+        } else {// if (et.getMet() == MouseEventType.RELEASED) {
+            if (selectedAnnotations != null) {
+                for (Tuple2D<Point2D, Annotation<T>> tpl : selectedAnnotations) {
                     tpl.getSecond().setSelected(false);
                 }
-            } catch (NoninvertibleTransformException ex) {
-                Logger.getLogger(SelectionRectanglePainter.class.getName()).
-                        log(Level.SEVERE, null, ex);
+                selectedAnnotations = null;
             }
             setSelection(null);
         }

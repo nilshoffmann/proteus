@@ -15,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import maltcms.ui.viewer.datastructures.tree.ElementNotFoundException;
@@ -76,20 +77,36 @@ public class HeatmapDataset<T> implements IProcessorResultListener<Tuple2D<Point
         return this.quadTree.get(p);
     }
 
-    public Tuple2D<Point2D, Annotation<T>> getClosestInRadius(Point2D p, double radius) {
+    public Tuple2D<Point2D, Annotation<T>> getClosestInRadius(final Point2D p, double radius) {
         //shortcut
-        if(lastAnnotation!=null && lastAnnotation.getSecond().getPosition().distance(p)<=radius) {
-            return lastAnnotation;
-        }
+//        if(lastAnnotation!=null && lastAnnotation.getSecond().getPosition().distance(p)<=radius) {
+//            return lastAnnotation;
+//        }
 
-        try {
-            lastAnnotation = this.quadTree.getClosestInRadius(p, radius);
-            return lastAnnotation;
-        } catch (ElementNotFoundException enfe) {
+        List<Tuple2D<Point2D,Annotation<T>>> rangeMembers = getChildrenInRange(new Rectangle2D.Double(p.getX()-radius,p.getY()-radius,radius*2,radius*2));
+        if(rangeMembers.isEmpty()) {
             lastAnnotation = null;
             return null;
-//            return new Tuple2D<Point2D, Annotation<T>>(p, new Annotation<T>(p, getItemAt(p)));
         }
+        Collections.sort(rangeMembers, new Comparator<Tuple2D<Point2D,Annotation<T>>>() {
+
+            @Override
+            public int compare(Tuple2D<Point2D, Annotation<T>> t, Tuple2D<Point2D, Annotation<T>> t1) {
+                double d1 = p.distance(t.getSecond().getPosition());
+                double d2 = p.distance(t1.getSecond().getPosition());
+                return Double.compare(d1,d2);
+            }
+        });
+        lastAnnotation = rangeMembers.get(0);
+        return lastAnnotation;
+//        try {
+//            lastAnnotation = this.quadTree.getClosestInRadius(p, radius);
+//            return lastAnnotation;
+//        } catch (ElementNotFoundException enfe) {
+//            lastAnnotation = null;
+//            return null;
+////            return new Tuple2D<Point2D, Annotation<T>>(p, new Annotation<T>(p, getItemAt(p)));
+//        }
     }
 
     public int size() {

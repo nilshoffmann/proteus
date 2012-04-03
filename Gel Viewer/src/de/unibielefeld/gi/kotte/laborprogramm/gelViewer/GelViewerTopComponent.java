@@ -216,7 +216,7 @@ public final class GelViewerTopComponent extends TopComponent implements
                 AnnotationPainter<ISpot, JPanel> annotationPainter = new AnnotationPainter<ISpot, JPanel>(
                         hmd) {
                 };
-                annotationPainter.setSearchRadius(10.0d);
+                annotationPainter.setSearchRadius(25.0d);
                 annotationPainter.addPropertyChangeListener(tooltipPainter);
                 annotationPainter.addPropertyChangeListener(tc);
 

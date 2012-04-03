@@ -5,6 +5,7 @@
 <project name="ProteomikLaborprogamm" basedir=".">
     <description>Builds the module suite ProteomikLaborprogamm.</description>
     <import file="nbproject/build-impl.xml"/>
+	<!-- additional task to fix dependencies for all modules at once -->
     <target name="fix-dependencies" depends="-init">
        <subant target="fix-dependencies" buildpath="${modules.sorted}" inheritrefs="false" inheritall="false"/>
     </target>

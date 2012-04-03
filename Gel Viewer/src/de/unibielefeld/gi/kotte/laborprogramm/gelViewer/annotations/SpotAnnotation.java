@@ -9,6 +9,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
@@ -92,9 +93,8 @@ public class SpotAnnotation extends Annotation<ISpot> implements Activatable {
         if(t.getShape() == null) {
             setShape(new RoundRectangle2D.Double(position.getX() - 10, position.getY() - 10, 20, 20, 5, 5));
         } else {
-            //setShape(new RoundRectangle2D.Double(position.getX() - 10, position.getY() - 10, 20, 20, 5, 5));
+//            System.out.println("Shape bounds in SpotAnnotation: " + t.getShape().getBounds2D());
             setShape(t.getShape());
-            //System.out.println("Shape bounds: "+t.getShape().getBounds2D());
         }
     }
 
@@ -329,6 +329,16 @@ public class SpotAnnotation extends Annotation<ISpot> implements Activatable {
 //            PainterTools.drawCrossInBox(g, selectionCrossColor, getShape().getBounds2D(), 2);
             }
         }
+        Color color = g.getColor();
+        g.setPaint(Color.BLACK);
+        Composite comp = g.getComposite();
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float)0.7f));
+        Line2D.Double criss = new Line2D.Double(getPosition().getX()-5, getPosition().getY(), getPosition().getX()+5, getPosition().getY());
+        Line2D.Double cross = new Line2D.Double(getPosition().getX(), getPosition().getY()-5, getPosition().getX(), getPosition().getY()+5);
+        g.draw(criss);
+        g.draw(cross);
+        g.setComposite(comp);
+        g.setColor(color);
         if (isDrawSpotId() && sb.length() > 0) {
             Color fill = getSelectedFillColor();
             Color stroke = getSelectedStrokeColor().darker();

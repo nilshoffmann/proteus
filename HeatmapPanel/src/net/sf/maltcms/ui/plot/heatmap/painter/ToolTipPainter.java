@@ -103,8 +103,7 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
 //            System.out.println("ToolTipPainter: drawing annotations");
             AffineTransform originalTransform = g.getTransform();
             g.setTransform(hm.getTransform());
-            Point2D lineCross = new Point2D.Double(annotationShape.getBounds2D().
-                    getCenterX(), annotationShape.getBounds2D().getCenterY());
+            Point2D lineCross = new Point2D.Double(a.getSecond().getPosition().getX(), a.getSecond().getPosition().getY());
             Line2D.Double l1 = new Line2D.Double(0, lineCross.getY(),
                     hm.getDataBounds().getWidth(), lineCross.getY());
             Line2D.Double l2 = new Line2D.Double(lineCross.getX(), 0, lineCross.
@@ -189,7 +188,7 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
 //            Point2D newPoint = (Point2D) pce.getNewValue();
 //            setPoint(newPoint);
 //        }
-
+        
 ////        System.out.println("ToolTipPainter Event: " + pce.getPropertyName());
         if (pce.getPropertyName().equals("annotationPointSelection")) {
 //            System.out.println("ToolTipPainter received annotationPointSelection: " + pce.
@@ -221,6 +220,7 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
             ////                setDrawLabels(false);
 //            {
         }
+        setDirty(true);
 
 //        } else if (pce.getPropertyName().equals(HeatmapDataset.PROP_TRANSFORM)) {
 //            System.out.println("Received transform change event!");

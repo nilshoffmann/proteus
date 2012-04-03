@@ -20,6 +20,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import de.unibielefeld.gi.kotte.laborprogramm.topComponentRegistry.api.IRegistryFactory;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Graphics;
 import java.awt.GridLayout;
@@ -38,6 +39,7 @@ import java.util.Iterator;
 import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.FocusManager;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -83,6 +85,7 @@ import org.openide.util.LookupListener;
 import org.openide.util.RequestProcessor;
 import org.openide.util.TaskListener;
 import org.openide.util.Utilities;
+import org.openide.util.WeakListeners;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 
@@ -114,6 +117,8 @@ public final class GelViewerTopComponent extends TopComponent implements
     private boolean centerView = true;
     private boolean showPickedSpots = true;
     private boolean showUnpickedSpots = true;
+    private boolean showUnlabeledSpots = false;
+    private boolean showLabeledSpots = true;
 
     @Override
     public HelpCtx getHelpCtx() {
@@ -314,10 +319,12 @@ public final class GelViewerTopComponent extends TopComponent implements
                 while (iter.hasNext()) {
                     Tuple2D<Point2D, Annotation<ISpot>> tple = iter.next();
                     tple.getSecond().setSelected(false);
+                    WeakListeners.propertyChange(tc, tple.getSecond());
+                    WeakListeners.propertyChange(tc, tple.getSecond().getPayload());
                 }
                 tc.putClientProperty("print.printable", Boolean.TRUE);
                 tc.requestFocusInWindow(true);
-
+                setSpotsToDraw();
             }
         });
         final ProgressHandle ph = ProgressHandleFactory.createHandle("Loading gel " + gel.
@@ -379,8 +386,11 @@ public final class GelViewerTopComponent extends TopComponent implements
     private void initComponents() {
 
         jPopupMenu1 = new javax.swing.JPopupMenu();
+        labeledSpotsCheckBox = new javax.swing.JCheckBoxMenuItem();
+        unlabeledSpotsCheckBox = new javax.swing.JCheckBoxMenuItem();
         pickedSpotsCheckBox = new javax.swing.JCheckBoxMenuItem();
         unpickedSpotsCheckBox = new javax.swing.JCheckBoxMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
         tooltipsCheckBox = new javax.swing.JCheckBoxMenuItem();
         centerCheckBox = new javax.swing.JCheckBoxMenuItem();
         syncCheckBox = new javax.swing.JCheckBoxMenuItem();
@@ -392,6 +402,23 @@ public final class GelViewerTopComponent extends TopComponent implements
         jSeparator1 = new javax.swing.JToolBar.Separator();
         viewSettingsButton = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
+
+        labeledSpotsCheckBox.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(labeledSpotsCheckBox, org.openide.util.NbBundle.getMessage(GelViewerTopComponent.class, "GelViewerTopComponent.labeledSpotsCheckBox.text")); // NOI18N
+        labeledSpotsCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                labeledSpotsCheckBoxActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(labeledSpotsCheckBox);
+
+        org.openide.awt.Mnemonics.setLocalizedText(unlabeledSpotsCheckBox, org.openide.util.NbBundle.getMessage(GelViewerTopComponent.class, "GelViewerTopComponent.unlabeledSpotsCheckBox.text")); // NOI18N
+        unlabeledSpotsCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                unlabeledSpotsCheckBoxActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(unlabeledSpotsCheckBox);
 
         pickedSpotsCheckBox.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(pickedSpotsCheckBox, org.openide.util.NbBundle.getMessage(GelViewerTopComponent.class, "GelViewerTopComponent.pickedSpotsCheckBox.text")); // NOI18N
@@ -412,6 +439,7 @@ public final class GelViewerTopComponent extends TopComponent implements
             }
         });
         jPopupMenu1.add(unpickedSpotsCheckBox);
+        jPopupMenu1.add(jSeparator2);
 
         tooltipsCheckBox.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(tooltipsCheckBox, org.openide.util.NbBundle.getMessage(GelViewerTopComponent.class, "GelViewerTopComponent.tooltipsCheckBox.text")); // NOI18N
@@ -572,18 +600,32 @@ public final class GelViewerTopComponent extends TopComponent implements
         getLookup().lookup(LocationRectanglePainter.class).
                 setDrawLocationIndicator(locationIndicatorCheckBox.isSelected());
     }//GEN-LAST:event_locationIndicatorCheckBoxActionPerformed
+
+    private void unlabeledSpotsCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unlabeledSpotsCheckBoxActionPerformed
+        showUnlabeledSpots = unlabeledSpotsCheckBox.isSelected();
+        setSpotsToDraw();
+    }//GEN-LAST:event_unlabeledSpotsCheckBoxActionPerformed
+
+    private void labeledSpotsCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_labeledSpotsCheckBoxActionPerformed
+        showLabeledSpots = labeledSpotsCheckBox.isSelected();
+        setSpotsToDraw();
+    }//GEN-LAST:event_labeledSpotsCheckBoxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBoxMenuItem centerCheckBox;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JToolBar.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JCheckBoxMenuItem labeledSpotsCheckBox;
     private javax.swing.JCheckBoxMenuItem locationIndicatorCheckBox;
     private javax.swing.JCheckBoxMenuItem pickedSpotsCheckBox;
     private javax.swing.JCheckBoxMenuItem syncCheckBox;
     private javax.swing.JCheckBoxMenuItem tooltipsCheckBox;
+    private javax.swing.JCheckBoxMenuItem unlabeledSpotsCheckBox;
     private javax.swing.JCheckBoxMenuItem unpickedSpotsCheckBox;
     private javax.swing.JButton viewSettingsButton;
     private javax.swing.JTextField zoomDisplay;
@@ -598,17 +640,32 @@ public final class GelViewerTopComponent extends TopComponent implements
                         next();
                 SpotAnnotation spot = (SpotAnnotation) tple.getSecond();
                 boolean drawSpot = false;
-                boolean isPicked = (spot.getPayload().getStatus() == SpotStatus.PICKED);
-                if (showPickedSpots && isPicked) {
+                boolean isUnlabeled = spot.getPayload().getLabel() == null || spot.getPayload().getLabel().isEmpty();
+                if (showUnlabeledSpots && isUnlabeled) {
                     drawSpot = true;
                 }
-                if (showUnpickedSpots && !isPicked) {
+                if (showLabeledSpots && !isUnlabeled) {
                     drawSpot = true;
+                }
+                if(drawSpot) {
+                    drawSpot = false;
+                    boolean isPicked = (spot.getPayload().getStatus() == SpotStatus.PICKED);
+                    if (showPickedSpots && isPicked) {
+                        drawSpot = true;
+                    }
+                    if (showUnpickedSpots && !isPicked) {
+                        drawSpot = true;
+                    }
                 }
                 spot.setDrawSpotBox(drawSpot);
                 spot.setDrawSpotId(drawSpot);
             }
-            layer.repaint();
+            Component c = FocusManager.getCurrentManager().getFocusOwner();
+            requestFocusInWindow(true);
+            //layer.repaint();
+            revalidate();
+            repaint();
+            FocusManager.getCurrentManager().focusNextComponent(c);
         }
     }
 //    /**
@@ -728,8 +785,10 @@ public final class GelViewerTopComponent extends TopComponent implements
 //            repaint();
         } else {
 //            repaint();
-        }
-        repaint();
+        } 
+        setSpotsToDraw();
+        jl.revalidate();
+        jl.repaint();
     }
 
 //    private Point2D interpolate(Point2D start, Point2D stop, int step) {
@@ -785,6 +844,7 @@ public final class GelViewerTopComponent extends TopComponent implements
                 }
             }
         }
+        
     }
 
     protected void removeAnnotation(Annotation<ISpot> sa) {

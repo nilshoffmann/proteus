@@ -14,6 +14,7 @@ public class SpotGroupFactory implements ISpotGroupFactory {
     @Override
     public ISpotGroup createSpotGroup() {
         ISpotGroup result = new SpotGroup();
+        result.setLabel("");
         return result;
     }
 }

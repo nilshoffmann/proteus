@@ -223,6 +223,7 @@ public class Spot implements ISpot, Activatable {
     @Override
     public void setShape(Shape shape) {
         activate(ActivationPurpose.WRITE);
+        System.out.println("setShape called on Spot with "+shape.getBounds2D());
         this.shape = shape;
         getPropertyChangeSupport().firePropertyChange(PROPERTY_SHAPE, null,
                 shape);

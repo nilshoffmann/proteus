@@ -17,7 +17,11 @@ public class SpotGroupPropertyEditor extends PropertyEditorSupport {
     @Override
     public String getAsText() {
         ISpotGroup spotGroup = (ISpotGroup) getValue();
-        return spotGroup.getNumber()+" "+spotGroup.getLabel();//spotGroup.getLabel();
+        if (spotGroup == null) {
+            return "no spot group";
+        }
+        return spotGroup.getNumber()+" "+spotGroup.getLabel();
+ //       return spotGroup.getLabel();
     }
 
     @Override

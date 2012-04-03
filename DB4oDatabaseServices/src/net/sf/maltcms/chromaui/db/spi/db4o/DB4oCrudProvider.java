@@ -10,6 +10,8 @@ import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.reflect.jdk.JdkReflector;
 import com.db4o.ta.TransparentActivationSupport;
 import com.db4o.ta.TransparentPersistenceSupport;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Path2D;
 import java.io.File;
 import java.util.HashSet;
 import java.util.logging.Level;
@@ -88,6 +90,10 @@ public final class DB4oCrudProvider implements ICrudProvider {
             ec.common().reflectWith(new JdkReflector(this.domainClassLoader));
             ec.common().add(new TransparentActivationSupport());
             ec.common().add(new TransparentPersistenceSupport());
+            ec.common().objectClass(GeneralPath.class).storeTransientFields(true);
+            ec.common().objectClass(Path2D.class).storeTransientFields(true);
+            ec.common().objectClass(Path2D.Float.class).storeTransientFields(true);
+            ec.common().objectClass(Path2D.Double.class).storeTransientFields(true);
             eoc = Db4oEmbedded.openFile(ec, projectDBLocation.getAbsolutePath());
 //            sessionCache = new HashSet<ICrudSession>();
         }

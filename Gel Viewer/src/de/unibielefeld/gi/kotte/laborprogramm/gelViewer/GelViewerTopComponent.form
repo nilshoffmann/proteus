@@ -8,6 +8,27 @@
         <Property name="useNullLayout" type="boolean" value="true"/>
       </Layout>
       <SubComponents>
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="labeledSpotsCheckBox">
+          <Properties>
+            <Property name="selected" type="boolean" value="true"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/gelViewer/Bundle.properties" key="GelViewerTopComponent.labeledSpotsCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="labeledSpotsCheckBoxActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="unlabeledSpotsCheckBox">
+          <Properties>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/gelViewer/Bundle.properties" key="GelViewerTopComponent.unlabeledSpotsCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="unlabeledSpotsCheckBoxActionPerformed"/>
+          </Events>
+        </MenuItem>
         <MenuItem class="javax.swing.JCheckBoxMenuItem" name="pickedSpotsCheckBox">
           <Properties>
             <Property name="selected" type="boolean" value="true"/>
@@ -36,6 +57,8 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="unpickedSpotsCheckBoxActionPerformed"/>
           </Events>
         </MenuItem>
+        <Component class="javax.swing.JPopupMenu$Separator" name="jSeparator2">
+        </Component>
         <MenuItem class="javax.swing.JCheckBoxMenuItem" name="tooltipsCheckBox">
           <Properties>
             <Property name="selected" type="boolean" value="true"/>

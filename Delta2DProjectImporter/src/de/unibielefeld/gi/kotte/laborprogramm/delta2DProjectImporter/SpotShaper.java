@@ -1,9 +1,9 @@
 package de.unibielefeld.gi.kotte.laborprogramm.delta2DProjectImporter;
 
 import java.awt.Shape;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,17 +33,13 @@ public class SpotShaper {
        Point2D.Double point = new Point2D.Double(x,y);
        points.add(point);
 
-       Path2D.Double path = new Path2D.Double();
+       GeneralPath path = new GeneralPath();
        path.moveTo(points.get(0).getX(),points.get(0).getY());
        for(int i = 1;i<points.size();i++) {
            Point2D pt = points.get(i);
            path.lineTo(pt.getX(),pt.getY());
-//           System.out.println("line to / move to"+pt);
-           path.moveTo(pt.getX(),pt.getY());
        }
-       path.lineTo(points.get(0).getX(),points.get(0).getY());
        path.closePath();
-//        System.out.println("# points: " + points.size());
        return path;
     }
 }

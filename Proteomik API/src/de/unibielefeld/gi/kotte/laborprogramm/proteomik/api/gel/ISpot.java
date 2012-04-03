@@ -30,6 +30,8 @@ public interface ISpot extends IPropertyChangeSource, IUniqueObject {
     public static final String PROPERTY_GEL = "gel";
     
     public static final String PROPERTY_SHAPE = "shape";
+    
+    public static final String PROPERTY_SHAPE_STRING = "shape string";
 
     public String getLabel();
 

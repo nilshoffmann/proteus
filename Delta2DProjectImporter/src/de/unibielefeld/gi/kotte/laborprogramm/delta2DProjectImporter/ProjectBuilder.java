@@ -12,8 +12,6 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGel
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroupFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroupFactory;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroupFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroupFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.xml.gelData.GelData;
@@ -28,6 +26,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.xml.projectData.ProjectData;
 import de.unibielefeld.gi.kotte.laborprogramm.xml.projectData.Projects;
 import de.unibielefeld.gi.kotte.laborprogramm.xml.quantitation.QuantitationData;
 import de.unibielefeld.gi.kotte.laborprogramm.xml.quantitation.Spot;
+import java.awt.Shape;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -168,7 +167,10 @@ public class ProjectBuilder {
                     } catch (NumberFormatException e) {
                         Logger.getLogger(ProjectBuilder.class.getName()).log(Level.SEVERE, null, e);
                     }
-                    spotObj.setShape(SpotShaper.shapeSpot(spotData.getBoundary()));
+                    Shape shape = SpotShaper.shapeSpot(spotData.getBoundary());
+                    System.out.println("Shape bounds: "+shape.getBounds2D());
+                    spotObj.setShape(shape);
+                    System.out.println("ShapeString im ProjectBuilder: " + spotData.getBoundary());
                     spotMap.put(spotData.getId(), spotObj);
                 }
 

@@ -12,6 +12,8 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGel
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroupFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroupFactory;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroupFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroupFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.xml.gelData.GelData;
@@ -79,8 +81,8 @@ public class ProjectBuilder {
 
         /** stores gel references by gel id */
         Map<String, IGel> gelMap = new HashMap<String, IGel>();
-        /** stores spot references by spot id */
-        Map<String, ISpot> spotMap = new HashMap<String, ISpot>();
+        /** stores spot references by gel and spot id */
+        Map<IGel, Map<String, ISpot>> spotMap = new HashMap<IGel, Map<String, ISpot>>();
 
         //read gel groups
         for (Group group : proj.getGroups().getGroup()) {
@@ -158,8 +160,14 @@ public class ProjectBuilder {
                 QuantitationData quantitationData = qdr.parseQuantification(quantitationsFile);
                 for (Spot spotData : quantitationData.getSpotList().getSpot()) {
                     ISpot spotObj = Lookup.getDefault().lookup(ISpotFactory.class).createSpot();
+                    //add spot to gel
                     spotObj.setGel(gel);
                     gel.addSpot(spotObj);
+                    //add spot to group
+                    ISpotGroup group = getSpotGroup(spotData.getId());
+                    group.addSpot(spotObj);
+                    spotObj.setGroup(group);
+                    //store spot properties
                     try {
                         spotObj.setNumber(Integer.parseInt(spotData.getId()));
                         spotObj.setPosX(Double.parseDouble(spotData.getCenter().getX()));
@@ -167,11 +175,16 @@ public class ProjectBuilder {
                     } catch (NumberFormatException e) {
                         Logger.getLogger(ProjectBuilder.class.getName()).log(Level.SEVERE, null, e);
                     }
+                    //store spot shape
                     Shape shape = SpotShaper.shapeSpot(spotData.getBoundary());
                     System.out.println("Shape bounds: "+shape.getBounds2D());
                     spotObj.setShape(shape);
                     System.out.println("ShapeString im ProjectBuilder: " + spotData.getBoundary());
-                    spotMap.put(spotData.getId(), spotObj);
+                    //store spot reference by gel and spotId
+                    if (!spotMap.containsKey(gel)) {
+                        spotMap.put(gel, new HashMap<String, ISpot>());
+                    }
+                    spotMap.get(gel).put(spotData.getId(), spotObj);
                 }
 
                 //read label spot relations
@@ -192,8 +205,14 @@ public class ProjectBuilder {
                         for (Label label : ((Labels) obj).getLabel()) {
                             String labelString = label.getName();
                             String labelId = label.getId();
-                            ISpot spot = spotMap.get(labelSpotRelations.get(labelId));
+                            //apply to single spot
+                            ISpot spot = spotMap.get(gel).get(labelSpotRelations.get(labelId));
                             spot.setLabel(labelString);
+//                            //apply to spot group
+//                            ISpotGroup group = getSpotGroup(labelSpotRelations.get(labelId));
+//                            for (ISpot spt : group.getSpots()) {
+//                                spt.setLabel(labelString);
+//                            }
                         }
                     }
                 } else {
@@ -206,24 +225,25 @@ public class ProjectBuilder {
         return project;
     }
 
-//    private Map<String, ISpotGroup> spotGroups = new HashMap<String, ISpotGroup>();
-//    private ISpotGroup getSpotGroup(String groupId) {
-//        if (spotGroups.containsKey(groupId)) {
-//            return spotGroups.get(groupId);
-//        } else {
-//            ISpotGroup group = Lookup.getDefault().lookup(ISpotGroupFactory.class).createSpotGroup();
-//            group.setParent(project);
-//            int spotId = 0;
-//            try {
-//                spotId = Integer.parseInt(groupId);
-//            } catch (NumberFormatException e) {
-//                System.out.println("Cannot parse labelId: '" + groupId + "'");
-//            }
-//            group.setNumber(spotId);
-//            spotGroups.put(groupId, group);
-//            return group;
-//        }
-//    }
+    private Map<String, ISpotGroup> spotGroups = new HashMap<String, ISpotGroup>();
+    private ISpotGroup getSpotGroup(String groupId) {
+        if (spotGroups.containsKey(groupId)) {
+            return spotGroups.get(groupId);
+        } else {
+            ISpotGroup group = Lookup.getDefault().lookup(ISpotGroupFactory.class).createSpotGroup();
+            group.setParent(project);
+            project.addSpotGroup(group);
+            int spotId = 0;
+            try {
+                spotId = Integer.parseInt(groupId);
+            } catch (NumberFormatException e) {
+                System.out.println("Cannot parse labelId: '" + groupId + "'");
+            }
+            group.setNumber(spotId);
+            spotGroups.put(groupId, group);
+            return group;
+        }
+    }
     
     public List<String> getProjectNames(File projectDataFile) {
         List<String> projectNames = new ArrayList<String>();

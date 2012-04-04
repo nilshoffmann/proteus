@@ -7,16 +7,19 @@ import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.event.ChangeListener;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+
 
 /**
  * Descriptor for the Sample Project Wizard.
  *
  * @author kotte
  */
-public class SampleProjectWizardIterator implements WizardDescriptor./*Progress*/InstantiatingIterator {
+public class SampleProjectWizardIterator implements WizardDescriptor.ProgressInstantiatingIterator<FileObject> {
 
     private int index;
     private WizardDescriptor.Panel[] panels;
@@ -28,13 +31,22 @@ public class SampleProjectWizardIterator implements WizardDescriptor./*Progress*
     }
 
     @Override
-    public Set/*<FileObject>*/ instantiate(/*ProgressHandle handle*/) throws IOException {
+    public Set<FileObject> instantiate(ProgressHandle handle) throws IOException {
+        handle.start();
+        handle.switchToIndeterminate();
         Set<FileObject> resultSet = new LinkedHashSet<FileObject>();
         File parentFile = iwa.createProject(wiz);
         if(parentFile!=null) {
-            resultSet.add(FileUtil.toFileObject(parentFile));
+            FileObject fobj = FileUtil.toFileObject(parentFile);
+            resultSet.add(fobj);
         }
+        handle.finish();
         return resultSet;
+    }
+    
+    @Override
+    public Set<FileObject> instantiate() throws IOException {
+        return instantiate(ProgressHandleFactory.createHandle("Delta2D Project Import"));
     }
 
     @Override
@@ -96,4 +108,5 @@ public class SampleProjectWizardIterator implements WizardDescriptor./*Progress*
     @Override
     public final void removeChangeListener(ChangeListener l) {
     }
+
 }

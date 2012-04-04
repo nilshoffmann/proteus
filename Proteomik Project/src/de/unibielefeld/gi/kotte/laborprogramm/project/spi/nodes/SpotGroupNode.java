@@ -85,6 +85,14 @@ public class SpotGroupNode extends AbstractNode {
 
     @Override
     public String getDisplayName() {
-        return "Spot group #" + getLookup().lookup(ISpotGroup.class).getNumber();
+        StringBuilder spotGroupLabel = new StringBuilder();
+        spotGroupLabel.append("Spot group #");
+        spotGroupLabel.append(getLookup().lookup(ISpotGroup.class).getNumber());
+        if(!getLookup().lookup(ISpotGroup.class).getLabel().isEmpty()){
+            spotGroupLabel.append("'");
+            spotGroupLabel.append(getLookup().lookup(ISpotGroup.class).getLabel());
+            spotGroupLabel.append("'");
+        }
+        return spotGroupLabel.toString();
     }
 }

@@ -22,10 +22,10 @@ import net.sf.maltcms.ui.plot.heatmap.IDataProvider;
  */
 public class GelSpotDataProvider implements IDataProvider<ISpot> {
 
-    private PlanarImage dataImage = null;
-    private Rectangle2D dataBounds = null;
-    private Point2D toOrigin;
-    private QuadTree<ISpot> qt = null;
+    private final PlanarImage dataImage;
+    private final Rectangle2D dataBounds;
+    private final Point2D toOrigin;
+    private final QuadTree<ISpot> qt;
 
     public GelSpotDataProvider(File gelLocation, IGel gel) {
         this(gelLocation, gel, new Point2D.Double(0,0));
@@ -34,8 +34,12 @@ public class GelSpotDataProvider implements IDataProvider<ISpot> {
     public GelSpotDataProvider(File gelLocation, IGel gel, Point2D toOrigin) {
         dataImage = JAI.create("fileload", gelLocation.getAbsolutePath());
         this.toOrigin = toOrigin;
-        this.dataBounds = new Rectangle2D.Double(0, 0, this.dataImage.getWidth(), this.dataImage.getHeight());
-        this.qt = new QuadTree<ISpot>(this.dataBounds);
+        Rectangle2D spotBounds = new Rectangle2D.Double(0, 0, this.dataImage.getWidth(), this.dataImage.getHeight());
+        for(ISpot spot:gel.getSpots()) {
+            spotBounds.add(new Point2D.Double(spot.getPosX(),spot.getPosY()));
+        }
+        this.dataBounds = spotBounds;
+        this.qt = new QuadTree<ISpot>(spotBounds);
         for(ISpot spot:gel.getSpots()) {
             this.qt.put(new Point2D.Double(spot.getPosX(),spot.getPosY()), spot);
         }

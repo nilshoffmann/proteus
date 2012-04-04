@@ -33,58 +33,15 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
 
     private Tuple2D<Point2D, Annotation<T>> a = null;
     private boolean drawLabels = true;
-//    private AffineTransform at = AffineTransform.getTranslateInstance(1.0d, 1.0d);
     private float labelFontSize = 14.0f;
     private double margin = 5.0f;
     private HeatmapDataset<T> hm;
-//    private Point2D viewPoint;
-//    private Point2D modelPoint;
-//    private Shape annotationShape;
 
     public ToolTipPainter(HeatmapDataset<T> hm) {
         setCacheable(false);
         this.hm = hm;
     }
 
-//    public void setPoint(Point2D viewPoint) {
-//        if (viewPoint != this.viewPoint) {
-//            this.viewPoint = viewPoint;
-//            if (this.viewPoint == null) {
-//                this.a = null;
-//            } else {
-//                try {
-//                    this.modelPoint = hm.toModelPoint(viewPoint);
-//                    try {
-//                        a = hm.getClosestInRadius(
-//                                this.modelPoint, 50);
-//                        if (a != null) {
-////                    System.out.println(
-////                            "Found annotation within radius 50 around " + this.modelPoint);
-////                        this.annotationShape = hm.toViewShape(
-////                                a.getSecond().getShape());
-////                        this.annotationShape = a.getSecond().getShape();
-//                        } else {
-////                        this.annotationShape = null;
-////                    System.out.println(
-////                            "Could not find annotation in search radius 50 around " + this.modelPoint);
-//                        }
-//                    } catch (ElementNotFoundException enfe) {
-////                System.out.println(
-////                        "Could not find annotation in search radius 50 around " + this.modelPoint);
-//                        a = null;
-////                    this.annotationShape = null;
-//                    }
-//                } catch (NoninvertibleTransformException ex) {
-////            Logger.getLogger(AnnotationPainter.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//            setDirty(true);
-//        }
-//    }
-//
-//    public Point2D getPoint() {
-//        return this.viewPoint;
-//    }
     public boolean isDrawLabels() {
         return drawLabels;
     }
@@ -146,7 +103,7 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
                     finaly);
             transl.preConcatenate(hm.getTransform());
             g.setTransform(transl);
-            drawLabelBox(g, fill, r, border, label, tple);
+            drawLabelBox(g,fill, r, border, label, tple);
 
             g.setFont(currentFont);
             g.setTransform(originalTransform);

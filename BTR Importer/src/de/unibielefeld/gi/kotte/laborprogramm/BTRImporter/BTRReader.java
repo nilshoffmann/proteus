@@ -27,7 +27,8 @@ import org.openide.util.Lookup;
 public class BTRReader {
 
     /**
-     * Parses the informations from a *.BTR file and passes them to the 384 well plate object.
+     * Parses the informations from a *.BTR file and passes them to the 384 well
+     * plate object.
      *
      * @param f the *.BTR File to be read
      * @param plate the IPlate384 Object representing the plate.
@@ -35,9 +36,8 @@ public class BTRReader {
     public static void readBTRFile(File f, IPlate384 plate) {
         try {
             BufferedReader in = new BufferedReader(new FileReader(f));
-            String line = null;
-            String[] header = in.readLine().split("\t"); //FIXME header Zeile
-            in.readLine(); //FIXME Sternchen Zeile
+            String[] header = in.readLine().split("\t"); // header Zeile
+            in.readLine(); // Sternchen Zeile
 
             //Pattern definition (re-usable)
             Pattern abbreviationPattern = Pattern.compile("^(\\w{3,4}) ");
@@ -47,11 +47,13 @@ public class BTRReader {
                     "\\(GenDB-Project=(\\d+)\\)");
             Pattern keggPattern = Pattern.compile(
                     "(\\d+\\.\\d+\\.\\d+\\.[\\d\\-]+)");
+
+            String line;
             IWell384 well = null;
             IIdentificationMethod method = null;
             while ((line = in.readLine()) != null) {
                 //line = line.trim();
-                System.out.println(line);
+//                System.out.println(line);
                 //create identification
                 IIdentification identification = Lookup.getDefault().lookup(
                         IIdentificationFactory.class).createIdentification();
@@ -60,18 +62,18 @@ public class BTRReader {
                 System.out.println("Parsing line: " + Arrays.toString(data));
                 for (int i = 0; i < data.length; i++) {
                     BtrColumn column = BtrColumn.normalizeColumnName(header[i]);
-                    //TODO data[4] gibt den Status an (Identified/Undefined/Error)
+                    //FYI: data[4] gibt den Status an (Identified/Undefined/Error) (wird nicht verwendet)
                     System.out.println(
                             "Parsing column: " + column + " with value: " + data[i]);
                     switch (column) {
                         case POS_ON_SCOUT:
-                            //only assign well, if entry is non empty, otherwise we are processing a previously identified well
+                            //only assign well, if entry is non empty, otherwise
+                            //we are processing a previously identified well
                             if (!data[i].trim().isEmpty()) {
                                 String[] coordinates = data[i].split(":");
                                 if (coordinates.length == 2) {
                                     well = plate.getWell(
-                                            coordinates[0].charAt(0), Integer.
-                                            parseInt(coordinates[1]));
+                                            coordinates[0].charAt(0), Integer.parseInt(coordinates[1]));
                                 }
                             }
                             break;
@@ -104,21 +106,17 @@ public class BTRReader {
                             identification.setPiValue(Float.parseFloat(data[i]));
                             break;
                         case PROTEIN_MW:
-                            identification.setProteinMolecularWeight(Float.
-                                    parseFloat(data[i]));
+                            identification.setProteinMolecularWeight(Float.parseFloat(data[i]));
                             break;
                         case STATUS:
                             break;
                         case TITLE:
                             //parse data
                             String abbreviation = "";
-                            Matcher abbreviationMatcher = abbreviationPattern.
-                                    matcher(data[2].replaceAll("\"", ""));
+                            Matcher abbreviationMatcher = abbreviationPattern.matcher(data[2].replaceAll("\"", ""));
                             if (abbreviationMatcher.find()) {
                                 abbreviation = abbreviationMatcher.group(1);
-                                abbreviation = Character.toUpperCase(abbreviation.
-                                        charAt(0)) + abbreviation.substring(1, abbreviation.
-                                        length());
+                                abbreviation = Character.toUpperCase(abbreviation.charAt(0)) + abbreviation.substring(1, abbreviation.length());
                             }
                             String name = "";
                             Matcher nameMatcher = namePattern.matcher(data[2]);
@@ -132,8 +130,7 @@ public class BTRReader {
                             }
 
                             String genDbProject = "";
-                            Matcher genDbProjectMatcher = gendbProjectPattern.
-                                    matcher(data[2]);
+                            Matcher genDbProjectMatcher = gendbProjectPattern.matcher(data[2]);
                             if (genDbProjectMatcher.find()) {
                                 genDbProject = genDbProjectMatcher.group();
                             }
@@ -149,8 +146,7 @@ public class BTRReader {
                                 name = name.substring(abbreviation.length());
                             }
                             if (!keggNumbers.isEmpty()) {
-                                //FIXME throws IndexOutOfBoundsException
-                                name = name.substring(0, Math.max(0,name.length() - 2));
+                                name = name.substring(0, Math.max(0, name.length() - 2));
                             }
                             name = name.trim();
 
@@ -169,15 +165,14 @@ public class BTRReader {
                 identification.setSource(f.getCanonicalPath());
                 //add identification to well
                 System.out.println(identification);
-                if (well != null && well.getStatus() != Well384Status.EMPTY || well.
-                        getStatus() == Well384Status.ERROR) {
+                if ((well == null) || (well.getStatus() == Well384Status.EMPTY)
+                        || (well.getStatus() == Well384Status.ERROR)) {
+                    Logger.getLogger(BTRReader.class.getName()).log(Level.WARNING,
+                            "Skipping well {0}", well);
+                } else {
                     well.getIdentification().getMethodByName(method.getName()).
                             addIdentification(identification);
                     checkWellStatus(well);
-                } else {
-                    System.out.println(
-                            "Can not add identification data to: " + well);
-                    //TODO Fehler behandeln
                 }
             }
             checkStatus(plate);
@@ -191,12 +186,15 @@ public class BTRReader {
         if (well.getStatus() == Well384Status.FILLED) {
             List<IIdentificationMethod> methods = well.getIdentification().
                     getMethods();
-            if (methods.isEmpty()) {
-                well.setStatus(Well384Status.UNIDENTIFIED);
-            } else {
-                //TODO: check if there is a valid identification (-> status!)
-                well.setStatus(Well384Status.IDENTIFIED);
+            if (!methods.isEmpty()) {
+                for (IIdentificationMethod ident : methods) {
+                    if (!ident.getIdentifications().isEmpty()) {
+                        well.setStatus(Well384Status.IDENTIFIED);
+                        return;
+                    }
+                }
             }
+            well.setStatus(Well384Status.UNIDENTIFIED);
         }
     }
 

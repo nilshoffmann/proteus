@@ -76,10 +76,30 @@ public class SpotGroupFolderNode extends AbstractNode {
             @Override
             public void setValue(Boolean val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
                 sgfcnf.setSortSpotGroupsNumerically(val);
+                if(val) {
+                    sgfcnf.setSortSpotGroupsByLabel(!val);
+                }
+            }
+        };
+        Property sortLabelProp = new ReadWrite<Boolean>("sortSpotGroupsbyLabel", Boolean.class,
+                "Sort by label", "Determines whether spot groups are sorted by label or in order of definition.") {
+
+            @Override
+            public Boolean getValue() throws IllegalAccessException, InvocationTargetException {
+                return sgfcnf.isSortSpotGroupsByLabel();
+            }
+
+            @Override
+            public void setValue(Boolean val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                sgfcnf.setSortSpotGroupsByLabel(val);
+                if(val) {
+                    sgfcnf.setSortSpotGroupsNumerically(!val);
+                }
             }
         };
 
         set.put(sortProp);
+        set.put(sortLabelProp);
 
         sheet.put(set);
         return sheet;

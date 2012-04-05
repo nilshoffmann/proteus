@@ -10,6 +10,7 @@ import java.util.List;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
+import org.openide.util.WeakListeners;
 
 /**
  *
@@ -19,7 +20,7 @@ class SpotGroupFolderChildNodeFactory extends ChildFactory<ISpotGroup> implement
 
     private Lookup lkp;
     private boolean sortSpotGroupsNumerically = false;
-
+    private boolean sortSpotGroupsByLabel = false;
     public SpotGroupFolderChildNodeFactory() {
         
     }
@@ -39,6 +40,20 @@ class SpotGroupFolderChildNodeFactory extends ChildFactory<ISpotGroup> implement
                     return t.getNumber() - t1.getNumber();
                 }
             });
+        }else if(sortSpotGroupsByLabel){
+            Collections.sort(l, new Comparator<ISpotGroup>() {
+
+                @Override
+                public int compare(ISpotGroup t, ISpotGroup t1) {
+                    if(t.getLabel()==null || t.getLabel().isEmpty()) {
+                        return 1;
+                    }
+                    if(t1.getLabel()==null || t1.getLabel().isEmpty()) {
+                        return -1;
+                    }
+                    return t.getLabel().compareTo(t1.getLabel());
+                }
+            });
         }
         for (ISpotGroup isg : l) {
             if (Thread.interrupted()) {
@@ -53,7 +68,7 @@ class SpotGroupFolderChildNodeFactory extends ChildFactory<ISpotGroup> implement
 
     @Override
     protected Node createNodeForKey(ISpotGroup key) {
-        key.addPropertyChangeListener(this);
+        key.addPropertyChangeListener(WeakListeners.propertyChange(this, key));
         return new SpotGroupNode(key, lkp);
     }
 
@@ -65,10 +80,20 @@ class SpotGroupFolderChildNodeFactory extends ChildFactory<ISpotGroup> implement
     public boolean isSortSpotGroupsNumerically() {
         return sortSpotGroupsNumerically;
     }
+    
+    public boolean isSortSpotGroupsByLabel() {
+        return sortSpotGroupsNumerically;
+    }
 
     public void setSortSpotGroupsNumerically(boolean sortSpotGroupsNumerically) {
         boolean oldValue = this.sortSpotGroupsNumerically;
         this.sortSpotGroupsNumerically = sortSpotGroupsNumerically;
         propertyChange(new PropertyChangeEvent(this,"sortSpotGroupsNumerically",oldValue,this.sortSpotGroupsNumerically));
+    }
+    
+    public void setSortSpotGroupsByLabel(boolean sortSpotGroupsByLabel) {
+        boolean oldValue = this.sortSpotGroupsByLabel;
+        this.sortSpotGroupsByLabel = sortSpotGroupsByLabel;
+        propertyChange(new PropertyChangeEvent(this,"sortSpotGroupsByLabel",oldValue,this.sortSpotGroupsByLabel));
     }
 }

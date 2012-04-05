@@ -4,6 +4,8 @@ import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import java.awt.Image;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -11,6 +13,7 @@ import org.openide.nodes.PropertySupport.ReadWrite;
 import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -18,12 +21,13 @@ import org.openide.util.lookup.Lookups;
  *
  * @author kotte
  */
-public class SpotGroupNode extends AbstractNode {
+public class SpotGroupNode extends AbstractNode implements PropertyChangeListener {
 
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/SpotGroupIcon.png";
 
     public SpotGroupNode(ISpotGroup isg, Lookup lkp) {
         super(Children.LEAF,Lookups.fixed(isg));
+        isg.addPropertyChangeListener(WeakListeners.propertyChange(this, isg));
     }
 
     @Override
@@ -86,13 +90,26 @@ public class SpotGroupNode extends AbstractNode {
     @Override
     public String getDisplayName() {
         StringBuilder spotGroupLabel = new StringBuilder();
-        spotGroupLabel.append("Spot group #");
-        spotGroupLabel.append(getLookup().lookup(ISpotGroup.class).getNumber());
-        if(!getLookup().lookup(ISpotGroup.class).getLabel().isEmpty()){
-            spotGroupLabel.append("'");
+        if(getLookup().lookup(ISpotGroup.class).getLabel()!=null && !getLookup().lookup(ISpotGroup.class).getLabel().isEmpty()){
+            //spotGroupLabel.append("'");
             spotGroupLabel.append(getLookup().lookup(ISpotGroup.class).getLabel());
-            spotGroupLabel.append("'");
+            //spotGroupLabel.append("'");
+        }else{
+            spotGroupLabel.append("#");
+            spotGroupLabel.append(getLookup().lookup(ISpotGroup.class).getNumber());
         }
         return spotGroupLabel.toString();
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if(evt.getPropertyName().equals(ISpotGroup.PROPERTY_LABEL) ||evt.getPropertyName().equals(PROP_DISPLAY_NAME)) {
+            fireDisplayNameChange(null, getDisplayName());
+        }else if(evt.getPropertyName().equals(PROP_NAME)) {
+            fireNameChange(null, getName());
+        }else if(evt.getPropertyName().equals(PROP_SHORT_DESCRIPTION)) {
+            fireShortDescriptionChange(null, getShortDescription());
+        }
+        firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
     }
 }

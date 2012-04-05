@@ -82,7 +82,7 @@ class SpotGroupFolderChildNodeFactory extends ChildFactory<ISpotGroup> implement
     }
     
     public boolean isSortSpotGroupsByLabel() {
-        return sortSpotGroupsNumerically;
+        return sortSpotGroupsByLabel;
     }
 
     public void setSortSpotGroupsNumerically(boolean sortSpotGroupsNumerically) {

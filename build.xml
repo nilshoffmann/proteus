@@ -9,4 +9,7 @@
     <target name="fix-dependencies" depends="-init">
        <subant target="fix-dependencies" buildpath="${modules.sorted}" inheritrefs="false" inheritall="false"/>
     </target>
+    <target name="fix-test-dependencies" depends="-init">
+       <subant target="fix-test-dependencies" buildpath="${modules.sorted}" inheritrefs="false" inheritall="false"/>
+    </target>
 </project>

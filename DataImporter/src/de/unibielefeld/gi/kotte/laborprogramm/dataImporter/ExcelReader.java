@@ -198,9 +198,15 @@ public class ExcelReader {
                     assert (spot != null);
 
                     switch (datum) {
-                        case NORM_VOLUME: //don't read volumes
+                        case NORM_VOLUME:
+                            if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                                spot.setNormVolume(cell.getNumericCellValue());
+                            }
                             break;
-                        case GREY_VOLUME: //don't read volumes
+                        case GREY_VOLUME:
+                            if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                                spot.setGreyVolume(cell.getNumericCellValue());
+                            }
                             break;
                         case SPOTID:
                             spot.setNumber(cellToInt(cell));

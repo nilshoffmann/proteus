@@ -32,6 +32,10 @@ public interface ISpot extends IPropertyChangeSource, IUniqueObject {
     public static final String PROPERTY_SHAPE = "shape";
     
     public static final String PROPERTY_SHAPE_STRING = "shape string";
+    
+    public static final String PROPERTY_NORM_VOLUME = "normalized volume";
+    
+    public static final String PROPERTY_GREY_VOLUME = "integrated grey volume";
 
     public String getLabel();
 
@@ -50,6 +54,14 @@ public interface ISpot extends IPropertyChangeSource, IUniqueObject {
     public IWell96 getWell();
     
     public Shape getShape();
+    
+    public double getNormVolume();
+    
+    public void setNormVolume(double normVolume);
+    
+    public double getGreyVolume();
+    
+    public void setGreyVolume(double greyVolume);
     
     public void setShape(Shape shape);
 

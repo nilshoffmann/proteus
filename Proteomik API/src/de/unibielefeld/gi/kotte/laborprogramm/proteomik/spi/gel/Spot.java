@@ -5,9 +5,9 @@ import com.db4o.activation.Activator;
 import com.db4o.ta.Activatable;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
 import java.awt.Shape;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -76,6 +76,8 @@ public class Spot implements ISpot, Activatable {
     int number;
     IWell96 well;
     Shape shape;
+    double normVolume;
+    double greyVolume;
 
     @Override
     public String getLabel() {
@@ -119,6 +121,32 @@ public class Spot implements ISpot, Activatable {
         return well;
     }
 
+    @Override
+    public double getNormVolume() {
+        activate(ActivationPurpose.READ);
+        return normVolume;
+    }
+
+    @Override
+    public void setNormVolume(double normVolume) {
+        activate(ActivationPurpose.WRITE);
+        this.normVolume = normVolume;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_NORM_VOLUME, null, normVolume);
+    }
+    
+    @Override
+    public double getGreyVolume() {
+        activate(ActivationPurpose.READ);
+        return greyVolume;
+    }
+
+    @Override
+    public void setGreyVolume(double greyVolume) {
+        activate(ActivationPurpose.WRITE);
+        this.greyVolume = greyVolume;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_GREY_VOLUME, null, greyVolume);
+    }
+    
     @Override
     public void setWell(IWell96 well) {
         activate(ActivationPurpose.WRITE);

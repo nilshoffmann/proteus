@@ -24,10 +24,10 @@ public class BTRImportAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        File f = null;
+        File f;
         JFileChooser jfc = new JFileChooser();
         //jfc.setCurrentDirectory(new java.io.File("."));
-        jfc.setDialogTitle("BTR Datei auswaehlen");
+        jfc.setDialogTitle("Choose *.BTR file");
         jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         jfc.setAcceptAllFileFilterUsed(false);
         int status = jfc.showOpenDialog(null);
@@ -35,7 +35,6 @@ public class BTRImportAction implements ActionListener {
             f = jfc.getSelectedFile();
             BTRReader.readBTRFile(f, context);
             BTRReader.checkStatus(context);
-            //System.out.println(context.toFullyRecursiveString());
         }
     }
 }

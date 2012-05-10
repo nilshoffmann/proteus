@@ -18,6 +18,7 @@ public class SpotBeanInfo extends SimpleBeanInfo {
     private static BeanDescriptor getBdescriptor(){//GEN-HEADEREND:BeanDescriptor
 
 
+
     // Here you can add code for customizing the BeanDescriptor.
 
          return beanDescriptor;     }//GEN-LAST:BeanDescriptor
@@ -25,25 +26,29 @@ public class SpotBeanInfo extends SimpleBeanInfo {
 
     // Property identifiers//GEN-FIRST:Properties
     private static final int PROPERTY_gel = 0;
-    private static final int PROPERTY_group = 1;
-    private static final int PROPERTY_id = 2;
-    private static final int PROPERTY_label = 3;
-    private static final int PROPERTY_number = 4;
-    private static final int PROPERTY_posX = 5;
-    private static final int PROPERTY_posY = 6;
-    private static final int PROPERTY_status = 7;
-    private static final int PROPERTY_well = 8;
+    private static final int PROPERTY_greyVolume = 1;
+    private static final int PROPERTY_group = 2;
+    private static final int PROPERTY_id = 3;
+    private static final int PROPERTY_label = 4;
+    private static final int PROPERTY_normVolume = 5;
+    private static final int PROPERTY_number = 6;
+    private static final int PROPERTY_posX = 7;
+    private static final int PROPERTY_posY = 8;
+    private static final int PROPERTY_status = 9;
+    private static final int PROPERTY_well = 10;
 
     // Property array 
     /*lazy PropertyDescriptor*/
     private static PropertyDescriptor[] getPdescriptor(){
-        PropertyDescriptor[] properties = new PropertyDescriptor[9];
+        PropertyDescriptor[] properties = new PropertyDescriptor[11];
     
         try {
             properties[PROPERTY_gel] = new PropertyDescriptor ( "gel", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Spot.class, "getGel", null ); // NOI18N
+            properties[PROPERTY_greyVolume] = new PropertyDescriptor ( "greyVolume", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Spot.class, "getGreyVolume", null ); // NOI18N
             properties[PROPERTY_group] = new PropertyDescriptor ( "group", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Spot.class, "getGroup", null ); // NOI18N
             properties[PROPERTY_id] = new PropertyDescriptor ( "id", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Spot.class, "getId", null ); // NOI18N
             properties[PROPERTY_label] = new PropertyDescriptor ( "label", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Spot.class, "getLabel", "setLabel" ); // NOI18N
+            properties[PROPERTY_normVolume] = new PropertyDescriptor ( "normVolume", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Spot.class, "getNormVolume", null ); // NOI18N
             properties[PROPERTY_number] = new PropertyDescriptor ( "number", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Spot.class, "getNumber", null ); // NOI18N
             properties[PROPERTY_posX] = new PropertyDescriptor ( "posX", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Spot.class, "getPosX", null ); // NOI18N
             properties[PROPERTY_posY] = new PropertyDescriptor ( "posY", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Spot.class, "getPosY", null ); // NOI18N

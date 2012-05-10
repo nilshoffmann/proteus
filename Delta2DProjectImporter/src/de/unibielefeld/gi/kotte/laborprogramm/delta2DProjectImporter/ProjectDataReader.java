@@ -1,4 +1,4 @@
-package de.unibielefeld.gi.kotte.laborprogramm.dataImporter;
+package de.unibielefeld.gi.kotte.laborprogramm.delta2DProjectImporter;
 
 import de.unibielefeld.gi.kotte.laborprogramm.xml.projectData.ProjectData;
 import java.io.File;

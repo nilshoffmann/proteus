@@ -3,12 +3,12 @@ package de.unibielefeld.gi.kotte.laborprogramm.dataImporter;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpotFactory;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.*;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.IBioRepGelGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGelGroup;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ITechRepGelGroup;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,7 +18,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
-import org.openide.util.Lookup;
 
 /**
  * Reads spot informations from the Delta2D table output.
@@ -27,34 +26,45 @@ import org.openide.util.Lookup;
  */
 public class ExcelReader {
 
-    Map<Integer, String> gelnames = null;
-    Map<Integer, SpotDatum> data = null;
+    Map<Integer, IGel> gelsByColumn = null;
+    Map<Integer, SpotDatum> datatypeByColumn = null;
+    Map<IGel, Map<Integer, ISpot>> gelSpotsMap = null;
 //    boolean dummiesInitialized = false;
-    ITechRepGelGroup trggDummy = null;
-    IBioRepGelGroup brggDummy = null;
-    ILogicalGelGroup lggDummy = null;
+//    ITechRepGelGroup trggDummy = null;
+//    IBioRepGelGroup brggDummy = null;
+//    ILogicalGelGroup lggDummy = null;
 
     private static enum SpotDatum {
 
-        NORM_VOLUME, GREY_VOLUME, SPOTID, LABEL, XPOS, YPOS;
+        NORM_VOLUME, GREY_VOLUME, SPOTID;// LABEL, XPOS, YPOS;
     }
 
-    public ExcelReader() {
-        gelnames = new LinkedHashMap<Integer, String>();
-        data = new LinkedHashMap<Integer, SpotDatum>();
-    }
-
-    private IGel getGelByName(String gelname, IProject project) {
+    public ExcelReader(IProject project) {
+        this.gelsByColumn = new LinkedHashMap<Integer, IGel>();
+        this.datatypeByColumn = new LinkedHashMap<Integer, SpotDatum>();
+        
+        //construct a new data structure to access all spots of all gels by spotID
+        this.gelSpotsMap = new LinkedHashMap<IGel, Map<Integer, ISpot>>();
         for (ILogicalGelGroup lgg : project.getGelGroups()) {
             for (IBioRepGelGroup brgg : lgg.getGelGroups()) {
                 for (ITechRepGelGroup trgg : brgg.getGelGroups()) {
                     for (IGel gel : trgg.getGels()) {
-                        assert gelname != null && gel.getName() != null;
-                        if (gel.getName().equals(gelname)) {
-                            return gel;
+                        Map<Integer, ISpot> spots = new LinkedHashMap<Integer, ISpot>();
+                        for (ISpot spot : gel.getSpots()) {
+                            spots.put(spot.getNumber(), spot);
                         }
+                        this.gelSpotsMap.put(gel, spots);
                     }
                 }
+            }
+        }
+    }
+
+    private IGel getGelByName(String gelname) {
+        for (IGel gel : gelSpotsMap.keySet()) {
+            assert gelname != null && gel.getName() != null;
+            if (gel.getName().equals(gelname)) {
+                return gel;
             }
         }
         throw new IllegalArgumentException("Mismatch of gel name defined in project! Gel '" + gelname + "' can't be found. Please check for missing/extraneous gels in Delta2D project and spot export (.xlsx)!");
@@ -93,10 +103,9 @@ public class ExcelReader {
         Pattern normVolPattern = Pattern.compile("normalized volume '(.*)'");
         Pattern greyVolPattern = Pattern.compile("integrated grey volume without background '(.*)'");
         Pattern spotIDPattern = Pattern.compile("'(.*)' spot ID given by Delta2D");
-        Pattern labelPattern = Pattern.compile("user defined label '(.*)'");
-        //Koordinatenursprung top left
-        Pattern xPosPattern = Pattern.compile("horizontal position on gel image \\(left = 0\\) of center '(.*)'");
-        Pattern yPosPattern = Pattern.compile("vertical position on gel image \\(top = 0\\) of center '(.*)'");
+//        Pattern labelPattern = Pattern.compile("user defined label '(.*)'");
+//        Pattern xPosPattern = Pattern.compile("horizontal position on gel image \\(left = 0\\) of center '(.*)'");
+//        Pattern yPosPattern = Pattern.compile("vertical position on gel image \\(top = 0\\) of center '(.*)'");
 
         Iterator<Cell> iter = header.cellIterator();
         while (iter.hasNext()) {
@@ -117,18 +126,18 @@ public class ExcelReader {
                 while (spotIDMatcher.find()) {
                     registerColumnInformation(column, spotIDMatcher.group(1), SpotDatum.SPOTID);
                 }
-                Matcher labelMatcher = labelPattern.matcher(line);
-                while (labelMatcher.find()) {
-                    registerColumnInformation(column, labelMatcher.group(1), SpotDatum.LABEL);
-                }
-                Matcher xPosMatcher = xPosPattern.matcher(line);
-                while (xPosMatcher.find()) {
-                    registerColumnInformation(column, xPosMatcher.group(1), SpotDatum.XPOS);
-                }
-                Matcher yPosMatcher = yPosPattern.matcher(line);
-                while (yPosMatcher.find()) {
-                    registerColumnInformation(column, yPosMatcher.group(1), SpotDatum.YPOS);
-                }
+//                Matcher labelMatcher = labelPattern.matcher(line);
+//                while (labelMatcher.find()) {
+//                    registerColumnInformation(column, labelMatcher.group(1), SpotDatum.LABEL);
+//                }
+//                Matcher xPosMatcher = xPosPattern.matcher(line);
+//                while (xPosMatcher.find()) {
+//                    registerColumnInformation(column, xPosMatcher.group(1), SpotDatum.XPOS);
+//                }
+//                Matcher yPosMatcher = yPosPattern.matcher(line);
+//                while (yPosMatcher.find()) {
+//                    registerColumnInformation(column, yPosMatcher.group(1), SpotDatum.YPOS);
+//                }
             } else {
                 Logger.getLogger(ExcelReader.class.getName()).log(Level.WARNING, "Header Zelle {0} ohne String Datentyp", c.getColumnIndex());
             }
@@ -136,20 +145,19 @@ public class ExcelReader {
     }
 
     private void registerColumnInformation(int column, String gelname, SpotDatum datum) {
-        assert gelname != null;
-        assert datum != null;
-        System.out.println("Adding column info. idx:" + column + " gel:'" + gelname + "' type:" + datum);
-        gelnames.put(column, gelname);
-        data.put(column, datum);
+//        System.out.println("Adding column info. idx:" + column + " gel:'" + gelname + "' type:" + datum);
+        gelsByColumn.put(column, getGelByName(gelname));
+        datatypeByColumn.put(column, datum);
     }
 
     /**
-     * Parses Excel file f and writes spot group and spot informations to the project.
+     * Parses Excel file f and writes spot informations to the spots of the
+     * project.
      *
      * @param f Excel file
      * @param project project data objects to fill with informations
      */
-    public void parseExport(File f, IProject project) {
+    public void parseExport(File f) {
         //open Excel file as workbook
         Workbook workbook = null;
         try {
@@ -160,100 +168,82 @@ public class ExcelReader {
             Logger.getLogger(ExcelReader.class.getName()).log(Level.SEVERE, null, ex);
         }
         assert (workbook != null);
-
         Sheet sheet = workbook.getSheetAt(0);
+
         Iterator<Row> iterR = sheet.iterator();
         //read row 0 as header row
         parseHeader(iterR.next());
+        while (iterR.hasNext()) {
+            int currentSpotID = 0;
+            Map<IGel, Double> normVolumes = new LinkedHashMap<IGel, Double>();
+            Map<IGel, Double> greyVolumes = new LinkedHashMap<IGel, Double>();
 
-        while (iterR.hasNext()) { //read rows
-            //create the spot group for the current row
-            ISpotGroup group = (Lookup.getDefault().lookup(ISpotGroupFactory.class)).createSpotGroup();
-            Map<String, ISpot> spotMap = new HashMap<String, ISpot>();
+            //read cells in row
             Iterator<Cell> iterC = iterR.next().iterator();
-            IProject currentProject = null;
-            while (iterC.hasNext()) { //read cells in row
+            while (iterC.hasNext()) {
                 Cell cell = iterC.next();
-                System.out.println("Column index of cell: " + cell.getColumnIndex());
-                if (data.containsKey(cell.getColumnIndex())) {
-                    SpotDatum datum = data.get(cell.getColumnIndex());
-
-                    //get spot from hash or create new one if it's not there
-                    ISpot spot = spotMap.get(gelnames.get(cell.getColumnIndex()));
-                    if (spot == null) {
-                        //create spot
-                        spot = (Lookup.getDefault().lookup(ISpotFactory.class)).createSpot();
-                        spotMap.put(gelnames.get(cell.getColumnIndex()), spot);
-                        //add spot to group
-                        spot.setGroup(group);
-                        group.addSpot(spot);
-                        //add spot to gel
-                        IGel gel = getGelByName(gelnames.get(cell.getColumnIndex()), project);
-                        currentProject = gel.getParent().getParent().getParent().getParent();
-
-                        System.out.println("Adding spot " + spot + " to gel " + spot.getGel() + " with group " + group);
-                        gel.addSpot(spot);
-                        spot.setGel(gel);
-                    }
-                    assert (spot != null);
-
+                int columnIndex = cell.getColumnIndex();
+                if (datatypeByColumn.containsKey(columnIndex)) {
+                    SpotDatum datum = datatypeByColumn.get(columnIndex);
                     switch (datum) {
                         case NORM_VOLUME:
                             if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                                spot.setNormVolume(cell.getNumericCellValue());
+                                normVolumes.put(gelsByColumn.get(columnIndex), cell.getNumericCellValue());
                             }
                             break;
                         case GREY_VOLUME:
                             if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                                spot.setGreyVolume(cell.getNumericCellValue());
+                                greyVolumes.put(gelsByColumn.get(columnIndex), cell.getNumericCellValue());
                             }
                             break;
                         case SPOTID:
-                            spot.setNumber(cellToInt(cell));
+                            if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                                currentSpotID = (int) cell.getNumericCellValue();
+                            } else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+                                currentSpotID = Integer.parseInt(cell.getStringCellValue());
+                            } else {
+                                throw new IllegalStateException("Cell " + cell.getColumnIndex() + ":" + cell.getRowIndex()
+                                        + " doesn't contain a numerical value");
+                            }
                             break;
-                        case LABEL:
-                            if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
-                                spot.setLabel(cell.getStringCellValue());
-                            } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                                spot.setLabel("" + (int) cell.getNumericCellValue());
-                            } //else leave label empty
-                            break;
-                        case XPOS:
-                            spot.setPosX(cellToInt(cell));
-                            break;
-                        case YPOS:
-                            spot.setPosY(cellToInt(cell));
-                            break;
+//                        case LABEL:
+//                            break;
+//                        case XPOS:
+//                            break;
+//                        case YPOS:
+//                            break;
                         default:
                             break;
                     }
-
-
                 }
+            } //done reading cells of the current row
+            ISpot spot;//note: all spots in one row belong to the same group,
+                       //      thus sharing the same Delta2D spotID
+            //set normalized volumes for the spots on all gels
+            for (IGel gel : normVolumes.keySet()) {
+                spot = gelSpotsMap.get(gel).get(currentSpotID);
+                spot.setNormVolume(normVolumes.get(gel));
             }
-            //set spot group number to spot ID of first member
-            group.setNumber(group.getSpots().iterator().next().getNumber());
-            //add spot group to project
-            if (currentProject != null) {
-                currentProject.addSpotGroup(group);
-            } else {
-                System.err.println("Warning: currentProject is null, could not add spot group: " + group.getNumber());
+            //set integrated grey volumes for the spots on all gels
+            for (IGel gel : greyVolumes.keySet()) {
+                spot = gelSpotsMap.get(gel).get(currentSpotID);
+                spot.setNormVolume(greyVolumes.get(gel));
             }
         }
     }
 
-    private int cellToInt(Cell cell) {
-        switch (cell.getCellType()) {
-            case Cell.CELL_TYPE_NUMERIC:
-                return (int) cell.getNumericCellValue();
-            case Cell.CELL_TYPE_BLANK:
-                return -1;
-            case Cell.CELL_TYPE_STRING:
-                String str = cell.getStringCellValue();
-                return Integer.parseInt(str);
-        }
-        throw new IllegalStateException("Cell " + cell.getColumnIndex() + ":" + cell.getRowIndex() + " doesn't contain a numerical value");
-    }
+//    private int cellToInt(Cell cell) {
+//        switch (cell.getCellType()) {
+//            case Cell.CELL_TYPE_NUMERIC:
+//                return (int) cell.getNumericCellValue();
+//            case Cell.CELL_TYPE_BLANK:
+//                return -1;
+//            case Cell.CELL_TYPE_STRING:
+//                String str = cell.getStringCellValue();
+//                return Integer.parseInt(str);
+//        }
+//        throw new IllegalStateException("Cell " + cell.getColumnIndex() + ":" + cell.getRowIndex() + " doesn't contain a numerical value");
+//    }
 //    public static String typeToString(Cell cell) {
 //        int cellType = cell.getCellType();
 //        switch(cellType) {

@@ -25,6 +25,30 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.openide.awt</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.39.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.nodes</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.25.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8.19.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.openide.util.lookup</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -48,17 +72,7 @@
             </test-dependencies>
             <public-packages>
                 <package>de.unibielefeld.gi.kotte.laborprogramm.dataImporter</package>
-                <package>de.unibielefeld.gi.kotte.laborprogramm.xml.gelData</package>
-                <package>de.unibielefeld.gi.kotte.laborprogramm.xml.projectData</package>
             </public-packages>
-            <class-path-extension>
-                <runtime-relative-path>ext/Delta2DProjectData.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/Delta2DProjectData.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/Delta2DGelData.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/Delta2DGelData.jar</binary-origin>
-            </class-path-extension>
         </data>
     </configuration>
 </project>

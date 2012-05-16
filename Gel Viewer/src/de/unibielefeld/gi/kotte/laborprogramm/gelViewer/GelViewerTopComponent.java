@@ -179,7 +179,17 @@ public final class GelViewerTopComponent extends TopComponent implements
                     File baseDir = FileUtil.toFile(p.getProjectDirectory());
                     System.out.println(
                             "Resolving relative file against baseDir " + baseDir);
-                    f = new File(baseDir, f.getPath());
+                    String filePath = f.getPath();
+                    if(filePath.contains("/")) {
+                        if(!File.separator.equals("/")) {
+                            filePath = filePath.replaceAll("/",File.separator);
+                        }
+                    }else if(filePath.contains("\\")) {
+                        if(!File.separator.equals("\\")) {
+                            filePath = filePath.replaceAll("\\\\",File.separator);
+                        }
+                    }
+                    f = new File(baseDir, filePath);
                 }
                 System.out.println("Using gel image location: " + f);
                 HeatmapDataset<ISpot> hmd = null;

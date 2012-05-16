@@ -117,6 +117,7 @@ public class SpotDataExporter {
                     StringBuilder sb = new StringBuilder();
 
                     //write leftmost column (user defined label)
+                    //FIXME use group number 
                     if(group.getLabel() != null && !group.getLabel().isEmpty()) {
                         sb.append(group.getLabel());
                     }

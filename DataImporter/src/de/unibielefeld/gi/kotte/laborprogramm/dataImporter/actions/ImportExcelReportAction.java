@@ -21,7 +21,7 @@ import org.openide.util.NbBundle.Messages;
 id = "de.unibielefeld.gi.kotte.laborprogramm.dataImporter.actions.ImportExcelReportAction")
 @ActionRegistration(displayName = "#CTL_ImportExcelReportAction")
 @ActionReferences({})
-@Messages("CTL_ImportExcelReportAction=Import Excel report")
+@Messages("CTL_ImportExcelReportAction=Import Quantification Data")
 public final class ImportExcelReportAction implements ActionListener {
 
     private final IProject context;
@@ -35,7 +35,7 @@ public final class ImportExcelReportAction implements ActionListener {
         File f;
         JFileChooser jfc = new JFileChooser();
         //jfc.setCurrentDirectory(new java.io.File("."));
-        jfc.setDialogTitle("Choose Excel report file");
+        jfc.setDialogTitle("Choose Delta2D Excel Report File");
         jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         jfc.setAcceptAllFileFilterUsed(false);
         int status = jfc.showOpenDialog(null);

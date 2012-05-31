@@ -18,7 +18,7 @@ import org.openide.util.NbBundle.Messages;
 id = "de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.SpotLabelTransferAction")
 @ActionRegistration(displayName = "#CTL_SpotLabelTransferAction")
 @ActionReferences({})
-@Messages("CTL_SpotLabelTransferAction=transfer spot labels")
+@Messages("CTL_SpotLabelTransferAction=Transfer Spot Labels")
 /**
  * Action that transfers the labels of a gel to all other gels of a project.
  * 

@@ -82,6 +82,7 @@ public class Plate96Panel extends JPanel {
             }
             button.getWell().setStatus(Well96Status.EMPTY);
         }
+        currentPlateIndex = 0;
         repaint();
     }
 

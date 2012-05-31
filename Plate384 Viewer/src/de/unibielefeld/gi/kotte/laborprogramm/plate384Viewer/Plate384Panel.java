@@ -2,8 +2,6 @@ package de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationMethod;
-import java.beans.PropertyChangeEvent;
-import javax.swing.JPanel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.Well384Status;
@@ -11,16 +9,19 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
 import java.awt.GridLayout;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.InstanceContent;
 
 /**
- * GUI Panel that visually represents a IPlate384. Offers Well96Buttons to manipulate plate wells.
+ * GUI Panel that visually represents a IPlate384. Offers Well96Buttons to
+ * manipulate plate wells.
  *
  * @author kotte
  */
@@ -228,17 +229,18 @@ public class Plate384Panel extends JPanel implements PropertyChangeListener {
             }
             for (IWell96 well : plate96.getWells()) {
                 if (well.getStatus() == Well96Status.FILLED) {
-                    //set current Well96
-                    this.well96 = well;
-                    //connect the two wells
-                    this.buttons[currentPlateIndex].selectStatus(
-                            Well384Status.FILLED);
+                    if (currentPlateIndex >= 384) {
+                        throw new IllegalStateException(
+                                "No empty wells left on plate!");
+                    } else {
+                        //set current Well96
+                        this.well96 = well;
+                        //connect the two wells
+                        this.buttons[currentPlateIndex].selectStatus(
+                                Well384Status.FILLED);
+                    }
                 }
                 currentPlateIndex++;
-                if (currentPlateIndex >= 384) {
-                    throw new IllegalStateException(
-                            "No empty wells left on plate!");
-                }
             }
         }
     }

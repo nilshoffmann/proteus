@@ -16,13 +16,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import org.openide.WizardDescriptor;
 import org.openide.util.Exceptions;
 
@@ -33,7 +27,7 @@ import org.openide.util.Exceptions;
 public class SpotDataExporter {
 
     public static void export(WizardDescriptor wizardDescriptor) {
-        System.out.println("Exporting spot annotations");
+        System.out.println("Exporting Spot Annotations");
 
         //get project
         IProteomicProject context = (IProteomicProject) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_PROJECT);
@@ -49,7 +43,8 @@ public class SpotDataExporter {
 
         //get output parameters
         boolean showMethodName = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_METHOD_NAME);
-        boolean showIdentificationName = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENTIFICATION_NAME);
+        boolean showIdentification = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENTIFICATION);
+        boolean showGroupLabel = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_GROUP_LABEL);
 
         //get sorted list of spotGroups
         List<ISpotGroup> spotGroups = context.getLookup().lookup(IProject.class).getSpotGroups();
@@ -64,83 +59,87 @@ public class SpotDataExporter {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(outFile));
             for (ISpotGroup group : spotGroups) {
-                //get identifications for output
-                List<ISpot> spots = group.getSpots();
-                Set<IWellIdentification> identifications = new LinkedHashSet<IWellIdentification>();
-                for (ISpot spot : spots) {
-                    if (spot.getStatus() == SpotStatus.PICKED) {
-                        IWell96 well96 = spot.getWell();
-                        if (well96.getStatus() == Well96Status.PROCESSED) {
-                            for (IWell384 well384 : well96.get384Wells()) {
-                                if (well384.getStatus() == Well384Status.IDENTIFIED) {
-                                    IWellIdentification ident = well384.getIdentification();
-                                    identifications.add(ident);
-//                                } else {
-//                                    System.out.println("Skipping well384 " + well384.toString());
-                                }
-                            }
-//                        } else {
-//                            System.out.println("Skipping well96 " + well96.toString());
-                        }
-//                    } else {
-//                        System.out.println("Skipping unpicked spot " + spot + " in group #" + group.getNumber() + ": " + group.getLabel());
-                    }
-                }
-//                System.out.println("Processing " + identifications.size() + " identifications of " + spots.size() + " spots in spot group!");
+                //use StringBuilder to generate output line
+                StringBuilder sb = new StringBuilder();
 
-                //get set of identification name strings for each Method object
-                Map<IIdentificationMethod, Set<String>> methodToNames = new LinkedHashMap<IIdentificationMethod, Set<String>>();
-                for (IWellIdentification ident : identifications) {
-                    for (IIdentificationMethod method : ident.getMethods()) {
-                        if (methods.contains(method.getName())) {
-                            Set<String> names = methodToNames.get(method);
-                            if (names == null) {
-                                names = new LinkedHashSet<String>();
-                            }
-                            for (IIdentification identification : method.getIdentifications()) {
-                                String id = identification.getName();
-                                if (!id.isEmpty()) {
-                                    names.add(id);
-                                } else {
-                                    System.out.println("Skipping empty identification for export!");
-                                }
-                            }
-                            if (!names.isEmpty()) {
-                                methodToNames.put(method, names);
-                            }
-                        }
-                    }
-                }
+                //write leftmost column (SpotID)
+                sb.append(group.getNumber());
 
-                //generate output
-                if (!methodToNames.isEmpty()) {
-                    StringBuilder sb = new StringBuilder();
-
-                    //write leftmost column (user defined label)
-                    //FIXME use group number 
-                    if(group.getLabel() != null && !group.getLabel().isEmpty()) {
+                //write label
+                if (showGroupLabel) {
+                    sb.append("\t");
+                    if (group.getLabel() != null && !group.getLabel().isEmpty()) {
                         sb.append(group.getLabel());
                     }
+                }
+                
+                if (showIdentification) {
+                    //get identifications for output
+                    List<ISpot> spots = group.getSpots();
+                    Set<IWellIdentification> identifications = new LinkedHashSet<IWellIdentification>();
+                    for (ISpot spot : spots) {
+                        if (spot.getStatus() == SpotStatus.PICKED) {
+                            IWell96 well96 = spot.getWell();
+                            if (well96.getStatus() == Well96Status.PROCESSED) {
+                                for (IWell384 well384 : well96.get384Wells()) {
+                                    if (well384.getStatus() == Well384Status.IDENTIFIED) {
+                                        IWellIdentification ident = well384.getIdentification();
+                                        identifications.add(ident);
+                                    //} else {
+                                    //  System.out.println("Skipping well384 " + well384.toString());
+                                    }
+                                }
+                            //} else {
+                            //  System.out.println("Skipping well96 " + well96.toString());
+                            }
+                        //} else {
+                        //  System.out.println("Skipping unpicked spot " + spot + " in group #" + group.getNumber() + ": " + group.getLabel());
+                        }
+                    }
+                    //System.out.println("Processing " + identifications.size() + " identifications of " + spots.size() + " spots in spot group!");
 
-                    //write identification name
-                    if (showIdentificationName) {
+                    //get set of identification name strings for each Method object
+                    Map<IIdentificationMethod, Set<IIdentification>> methodToIdentification = new LinkedHashMap<IIdentificationMethod, Set<IIdentification>>();
+                    for (IWellIdentification ident : identifications) {
+                        for (IIdentificationMethod method : ident.getMethods()) {
+                            if (methods.contains(method.getName())) {
+                                Set<IIdentification> idents = methodToIdentification.get(method);
+                                if (idents == null) {
+                                    idents = new LinkedHashSet<IIdentification>();
+                                    methodToIdentification.put(method, idents);
+                                }
+                                for (IIdentification identification : method.getIdentifications()) {
+                                    //if (!identification.getName().isEmpty()) {
+                                        idents.add(identification);
+                                    //} else {
+                                    //  System.out.println("Skipping empty identification for export!");
+                                    //}
+                                }
+                            }
+                        }
+                    }
+
+                    //generate method output in format:
+                    //[method1:ident1|ident2][method2:ident3]
+                    if (!methodToIdentification.isEmpty()) {
                         sb.append("\t");
-
-                        for (IIdentificationMethod method : methodToNames.keySet()) {
-                            Set<String> names = methodToNames.get(method);
-                            if (!names.isEmpty()) {
+                        for (IIdentificationMethod method : methodToIdentification.keySet()) {
+                            Set<IIdentification> idents = methodToIdentification.get(method);
+                            if (!idents.isEmpty()) {
                                 sb.append("[");
 
                                 //write method name
-                                if(showMethodName) {
+                                if (showMethodName) {
                                     sb.append(method.getName());
                                     sb.append(": ");
                                 }
 
                                 int cnt = 0;
-                                for (String name : names) {
-                                    sb.append(name);
-                                    if (cnt < names.size() - 1) {
+                                for (IIdentification ident : idents) {
+                                    //write identification name (always enabled)
+                                    sb.append(ident.getName());
+
+                                    if (cnt < idents.size() - 1) {
                                         sb.append("|");
                                     }
                                     cnt++;
@@ -150,16 +149,15 @@ public class SpotDataExporter {
                                 System.out.println("Skipping empty method results for " + method.getName());
                             }
                         }
+                    } else {
+                        System.out.println("Skipping spot group " + group.getNumber() + " without annotations!");
                     }
-
-                    //write output line
-                    bw.write(sb.toString());
-                    bw.newLine();
-                } else {
-                    System.out.println(
-                            "Skipping spot group " + group.getNumber() + " without annotations!");
                 }
+                //finish output line
+                bw.write(sb.toString());
+                bw.newLine();
             }
+            //finish output
             bw.flush();
             bw.close();
         } catch (IOException ex) {

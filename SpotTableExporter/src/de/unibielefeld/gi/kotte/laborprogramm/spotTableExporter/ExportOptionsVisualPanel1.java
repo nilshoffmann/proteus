@@ -16,18 +16,23 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
     public static final String PROPERTY_PROJECT = "project";
     public static final String PROPERTY_METHODS = "methods";
     public static final String PROPERTY_SHOW_METHOD_NAME = "show method name";
-    public static final String PROPERTY_SHOW_IDENTIFICATION_NAME = "show identification name";
+    public static final String PROPERTY_SHOW_IDENTIFICATION = "show identification";
+    public static final String PROPERTY_SHOW_GROUP_LABEL = "show group label";
     public static final String PROPERTY_FILENAME = "filename";
     public static final String PROPERTY_DIRECTORY = "directory";
 
     private File directory;
 
-    public boolean isUserDefinedLabel() {
-        return userDefinedLabelBox.isSelected();
+    public boolean isShowMethodName() {
+        return methodNameBox.isSelected();
+    }
+    
+    public boolean isShowGroupLabel() {
+        return groupLabelBox.isSelected();
     }
 
-    public boolean isIdentificationName() {
-        return identificationNameBox.isSelected();
+    public boolean isShowIdentification() {
+        return identificationBox.isSelected();
     }
 
     public String getFileName() {
@@ -71,7 +76,7 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
 
     @Override
     public String getName() {
-        return "Output options for Spot Data Export";
+        return "Output Options for Spot Data Export";
     }
 
     /** This method is called from within the constructor to
@@ -84,9 +89,9 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
-        headingLabel = new javax.swing.JLabel();
-        userDefinedLabelBox = new javax.swing.JCheckBox();
-        identificationNameBox = new javax.swing.JCheckBox();
+        outputHeadingLabel = new javax.swing.JLabel();
+        methodNameBox = new javax.swing.JCheckBox();
+        identificationBox = new javax.swing.JCheckBox();
         fileDirectoryTextField = new javax.swing.JTextField();
         fileDirectoryLabel = new javax.swing.JLabel();
         fileChooserButton = new javax.swing.JButton();
@@ -97,6 +102,8 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
         methodsLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         methodsList = new javax.swing.JList();
+        outputSeparator = new javax.swing.JSeparator();
+        groupLabelBox = new javax.swing.JCheckBox();
 
         jList1.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -105,22 +112,21 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
         });
         jScrollPane1.setViewportView(jList1);
 
-        org.openide.awt.Mnemonics.setLocalizedText(headingLabel, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.headingLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(outputHeadingLabel, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.outputHeadingLabel.text")); // NOI18N
 
-        userDefinedLabelBox.setSelected(true);
-        org.openide.awt.Mnemonics.setLocalizedText(userDefinedLabelBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.userDefinedLabelBox.text")); // NOI18N
-        userDefinedLabelBox.addActionListener(new java.awt.event.ActionListener() {
+        methodNameBox.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(methodNameBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.methodNameBox.text")); // NOI18N
+        methodNameBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                userDefinedLabelBoxActionPerformed(evt);
+                methodNameBoxActionPerformed(evt);
             }
         });
 
-        identificationNameBox.setSelected(true);
-        org.openide.awt.Mnemonics.setLocalizedText(identificationNameBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.identificationNameBox.text")); // NOI18N
-        identificationNameBox.setEnabled(false);
-        identificationNameBox.addActionListener(new java.awt.event.ActionListener() {
+        identificationBox.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(identificationBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.identificationBox.text")); // NOI18N
+        identificationBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                identificationNameBoxActionPerformed(evt);
+                identificationBoxActionPerformed(evt);
             }
         });
 
@@ -160,29 +166,43 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
         });
         jScrollPane2.setViewportView(methodsList);
 
+        groupLabelBox.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(groupLabelBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.groupLabelBox.text")); // NOI18N
+        groupLabelBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                groupLabelBoxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(outputSeparator)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(fileNameLabel)
-                    .addComponent(fileDirectoryLabel)
-                    .addComponent(filePathLabel)
-                    .addComponent(headingLabel)
-                    .addComponent(methodsLabel)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
-                    .addComponent(filePathTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(fileNameTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
-                            .addComponent(fileDirectoryTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE))
+                            .addComponent(fileNameTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                            .addComponent(fileDirectoryTextField))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(fileChooserButton))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(userDefinedLabelBox)
-                        .addComponent(identificationNameBox)))
+                    .addComponent(filePathTextField)
+                    .addComponent(jScrollPane2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addComponent(methodNameBox))
+                            .addComponent(identificationBox)
+                            .addComponent(groupLabelBox)
+                            .addComponent(fileNameLabel)
+                            .addComponent(fileDirectoryLabel)
+                            .addComponent(filePathLabel)
+                            .addComponent(methodsLabel)
+                            .addComponent(outputHeadingLabel))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -198,35 +218,40 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fileDirectoryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(fileChooserButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(filePathLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(filePathTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(headingLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(identificationNameBox)
+                .addComponent(outputSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(userDefinedLabelBox)
-                .addGap(13, 13, 13)
                 .addComponent(methodsLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(outputHeadingLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(groupLabelBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(identificationBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(methodNameBox)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void userDefinedLabelBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userDefinedLabelBoxActionPerformed
-        firePropertyChange(PROPERTY_SHOW_METHOD_NAME, !userDefinedLabelBox.isSelected(), userDefinedLabelBox.isSelected());
-    }//GEN-LAST:event_userDefinedLabelBoxActionPerformed
+    private void methodNameBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_methodNameBoxActionPerformed
+        firePropertyChange(PROPERTY_SHOW_METHOD_NAME, !methodNameBox.isSelected(), methodNameBox.isSelected());
+    }//GEN-LAST:event_methodNameBoxActionPerformed
 
-    private void identificationNameBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_identificationNameBoxActionPerformed
-        firePropertyChange(PROPERTY_SHOW_IDENTIFICATION_NAME, !identificationNameBox.isSelected(), identificationNameBox.isSelected());
-    }//GEN-LAST:event_identificationNameBoxActionPerformed
+    private void identificationBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_identificationBoxActionPerformed
+        firePropertyChange(PROPERTY_SHOW_IDENTIFICATION, !identificationBox.isSelected(), identificationBox.isSelected());
+        methodNameBox.setEnabled(identificationBox.isSelected());
+    }//GEN-LAST:event_identificationBoxActionPerformed
 
     private void fileChooserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileChooserButtonActionPerformed
         JFileChooser jfc = new JFileChooser(directory);
-        jfc.setDialogTitle("Choose directory for spotgroup export");
+        jfc.setDialogTitle("Choose Directory for Spotgroup Export");
         jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         jfc.setAcceptAllFileFilterUsed(false);
         int status = jfc.showOpenDialog(null);
@@ -244,6 +269,10 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
         firePropertyChange(PROPERTY_FILENAME, null, fileNameTextField.getText());
     }//GEN-LAST:event_fileNameTextFieldActionPerformed
 
+    private void groupLabelBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_groupLabelBoxActionPerformed
+        firePropertyChange(PROPERTY_SHOW_GROUP_LABEL, !groupLabelBox.isSelected(), groupLabelBox.isSelected());
+    }//GEN-LAST:event_groupLabelBoxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton fileChooserButton;
     private javax.swing.JLabel fileDirectoryLabel;
@@ -252,13 +281,15 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
     private javax.swing.JTextField fileNameTextField;
     private javax.swing.JLabel filePathLabel;
     private javax.swing.JTextField filePathTextField;
-    private javax.swing.JLabel headingLabel;
-    private javax.swing.JCheckBox identificationNameBox;
+    private javax.swing.JCheckBox groupLabelBox;
+    private javax.swing.JCheckBox identificationBox;
     private javax.swing.JList jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JCheckBox methodNameBox;
     private javax.swing.JLabel methodsLabel;
     private javax.swing.JList methodsList;
-    private javax.swing.JCheckBox userDefinedLabelBox;
+    private javax.swing.JLabel outputHeadingLabel;
+    private javax.swing.JSeparator outputSeparator;
     // End of variables declaration//GEN-END:variables
 }

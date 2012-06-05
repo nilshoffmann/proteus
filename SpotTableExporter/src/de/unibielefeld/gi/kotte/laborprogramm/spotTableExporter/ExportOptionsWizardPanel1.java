@@ -60,7 +60,7 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
             descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Please pick an output directory.");
             return false;
         }
-        if (!(component.isUserDefinedLabel() || component.isIdentificationName())) {
+        if (!(component.isShowMethodName() || component.isShowIdentification()) /*TODO hier*/) {
             descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Please pick at least one output column.");
             return false;
         }
@@ -101,9 +101,10 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
         this.descriptor = settings;
         //get directory path
         IProteomicProject project = (IProteomicProject) this.descriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_PROJECT);
-        String path = project.getProjectDirectory().getPath();
-        path += File.separator + "export" + File.separator + "spotTables";
-        File dir = new File(path);
+        StringBuilder path = new StringBuilder();
+        path.append(project.getProjectDirectory().getPath());
+        path.append(File.separator).append("export").append(File.separator).append("spotTables");
+        File dir = new File(path.toString());
         ((ExportOptionsVisualPanel1) getComponent()).setDirectory(dir);
         //Liste der Methoden anhand der vorhandenen Identifikationen erstellen
         Set<String> methods = new LinkedHashSet<String>();
@@ -130,8 +131,9 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_METHODS, eovp.getSelectedMethods());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_DIRECTORY, eovp.getDirectory());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_FILENAME, eovp.getFileName());
-        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_METHOD_NAME, eovp.isUserDefinedLabel());
-        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENTIFICATION_NAME, eovp.isIdentificationName());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_METHOD_NAME, eovp.isShowMethodName());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENTIFICATION, eovp.isShowIdentification());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_GROUP_LABEL, eovp.isShowGroupLabel());
     }
 
     @Override

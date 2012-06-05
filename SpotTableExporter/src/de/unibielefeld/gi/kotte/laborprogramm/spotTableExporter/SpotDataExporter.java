@@ -61,6 +61,8 @@ public class SpotDataExporter {
             for (ISpotGroup group : spotGroups) {
                 //use StringBuilder to generate output line
                 StringBuilder sb = new StringBuilder();
+                //skip empty lines
+                boolean filled = false;
 
                 //write leftmost column (SpotID)
                 sb.append(group.getNumber());
@@ -70,6 +72,7 @@ public class SpotDataExporter {
                     sb.append("\t");
                     if (group.getLabel() != null && !group.getLabel().isEmpty()) {
                         sb.append(group.getLabel());
+                        filled = true;
                     }
                 }
                 
@@ -149,13 +152,16 @@ public class SpotDataExporter {
                                 System.out.println("Skipping empty method results for " + method.getName());
                             }
                         }
+                        filled = true;
                     } else {
                         System.out.println("Skipping spot group " + group.getNumber() + " without annotations!");
                     }
                 }
                 //finish output line
-                bw.write(sb.toString());
-                bw.newLine();
+                if (filled) {
+                    bw.write(sb.toString());
+                    bw.newLine();
+                }
             }
             //finish output
             bw.flush();

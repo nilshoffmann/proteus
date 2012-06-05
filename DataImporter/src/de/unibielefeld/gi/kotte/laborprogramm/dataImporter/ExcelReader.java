@@ -222,12 +222,16 @@ public class ExcelReader {
             //set normalized volumes for the spots on all gels
             for (IGel gel : normVolumes.keySet()) {
                 spot = gelSpotsMap.get(gel).get(currentSpotID);
-                spot.setNormVolume(normVolumes.get(gel));
+                if (spot != null) {
+                    spot.setNormVolume(normVolumes.get(gel));
+                }
             }
             //set integrated grey volumes for the spots on all gels
             for (IGel gel : greyVolumes.keySet()) {
                 spot = gelSpotsMap.get(gel).get(currentSpotID);
-                spot.setNormVolume(greyVolumes.get(gel));
+                if (spot != null) {
+                    spot.setNormVolume(greyVolumes.get(gel));
+                }
             }
         }
     }

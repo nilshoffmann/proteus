@@ -1,10 +1,24 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ *  Copyright (C) 2008-2012 Nils Hoffmann
+ *  Nils.Hoffmann A T CeBiTec.Uni-Bielefeld.DE
+ *
+ *  This file is part of Maui.
+ *
+ * Maui is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ * Maui is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Maui.  If not, see <http://www.gnu.org/licenses/>.
  */
 package net.sf.maltcms.ui.plot.heatmap.painter;
 
-import cross.datastructures.tuple.Tuple2D;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
@@ -16,8 +30,9 @@ import java.util.Iterator;
 import java.util.List;
 import javax.swing.JComponent;
 import maltcms.ui.viewer.datastructures.tree.ElementNotFoundException;
-import net.sf.maltcms.ui.plot.heatmap.Annotation;
 import net.sf.maltcms.ui.plot.heatmap.HeatmapDataset;
+import net.sf.maltcms.ui.plot.heatmap.IAnnotation;
+import net.sf.maltcms.ui.plot.heatmap.Tuple2D;
 import net.sf.maltcms.ui.plot.heatmap.event.IProcessorResultListener;
 import net.sf.maltcms.ui.plot.heatmap.event.mouse.MouseEvent;
 import org.jdesktop.swingx.painter.AbstractPainter;
@@ -37,7 +52,7 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
 //    private Tuple2D<Point2D, Annotation<T>> activeSelection = null;
     private Point2D viewPoint;
     private Point2D modelPoint;
-    private Tuple2D<Point2D, Annotation<T>> a = null;
+    private Tuple2D<Point2D, IAnnotation<T>> a = null;
 //    private Shape annotationShape;
 
     public AnnotationPainter(HeatmapDataset<T> hm) {
@@ -70,7 +85,7 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
     public void selectAnnotation() {
         if (activeModelPoint != null) {
             try {
-                Tuple2D<Point2D, Annotation<T>> tpl = this.hm.getClosestInRadius(
+                Tuple2D<Point2D, IAnnotation<T>> tpl = this.hm.getClosestInRadius(
                         activeModelPoint, this.searchRadius);
                 tpl.getSecond().setSelected(true);
                 firePropertyChange("annotations", null, tpl.getSecond());
@@ -82,7 +97,7 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
     public void deselectAnnotation() {
         if (activeModelPoint != null) {
             try {
-                Tuple2D<Point2D, Annotation<T>> tpl = this.hm.getClosestInRadius(
+                Tuple2D<Point2D, IAnnotation<T>> tpl = this.hm.getClosestInRadius(
                         activeModelPoint, this.searchRadius);
                 tpl.getSecond().setSelected(false);
                 firePropertyChange("annotations", null, tpl.getSecond());
@@ -94,7 +109,7 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
     public void addAnnotation() {
         if (activeModelPoint != null) {
             T t = hm.getItemAt(activeModelPoint);
-            Annotation<T> a = this.hm.addAnnotation(activeModelPoint, t);
+            IAnnotation<T> a = this.hm.addAnnotation(activeModelPoint, t);
             firePropertyChange("annotations", null, a);
         }
     }
@@ -102,17 +117,17 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
     public void removeAnnotation() {
         if (activeModelPoint != null) {
             try {
-                Tuple2D<Point2D, Annotation<T>> tpl = this.hm.getClosestInRadius(
+                Tuple2D<Point2D, IAnnotation<T>> tpl = this.hm.getClosestInRadius(
                         activeModelPoint, 10.0d);
-                Annotation a = this.hm.removeAnnotation(tpl.getFirst());
+                IAnnotation a = this.hm.removeAnnotation(tpl.getFirst());
                 firePropertyChange("annotations", null, a);
             } catch (ElementNotFoundException fnfe) {
             }
         }
     }
 
-    public Annotation<T> getAnnotation(T t) {
-        for (Tuple2D<Point2D, Annotation<T>> ann : getAnnotations()) {
+    public IAnnotation<T> getAnnotation(T t) {
+        for (Tuple2D<Point2D, IAnnotation<T>> ann : getAnnotations()) {
             if (ann.getSecond().getPayload().equals(t)) {
                 return ann.getSecond();
             }
@@ -120,10 +135,10 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
         return null;
     }
 
-    public List<Tuple2D<Point2D, Annotation<T>>> getAnnotations() {
-        List<Tuple2D<Point2D, Annotation<T>>> l = new ArrayList<Tuple2D<Point2D, Annotation<T>>>(this.hm.
+    public List<Tuple2D<Point2D, IAnnotation<T>>> getAnnotations() {
+        List<Tuple2D<Point2D, IAnnotation<T>>> l = new ArrayList<Tuple2D<Point2D, IAnnotation<T>>>(this.hm.
                 size());
-        Iterator<Tuple2D<Point2D, Annotation<T>>> iter = this.hm.
+        Iterator<Tuple2D<Point2D, IAnnotation<T>>> iter = this.hm.
                 getAnnotationIterator();
         while (iter.hasNext()) {
             l.add(iter.next());
@@ -136,17 +151,17 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
         if (this.hm != null) {
             AffineTransform old = g.getTransform();
             g.setTransform(hm.getTransform());
-            Iterator<Tuple2D<Point2D, Annotation<T>>> iter = null;//this.annotations.getChildrenInRange(selection.getBounds2D()).iterator();
+            Iterator<Tuple2D<Point2D, IAnnotation<T>>> iter = null;//this.annotations.getChildrenInRange(selection.getBounds2D()).iterator();
             iter = this.hm.getAnnotationIterator();
             while (iter.hasNext()) {
-                Tuple2D<Point2D, Annotation<T>> tple = iter.next();
+                Tuple2D<Point2D, IAnnotation<T>> tple = iter.next();
                 drawAnnotation(g, tple.getSecond());//, activeAnnotations);
             }
             g.setTransform(old);
         }
     }
 
-    private void drawAnnotation(Graphics2D g, Annotation<T> a) {
+    private void drawAnnotation(Graphics2D g, IAnnotation<T> a) {
         a.draw(g);
     }
 
@@ -170,7 +185,7 @@ public class AnnotationPainter<T, U extends JComponent> extends AbstractPainter<
     }
 
     public void selectAnnotation(Point2D viewPoint) {
-        Tuple2D<Point2D, Annotation<T>> old = a;
+        Tuple2D<Point2D, IAnnotation<T>> old = a;
         if (old != null) {
             old.getSecond().setSelected(false);
         }

@@ -1,10 +1,24 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ *  Copyright (C) 2008-2012 Nils Hoffmann
+ *  Nils.Hoffmann A T CeBiTec.Uni-Bielefeld.DE
+ *
+ *  This file is part of Maui.
+ *
+ * Maui is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ * Maui is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Maui.  If not, see <http://www.gnu.org/licenses/>.
  */
 package net.sf.maltcms.ui.plot.heatmap.painter;
 
-import cross.datastructures.tuple.Tuple2D;
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -12,8 +26,9 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import javax.swing.JComponent;
 import maltcms.ui.viewer.datastructures.tree.ElementNotFoundException;
-import net.sf.maltcms.ui.plot.heatmap.Annotation;
+import net.sf.maltcms.ui.plot.heatmap.IAnnotation;
 import net.sf.maltcms.ui.plot.heatmap.HeatmapDataset;
+import net.sf.maltcms.ui.plot.heatmap.Tuple2D;
 import net.sf.maltcms.ui.plot.heatmap.event.IProcessorResultListener;
 import net.sf.maltcms.ui.plot.heatmap.event.mouse.MouseEvent;
 import org.jdesktop.swingx.painter.AbstractPainter;
@@ -53,7 +68,7 @@ public class ModelViewCoordinatesRenderer<T, U extends JComponent> extends Abstr
         try {
             this.modelPoint = hm.toModelPoint(t);
             try {
-                Tuple2D<Point2D, Annotation<T>> tpl = hm.getClosestInRadius(
+                Tuple2D<Point2D, IAnnotation<T>> tpl = hm.getClosestInRadius(
                         this.modelPoint, 50);
                 if (tpl != null) {
                     System.out.println("Found annotation within radius 50 around "+this.modelPoint);

@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: net.sf.maltcms.io.xml.serialization
+OpenIDE-Module-Localizing-Bundle: net/sf/maltcms/io/xml/serialization/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

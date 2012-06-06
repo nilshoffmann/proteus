@@ -1,10 +1,24 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ *  Copyright (C) 2008-2012 Nils Hoffmann
+ *  Nils.Hoffmann A T CeBiTec.Uni-Bielefeld.DE
+ *
+ *  This file is part of Maui.
+ *
+ * Maui is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ * Maui is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Maui.  If not, see <http://www.gnu.org/licenses/>.
  */
 package net.sf.maltcms.ui.plot.heatmap;
 
-import cross.datastructures.tuple.Tuple2D;
 import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
@@ -32,8 +46,8 @@ public class HeatmapDataset<T> implements IProcessorResultListener<Tuple2D<Point
     private final IDataProvider<T> dp;
     private AffineTransform transform = AffineTransform.getTranslateInstance(0, 0);
     private Tuple2D<Point2D, Double> zoom = new Tuple2D<Point2D, Double>(new Point(0, 0), 1.0d);
-    private final QuadTree<Annotation<T>> quadTree;
-    private Tuple2D<Point2D, Annotation<T>> lastAnnotation;
+    private final QuadTree<IAnnotation<T>> quadTree;
+    private Tuple2D<Point2D, IAnnotation<T>> lastAnnotation;
 
     public Tuple2D<Point2D, Double> getZoom() {
         return zoom;
@@ -49,23 +63,24 @@ public class HeatmapDataset<T> implements IProcessorResultListener<Tuple2D<Point
     public HeatmapDataset(IDataProvider<T> dp) {
         this.dataImage = dp.createDataImage();
         this.dp = dp;
-        this.quadTree = new QuadTree<Annotation<T>>(dp.getDataBounds());
+        this.quadTree = new QuadTree<IAnnotation<T>>(dp.getDataBounds());
     }
 
     public IDataProvider<T> getDataProvider() {
         return this.dp;
     }
 
-    public void addAnnotation(Point2D p, Annotation<T> annotation) {
+    public void addAnnotation(Point2D p, IAnnotation<T> annotation) {
         this.quadTree.put(p, annotation);
     }
 
-    public Annotation<T> addAnnotation(Point2D p, T t) {
+    @Deprecated
+    public IAnnotation<T> addAnnotation(Point2D p, T t) {
         Annotation<T> a = new Annotation<T>(p, t);
         return this.quadTree.put(p, a);
     }
 
-    public Annotation<T> removeAnnotation(Point2D p) {
+    public IAnnotation<T> removeAnnotation(Point2D p) {
         return this.quadTree.remove(p);
     }
 
@@ -73,25 +88,25 @@ public class HeatmapDataset<T> implements IProcessorResultListener<Tuple2D<Point
         return this.dp.get(p);
     }
 
-    public Annotation<T> get(Point2D p) {
+    public IAnnotation<T> get(Point2D p) {
         return this.quadTree.get(p);
     }
 
-    public Tuple2D<Point2D, Annotation<T>> getClosestInRadius(final Point2D p, double radius) {
+    public Tuple2D<Point2D, IAnnotation<T>> getClosestInRadius(final Point2D p, double radius) {
         //shortcut
 //        if(lastAnnotation!=null && lastAnnotation.getSecond().getPosition().distance(p)<=radius) {
 //            return lastAnnotation;
 //        }
 
-        List<Tuple2D<Point2D,Annotation<T>>> rangeMembers = getChildrenInRange(new Rectangle2D.Double(p.getX()-radius,p.getY()-radius,radius*2,radius*2));
+        List<Tuple2D<Point2D,IAnnotation<T>>> rangeMembers = getChildrenInRange(new Rectangle2D.Double(p.getX()-radius,p.getY()-radius,radius*2,radius*2));
         if(rangeMembers.isEmpty()) {
             lastAnnotation = null;
             return null;
         }
-        Collections.sort(rangeMembers, new Comparator<Tuple2D<Point2D,Annotation<T>>>() {
+        Collections.sort(rangeMembers, new Comparator<Tuple2D<Point2D,IAnnotation<T>>>() {
 
             @Override
-            public int compare(Tuple2D<Point2D, Annotation<T>> t, Tuple2D<Point2D, Annotation<T>> t1) {
+            public int compare(Tuple2D<Point2D, IAnnotation<T>> t, Tuple2D<Point2D, IAnnotation<T>> t1) {
                 double d1 = p.distance(t.getSecond().getPosition());
                 double d2 = p.distance(t1.getSecond().getPosition());
                 return Double.compare(d1,d2);
@@ -113,11 +128,11 @@ public class HeatmapDataset<T> implements IProcessorResultListener<Tuple2D<Point
         return this.quadTree.size();
     }
 
-    public Iterator<Tuple2D<Point2D, Annotation<T>>> getAnnotationIterator() {
+    public Iterator<Tuple2D<Point2D, IAnnotation<T>>> getAnnotationIterator() {
         return this.quadTree.iterator();
     }
 
-    public List<Tuple2D<Point2D, Annotation<T>>> getChildrenInRange(Rectangle2D r) {
+    public List<Tuple2D<Point2D, IAnnotation<T>>> getChildrenInRange(Rectangle2D r) {
         try {
             return this.quadTree.getChildrenInRange(r);
         } catch (ElementNotFoundException enfe) {

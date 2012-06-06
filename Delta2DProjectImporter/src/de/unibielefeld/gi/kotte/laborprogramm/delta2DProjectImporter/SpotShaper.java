@@ -2,7 +2,6 @@ package de.unibielefeld.gi.kotte.laborprogramm.delta2DProjectImporter;
 
 import java.awt.Shape;
 import java.awt.geom.GeneralPath;
-import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;

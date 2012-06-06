@@ -1,9 +1,27 @@
+/*
+ *  Copyright (C) 2008-2012 Nils Hoffmann
+ *  Nils.Hoffmann A T CeBiTec.Uni-Bielefeld.DE
+ *
+ *  This file is part of Maui.
+ *
+ *  Maui is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Maui is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Maui.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations;
 
 import com.db4o.activation.ActivationPurpose;
 import com.db4o.activation.Activator;
-import com.db4o.ta.Activatable;
-import cross.datastructures.tuple.Tuple2D;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import java.awt.AlphaComposite;
@@ -18,14 +36,14 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
-import net.sf.maltcms.ui.plot.heatmap.Annotation;
+import net.sf.maltcms.ui.plot.heatmap.Tuple2D;
 import net.sf.maltcms.ui.plot.heatmap.painter.PainterTools;
 
 /**
  *
  * @author nils
  */
-public class SpotAnnotation extends Annotation<ISpot> implements Activatable {
+public class SpotAnnotation extends Annotation<ISpot> {
 
 //    /**
 //     * PropertyChangeSupport ala JavaBeans(tm)

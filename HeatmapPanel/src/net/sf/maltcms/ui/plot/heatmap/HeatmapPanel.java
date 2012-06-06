@@ -1,10 +1,24 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ *  Copyright (C) 2008-2012 Nils Hoffmann
+ *  Nils.Hoffmann A T CeBiTec.Uni-Bielefeld.DE
+ *
+ *  This file is part of Maui.
+ *
+ * Maui is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ * Maui is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Maui.  If not, see <http://www.gnu.org/licenses/>.
  */
 package net.sf.maltcms.ui.plot.heatmap;
 
-import cross.datastructures.tuple.Tuple2D;
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
@@ -12,8 +26,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -31,7 +43,6 @@ import javax.swing.JScrollPane;
 import javax.swing.RepaintManager;
 import javax.swing.Scrollable;
 import javax.swing.SwingUtilities;
-import javax.swing.event.MouseInputListener;
 import net.sf.maltcms.ui.plot.heatmap.actions.AddAnnotation;
 import net.sf.maltcms.ui.plot.heatmap.actions.RemoveAnnotation;
 import net.sf.maltcms.ui.plot.heatmap.axis.Corner;
@@ -216,7 +227,7 @@ public class HeatmapPanel<T> extends JComponent implements
                 ToolTipPainter<List<Integer>, JPanel> tooltipPainter = new ToolTipPainter<List<Integer>, JPanel>(hmd) {
 
                     @Override
-                    public String getStringFor(Annotation<List<Integer>> t) {
+                    public String getStringFor(IAnnotation<List<Integer>> t) {
                         Point2D dataCoord = hdp.getViewToModelTransform().
                                 transform(t.getPosition(), null);
                         return String.format("x=%.2f, y=%.2f; values=",

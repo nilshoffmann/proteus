@@ -1,7 +1,27 @@
+/*
+ *  Copyright (C) 2008-2012 Nils Hoffmann
+ *  Nils.Hoffmann A T CeBiTec.Uni-Bielefeld.DE
+ *
+ *  This file is part of Maui.
+ *
+ *  Maui is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Maui is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Maui.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package de.unibielefeld.gi.kotte.laborprogramm.gelViewer;
 
-import cross.datastructures.tuple.Tuple2D;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.actions.ExportGelAction;
+import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.Annotation;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.AnnotationManager;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.GelSpotAnnotations;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation;
@@ -49,10 +69,7 @@ import javax.swing.JSeparator;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputListener;
 import net.sf.maltcms.chromaui.lookupResultListener.api.LookupResultListeners;
-import net.sf.maltcms.ui.plot.heatmap.Annotation;
-import net.sf.maltcms.ui.plot.heatmap.HeatmapDataset;
-import net.sf.maltcms.ui.plot.heatmap.HeatmapPanel;
-import net.sf.maltcms.ui.plot.heatmap.IDataProvider;
+import net.sf.maltcms.ui.plot.heatmap.*;
 import net.sf.maltcms.ui.plot.heatmap.axis.Corner;
 import net.sf.maltcms.ui.plot.heatmap.event.IProcessorResultListener;
 import net.sf.maltcms.ui.plot.heatmap.event.mouse.MouseEventProcessorChain;
@@ -209,7 +226,7 @@ public final class GelViewerTopComponent extends TopComponent implements
                         hmd) {
 
                     @Override
-                    public String getStringFor(Annotation<ISpot> t) {
+                    public String getStringFor(IAnnotation<ISpot> t) {
                         Point2D dataCoord = hdp.getViewToModelTransform().
                                 transform(t.getPosition(), null);
                         return String.format("[x=%.2f|y=%.2f] ",
@@ -324,10 +341,10 @@ public final class GelViewerTopComponent extends TopComponent implements
 //                jl.requestFocusInWindow();
                 ic.add(jl);
                 result.removeLookupListener(tc);
-                Iterator<Tuple2D<Point2D, Annotation<ISpot>>> iter = hmd.
+                Iterator<Tuple2D<Point2D, IAnnotation<ISpot>>> iter = hmd.
                         getAnnotationIterator();
                 while (iter.hasNext()) {
-                    Tuple2D<Point2D, Annotation<ISpot>> tple = iter.next();
+                    Tuple2D<Point2D, IAnnotation<ISpot>> tple = iter.next();
                     tple.getSecond().setSelected(false);
                     WeakListeners.propertyChange(tc, tple.getSecond());
                     WeakListeners.propertyChange(tc, tple.getSecond().getPayload());

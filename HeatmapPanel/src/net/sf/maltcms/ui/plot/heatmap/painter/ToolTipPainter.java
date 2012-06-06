@@ -1,25 +1,32 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ *  Copyright (C) 2008-2012 Nils Hoffmann
+ *  Nils.Hoffmann A T CeBiTec.Uni-Bielefeld.DE
+ *
+ *  This file is part of Maui.
+ *
+ * Maui is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ * Maui is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Maui.  If not, see <http://www.gnu.org/licenses/>.
  */
 package net.sf.maltcms.ui.plot.heatmap.painter;
 
-import cross.datastructures.tuple.Tuple2D;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Paint;
-import java.awt.Shape;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.RoundRectangle2D;
+import java.awt.*;
+import java.awt.geom.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JComponent;
-import net.sf.maltcms.ui.plot.heatmap.Annotation;
+import net.sf.maltcms.ui.plot.heatmap.IAnnotation;
 import net.sf.maltcms.ui.plot.heatmap.HeatmapDataset;
+import net.sf.maltcms.ui.plot.heatmap.Tuple2D;
 import net.sf.maltcms.ui.plot.heatmap.event.IProcessorResultListener;
 import net.sf.maltcms.ui.plot.heatmap.event.mouse.MouseEvent;
 import org.jdesktop.swingx.painter.AbstractPainter;
@@ -31,7 +38,7 @@ import org.jdesktop.swingx.painter.AbstractPainter;
 public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPainter<U>
         implements IProcessorResultListener<Point2D>, PropertyChangeListener {
 
-    private Tuple2D<Point2D, Annotation<T>> a = null;
+    private Tuple2D<Point2D, IAnnotation<T>> a = null;
     private boolean drawLabels = true;
     private float labelFontSize = 14.0f;
     private double margin = 5.0f;
@@ -131,7 +138,7 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
 //        setPoint(t);
     }
 
-    public abstract String getStringFor(Annotation<T> t);
+    public abstract String getStringFor(IAnnotation<T> t);
 
     /**
      * FIXME selection issue when selecting the same annotation
@@ -150,7 +157,7 @@ public abstract class ToolTipPainter<T, U extends JComponent> extends AbstractPa
         if (pce.getPropertyName().equals("annotationPointSelection")) {
 //            System.out.println("ToolTipPainter received annotationPointSelection: " + pce.
 //                    getNewValue());
-            Tuple2D<Point2D, Annotation<T>> annotation = (Tuple2D<Point2D, Annotation<T>>) pce.
+            Tuple2D<Point2D, IAnnotation<T>> annotation = (Tuple2D<Point2D, IAnnotation<T>>) pce.
                     getNewValue();
             if (annotation == null) {
 //                setPoint(null);

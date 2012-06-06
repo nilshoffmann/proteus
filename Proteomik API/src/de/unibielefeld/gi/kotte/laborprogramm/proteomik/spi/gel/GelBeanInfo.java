@@ -19,6 +19,8 @@ public class GelBeanInfo extends SimpleBeanInfo {
 
 
 
+
+
     // Here you can add code for customizing the BeanDescriptor.
 
          return beanDescriptor;     }//GEN-LAST:BeanDescriptor
@@ -41,10 +43,10 @@ public class GelBeanInfo extends SimpleBeanInfo {
     
         try {
             properties[PROPERTY_description] = new PropertyDescriptor ( "description", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Gel.class, "getDescription", "setDescription" ); // NOI18N
-            properties[PROPERTY_filename] = new PropertyDescriptor ( "filename", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Gel.class, "getFilename", null ); // NOI18N
+            properties[PROPERTY_filename] = new PropertyDescriptor ( "filename", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Gel.class, "getFilename", "setFilename" ); // NOI18N
             properties[PROPERTY_id] = new PropertyDescriptor ( "id", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Gel.class, "getId", null ); // NOI18N
             properties[PROPERTY_id].setHidden ( true );
-            properties[PROPERTY_location] = new PropertyDescriptor ( "location", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Gel.class, "getLocation", null ); // NOI18N
+            properties[PROPERTY_location] = new PropertyDescriptor ( "location", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Gel.class, "getLocation", "setLocation" ); // NOI18N
             properties[PROPERTY_name] = new PropertyDescriptor ( "name", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Gel.class, "getName", "setName" ); // NOI18N
             properties[PROPERTY_parent] = new PropertyDescriptor ( "parent", de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel.Gel.class, "getParent", "setParent" ); // NOI18N
             properties[PROPERTY_parent].setHidden ( true );

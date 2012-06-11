@@ -86,7 +86,7 @@ public final class ExportToXml implements ActionListener {
             XStream xstream = new XStream(new StaxDriver());
             //xstream.registerConverter(new FileConverter());
             xstream.registerConverter(new GeneralPathConverter());
-            xstream.registerConverter(new ActivatableArrayListConverter());
+            //xstream.registerConverter(new ActivatableArrayListConverter());
             xstream.toXML(project, new BufferedOutputStream(new FileOutputStream(outputFile)));
 //            
 //            try {

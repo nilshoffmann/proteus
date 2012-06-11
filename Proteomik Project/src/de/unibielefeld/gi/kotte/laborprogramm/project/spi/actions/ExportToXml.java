@@ -4,20 +4,20 @@
  */
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.beans.ExceptionListener;
-import java.beans.Introspector;
-import java.beans.XMLEncoder;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
-import net.sf.maltcms.io.xml.serialization.api.IPersistenceDelegateRegistration;
+import net.sf.maltcms.io.xml.serialization.api.ActivatableArrayListConverter;
+import net.sf.maltcms.io.xml.serialization.api.GeneralPathConverter;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 
@@ -29,7 +29,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Cancellable;
 import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 
@@ -52,10 +51,10 @@ public final class ExportToXml implements ActionListener {
     public void actionPerformed(ActionEvent ev) {
         ExportToXmlCallable runnable = new ExportToXmlCallable(context);
         final ProgressHandle handle = ProgressHandleFactory.createHandle(
-                "Export Project to XML", runnable);
+                "Exporting Project to XML", runnable);
         runnable.setProgressHandle(handle);
         final RequestProcessor rp = new RequestProcessor(
-                "Export Project to XML");
+                "Exporting Project to XML");
         Future<File> task = rp.submit(runnable);
     }
 
@@ -83,21 +82,29 @@ public final class ExportToXml implements ActionListener {
             project.toFullyRecursiveString();
             System.out.println("Project: " + project.toString());
             File outputFile = new File(output, project.getName() + ".xml");
-            try {
-                XMLEncoder encoder = new XMLEncoder(new BufferedOutputStream(
-                        new FileOutputStream(outputFile)));
-                encoder.setExceptionListener(this);
-                //remove any previously retrieved BeanInfo objects
-                Introspector.flushCaches();
-                for (IPersistenceDelegateRegistration registration : Lookup.getDefault().lookupAll(IPersistenceDelegateRegistration.class)) {
-                    registration.registerPersistenceDelegates(encoder);
-                }
-                encoder.writeObject(project);
-                encoder.close();
-            } catch (FileNotFoundException e) {
-            } finally {
-                handle.finish();
-            }
+            
+            XStream xstream = new XStream(new StaxDriver());
+            //xstream.registerConverter(new FileConverter());
+            xstream.registerConverter(new GeneralPathConverter());
+            xstream.registerConverter(new ActivatableArrayListConverter());
+            xstream.toXML(project, new BufferedOutputStream(new FileOutputStream(outputFile)));
+//            
+//            try {
+//                XMLEncoder encoder = new XMLEncoder(new BufferedOutputStream(
+//                        new FileOutputStream(outputFile)));
+//                encoder.setExceptionListener(this);
+//                //remove any previously retrieved BeanInfo objects
+//                Introspector.flushCaches();
+//                for (IPersistenceDelegateRegistration registration : Lookup.getDefault().lookupAll(IPersistenceDelegateRegistration.class)) {
+//                    registration.registerPersistenceDelegates(encoder);
+//                }
+//                encoder.writeObject(project);
+//                encoder.close();
+//            } catch (FileNotFoundException e) {
+//            } finally {
+//                handle.finish();
+//            }
+            handle.finish();
             return outputFile;
         }
 

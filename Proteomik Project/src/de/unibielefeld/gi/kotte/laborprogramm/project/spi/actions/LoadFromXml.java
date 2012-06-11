@@ -4,16 +4,18 @@
  */
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.project.spi.factory.ProteomicProjectFactory2;
 import de.unibielefeld.gi.kotte.laborprogramm.project.spi.factory.ProteomikProjectFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.beans.XMLDecoder;
 import java.io.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import net.sf.maltcms.io.xml.serialization.api.GeneralPathConverter;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
@@ -50,10 +52,10 @@ public final class LoadFromXml implements ActionListener {
     public void actionPerformed(ActionEvent ev) {
         ImportFromXmlCallable runnable = new ImportFromXmlCallable(context);
         final ProgressHandle handle = ProgressHandleFactory.createHandle(
-                "Import Project from XML", runnable);
+                "Restoring Project from XML", runnable);
         runnable.setProgressHandle(handle);
         final RequestProcessor rp = new RequestProcessor(
-                "Import Project from XML");
+                "Restoring Project from XML");
         Future<IProject> task = rp.submit(runnable);
     }
 
@@ -83,9 +85,10 @@ public final class LoadFromXml implements ActionListener {
             System.out.println("Project: " + project.toString());
             IProject projectFromBackup = project;
             try {
-                XMLDecoder decoder = new XMLDecoder(new BufferedInputStream(
+                XStream xstream = new XStream(new StaxDriver());
+                xstream.registerConverter(new GeneralPathConverter());
+                projectFromBackup = (IProject) xstream.fromXML(new BufferedInputStream(
                         new FileInputStream(backupFile)));
-                projectFromBackup = (IProject) decoder.readObject();
                 ProteomicProjectFactory2 ppf = new ProteomicProjectFactory2();
                 File oldDatabaseFile = new File(output.getParentFile(), ProteomikProjectFactory.PROJECT_FILE);
                 oldDatabaseFile.renameTo(new File(output.getParent(), ProteomikProjectFactory.PROJECT_FILE + ".bak"));

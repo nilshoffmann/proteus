@@ -107,21 +107,21 @@ import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 
 /**
- * TODO allow setting of font size property
- * TODO allow setting of focused view
- * TODO add support for highlighting / scrolling to a specific annotation
- * Top component that displays a gel with spot annotations and allows selection
- * of associated ISpot objects.
+ * TODO allow setting of font size property TODO allow setting of focused view
+ * TODO add support for highlighting / scrolling to a specific annotation Top
+ * component that displays a gel with spot annotations and allows selection of
+ * associated ISpot objects.
  */
-@ConvertAsProperties(
-dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.gelViewer//GelViewer//EN",
+@ConvertAsProperties(dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.gelViewer//GelViewer//EN",
 autostore = false)
 public final class GelViewerTopComponent extends TopComponent implements
         LookupListener, PropertyChangeListener,
         IProcessorResultListener<Tuple2D<Point2D, Double>>, MouseInputListener {
 
     private static GelViewerTopComponent instance;
-    /** path to the icon used by the component and its open action */
+    /**
+     * path to the icon used by the component and its open action
+     */
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
     private static final String PREFERRED_ID = "GelViewerTopComponent";
     private InstanceContent ic = new InstanceContent();
@@ -181,6 +181,19 @@ public final class GelViewerTopComponent extends TopComponent implements
         }
     }
 
+    private String getLocalizedFilePath(String filePath) {
+        if (filePath.contains("/")) {
+            if (!File.separator.equals("/")) {
+                return filePath.replaceAll("/", File.separator);
+            }
+        } else if (filePath.contains("\\")) {
+            if (!File.separator.equals("\\")) {
+                return filePath.replaceAll("\\\\", File.separator);
+            }
+        }
+        return filePath;
+    }
+
     private void addHeatmapPanel(final GelViewerTopComponent tc, final IGel gel) {
         final RequestProcessor rp = new RequestProcessor("Gel Loader", 1);
         final RequestProcessor.Task task = rp.create(new Runnable() {
@@ -191,23 +204,23 @@ public final class GelViewerTopComponent extends TopComponent implements
                 IProteomicProject p = Utilities.actionsGlobalContext().lookup(
                         IProteomicProject.class);
                 File f = gel.getLocation();
+                File baseDir = FileUtil.toFile(p.getProjectDirectory());
+                String localizedFilename = getLocalizedFilePath(gel.getFilename());
+                String filePath = localizedFilename;
+                if (f == null) {
+                    System.out.println("Gel location is null");
+                    f = new File(localizedFilename);
+                    System.out.println("Setting to :" + f.getPath());
+                    gel.setLocation(f);
+
+                } else {
+                    filePath = getLocalizedFilePath(f.getPath());
+                }
 
                 if (!f.isAbsolute()) {
-                    File baseDir = FileUtil.toFile(p.getProjectDirectory());
-                    System.out.println(
-                            "Resolving relative file against baseDir " + baseDir);
-                    String filePath = f.getPath();
-                    if(filePath.contains("/")) {
-                        if(!File.separator.equals("/")) {
-                            filePath = filePath.replaceAll("/",File.separator);
-                        }
-                    }else if(filePath.contains("\\")) {
-                        if(!File.separator.equals("\\")) {
-                            filePath = filePath.replaceAll("\\\\",File.separator);
-                        }
-                    }
                     f = new File(baseDir, filePath);
                 }
+
                 System.out.println("Using gel image location: " + f);
                 HeatmapDataset<ISpot> hmd = null;
                 hmd = new HeatmapDataset<ISpot>(new GelSpotDataProvider(
@@ -230,8 +243,7 @@ public final class GelViewerTopComponent extends TopComponent implements
                         Point2D dataCoord = hdp.getViewToModelTransform().
                                 transform(t.getPosition(), null);
                         return String.format("[x=%.2f|y=%.2f] ",
-                                dataCoord.getX(), dataCoord.getY()) + " Label: " + t.
-                                getPayload().getLabel() + " " + t.getPayload().
+                                dataCoord.getX(), dataCoord.getY()) + " Label: " + t.getPayload().getLabel() + " " + t.getPayload().
                                 getStatus();//"x="+t.getPosition().getX()+" values: "+t.getPayload();
                     }
                 };
@@ -341,8 +353,7 @@ public final class GelViewerTopComponent extends TopComponent implements
 //                jl.requestFocusInWindow();
                 ic.add(jl);
                 result.removeLookupListener(tc);
-                Iterator<Tuple2D<Point2D, IAnnotation<ISpot>>> iter = hmd.
-                        getAnnotationIterator();
+                Iterator<Tuple2D<Point2D, IAnnotation<ISpot>>> iter = hmd.getAnnotationIterator();
                 while (iter.hasNext()) {
                     Tuple2D<Point2D, IAnnotation<ISpot>> tple = iter.next();
                     tple.getSecond().setSelected(false);
@@ -354,8 +365,7 @@ public final class GelViewerTopComponent extends TopComponent implements
                 setSpotsToDraw();
             }
         });
-        final ProgressHandle ph = ProgressHandleFactory.createHandle("Loading gel " + gel.
-                getName(), task);
+        final ProgressHandle ph = ProgressHandleFactory.createHandle("Loading gel " + gel.getName(), task);
         task.addTaskListener(new TaskListener() {
 
             @Override
@@ -404,10 +414,10 @@ public final class GelViewerTopComponent extends TopComponent implements
 //        super.printComponent(g);
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -565,8 +575,7 @@ public final class GelViewerTopComponent extends TopComponent implements
             public void run() {
                 Rectangle2D dataBounds = getLookup().lookup(HeatmapDataset.class).
                         getDataBounds();
-                getLookup().lookup(ZoomProcessor.class).zoomIn(new Point2D.Double(dataBounds.
-                        getCenterX(), dataBounds.getCenterY()));
+                getLookup().lookup(ZoomProcessor.class).zoomIn(new Point2D.Double(dataBounds.getCenterX(), dataBounds.getCenterY()));
                 zoomDisplay.setText(String.format("%1.2f", getLookup().lookup(
                         HeatmapDataset.class).getZoom().getSecond()));
             }
@@ -584,8 +593,7 @@ public final class GelViewerTopComponent extends TopComponent implements
                         getDataBounds();
 
                 getLookup().lookup(ZoomProcessor.class).zoomOut(
-                        new Point2D.Double(dataBounds.getCenterX(), dataBounds.
-                        getCenterY()));
+                        new Point2D.Double(dataBounds.getCenterX(), dataBounds.getCenterY()));
                 zoomDisplay.setText(String.format("%1.2f", getLookup().lookup(
                         HeatmapDataset.class).getZoom().getSecond()));
             }
@@ -637,7 +645,6 @@ public final class GelViewerTopComponent extends TopComponent implements
         showLabeledSpots = labeledSpotsCheckBox.isSelected();
         setSpotsToDraw();
     }//GEN-LAST:event_labeledSpotsCheckBoxActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBoxMenuItem centerCheckBox;
     private javax.swing.JButton jButton1;
@@ -663,8 +670,7 @@ public final class GelViewerTopComponent extends TopComponent implements
         if (ds != null) {
             Iterator<?> iter2 = ds.getAnnotationIterator();
             while (iter2.hasNext()) {
-                Tuple2D<Point2D, Annotation<?>> tple = (Tuple2D<Point2D, Annotation<?>>) iter2.
-                        next();
+                Tuple2D<Point2D, Annotation<?>> tple = (Tuple2D<Point2D, Annotation<?>>) iter2.next();
                 SpotAnnotation spot = (SpotAnnotation) tple.getSecond();
                 boolean drawSpot = false;
                 boolean isUnlabeled = spot.getPayload().getLabel() == null || spot.getPayload().getLabel().isEmpty();
@@ -674,7 +680,7 @@ public final class GelViewerTopComponent extends TopComponent implements
                 if (showLabeledSpots && !isUnlabeled) {
                     drawSpot = true;
                 }
-                if(drawSpot) {
+                if (drawSpot) {
                     drawSpot = false;
                     boolean isPicked = (spot.getPayload().getStatus() == SpotStatus.PICKED);
                     if (showPickedSpots && isPicked) {
@@ -798,12 +804,9 @@ public final class GelViewerTopComponent extends TopComponent implements
     public void propertyChange(PropertyChangeEvent evt) {
         if ("annotationPointSelection".equals(evt.getPropertyName())) {
             System.out.println("GelViewer for gel " + getLookup().lookup(
-                    IGel.class) + " received annotationPointSelection: " + evt.
-                    getNewValue());
-            Tuple2D<Point2D, Annotation<ISpot>> newAnnotation = (Tuple2D<Point2D, Annotation<ISpot>>) evt.
-                    getNewValue();
-            Tuple2D<Point2D, Annotation<ISpot>> oldAnnotation = (Tuple2D<Point2D, Annotation<ISpot>>) evt.
-                    getOldValue();
+                    IGel.class) + " received annotationPointSelection: " + evt.getNewValue());
+            Tuple2D<Point2D, Annotation<ISpot>> newAnnotation = (Tuple2D<Point2D, Annotation<ISpot>>) evt.getNewValue();
+            Tuple2D<Point2D, Annotation<ISpot>> oldAnnotation = (Tuple2D<Point2D, Annotation<ISpot>>) evt.getOldValue();
             if (oldAnnotation != null) {
                 removeAnnotation(oldAnnotation.getSecond());
             }
@@ -812,7 +815,7 @@ public final class GelViewerTopComponent extends TopComponent implements
 //            repaint();
         } else {
 //            repaint();
-        } 
+        }
         setSpotsToDraw();
         jl.revalidate();
         jl.repaint();
@@ -856,10 +859,7 @@ public final class GelViewerTopComponent extends TopComponent implements
                         Point2D transformedCenter;
                         transformedCenter = hd.toViewPoint(
                                 annotation.getFirst());
-                        Rectangle target = new Rectangle((int) (transformedCenter.
-                                getX() - jl.getVisibleRect().width / 2), (int) (transformedCenter.
-                                getY() - jl.getVisibleRect().height / 2), jl.
-                                getVisibleRect().width,
+                        Rectangle target = new Rectangle((int) (transformedCenter.getX() - jl.getVisibleRect().width / 2), (int) (transformedCenter.getY() - jl.getVisibleRect().height / 2), jl.getVisibleRect().width,
                                 jl.getVisibleRect().height);
                         System.out.println("Scrolling to rectangle " + target);
                         jl.scrollRectToVisible(target);
@@ -871,7 +871,7 @@ public final class GelViewerTopComponent extends TopComponent implements
                 }
             }
         }
-        
+
     }
 
     protected void removeAnnotation(Annotation<ISpot> sa) {
@@ -916,8 +916,7 @@ public final class GelViewerTopComponent extends TopComponent implements
 
                         @Override
                         public void actionPerformed(ActionEvent ae) {
-                            IPlate96OpenCookie plate96OpenCookie = Lookup.
-                                    getDefault().
+                            IPlate96OpenCookie plate96OpenCookie = Lookup.getDefault().
                                     lookup(IPlate96OpenCookie.class);
                             ic.add(spot.getWell().getParent());
                             plate96OpenCookie.open();
@@ -933,8 +932,7 @@ public final class GelViewerTopComponent extends TopComponent implements
                             public void actionPerformed(ActionEvent ae) {
                                 for (IWell384 well384 : spot.getWell().
                                         get384Wells()) {
-                                    IPlate384OpenCookie plate384OpenCookie = Lookup.
-                                            getDefault().
+                                    IPlate384OpenCookie plate384OpenCookie = Lookup.getDefault().
                                             lookup(IPlate384OpenCookie.class);
                                     ic.add(well384.getParent());
                                     //TODO add project to lookup
@@ -955,8 +953,7 @@ public final class GelViewerTopComponent extends TopComponent implements
                         HeatmapDataset ds = getLookup().lookup(
                                 HeatmapDataset.class);
                         if (ds != null && annotation != null) {
-                            SpotAnnotation sa = (SpotAnnotation) annotation.
-                                    getSecond();
+                            SpotAnnotation sa = (SpotAnnotation) annotation.getSecond();
                             PropertySheet ps = new PropertySheet();
                             try {
                                 ps.setNodes(new Node[]{new BeanNode(sa)});
@@ -996,15 +993,13 @@ public final class GelViewerTopComponent extends TopComponent implements
                                 if (applyToSpotsInGroup.isSelected()) {
                                     ISpot spot = annotation.getSecond().
                                             getPayload();
-                                    SpotAnnotation templateSpotAnnotation = (SpotAnnotation) annotation.
-                                            getSecond();
+                                    SpotAnnotation templateSpotAnnotation = (SpotAnnotation) annotation.getSecond();
                                     ISpotGroup spotGroup = spot.getGroup();
                                     if (spotGroup != null) {
                                         for (ISpot other : spotGroup.getSpots()) {
                                             if (other != spot) {
 
-                                                SpotAnnotation otherSpotAnnotation = AnnotationManager.
-                                                        getSpotAnnotation(getLookup().
+                                                SpotAnnotation otherSpotAnnotation = AnnotationManager.getSpotAnnotation(getLookup().
                                                         lookup(
                                                         IProteomicProject.class),
                                                         other);
@@ -1019,21 +1014,16 @@ public final class GelViewerTopComponent extends TopComponent implements
                                 } else if (applyToAllOnGel.isSelected()) {
                                     Iterator<?> iter2 = ds.getAnnotationIterator();
                                     while (iter2.hasNext()) {
-                                        Tuple2D<Point2D, Annotation<?>> tple = (Tuple2D<Point2D, Annotation<?>>) iter2.
-                                                next();
-                                        SpotAnnotation spot = (SpotAnnotation) tple.
-                                                getSecond();
+                                        Tuple2D<Point2D, Annotation<?>> tple = (Tuple2D<Point2D, Annotation<?>>) iter2.next();
+                                        SpotAnnotation spot = (SpotAnnotation) tple.getSecond();
                                         setSpotProperties(spot, sa);
                                     }
                                 } else if (applyToAll.isSelected()) {
-                                    SpotAnnotation templateSpotAnnotation = (SpotAnnotation) annotation.
-                                            getSecond();
-                                    for (GelSpotAnnotations gsa : AnnotationManager.
-                                            getAnnotations(getLookup().
+                                    SpotAnnotation templateSpotAnnotation = (SpotAnnotation) annotation.getSecond();
+                                    for (GelSpotAnnotations gsa : AnnotationManager.getAnnotations(getLookup().
                                             lookup(
                                             IProteomicProject.class))) {
-                                        for (SpotAnnotation sann : gsa.
-                                                getSpotAnnotations()) {
+                                        for (SpotAnnotation sann : gsa.getSpotAnnotations()) {
                                             setSpotProperties(
                                                     sann,
                                                     templateSpotAnnotation);
@@ -1052,10 +1042,8 @@ public final class GelViewerTopComponent extends TopComponent implements
                         spot.setFont(template.getFont());
                         spot.setSelectedFillColor(
                                 template.getSelectedFillColor());
-                        spot.setSelectedStrokeColor(template.
-                                getSelectedStrokeColor());
-                        spot.setSelectionCrossColor(template.
-                                getSelectionCrossColor());
+                        spot.setSelectedStrokeColor(template.getSelectedStrokeColor());
+                        spot.setSelectionCrossColor(template.getSelectionCrossColor());
                         spot.setStrokeColor(template.getStrokeColor());
                         spot.setTextColor(template.getTextColor());
                         spot.setDrawSpotBox(template.isDrawSpotBox());

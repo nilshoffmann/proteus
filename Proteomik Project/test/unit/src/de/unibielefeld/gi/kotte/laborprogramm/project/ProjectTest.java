@@ -43,6 +43,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProjectFacto
 import de.unibielefeld.gi.kotte.laborprogramm.project.spi.factory.ProteomicProjectFactory2;
 import de.unibielefeld.gi.kotte.laborprogramm.project.spi.factory.ProteomikProjectFactory;
 import java.io.File;
+import java.net.URL;
 import net.sf.maltcms.chromaui.db.api.NoAuthCredentials;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -196,7 +197,7 @@ public class ProjectTest extends TestCase {
             IProject ipr2 = ics.retrieve(IProject.class).iterator().next();
             assertNotNull(ipr2);
             assertFalse(ipr2.get96Plates().isEmpty());
-            System.out.println("IProject has the following plates: "+ipr2.get96Plates());
+            System.out.println("IProject has the following plates: " + ipr2.get96Plates());
             ics.close();
             icp.close();
         } catch (MalformedURLException ex) {
@@ -243,51 +244,57 @@ public class ProjectTest extends TestCase {
 //        } catch (MalformedURLException ex) {
 //            Exceptions.printStackTrace(ex);
 //        }
-
-        //test retrieval from database
-
-        DB4oCrudProvider instance = new DB4oCrudProvider(new File(tmpProjectDir,
-                ProteomikProjectFactory.PROJECT_FILE), new NoAuthCredentials(), Lookup.
-                getDefault().lookup(ClassLoader.class));
-        instance.open();
-        ICrudSession ics = instance.createSession();
-        ics.open();
-        Collection<IProject> projects = ics.retrieve(IProject.class);
-        Logger.getLogger(getClass().getName()).log(Level.INFO,
-                "Retrieved {0} projects", projects.size());
-        assertEquals(1, projects.size());
-        for (IProject proj : projects) {
-            Logger.getLogger(getClass().getName()).log(Level.INFO,
-                    "Retrieved project {0}", proj);
-        }
-        ics.close();
-        instance.close();
-
-        //retrieve from database and compare to previous version
         try {
-            IProteomicProject ipp2 = (IProteomicProject) ippf.loadProject(FileUtil.
-                    toFileObject(tmpProjectDir), new ProjectState() {
+            //test retrieval from database
+            URL dbUrl = new File(tmpProjectDir, ProteomikProjectFactory.PROJECT_FILE).toURI().toURL();
+            ICrudProvider instance = Lookup.getDefault().lookup(ICrudProviderFactory.class).
+                    getCrudProvider(
+                    dbUrl,
+                    new NoAuthCredentials(), Thread.currentThread().
+                    getContextClassLoader());
+//            DB4oCrudProvider instance = new DB4oCrudProvider(new File(tmpProjectDir,
+//                    ProteomikProjectFactory.PROJECT_FILE), new NoAuthCredentials(), Lookup.getDefault().lookup(ClassLoader.class));
+            instance.open();
+            ICrudSession ics = instance.createSession();
+            ics.open();
+            Collection<IProject> projects = ics.retrieve(IProject.class);
+            Logger.getLogger(getClass().getName()).log(Level.INFO,
+                    "Retrieved {0} projects", projects.size());
+            assertEquals(1, projects.size());
+            for (IProject proj : projects) {
+                Logger.getLogger(getClass().getName()).log(Level.INFO,
+                        "Retrieved project {0}", proj);
+            }
+            ics.close();
+            instance.close();
 
-                @Override
-                public void markModified() {
-                    //throw new UnsupportedOperationException("Not supported yet.");
-                }
+            //retrieve from database and compare to previous version
+            try {
+                IProteomicProject ipp2 = (IProteomicProject) ippf.loadProject(FileUtil.toFileObject(tmpProjectDir), new ProjectState() {
 
-                @Override
-                public void notifyDeleted() throws IllegalStateException {
-                    //throw new UnsupportedOperationException("Not supported yet.");
-                }
-            });
-            System.err.println("Str1: " + str1);
-            String str2 = ipp2.toString();
-            System.err.println("Str2: " + str2);
-            assertEquals(str1, str2);
-            ipp2.close();
-            //System.out.println("Project2: "+ipp2.toString());
-        } catch (IOException ex) {
+                    @Override
+                    public void markModified() {
+                        //throw new UnsupportedOperationException("Not supported yet.");
+                    }
+
+                    @Override
+                    public void notifyDeleted() throws IllegalStateException {
+                        //throw new UnsupportedOperationException("Not supported yet.");
+                    }
+                });
+                System.err.println("Str1: " + str1);
+                String str2 = ipp2.toString();
+                System.err.println("Str2: " + str2);
+                assertEquals(str1, str2);
+                ipp2.close();
+                //System.out.println("Project2: "+ipp2.toString());
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            //IProteomicProject pp = ippf.createProject(dir);
+        } catch (MalformedURLException ex) {
             Exceptions.printStackTrace(ex);
         }
-        //IProteomicProject pp = ippf.createProject(dir);
     }
 
     private void deleteChildren(File f) {

@@ -29,8 +29,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.0</specification-version>
+                        <specification-version>1.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -130,6 +129,10 @@
                     <name>unit</name>
                     <test-dependency>
                         <code-name-base>net.sf.maltcms.chromaui.db.spi.db4o</code-name-base>
+                        <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.insane</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>

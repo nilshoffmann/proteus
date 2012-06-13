@@ -144,7 +144,7 @@ public class ProteomicProject implements IProteomicProject {
                     "Failed to find an instance of IProject in project database!");
         }
         IProject project = projects.iterator().next();
-        project.addPropertyChangeListener(WeakListeners.propertyChange(this,project));
+        project.addPropertyChangeListener(WeakListeners.propertyChange(this, project));
         return project;
     }
 
@@ -161,8 +161,7 @@ public class ProteomicProject implements IProteomicProject {
     @Override
     public FileObject getProjectDirectory() {
         try {
-            return FileUtil.toFileObject(new File(dblocation.toURI()).
-                    getParentFile());
+            return FileUtil.toFileObject(new File(dblocation.toURI()).getParentFile());
         } catch (URISyntaxException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -240,8 +239,7 @@ public class ProteomicProject implements IProteomicProject {
             File lockFile = new File(new File(dblocation.toURI()).getParentFile(), "lock");
             if (lockFile.exists()) {
                 closeSession();
-                throw new RuntimeException("Project database is already in use. If there is no open project, please delete the lock file " + lockFile.
-                        getAbsolutePath());
+                throw new RuntimeException("Project database is already in use. If there is no open project, please delete the lock file " + lockFile.getAbsolutePath());
             }
             try {
                 lockFile.createNewFile();
@@ -256,7 +254,8 @@ public class ProteomicProject implements IProteomicProject {
         if (icp == null || ics == null) {
             try {
                 icp = Lookup.getDefault().lookup(ICrudProviderFactory.class).
-                        getCrudProvider(dblocation, new NoAuthCredentials());
+                        getCrudProvider(dblocation, new NoAuthCredentials(), Lookup.getDefault().lookup(
+                        ClassLoader.class));
                 Logger.getLogger(getClass().getName()).log(Level.INFO,
                         "Using {0} as CRUD provider", icp.getClass().getName());
                 ics = icp.createSession();
@@ -299,7 +298,7 @@ public class ProteomicProject implements IProteomicProject {
         instanceContent.remove(this);
         Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().
                 closeTopComponentsFor(this);
-        if(lock!=null && lock.exists()) {
+        if (lock != null && lock.exists()) {
             lock.delete();
         }
         //CentralLookup.getDefault().remove(this);

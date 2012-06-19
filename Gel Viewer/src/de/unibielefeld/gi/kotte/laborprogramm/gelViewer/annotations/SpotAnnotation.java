@@ -22,6 +22,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations;
 
 import com.db4o.activation.ActivationPurpose;
 import com.db4o.activation.Activator;
+import com.db4o.ta.Activatable;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import java.awt.AlphaComposite;

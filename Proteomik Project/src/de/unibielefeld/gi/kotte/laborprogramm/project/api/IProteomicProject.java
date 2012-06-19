@@ -28,4 +28,6 @@ public interface IProteomicProject extends Project, IPropertyChangeSource, Prope
 
     public <T> Collection<T> retrieve(Class<T> c);
     
+    public void delete(Object...obj);
+    
 }

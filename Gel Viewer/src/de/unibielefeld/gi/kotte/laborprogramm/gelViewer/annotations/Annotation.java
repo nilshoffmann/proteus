@@ -37,7 +37,7 @@ import net.sf.maltcms.ui.plot.heatmap.painter.PainterTools;
  *
  * @author nilshoffmann
  */
-public class Annotation<T> implements IAnnotation<T>, Activatable, IPropertyChangeSource {
+public class Annotation<T> implements IAnnotation<T>, IPropertyChangeSource, Activatable {
 
     /**
      * PropertyChangeSupport ala JavaBeans(tm)

@@ -133,6 +133,11 @@ public class ProteomicProject implements IProteomicProject {
     public <T> void persist(List<T> objects) {
         getCrudSession().create(objects);
     }
+    
+    @Override
+    public void delete(Object...obj) {
+        getCrudSession().delete(obj);
+    }
 
     private IProject getFromDB() {
         Collection<IProject> projects = getCrudSession().retrieve(IProject.class);

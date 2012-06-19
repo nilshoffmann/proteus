@@ -25,8 +25,10 @@ import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import net.sf.maltcms.ui.plot.heatmap.HeatmapDataset;
 import net.sf.maltcms.ui.plot.heatmap.HeatmapPanel;
@@ -64,7 +66,12 @@ public class AnnotationManager {
     }
 
     public static Collection<GelSpotAnnotations> getAnnotations(IProteomicProject project) {
-        return project.retrieve(GelSpotAnnotations.class);
+        try {
+            return project.retrieve(GelSpotAnnotations.class);
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
+
     }
 
     public static GelSpotAnnotations getAnnotationsForGel(IProteomicProject project, IGel gel) {
@@ -79,12 +86,12 @@ public class AnnotationManager {
 
     public static SpotAnnotation getSpotAnnotation(IProteomicProject project, ISpot spot) {
         GelSpotAnnotations annotations = getAnnotationsForGel(project, spot.getGel());
-        if(annotations==null) {
+        if (annotations == null) {
             return null;
         }
         for (Annotation ann : annotations.getSpotAnnotations()) {
-            SpotAnnotation sann = (SpotAnnotation)ann;
-            if(sann.getPayload() == spot) {
+            SpotAnnotation sann = (SpotAnnotation) ann;
+            if (sann.getPayload() == spot) {
                 return sann;
             }
         }
@@ -106,15 +113,25 @@ public class AnnotationManager {
             }
         }
 
-        for (Annotation ann : gelSpotAnnotation.getSpotAnnotations()) {
-            SpotAnnotation annotation = (SpotAnnotation) ann;
-            ISpot spot = annotation.getPayload();
-            if (spot == null) {
-                System.err.println("Spot for annotation: " + annotation + " was null!");
+        try {
+            for (Annotation ann : gelSpotAnnotation.getSpotAnnotations()) {
+                SpotAnnotation annotation = (SpotAnnotation) ann;
+                ISpot spot = annotation.getPayload();
+                if (spot == null) {
+                    System.err.println("Spot for annotation: " + annotation + " was null!");
+                } else {
+                    if (annotation.getShape()==null) {
+                        System.err.println("Shape for annotation was null, setting default rectangle!");
+                        annotation.setShape(new Rectangle2D.Double(spot.getPosX() - 10, spot.getPosX() - 10, 20, 20));
+                    }
+                    spot.addPropertyChangeListener(hp);
+                    annotation.addPropertyChangeListener(hp);
+                    hmd.addAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()), annotation);
+                    annotation.setDrawSpotBox(true);
+                }
             }
-            spot.addPropertyChangeListener(hp);
-            annotation.addPropertyChangeListener(hp);
-            hmd.addAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()), annotation);
+        } catch (java.lang.IllegalStateException ise) {
+            ise.printStackTrace();
         }
     }
 

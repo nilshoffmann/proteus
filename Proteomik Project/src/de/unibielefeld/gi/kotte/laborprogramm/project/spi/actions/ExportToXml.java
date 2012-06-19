@@ -29,6 +29,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Cancellable;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 
@@ -40,13 +41,13 @@ id = "de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.ExportToXml")
 })
 @Messages("CTL_ExportToXml=Backup to Xml")
 public final class ExportToXml implements ActionListener {
-
+    
     private final IProteomicProject context;
-
+    
     public ExportToXml(IProteomicProject context) {
         this.context = context;
     }
-
+    
     @Override
     public void actionPerformed(ActionEvent ev) {
         ExportToXmlCallable runnable = new ExportToXmlCallable(context);
@@ -57,20 +58,20 @@ public final class ExportToXml implements ActionListener {
                 "Exporting Project to XML");
         Future<File> task = rp.submit(runnable);
     }
-
+    
     private class ExportToXmlCallable implements Callable<File>, Cancellable, ExceptionListener {
-
+        
         private final IProteomicProject context;
         private ProgressHandle handle;
-
+        
         public ExportToXmlCallable(IProteomicProject context) {
             this.context = context;
         }
-
+        
         public void setProgressHandle(ProgressHandle handle) {
             this.handle = handle;
         }
-
+        
         @Override
         public File call() throws Exception {
             handle.start();
@@ -84,6 +85,8 @@ public final class ExportToXml implements ActionListener {
             File outputFile = new File(output, project.getName() + ".xml");
             
             XStream xstream = new XStream(new StaxDriver());
+            xstream.setClassLoader(Lookup.getDefault().lookup(
+                    ClassLoader.class));
             //xstream.registerConverter(new FileConverter());
             xstream.registerConverter(new GeneralPathConverter());
             //xstream.registerConverter(new ActivatableArrayListConverter());
@@ -107,12 +110,12 @@ public final class ExportToXml implements ActionListener {
             handle.finish();
             return outputFile;
         }
-
+        
         @Override
         public boolean cancel() {
             throw new UnsupportedOperationException("Cancellation not supported!");
         }
-
+        
         @Override
         public void exceptionThrown(Exception excptn) {
             Exceptions.printStackTrace(excptn);

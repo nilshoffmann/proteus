@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.io.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import net.sf.maltcms.io.xml.serialization.api.ActivatableArrayListConverter;
 import net.sf.maltcms.io.xml.serialization.api.GeneralPathConverter;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
@@ -30,6 +31,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Cancellable;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 
@@ -41,13 +43,13 @@ id = "de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.LoadFromXml")
 })
 @Messages("CTL_LoadFromXml=Load Backup from Xml")
 public final class LoadFromXml implements ActionListener {
-
+    
     private final IProteomicProject context;
-
+    
     public LoadFromXml(IProteomicProject context) {
         this.context = context;
     }
-
+    
     @Override
     public void actionPerformed(ActionEvent ev) {
         ImportFromXmlCallable runnable = new ImportFromXmlCallable(context);
@@ -58,20 +60,20 @@ public final class LoadFromXml implements ActionListener {
                 "Restoring Project from XML");
         Future<IProject> task = rp.submit(runnable);
     }
-
+    
     private class ImportFromXmlCallable implements Callable<IProject>, Cancellable {
-
+        
         private final IProteomicProject context;
         private ProgressHandle handle;
-
+        
         public ImportFromXmlCallable(IProteomicProject context) {
             this.context = context;
         }
-
+        
         public void setProgressHandle(ProgressHandle handle) {
             this.handle = handle;
         }
-
+        
         @Override
         public IProject call() throws Exception {
             handle.start();
@@ -86,7 +88,10 @@ public final class LoadFromXml implements ActionListener {
             IProject projectFromBackup = project;
             try {
                 XStream xstream = new XStream(new StaxDriver());
+                xstream.setClassLoader(Lookup.getDefault().lookup(
+                        ClassLoader.class));
                 xstream.registerConverter(new GeneralPathConverter());
+                //xstream.registerConverter(new ActivatableArrayListConverter());
                 projectFromBackup = (IProject) xstream.fromXML(new BufferedInputStream(
                         new FileInputStream(backupFile)));
                 ProteomicProjectFactory2 ppf = new ProteomicProjectFactory2();
@@ -94,7 +99,7 @@ public final class LoadFromXml implements ActionListener {
                 oldDatabaseFile.renameTo(new File(output.getParent(), ProteomikProjectFactory.PROJECT_FILE + ".bak"));
                 IProteomicProject proj = ppf.createProject(output.getParentFile(), projectFromBackup);
                 proj.close();
-
+                
                 try {
                     Project nbproject;
                     nbproject = ProjectManager.getDefault().findProject(projectDir);
@@ -112,7 +117,7 @@ public final class LoadFromXml implements ActionListener {
             }
             return project;
         }
-
+        
         @Override
         public boolean cancel() {
             throw new UnsupportedOperationException("Cancellation not supported!");

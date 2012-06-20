@@ -1,15 +1,15 @@
 package de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer;
 
-import javax.swing.JPanel;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.Well384Status;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
 import java.awt.GridLayout;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Lookup;
@@ -23,7 +23,7 @@ import org.openide.util.lookup.InstanceContent;
 public class Plate96Panel extends JPanel {
 
     private ISpot spot = null;
-    private IWell384 well384 = null;
+//    private IWell384 well384 = null;
     private boolean autoAssignSpots = false;
     private int currentPlateIndex = 0;
 //    private IPlate96 plate = null;
@@ -150,13 +150,13 @@ public class Plate96Panel extends JPanel {
     }
 
     public void setWell384(IWell384 well384) {
-        this.well384 = well384;
+//        this.well384 = well384;
         setButtonForWell384Active(well384);
     }
 
-    public boolean isAutoAssignSpots() {
-        return autoAssignSpots;
-    }
+//    public boolean isAutoAssignSpots() {
+//        return autoAssignSpots;
+//    }
 
     protected Well96Button setButtonForSpotActive(ISpot spot) {
         Well96Button button = null;
@@ -204,9 +204,9 @@ public class Plate96Panel extends JPanel {
     }
 
     public void setAutoAssignSpots(boolean autoAssignSpots) {
-        if (this.autoAssignSpots != autoAssignSpots) {
-            currentPlateIndex = 0;
-        }
+//        if (this.autoAssignSpots != autoAssignSpots) {
+//            currentPlateIndex = 0;
+//        }
         this.autoAssignSpots = autoAssignSpots;
     }
 }

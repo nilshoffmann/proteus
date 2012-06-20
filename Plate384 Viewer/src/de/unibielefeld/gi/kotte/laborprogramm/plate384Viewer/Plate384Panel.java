@@ -184,9 +184,9 @@ public class Plate384Panel extends JPanel implements PropertyChangeListener {
         setButtonForWell96Active(well96);
     }
 
-    public boolean isAutoAssignWell96() {
-        return autoAssign96Wells;
-    }
+//    public boolean isAutoAssignWell96() {
+//        return autoAssign96Wells;
+//    }
 
     public void setButtonForWell96Active(IWell96 well96) {
         if (well96 != null) {
@@ -215,9 +215,9 @@ public class Plate384Panel extends JPanel implements PropertyChangeListener {
     }
 
     public void setAutoAssign96Wells(boolean autoAssign96Wells) {
-        if (this.autoAssign96Wells != autoAssign96Wells) {
-            currentPlateIndex = 0;
-        }
+//        if (this.autoAssign96Wells != autoAssign96Wells) {
+//            currentPlateIndex = 0;
+//        }
         this.autoAssign96Wells = autoAssign96Wells;
     }
 

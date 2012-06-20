@@ -5,24 +5,11 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.RenderingHints;
-import java.awt.Shape;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
-import javax.swing.AbstractAction;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JPopupMenu;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JSeparator;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -170,9 +157,6 @@ public class Well96Button extends JButton implements MouseInputListener {
         public void actionPerformed(ActionEvent e) {
             selectStatus(status);
             menu.setVisible(false);
-            boolean autoAssignState = panel.isAutoAssignSpots();
-            panel.setAutoAssignSpots(!autoAssignState);
-            panel.setAutoAssignSpots(autoAssignState);
         }
     }
 

@@ -51,12 +51,14 @@ public class BTRReader {
             String line;
             IWell384 well = null;
             IIdentificationMethod method = null;
+            boolean valid;
             while ((line = in.readLine()) != null) {
                 //line = line.trim();
 //                System.out.println(line);
                 //create identification
                 IIdentification identification = Lookup.getDefault().lookup(
                         IIdentificationFactory.class).createIdentification();
+                valid = true;
                 String[] data = line.split("\t");
 //                data = line.split("\t");
                 System.out.println("Parsing line: " + Arrays.toString(data));
@@ -90,7 +92,11 @@ public class BTRReader {
                                     data[i]));
                             break;
                         case MASCOT_SCORE:
-                            identification.setScore(Float.parseFloat(data[i]));
+                            float score = Float.parseFloat(data[i]);
+                            identification.setScore(score);
+                            if (score == -1) {
+                                valid = false;
+                            }
                             break;
                         case METHOD:
                             //read in method, if there is a new one
@@ -109,33 +115,40 @@ public class BTRReader {
                             identification.setProteinMolecularWeight(Float.parseFloat(data[i]));
                             break;
                         case STATUS:
+                            if (data[i].equals("Error") || data[i].equals("Undefined")) {
+                                valid = false;
+                            }
                             break;
                         case TITLE:
-                            //parse data
+                            String title = data[2];
+                            if (title.startsWith("\"") && title.endsWith("\"")) {
+                                title = title.substring(1, title.length() -1);
+                            }
+                            //parse title
                             String abbreviation = "";
-                            Matcher abbreviationMatcher = abbreviationPattern.matcher(data[2].replaceAll("\"", ""));
+                            Matcher abbreviationMatcher = abbreviationPattern.matcher(title.replaceAll("\"", ""));
                             if (abbreviationMatcher.find()) {
                                 abbreviation = abbreviationMatcher.group(1);
                                 abbreviation = Character.toUpperCase(abbreviation.charAt(0)) + abbreviation.substring(1, abbreviation.length());
                             }
                             String name = "";
-                            Matcher nameMatcher = namePattern.matcher(data[2]);
+                            Matcher nameMatcher = namePattern.matcher(title);
                             if (nameMatcher.find()) {
                                 name = nameMatcher.group(1);
                             }
                             int gendbId = -1;
-                            Matcher gendbMatcher = gendbPattern.matcher(data[2]);
+                            Matcher gendbMatcher = gendbPattern.matcher(title);
                             if (gendbMatcher.find()) {
                                 gendbId = Integer.parseInt(gendbMatcher.group(1));
                             }
 
                             String genDbProject = "";
-                            Matcher genDbProjectMatcher = gendbProjectPattern.matcher(data[2]);
+                            Matcher genDbProjectMatcher = gendbProjectPattern.matcher(title);
                             if (genDbProjectMatcher.find()) {
                                 genDbProject = genDbProjectMatcher.group();
                             }
                             List<String> keggNumbers = new ArrayList<String>();
-                            Matcher keggMatcher = keggPattern.matcher(data[2]);
+                            Matcher keggMatcher = keggPattern.matcher(title);
                             while (keggMatcher.find()) {
                                 keggNumbers.add(keggMatcher.group(1));
                             }
@@ -165,7 +178,7 @@ public class BTRReader {
                 identification.setSource(f.getCanonicalPath());
                 //add identification to well
                 System.out.println(identification);
-                if ((well == null) || (well.getStatus() == Well384Status.EMPTY)
+                if (!valid || (well == null) || (well.getStatus() == Well384Status.EMPTY)
                         || (well.getStatus() == Well384Status.ERROR)) {
                     Logger.getLogger(BTRReader.class.getName()).log(Level.WARNING,
                             "Skipping well {0}", well);

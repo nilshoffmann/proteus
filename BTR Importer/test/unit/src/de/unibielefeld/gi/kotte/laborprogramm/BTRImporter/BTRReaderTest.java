@@ -1,5 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.BTRImporter;
 
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationMethod;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384Factory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
@@ -39,6 +40,11 @@ public class BTRReaderTest {
         }
 
         BTRReader.readBTRFile(f, plate);
-        System.out.println(plate.toFullyRecursiveString());
+        //System.out.println(plate.toFullyRecursiveString());
+        
+        //TEST
+        for (IIdentificationMethod method : plate.getWell('A', 19).getIdentification().getMethods()) {
+            System.out.println(method.getName());
+        }
     }
 }

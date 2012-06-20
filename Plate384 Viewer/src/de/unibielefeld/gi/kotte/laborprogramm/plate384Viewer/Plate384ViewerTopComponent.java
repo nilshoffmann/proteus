@@ -1,5 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer;
 
+import de.unibielefeld.gi.kotte.laborprogramm.picking.api.Picker;
+import de.unibielefeld.gi.kotte.laborprogramm.picking.api.PickingRegistry;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
@@ -10,18 +12,13 @@ import de.unibielefeld.gi.kotte.laborprogramm.topComponentRegistry.api.IRegistry
 import java.awt.BorderLayout;
 import java.util.Iterator;
 import java.util.List;
-import org.openide.util.LookupEvent;
-import org.openide.util.NbBundle;
-import org.openide.windows.TopComponent;
-//import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
-import org.openide.util.LookupListener;
-import org.openide.util.Utilities;
+import org.openide.util.*;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.windows.Mode;
+import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
 /**
@@ -31,7 +28,7 @@ import org.openide.windows.WindowManager;
  */
 @ConvertAsProperties(dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.plateViewer//Plate384Viewer//EN",
 autostore = false)
-public final class Plate384ViewerTopComponent extends TopComponent implements LookupListener {
+public final class Plate384ViewerTopComponent extends TopComponent implements LookupListener, Picker {
 
     private static Plate384ViewerTopComponent instance;
     /** path to the icon used by the component and its open action */
@@ -141,6 +138,11 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
     }// </editor-fold>//GEN-END:initComponents
 
     private void autoAssignSpotsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoAssignSpotsButtonActionPerformed
+        if (autoAssignSpotsButton.isSelected()) {
+            PickingRegistry.register(this);
+        } else {
+            PickingRegistry.unregister(this);
+        }
         platePanel.setAutoAssign96Wells(autoAssignSpotsButton.isSelected());
     }//GEN-LAST:event_autoAssignSpotsButtonActionPerformed
 
@@ -309,5 +311,11 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
                 }
             }
         }
+    }
+    
+    @Override
+    public void resetPicking() {
+        autoAssignSpotsButton.setSelected(false);
+        platePanel.setAutoAssign96Wells(false);
     }
 }

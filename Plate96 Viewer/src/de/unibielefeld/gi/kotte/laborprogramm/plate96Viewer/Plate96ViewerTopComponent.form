@@ -1,4 +1,4 @@
-<?xml version="1.1" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <AuxValues>
@@ -28,17 +28,17 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JToggleButton" name="autoAssignSpots">
+        <Component class="javax.swing.JToggleButton" name="autoAssignSpotsButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/plate96Viewer/Bundle.properties" key="Plate96ViewerTopComponent.autoAssignSpots.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/plate96Viewer/Bundle.properties" key="Plate96ViewerTopComponent.autoAssignSpotsButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/plate96Viewer/Bundle.properties" key="Plate96ViewerTopComponent.autoAssignSpots.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/plate96Viewer/Bundle.properties" key="Plate96ViewerTopComponent.autoAssignSpotsButton.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="autoAssignSpotsActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="autoAssignSpotsButtonActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JToolBar$Separator" name="jSeparator1">

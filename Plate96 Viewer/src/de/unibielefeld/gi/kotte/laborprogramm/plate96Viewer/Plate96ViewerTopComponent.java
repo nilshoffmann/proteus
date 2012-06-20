@@ -1,5 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer;
 
+import de.unibielefeld.gi.kotte.laborprogramm.picking.api.Picker;
+import de.unibielefeld.gi.kotte.laborprogramm.picking.api.PickingRegistry;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
@@ -8,18 +10,13 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.topComponentRegistry.api.IRegistryFactory;
 import java.awt.BorderLayout;
 import java.util.Iterator;
-import org.openide.util.LookupEvent;
-import org.openide.util.NbBundle;
-import org.openide.windows.TopComponent;
-//import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
-import org.openide.util.LookupListener;
-import org.openide.util.Utilities;
+import org.openide.util.*;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.windows.Mode;
+import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
 /**
@@ -29,7 +26,7 @@ import org.openide.windows.WindowManager;
  */
 @ConvertAsProperties(dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.plateViewer//Plate96Viewer//EN",
 autostore = false)
-public final class Plate96ViewerTopComponent extends TopComponent implements LookupListener {
+public final class Plate96ViewerTopComponent extends TopComponent implements LookupListener, Picker {
 
     private static Plate96ViewerTopComponent instance;
     /** path to the icon used by the component and its open action */
@@ -75,7 +72,7 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
     private void initComponents() {
 
         jToolBar1 = new javax.swing.JToolBar();
-        autoAssignSpots = new javax.swing.JToggleButton();
+        autoAssignSpotsButton = new javax.swing.JToggleButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         jButton1 = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
@@ -86,14 +83,14 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
 
         jToolBar1.setRollover(true);
 
-        org.openide.awt.Mnemonics.setLocalizedText(autoAssignSpots, org.openide.util.NbBundle.getMessage(Plate96ViewerTopComponent.class, "Plate96ViewerTopComponent.autoAssignSpots.text")); // NOI18N
-        autoAssignSpots.setToolTipText(org.openide.util.NbBundle.getMessage(Plate96ViewerTopComponent.class, "Plate96ViewerTopComponent.autoAssignSpots.toolTipText")); // NOI18N
-        autoAssignSpots.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(autoAssignSpotsButton, org.openide.util.NbBundle.getMessage(Plate96ViewerTopComponent.class, "Plate96ViewerTopComponent.autoAssignSpotsButton.text")); // NOI18N
+        autoAssignSpotsButton.setToolTipText(org.openide.util.NbBundle.getMessage(Plate96ViewerTopComponent.class, "Plate96ViewerTopComponent.autoAssignSpotsButton.toolTipText")); // NOI18N
+        autoAssignSpotsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                autoAssignSpotsActionPerformed(evt);
+                autoAssignSpotsButtonActionPerformed(evt);
             }
         });
-        jToolBar1.add(autoAssignSpots);
+        jToolBar1.add(autoAssignSpotsButton);
         jToolBar1.add(jSeparator1);
 
         org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(Plate96ViewerTopComponent.class, "Plate96ViewerTopComponent.jButton1.text")); // NOI18N
@@ -118,16 +115,21 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         add(jToolBar1, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void autoAssignSpotsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoAssignSpotsActionPerformed
-        platePanel.setAutoAssignSpots(autoAssignSpots.isSelected());
-    }//GEN-LAST:event_autoAssignSpotsActionPerformed
+    private void autoAssignSpotsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoAssignSpotsButtonActionPerformed
+        if (autoAssignSpotsButton.isSelected()) {
+            PickingRegistry.register(this);
+        } else {
+            PickingRegistry.unregister(this);
+        }
+        platePanel.setAutoAssignSpots(autoAssignSpotsButton.isSelected());
+    }//GEN-LAST:event_autoAssignSpotsButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         platePanel.clear();
     }//GEN-LAST:event_jButton1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel activeSpotLabel;
-    private javax.swing.JToggleButton autoAssignSpots;
+    private javax.swing.JToggleButton autoAssignSpotsButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JToolBar.Separator jSeparator1;
@@ -249,5 +251,11 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
                 platePanel.setWell384(this.well384);
             }
         }
+    }
+
+    @Override
+    public void resetPicking() {
+        autoAssignSpotsButton.setSelected(false);
+        platePanel.setAutoAssignSpots(false);
     }
 }

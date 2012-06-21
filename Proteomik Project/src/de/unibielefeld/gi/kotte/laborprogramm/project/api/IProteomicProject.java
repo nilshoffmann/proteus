@@ -24,8 +24,11 @@ public interface IProteomicProject extends Project, IPropertyChangeSource, Prope
 
     public void setProjectState(ProjectState ps);
 
+    @Deprecated
     public <T> void persist(List<T> objects);
 
+    public <T> void store(T...t);
+    
     public <T> Collection<T> retrieve(Class<T> c);
     
     public void delete(Object...obj);

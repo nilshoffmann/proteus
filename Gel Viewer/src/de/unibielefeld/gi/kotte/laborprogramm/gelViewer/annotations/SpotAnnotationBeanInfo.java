@@ -35,6 +35,7 @@ public class SpotAnnotationBeanInfo extends SimpleBeanInfo {
 
 
 
+
     // Here you can add code for customizing the BeanDescriptor.
 
          return beanDescriptor;     }//GEN-LAST:BeanDescriptor
@@ -88,7 +89,6 @@ public class SpotAnnotationBeanInfo extends SimpleBeanInfo {
             properties[PROPERTY_shape].setHidden ( true );
             properties[PROPERTY_strokeAlpha] = new PropertyDescriptor ( "strokeAlpha", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getStrokeAlpha", "setStrokeAlpha" ); // NOI18N
             properties[PROPERTY_strokeColor] = new PropertyDescriptor ( "strokeColor", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getStrokeColor", "setStrokeColor" ); // NOI18N
-            properties[PROPERTY_strokeColor].setHidden ( true );
             properties[PROPERTY_textColor] = new PropertyDescriptor ( "textColor", de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation.class, "getTextColor", "setTextColor" ); // NOI18N
         }
         catch(IntrospectionException e) {

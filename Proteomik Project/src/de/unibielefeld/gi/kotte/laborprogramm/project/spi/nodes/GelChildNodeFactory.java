@@ -21,7 +21,7 @@ import org.openide.util.Lookup;
 class GelChildNodeFactory extends ChildFactory<ISpot> implements PropertyChangeListener {
 
     private Lookup lkp;
-    private boolean sortSpotGroupsNumerically = false;
+    private boolean sortSpotGroupsNumerically = true;
 
     public GelChildNodeFactory() {
     }
@@ -58,7 +58,7 @@ class GelChildNodeFactory extends ChildFactory<ISpot> implements PropertyChangeL
     protected Node createNodeForKey(ISpot key) {
         key.addPropertyChangeListener(this);
         try {
-            return new BeanNode<ISpot>(key);
+            return new SpotNode(key,lkp);
         } catch (IntrospectionException ex) {
             Exceptions.printStackTrace(ex);
         }

@@ -135,6 +135,11 @@ public class ProteomicProject implements IProteomicProject {
     }
     
     @Override
+    public <T> void store(T...t) {
+        getCrudSession().create(t);
+    }
+    
+    @Override
     public void delete(Object...obj) {
         getCrudSession().delete(obj);
     }

@@ -21,7 +21,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.gelViewer;
 
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.actions.ExportGelAction;
-import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.Annotation;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.AnnotationManager;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.GelSpotAnnotations;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation;

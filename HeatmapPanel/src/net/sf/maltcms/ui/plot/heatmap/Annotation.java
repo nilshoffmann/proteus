@@ -96,6 +96,9 @@ public class Annotation<T> implements IAnnotation<T> {
 
     @Override
     public String toString() {
+        if(payload==null) {
+            return "<NA>";
+        }
         return getPayload().toString();
     }
 

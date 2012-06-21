@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import net.sf.maltcms.ui.plot.heatmap.Annotation;
 import net.sf.maltcms.ui.plot.heatmap.HeatmapDataset;
 import net.sf.maltcms.ui.plot.heatmap.HeatmapPanel;
 
@@ -52,7 +53,7 @@ public class AnnotationManager {
         this.hp = hp;
     }
 
-    protected GelSpotAnnotations addAnnotations() {
+    public static GelSpotAnnotations addAnnotations(IProteomicProject project, IGel gel) {
         List<SpotAnnotation> spotAnnotations = new ActivatableArrayList<SpotAnnotation>();
         for (ISpot spot : gel.getSpots()) {
             SpotAnnotation ann = new SpotAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()), spot);
@@ -99,17 +100,31 @@ public class AnnotationManager {
     }
 
     public void open() {
-
+        Collection<AnnotationsResetMarker> c = project.retrieve(AnnotationsResetMarker.class);
+        if(c.isEmpty()) {
+            System.out.println("Resetting annotations");
+            //reset annotations
+            Collection<GelSpotAnnotations> gelSpotAnnotations = getAnnotations(project);
+            for(GelSpotAnnotations gsa:gelSpotAnnotations) {
+                for(SpotAnnotation sa:gsa.getSpotAnnotations()){
+                    project.delete(sa);
+                }
+                project.delete(gsa);
+            }
+            System.out.println("Storing annotations reset marker!");
+            AnnotationsResetMarker ars = new AnnotationsResetMarker();
+            ars.setUpdated(true);
+            project.store(ars);
+        }
         Collection<GelSpotAnnotations> gelSpotAnnotations = getAnnotations(project);
-
         if (gelSpotAnnotations.isEmpty()) {
             System.out.println("Did not find any spot GelSpotAnnotations in database!");
-            gelSpotAnnotation = addAnnotations();
+            gelSpotAnnotation = addAnnotations(project, gel);
         } else {
             gelSpotAnnotation = getAnnotationsForGel(project, gel);
             if (gelSpotAnnotation == null) {
                 System.out.println("Could not find existing GelSpotAnnotations for gel " + gel.getFilename());
-                gelSpotAnnotation = addAnnotations();
+                gelSpotAnnotation = addAnnotations(project, gel);
             }
         }
 

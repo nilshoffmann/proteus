@@ -1,23 +1,3 @@
-/*
- *  Copyright (C) 2008-2012 Nils Hoffmann
- *  Nils.Hoffmann A T CeBiTec.Uni-Bielefeld.DE
- *
- *  This file is part of Maui.
- *
- *  Maui is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Maui is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with Maui.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
 package de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations;
 
 import com.db4o.activation.ActivationPurpose;
@@ -37,6 +17,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
+import net.sf.maltcms.ui.plot.heatmap.Annotation;
 import net.sf.maltcms.ui.plot.heatmap.Tuple2D;
 import net.sf.maltcms.ui.plot.heatmap.painter.PainterTools;
 
@@ -44,7 +25,7 @@ import net.sf.maltcms.ui.plot.heatmap.painter.PainterTools;
  *
  * @author nils
  */
-public class SpotAnnotation extends Annotation<ISpot> {
+public class SpotAnnotation extends Annotation<ISpot> implements Activatable {
 
 //    /**
 //     * PropertyChangeSupport ala JavaBeans(tm)
@@ -70,7 +51,6 @@ public class SpotAnnotation extends Annotation<ISpot> {
 //        }
 //        return this.pcs;
 //    }
-
     private transient Activator activator;
 
     @Override
@@ -91,7 +71,6 @@ public class SpotAnnotation extends Annotation<ISpot> {
             activator.activate(activationPurpose);
         }
     }
-
     private boolean drawSpotId = true;
     private double displacementX = 5.0;
     private double displacementY = -5.0;
@@ -109,14 +88,13 @@ public class SpotAnnotation extends Annotation<ISpot> {
 
     public SpotAnnotation(Point2D position, ISpot t) {
         super(position, t);
-        if(t.getShape() == null) {
+        if (t.getShape() == null) {
             setShape(new RoundRectangle2D.Double(position.getX() - 10, position.getY() - 10, 20, 20, 5, 5));
         } else {
-//            System.out.println("Shape bounds in SpotAnnotation: " + t.getShape().getBounds2D());
+            System.out.println("Shape bounds in SpotAnnotation: " + t.getShape().getBounds2D());
             setShape(t.getShape());
         }
     }
-
     public static final String PROP_DRAWSPOTBOX = "drawSpotBox";
 
     public boolean isDrawSpotBox() {
@@ -130,8 +108,8 @@ public class SpotAnnotation extends Annotation<ISpot> {
         this.drawSpotBox = b;
         getPropertyChangeSupport().firePropertyChange(PROP_DRAWSPOTBOX, old, b);
     }
-
     public static final String PROP_DISPLACEMENTX = "displacementX";
+
     public double getDisplacementX() {
         activate(ActivationPurpose.READ);
         return displacementX;
@@ -143,8 +121,8 @@ public class SpotAnnotation extends Annotation<ISpot> {
         this.displacementX = displacementX;
         getPropertyChangeSupport().firePropertyChange(PROP_DISPLACEMENTX, old, displacementX);
     }
-
     public static final String PROP_DISPLACEMENTY = "displacementY";
+
     public double getDisplacementY() {
         activate(ActivationPurpose.READ);
         return displacementY;
@@ -156,8 +134,8 @@ public class SpotAnnotation extends Annotation<ISpot> {
         this.displacementY = displacementY;
         getPropertyChangeSupport().firePropertyChange(PROP_DISPLACEMENTY, old, displacementY);
     }
-
     public static final String PROP_STROKEALPHA = "strokeAlpha";
+
     public double getStrokeAlpha() {
         activate(ActivationPurpose.READ);
         return strokeAlpha;
@@ -169,8 +147,8 @@ public class SpotAnnotation extends Annotation<ISpot> {
         this.strokeAlpha = strokeAlpha;
         getPropertyChangeSupport().firePropertyChange(PROP_STROKEALPHA, old, strokeAlpha);
     }
-
     public static final String PROP_FILLALPHA = "fillAlpha";
+
     public double getFillAlpha() {
         activate(ActivationPurpose.READ);
         return fillAlpha;
@@ -182,8 +160,8 @@ public class SpotAnnotation extends Annotation<ISpot> {
         this.fillAlpha = fillAlpha;
         getPropertyChangeSupport().firePropertyChange(PROP_FILLALPHA, old, fillAlpha);
     }
-
     public static final String PROP_DRAWSPOTID = "drawSpotId";
+
     public boolean isDrawSpotId() {
         activate(ActivationPurpose.READ);
         return drawSpotId;
@@ -195,8 +173,8 @@ public class SpotAnnotation extends Annotation<ISpot> {
         this.drawSpotId = drawSpotId;
         getPropertyChangeSupport().firePropertyChange(PROP_DRAWSPOTID, old, drawSpotId);
     }
-
     public static final String PROP_FILLCOLOR = "fillColor";
+
     public Color getFillColor() {
         activate(ActivationPurpose.READ);
         return fillColor;
@@ -208,8 +186,8 @@ public class SpotAnnotation extends Annotation<ISpot> {
         this.fillColor = fillColor;
         getPropertyChangeSupport().firePropertyChange(PROP_FILLCOLOR, old, fillColor);
     }
-
     public static final String PROP_FONT = "font";
+
     public Font getFont() {
         activate(ActivationPurpose.READ);
         return font;
@@ -221,8 +199,8 @@ public class SpotAnnotation extends Annotation<ISpot> {
         this.font = font;
         getPropertyChangeSupport().firePropertyChange(PROP_FONT, old, font);
     }
-
     public static final String PROP_LINECOLOR = "lineColor";
+
     public Color getLineColor() {
         activate(ActivationPurpose.READ);
         return lineColor;
@@ -234,8 +212,8 @@ public class SpotAnnotation extends Annotation<ISpot> {
         this.lineColor = lineColor;
         getPropertyChangeSupport().firePropertyChange(PROP_LINECOLOR, old, lineColor);
     }
-
     public static final String PROP_SELECTEDFILLCOLOR = "selectedFillColor";
+
     public Color getSelectedFillColor() {
         activate(ActivationPurpose.READ);
         return selectedFillColor;
@@ -247,8 +225,8 @@ public class SpotAnnotation extends Annotation<ISpot> {
         this.selectedFillColor = selectedFillColor;
         getPropertyChangeSupport().firePropertyChange(PROP_SELECTEDFILLCOLOR, old, selectedFillColor);
     }
-
     public static final String PROP_SELECTEDSTROKECOLOR = "selectedStrokeColor";
+
     public Color getSelectedStrokeColor() {
         activate(ActivationPurpose.READ);
         return selectedStrokeColor;
@@ -258,10 +236,10 @@ public class SpotAnnotation extends Annotation<ISpot> {
         activate(ActivationPurpose.WRITE);
         Color old = this.selectedStrokeColor;
         this.selectedStrokeColor = selectedStrokeColor;
-        getPropertyChangeSupport().firePropertyChange(PROP_SELECTEDSTROKECOLOR,old,selectedStrokeColor);
+        getPropertyChangeSupport().firePropertyChange(PROP_SELECTEDSTROKECOLOR, old, selectedStrokeColor);
     }
-
     public static final String PROP_SELECTIONCROSSCOLOR = "selectionCrossColor";
+
     public Color getSelectionCrossColor() {
         activate(ActivationPurpose.READ);
         return selectionCrossColor;
@@ -273,8 +251,8 @@ public class SpotAnnotation extends Annotation<ISpot> {
         this.selectionCrossColor = selectionCrossColor;
         getPropertyChangeSupport().firePropertyChange(PROP_SELECTIONCROSSCOLOR, old, selectionCrossColor);
     }
-
     public static final String PROP_STROKECOLOR = "strokeColor";
+
     public Color getStrokeColor() {
         activate(ActivationPurpose.READ);
         return strokeColor;
@@ -286,8 +264,8 @@ public class SpotAnnotation extends Annotation<ISpot> {
         this.strokeColor = strokeColor;
         getPropertyChangeSupport().firePropertyChange(PROP_STROKECOLOR, old, strokeColor);
     }
-
     public static final String PROP_TEXTCOLOR = "textColor";
+
     public Color getTextColor() {
         activate(ActivationPurpose.READ);
         return textColor;
@@ -297,7 +275,7 @@ public class SpotAnnotation extends Annotation<ISpot> {
         activate(ActivationPurpose.WRITE);
         Color old = textColor;
         this.textColor = textColor;
-        getPropertyChangeSupport().firePropertyChange(PROP_TEXTCOLOR,old,textColor);
+        getPropertyChangeSupport().firePropertyChange(PROP_TEXTCOLOR, old, textColor);
     }
 
     @Override
@@ -305,7 +283,7 @@ public class SpotAnnotation extends Annotation<ISpot> {
         ISpot t = getPayload();
         IWell96 well = t.getWell();
         StringBuilder sb = new StringBuilder();
-        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1.0f));
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
         if (well != null) {
             sb.append(well.getParent().getName());
             sb.append(": ");
@@ -325,21 +303,31 @@ public class SpotAnnotation extends Annotation<ISpot> {
         }
 
         if (isDrawSpotBox()) {
+            Color color = g.getColor();
+            g.setPaint(Color.BLACK);
+            Composite comp = g.getComposite();
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 0.7f));
+            Line2D.Double criss = new Line2D.Double(getPosition().getX() - 5, getPosition().getY(), getPosition().getX() + 5, getPosition().getY());
+            Line2D.Double cross = new Line2D.Double(getPosition().getX(), getPosition().getY() - 5, getPosition().getX(), getPosition().getY() + 5);
+            g.draw(criss);
+            g.draw(cross);
+            g.setComposite(comp);
+            g.setColor(color);
             if (!isSelected()) {
                 g.setPaint(getFillColor());
-                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float)getFillAlpha()));
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getFillAlpha()));
                 g.fill(getShape());
                 g.setPaint(getStrokeColor());
-                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float)getStrokeAlpha()));
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getStrokeAlpha()));
                 g.draw(getShape());
                 g.setPaint(Color.BLACK);
 
             } else {
                 g.setPaint(getSelectedFillColor());
-                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float)getFillAlpha()));
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getFillAlpha()));
                 g.fill(getShape());
                 g.setPaint(getSelectedStrokeColor());
-                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float)getStrokeAlpha()));
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getStrokeAlpha()));
                 Stroke stroke = g.getStroke();
                 Stroke lineStroke = new BasicStroke(3.0f);
                 g.setStroke(lineStroke);
@@ -348,16 +336,7 @@ public class SpotAnnotation extends Annotation<ISpot> {
 //            PainterTools.drawCrossInBox(g, selectionCrossColor, getShape().getBounds2D(), 2);
             }
         }
-        Color color = g.getColor();
-        g.setPaint(Color.BLACK);
-        Composite comp = g.getComposite();
-        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float)0.7f));
-        Line2D.Double criss = new Line2D.Double(getPosition().getX()-5, getPosition().getY(), getPosition().getX()+5, getPosition().getY());
-        Line2D.Double cross = new Line2D.Double(getPosition().getX(), getPosition().getY()-5, getPosition().getX(), getPosition().getY()+5);
-        g.draw(criss);
-        g.draw(cross);
-        g.setComposite(comp);
-        g.setColor(color);
+        
         if (isDrawSpotId() && sb.length() > 0) {
             Color fill = getSelectedFillColor();
             Color stroke = getSelectedStrokeColor().darker();
@@ -371,13 +350,12 @@ public class SpotAnnotation extends Annotation<ISpot> {
 //            g.setColor(fill);
 //            g.fill(s);
             g.setColor(getLineColor());
-            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float)getStrokeAlpha()));
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getStrokeAlpha()));
             Line2D.Double line = new Line2D.Double(getPosition(), textOrigin);
             g.draw(line);
             g.setColor(getTextColor());
             g.drawString(sb.toString(), (float) textOrigin.getX(), (float) textOrigin.getY());
         }
-        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1.0f));
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
     }
-
 }

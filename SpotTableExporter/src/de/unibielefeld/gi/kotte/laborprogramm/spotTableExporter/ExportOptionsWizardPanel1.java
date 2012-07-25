@@ -6,11 +6,7 @@ import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
@@ -60,7 +56,7 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
             descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Please pick an output directory.");
             return false;
         }
-        if (!(component.isShowMethodName() || component.isShowIdentification()) /*TODO hier*/) {
+        if (!(component.isShowIdentMethodName() || component.isShowIdentification()) /*TODO hier*/) {
             descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Please pick at least one output column.");
             return false;
         }
@@ -131,9 +127,23 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_METHODS, eovp.getSelectedMethods());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_DIRECTORY, eovp.getDirectory());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_FILENAME, eovp.getFileName());
-        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_METHOD_NAME, eovp.isShowMethodName());
-        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENTIFICATION, eovp.isShowIdentification());
+        
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_HEADER, eovp.isShowHeader());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_GROUP_NUMBER, eovp.isShowGroupNumber());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_GROUP_LABEL, eovp.isShowGroupLabel());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENTIFICATION, eovp.isShowIdentification());
+        
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_METHOD_NAME, eovp.isShowIdentMethodName());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_NAME, eovp.isShowIdentName());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_PLATE96_POSITION, eovp.isShowIdentPlate96Position());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_PLATE384_POSITION, eovp.isShowIdentPlate384Position());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_ABBREVIATION, eovp.isShowIdentAbbreviation());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_ACCESSION, eovp.isShowIdentAccession());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_KEGG_NUMBERS, eovp.isShowIdentKeggNumbers());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_COVERAGE, eovp.isShowIdentCoverage());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_PI_VALUE, eovp.isShowIdentPIValue());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_SCORE, eovp.isShowIdentScore());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_WEIGHT, eovp.isShowIdentWeight());
     }
 
     @Override

@@ -56,17 +56,31 @@
                   <Component id="jScrollPane2" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <EmptySpace min="21" pref="21" max="-2" attributes="0"/>
-                              <Component id="methodNameBox" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="headerBox" min="-2" max="-2" attributes="0"/>
+                          <Component id="spotGroupIDBox" min="-2" max="-2" attributes="0"/>
                           <Component id="identificationBox" min="-2" max="-2" attributes="0"/>
-                          <Component id="groupLabelBox" min="-2" max="-2" attributes="0"/>
+                          <Component id="spotGroupLabelBox" min="-2" max="-2" attributes="0"/>
                           <Component id="fileNameLabel" min="-2" max="-2" attributes="0"/>
                           <Component id="fileDirectoryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="filePathLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="methodsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="outputHeadingLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="21" pref="21" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="identNameBox" min="-2" max="-2" attributes="0"/>
+                                  <Component id="identMethodNameBox" min="-2" max="-2" attributes="0"/>
+                                  <Component id="identPlate96Box" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="identPlate384Box" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="identAbbreviationBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="identAccessionBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="identCoverageBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="identKeggNumbersBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="identPIValueBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="identScoreBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="identWeightBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
@@ -102,11 +116,35 @@
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="outputHeadingLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="groupLabelBox" min="-2" max="-2" attributes="0"/>
+              <Component id="headerBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="spotGroupIDBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="spotGroupLabelBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="identificationBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="methodNameBox" min="-2" max="-2" attributes="0"/>
+              <Component id="identMethodNameBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="identNameBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="identPlate96Box" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="identPlate384Box" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="identAbbreviationBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="identAccessionBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="identKeggNumbersBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="identCoverageBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="identPIValueBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="identScoreBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="identWeightBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -120,15 +158,14 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="methodNameBox">
+    <Component class="javax.swing.JCheckBox" name="identMethodNameBox">
       <Properties>
-        <Property name="selected" type="boolean" value="true"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.methodNameBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.identMethodNameBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="methodNameBoxActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="identMethodNameBoxActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JCheckBox" name="identificationBox">
@@ -233,15 +270,140 @@
     </Container>
     <Component class="javax.swing.JSeparator" name="outputSeparator">
     </Component>
-    <Component class="javax.swing.JCheckBox" name="groupLabelBox">
+    <Component class="javax.swing.JCheckBox" name="spotGroupLabelBox">
       <Properties>
         <Property name="selected" type="boolean" value="true"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.groupLabelBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.spotGroupLabelBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="groupLabelBoxActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="spotGroupLabelBoxActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="identNameBox">
+      <Properties>
+        <Property name="selected" type="boolean" value="true"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.identNameBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="identNameBoxActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="identPlate96Box">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.identPlate96Box.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="identPlate96BoxActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="identPlate384Box">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.identPlate384Box.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="identPlate384BoxActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="spotGroupIDBox">
+      <Properties>
+        <Property name="selected" type="boolean" value="true"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.spotGroupIDBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="spotGroupIDBoxActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="identAbbreviationBox">
+      <Properties>
+        <Property name="selected" type="boolean" value="true"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.identAbbreviationBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="identAbbreviationBoxActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="identAccessionBox">
+      <Properties>
+        <Property name="selected" type="boolean" value="true"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.identAccessionBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="identAccessionBoxActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="identCoverageBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.identCoverageBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="identCoverageBoxActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="identKeggNumbersBox">
+      <Properties>
+        <Property name="selected" type="boolean" value="true"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.identKeggNumbersBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="identKeggNumbersBoxActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="identPIValueBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.identPIValueBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="identPIValueBoxActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="identScoreBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.identScoreBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="identScoreBoxActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="identWeightBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.identWeightBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="identWeightBoxActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="headerBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.headerBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="headerBoxActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

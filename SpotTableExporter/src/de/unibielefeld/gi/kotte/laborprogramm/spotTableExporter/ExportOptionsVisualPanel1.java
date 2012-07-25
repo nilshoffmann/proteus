@@ -15,24 +15,86 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
 
     public static final String PROPERTY_PROJECT = "project";
     public static final String PROPERTY_METHODS = "methods";
-    public static final String PROPERTY_SHOW_METHOD_NAME = "show method name";
-    public static final String PROPERTY_SHOW_IDENTIFICATION = "show identification";
-    public static final String PROPERTY_SHOW_GROUP_LABEL = "show group label";
     public static final String PROPERTY_FILENAME = "filename";
     public static final String PROPERTY_DIRECTORY = "directory";
-
+    
+    public static final String PROPERTY_SHOW_HEADER= "add row header";
+    public static final String PROPERTY_SHOW_GROUP_NUMBER = "show spot group number";
+    public static final String PROPERTY_SHOW_GROUP_LABEL = "show spot group label";
+    public static final String PROPERTY_SHOW_IDENTIFICATION = "show spot identifications";
+    
+    public static final String PROPERTY_SHOW_IDENT_METHOD_NAME = "show identification method name";
+    public static final String PROPERTY_SHOW_IDENT_NAME = "show identification name";
+    public static final String PROPERTY_SHOW_IDENT_PLATE96_POSITION = "show identification plate96 position";
+    public static final String PROPERTY_SHOW_IDENT_PLATE384_POSITION = "show identification plate384 position";
+    public static final String PROPERTY_SHOW_IDENT_ABBREVIATION = "show identification abbreviation";
+    public static final String PROPERTY_SHOW_IDENT_ACCESSION = "show identification accession number";
+    public static final String PROPERTY_SHOW_IDENT_KEGG_NUMBERS = "show identification kegg numbers";
+    public static final String PROPERTY_SHOW_IDENT_COVERAGE = "show identification MS Coverage";
+    public static final String PROPERTY_SHOW_IDENT_PI_VALUE = "show identification pI value";
+    public static final String PROPERTY_SHOW_IDENT_SCORE = "show identification mascot score";
+    public static final String PROPERTY_SHOW_IDENT_WEIGHT = "show identification molecular weight";
+    
     private File directory;
-
-    public boolean isShowMethodName() {
-        return methodNameBox.isSelected();
+    
+    public boolean isShowHeader() {
+        return headerBox.isSelected();
+    }
+    
+    public boolean isShowGroupNumber() {
+        return spotGroupIDBox.isSelected();
     }
     
     public boolean isShowGroupLabel() {
-        return groupLabelBox.isSelected();
+        return spotGroupLabelBox.isSelected();
     }
 
     public boolean isShowIdentification() {
         return identificationBox.isSelected();
+    }
+
+    public boolean isShowIdentMethodName() {
+        return identMethodNameBox.isSelected();
+    }
+
+    public boolean isShowIdentName() {
+        return identNameBox.isSelected();
+    }
+
+    public boolean isShowIdentPlate96Position() {
+        return identPlate96Box.isSelected();
+    }
+
+    public boolean isShowIdentPlate384Position() {
+        return identPlate384Box.isSelected();
+    }
+
+    public boolean isShowIdentAbbreviation() {
+        return identAbbreviationBox.isSelected();
+    }
+
+    public boolean isShowIdentAccession() {
+        return identAccessionBox.isSelected();
+    }
+
+    public boolean isShowIdentKeggNumbers() {
+        return identKeggNumbersBox.isSelected();
+    }
+
+    public boolean isShowIdentCoverage() {
+        return identCoverageBox.isSelected();
+    }
+
+    public boolean isShowIdentPIValue() {
+        return identPIValueBox.isSelected();
+    }
+
+    public boolean isShowIdentScore() {
+        return identScoreBox.isSelected();
+    }
+
+    public boolean isShowIdentWeight() {
+        return identWeightBox.isSelected();
     }
 
     public String getFileName() {
@@ -90,7 +152,7 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
         outputHeadingLabel = new javax.swing.JLabel();
-        methodNameBox = new javax.swing.JCheckBox();
+        identMethodNameBox = new javax.swing.JCheckBox();
         identificationBox = new javax.swing.JCheckBox();
         fileDirectoryTextField = new javax.swing.JTextField();
         fileDirectoryLabel = new javax.swing.JLabel();
@@ -103,7 +165,19 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         methodsList = new javax.swing.JList();
         outputSeparator = new javax.swing.JSeparator();
-        groupLabelBox = new javax.swing.JCheckBox();
+        spotGroupLabelBox = new javax.swing.JCheckBox();
+        identNameBox = new javax.swing.JCheckBox();
+        identPlate96Box = new javax.swing.JCheckBox();
+        identPlate384Box = new javax.swing.JCheckBox();
+        spotGroupIDBox = new javax.swing.JCheckBox();
+        identAbbreviationBox = new javax.swing.JCheckBox();
+        identAccessionBox = new javax.swing.JCheckBox();
+        identCoverageBox = new javax.swing.JCheckBox();
+        identKeggNumbersBox = new javax.swing.JCheckBox();
+        identPIValueBox = new javax.swing.JCheckBox();
+        identScoreBox = new javax.swing.JCheckBox();
+        identWeightBox = new javax.swing.JCheckBox();
+        headerBox = new javax.swing.JCheckBox();
 
         jList1.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -114,11 +188,10 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(outputHeadingLabel, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.outputHeadingLabel.text")); // NOI18N
 
-        methodNameBox.setSelected(true);
-        org.openide.awt.Mnemonics.setLocalizedText(methodNameBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.methodNameBox.text")); // NOI18N
-        methodNameBox.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(identMethodNameBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.identMethodNameBox.text")); // NOI18N
+        identMethodNameBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                methodNameBoxActionPerformed(evt);
+                identMethodNameBoxActionPerformed(evt);
             }
         });
 
@@ -166,11 +239,100 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
         });
         jScrollPane2.setViewportView(methodsList);
 
-        groupLabelBox.setSelected(true);
-        org.openide.awt.Mnemonics.setLocalizedText(groupLabelBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.groupLabelBox.text")); // NOI18N
-        groupLabelBox.addActionListener(new java.awt.event.ActionListener() {
+        spotGroupLabelBox.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(spotGroupLabelBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.spotGroupLabelBox.text")); // NOI18N
+        spotGroupLabelBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                groupLabelBoxActionPerformed(evt);
+                spotGroupLabelBoxActionPerformed(evt);
+            }
+        });
+
+        identNameBox.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(identNameBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.identNameBox.text")); // NOI18N
+        identNameBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                identNameBoxActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(identPlate96Box, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.identPlate96Box.text")); // NOI18N
+        identPlate96Box.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                identPlate96BoxActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(identPlate384Box, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.identPlate384Box.text")); // NOI18N
+        identPlate384Box.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                identPlate384BoxActionPerformed(evt);
+            }
+        });
+
+        spotGroupIDBox.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(spotGroupIDBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.spotGroupIDBox.text")); // NOI18N
+        spotGroupIDBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                spotGroupIDBoxActionPerformed(evt);
+            }
+        });
+
+        identAbbreviationBox.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(identAbbreviationBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.identAbbreviationBox.text")); // NOI18N
+        identAbbreviationBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                identAbbreviationBoxActionPerformed(evt);
+            }
+        });
+
+        identAccessionBox.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(identAccessionBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.identAccessionBox.text")); // NOI18N
+        identAccessionBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                identAccessionBoxActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(identCoverageBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.identCoverageBox.text")); // NOI18N
+        identCoverageBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                identCoverageBoxActionPerformed(evt);
+            }
+        });
+
+        identKeggNumbersBox.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(identKeggNumbersBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.identKeggNumbersBox.text")); // NOI18N
+        identKeggNumbersBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                identKeggNumbersBoxActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(identPIValueBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.identPIValueBox.text")); // NOI18N
+        identPIValueBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                identPIValueBoxActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(identScoreBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.identScoreBox.text")); // NOI18N
+        identScoreBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                identScoreBoxActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(identWeightBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.identWeightBox.text")); // NOI18N
+        identWeightBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                identWeightBoxActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(headerBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.headerBox.text")); // NOI18N
+        headerBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                headerBoxActionPerformed(evt);
             }
         });
 
@@ -192,16 +354,29 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
                     .addComponent(jScrollPane2)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(21, 21, 21)
-                                .addComponent(methodNameBox))
+                            .addComponent(headerBox)
+                            .addComponent(spotGroupIDBox)
                             .addComponent(identificationBox)
-                            .addComponent(groupLabelBox)
+                            .addComponent(spotGroupLabelBox)
                             .addComponent(fileNameLabel)
                             .addComponent(fileDirectoryLabel)
                             .addComponent(filePathLabel)
                             .addComponent(methodsLabel)
-                            .addComponent(outputHeadingLabel))
+                            .addComponent(outputHeadingLabel)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(identNameBox)
+                                    .addComponent(identMethodNameBox)
+                                    .addComponent(identPlate96Box)
+                                    .addComponent(identPlate384Box)
+                                    .addComponent(identAbbreviationBox)
+                                    .addComponent(identAccessionBox)
+                                    .addComponent(identCoverageBox)
+                                    .addComponent(identKeggNumbersBox)
+                                    .addComponent(identPIValueBox)
+                                    .addComponent(identScoreBox)
+                                    .addComponent(identWeightBox))))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -231,22 +406,58 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(outputHeadingLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(groupLabelBox)
+                .addComponent(headerBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(spotGroupIDBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(spotGroupLabelBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(identificationBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(methodNameBox)
+                .addComponent(identMethodNameBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(identNameBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(identPlate96Box)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(identPlate384Box)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(identAbbreviationBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(identAccessionBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(identKeggNumbersBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(identCoverageBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(identPIValueBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(identScoreBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(identWeightBox)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void methodNameBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_methodNameBoxActionPerformed
-        firePropertyChange(PROPERTY_SHOW_METHOD_NAME, !methodNameBox.isSelected(), methodNameBox.isSelected());
-    }//GEN-LAST:event_methodNameBoxActionPerformed
+    private void identMethodNameBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_identMethodNameBoxActionPerformed
+        firePropertyChange(PROPERTY_SHOW_IDENT_METHOD_NAME, !identMethodNameBox.isSelected(), identMethodNameBox.isSelected());
+    }//GEN-LAST:event_identMethodNameBoxActionPerformed
 
     private void identificationBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_identificationBoxActionPerformed
         firePropertyChange(PROPERTY_SHOW_IDENTIFICATION, !identificationBox.isSelected(), identificationBox.isSelected());
-        methodNameBox.setEnabled(identificationBox.isSelected());
+        identMethodNameBox.setEnabled(identificationBox.isSelected());
+        identAbbreviationBox.setEnabled(identificationBox.isSelected());
+        identAccessionBox.setEnabled(identificationBox.isSelected());
+        identCoverageBox.setEnabled(identificationBox.isSelected());
+        identKeggNumbersBox.setEnabled(identificationBox.isSelected());
+        identMethodNameBox.setEnabled(identificationBox.isSelected());
+        identNameBox.setEnabled(identificationBox.isSelected());
+        identPIValueBox.setEnabled(identificationBox.isSelected());
+        identPlate384Box.setEnabled(identificationBox.isSelected());
+        identPlate96Box.setEnabled(identificationBox.isSelected());
+        identScoreBox.setEnabled(identificationBox.isSelected());
+        identWeightBox.setEnabled(identificationBox.isSelected());
+        identificationBox.setEnabled(identificationBox.isSelected());
     }//GEN-LAST:event_identificationBoxActionPerformed
 
     private void fileChooserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileChooserButtonActionPerformed
@@ -269,9 +480,57 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
         firePropertyChange(PROPERTY_FILENAME, null, fileNameTextField.getText());
     }//GEN-LAST:event_fileNameTextFieldActionPerformed
 
-    private void groupLabelBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_groupLabelBoxActionPerformed
-        firePropertyChange(PROPERTY_SHOW_GROUP_LABEL, !groupLabelBox.isSelected(), groupLabelBox.isSelected());
-    }//GEN-LAST:event_groupLabelBoxActionPerformed
+    private void spotGroupLabelBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spotGroupLabelBoxActionPerformed
+        firePropertyChange(PROPERTY_SHOW_GROUP_LABEL, !spotGroupLabelBox.isSelected(), spotGroupLabelBox.isSelected());
+    }//GEN-LAST:event_spotGroupLabelBoxActionPerformed
+
+    private void identNameBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_identNameBoxActionPerformed
+        firePropertyChange(PROPERTY_SHOW_IDENT_NAME, !identNameBox.isSelected(), identNameBox.isSelected());
+    }//GEN-LAST:event_identNameBoxActionPerformed
+
+    private void identPlate96BoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_identPlate96BoxActionPerformed
+        firePropertyChange(PROPERTY_SHOW_IDENT_PLATE96_POSITION, !identPlate96Box.isSelected(), identPlate96Box.isSelected());
+    }//GEN-LAST:event_identPlate96BoxActionPerformed
+
+    private void identPlate384BoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_identPlate384BoxActionPerformed
+        firePropertyChange(PROPERTY_SHOW_IDENT_PLATE384_POSITION, !identPlate384Box.isSelected(), identPlate384Box.isSelected());
+    }//GEN-LAST:event_identPlate384BoxActionPerformed
+
+    private void spotGroupIDBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spotGroupIDBoxActionPerformed
+        firePropertyChange(PROPERTY_SHOW_GROUP_NUMBER, !spotGroupIDBox.isSelected(), spotGroupIDBox.isSelected());
+    }//GEN-LAST:event_spotGroupIDBoxActionPerformed
+
+    private void identAbbreviationBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_identAbbreviationBoxActionPerformed
+        firePropertyChange(PROPERTY_SHOW_IDENT_ABBREVIATION, !identAbbreviationBox.isSelected(), identAbbreviationBox.isSelected());
+    }//GEN-LAST:event_identAbbreviationBoxActionPerformed
+
+    private void identAccessionBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_identAccessionBoxActionPerformed
+        firePropertyChange(PROPERTY_SHOW_IDENT_ACCESSION, !identAccessionBox.isSelected(), identAccessionBox.isSelected());
+    }//GEN-LAST:event_identAccessionBoxActionPerformed
+
+    private void identCoverageBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_identCoverageBoxActionPerformed
+        firePropertyChange(PROPERTY_SHOW_IDENT_COVERAGE, !identCoverageBox.isSelected(), identCoverageBox.isSelected());
+    }//GEN-LAST:event_identCoverageBoxActionPerformed
+
+    private void identKeggNumbersBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_identKeggNumbersBoxActionPerformed
+        firePropertyChange(PROPERTY_SHOW_IDENT_KEGG_NUMBERS, !identKeggNumbersBox.isSelected(), identKeggNumbersBox.isSelected());
+    }//GEN-LAST:event_identKeggNumbersBoxActionPerformed
+
+    private void identPIValueBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_identPIValueBoxActionPerformed
+        firePropertyChange(PROPERTY_SHOW_IDENT_PI_VALUE, !identPIValueBox.isSelected(), identPIValueBox.isSelected());
+    }//GEN-LAST:event_identPIValueBoxActionPerformed
+
+    private void identScoreBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_identScoreBoxActionPerformed
+        firePropertyChange(PROPERTY_SHOW_IDENT_SCORE, !identScoreBox.isSelected(), identScoreBox.isSelected());
+    }//GEN-LAST:event_identScoreBoxActionPerformed
+
+    private void identWeightBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_identWeightBoxActionPerformed
+        firePropertyChange(PROPERTY_SHOW_IDENT_WEIGHT, !identWeightBox.isSelected(), identWeightBox.isSelected());
+    }//GEN-LAST:event_identWeightBoxActionPerformed
+
+    private void headerBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_headerBoxActionPerformed
+        firePropertyChange(PROPERTY_SHOW_HEADER, !headerBox.isSelected(), headerBox.isSelected());
+    }//GEN-LAST:event_headerBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton fileChooserButton;
@@ -281,15 +540,27 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
     private javax.swing.JTextField fileNameTextField;
     private javax.swing.JLabel filePathLabel;
     private javax.swing.JTextField filePathTextField;
-    private javax.swing.JCheckBox groupLabelBox;
+    private javax.swing.JCheckBox headerBox;
+    private javax.swing.JCheckBox identAbbreviationBox;
+    private javax.swing.JCheckBox identAccessionBox;
+    private javax.swing.JCheckBox identCoverageBox;
+    private javax.swing.JCheckBox identKeggNumbersBox;
+    private javax.swing.JCheckBox identMethodNameBox;
+    private javax.swing.JCheckBox identNameBox;
+    private javax.swing.JCheckBox identPIValueBox;
+    private javax.swing.JCheckBox identPlate384Box;
+    private javax.swing.JCheckBox identPlate96Box;
+    private javax.swing.JCheckBox identScoreBox;
+    private javax.swing.JCheckBox identWeightBox;
     private javax.swing.JCheckBox identificationBox;
     private javax.swing.JList jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JCheckBox methodNameBox;
     private javax.swing.JLabel methodsLabel;
     private javax.swing.JList methodsList;
     private javax.swing.JLabel outputHeadingLabel;
     private javax.swing.JSeparator outputSeparator;
+    private javax.swing.JCheckBox spotGroupIDBox;
+    private javax.swing.JCheckBox spotGroupLabelBox;
     // End of variables declaration//GEN-END:variables
 }

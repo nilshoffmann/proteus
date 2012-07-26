@@ -21,7 +21,7 @@ public final class ExportOptionsWizardAction implements ActionListener {
     private final IProteomicProject context;
 
     public ExportOptionsWizardAction(IProteomicProject context) {
-        System.out.println("ExportSpotTableAction initialized with " + context);
+        System.out.println("ExportOptionsWizardAction for Spot Data Export initialized with " + context);
         this.context = context;
     }
 
@@ -30,7 +30,7 @@ public final class ExportOptionsWizardAction implements ActionListener {
         WizardDescriptor wizardDescriptor = new WizardDescriptor(getPanels());
         // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
         wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
-        wizardDescriptor.setTitle("Output options for Spot Data Export");
+        wizardDescriptor.setTitle("Output Options for Spot Data Export");
         wizardDescriptor.putProperty(ExportOptionsVisualPanel1.PROPERTY_PROJECT, context);
         Dialog dialog = DialogDisplayer.getDefault().createDialog(wizardDescriptor);
         dialog.setVisible(true);

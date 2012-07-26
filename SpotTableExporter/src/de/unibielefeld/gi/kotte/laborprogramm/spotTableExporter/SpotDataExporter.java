@@ -2,6 +2,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.spotTableExporter;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
@@ -50,6 +51,7 @@ public class SpotDataExporter {
         boolean showIdentName = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_NAME);
         boolean showIdentPlate96Position = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_PLATE96_POSITION);
         boolean showIdentPlate384Position = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_PLATE384_POSITION);
+        boolean showIdentGelName = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_GEL_NAME);
         boolean showIdentAbbreviation = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_ABBREVIATION);
         boolean showIdentAccession = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_ACCESSION);
         boolean showIdentEcNumbers = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_ABBREVIATION);
@@ -97,6 +99,10 @@ public class SpotDataExporter {
                     header.append('\t');
                     header.append("384 Well Plate");
                 }
+                if (showIdentGelName) {
+                    header.append('\t');
+                    header.append("Gel Name");
+                }
                 if (showIdentAbbreviation) {
                     header.append('\t');
                     header.append("Abbbreviation");
@@ -130,26 +136,6 @@ public class SpotDataExporter {
             }
             
             for (ISpotGroup group : spotGroups) {
-                //use StringBuilder to generate output line
-                StringBuilder sb = new StringBuilder();
-                
-                //skip empty lines
-                boolean filled = false;
-
-                //write leftmost column (SpotID)
-                if (showGroupNumber) {
-                    sb.append(group.getNumber());
-                }
-
-                //write label
-                if (showGroupLabel) {
-                    sb.append('\t');
-                    if (group.getLabel() != null && !group.getLabel().isEmpty()) {
-                        sb.append(group.getLabel());
-                        filled = true;
-                    }
-                }
-                
                 if (showIdentification) {
                     //get identifications for output
                     List<ISpot> spots = group.getSpots();
@@ -197,18 +183,36 @@ public class SpotDataExporter {
                     }
 
                     if (!methodToIdentification.isEmpty()) {
+                        //skip empty lines
+                        boolean filled = false;
+                        //use StringBuilder to generate output line
+                        StringBuilder sb = null;
                         for (IIdentificationMethod method : methodToIdentification.keySet()) {
                             Set<IIdentification> idents = methodToIdentification.get(method);
                             if (!idents.isEmpty()) {
                                 //// OUTPUT GENERATION (for identification) ////
-                                int cnt = 0;
                                 for (IIdentification ident : idents) {
+                                    //initialize line
+                                    sb = new StringBuilder();
+                                    filled = false;
+                                    //write leftmost column (SpotID)
+                                    if (showGroupNumber) {
+                                        sb.append(group.getNumber());
+                                    }
+                                    //write label
+                                    if (showGroupLabel) {
+                                        sb.append('\t');
+                                        if (group.getLabel() != null && !group.getLabel().isEmpty()) {
+                                            sb.append(group.getLabel());
+                                            filled = true;
+                                        }
+                                    }
                                     if (showIdentMethodName) {
                                         sb.append('\t');
                                         sb.append(method.getName());
-                                        if (!method.getName().isEmpty()) {
-                                            filled = true;
-                                        }
+//                                        if (!method.getName().isEmpty()) {
+//                                            filled = true;
+//                                        }
                                     }
                                     if (showIdentName) {
                                         sb.append('\t');
@@ -217,21 +221,34 @@ public class SpotDataExporter {
                                             filled = true;
                                         }
                                     }
+                                    //get remote objects
+                                    IWell384 well384 = method.getParent().getParent();
+                                    IWell96 well96 = well384.getWell96();
+                                    IGel gel = well96.getSpot().getGel();
                                     if (showIdentPlate96Position) {
                                         sb.append('\t');
-                                        IWell96 well96 = method.getParent().getParent().getWell96();
-                                        sb.append(well96.getParent().getName());
-                                        sb.append(':');
-                                        sb.append(well96.getWellPosition());
-                                        filled = true;
+                                        if (well96 != null) {
+                                            sb.append(well96.getParent().getName());
+                                            sb.append(':');
+                                            sb.append(well96.getWellPosition());
+                                            filled = true;
+                                        }
                                     }
                                     if (showIdentPlate384Position) {
                                         sb.append('\t');
-                                        IWell384 well384 = method.getParent().getParent();
-                                        sb.append(well384.getParent().getName());
-                                        sb.append(':');
-                                        sb.append(well384.getWellPosition());
-                                        filled = true;
+                                        if (well384 != null) {
+                                            sb.append(well384.getParent().getName());
+                                            sb.append(':');
+                                            sb.append(well384.getWellPosition());
+                                            filled = true;
+                                        }
+                                    }
+                                    if (showIdentGelName) {
+                                        sb.append('\t');
+                                        if (gel != null) {
+                                            sb.append(gel.getName());
+                                            filled = true;
+                                        }
                                     }
                                     if (showIdentAbbreviation) {
                                         sb.append('\t');
@@ -286,14 +303,16 @@ public class SpotDataExporter {
                                         //TODO check value validity
                                         //filled = true;
                                     }
-                                    if (cnt < idents.size() - 1) {
-                                        //new line, tabbed to start of identification output
-                                        sb.append('\n');
-                                        if (showGroupLabel) {
-                                            sb.append('\t');
-                                        }
+                                    //finish output line
+                                    if (filled) {
+                                        bw.write(sb.toString());
+                                        bw.newLine();
                                     }
-                                    cnt++;
+                                }
+                                //finish output line (yes, again!)
+                                if (filled) {
+                                    bw.write(sb.toString());
+                                    bw.newLine();
                                 }
                                 ////////////////////////////////////////////////
                             } else {
@@ -303,11 +322,6 @@ public class SpotDataExporter {
                     } else {
                         System.out.println("Skipping spot group " + group.getNumber() + " without annotations!");
                     }
-                }
-                //finish output line
-                if (filled) {
-                    bw.write(sb.toString());
-                    bw.newLine();
                 }
             }
             //finish output

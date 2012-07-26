@@ -79,6 +79,7 @@ public class Well384 implements IWell384, Activatable {
         this.status = Well384Status.EMPTY;
         this.well96 = null;
         this.identification = new WellIdentification();
+        this.identification.setParent(this);
         this.row = posX;
         this.column = posY;
     }
@@ -124,6 +125,9 @@ public class Well384 implements IWell384, Activatable {
         activate(ActivationPurpose.READ);
         if (identification == null) {
             setIdentification(new WellIdentification());
+        }
+        if (identification.getParent() == null) {
+            identification.setParent(this);
         }
         return identification;
     }

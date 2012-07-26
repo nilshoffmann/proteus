@@ -56,22 +56,14 @@
                   <Component id="jScrollPane2" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="headerBox" min="-2" max="-2" attributes="0"/>
-                          <Component id="spotGroupIDBox" min="-2" max="-2" attributes="0"/>
-                          <Component id="identificationBox" min="-2" max="-2" attributes="0"/>
-                          <Component id="spotGroupLabelBox" min="-2" max="-2" attributes="0"/>
-                          <Component id="fileNameLabel" min="-2" max="-2" attributes="0"/>
-                          <Component id="fileDirectoryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="filePathLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="methodsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="outputHeadingLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="21" pref="21" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="identNameBox" min="-2" max="-2" attributes="0"/>
                                   <Component id="identMethodNameBox" min="-2" max="-2" attributes="0"/>
+                                  <Component id="identNameBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="identPlate96Box" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="identPlate384Box" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="identGelNameBox" min="-2" max="-2" attributes="0"/>
                                   <Component id="identAbbreviationBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="identAccessionBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="identCoverageBox" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -81,6 +73,15 @@
                                   <Component id="identWeightBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
+                          <Component id="headerBox" min="-2" max="-2" attributes="0"/>
+                          <Component id="spotGroupIDBox" min="-2" max="-2" attributes="0"/>
+                          <Component id="identificationBox" min="-2" max="-2" attributes="0"/>
+                          <Component id="spotGroupLabelBox" min="-2" max="-2" attributes="0"/>
+                          <Component id="fileNameLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="fileDirectoryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="filePathLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="methodsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="outputHeadingLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
@@ -131,6 +132,8 @@
               <Component id="identPlate96Box" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="identPlate384Box" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="identGelNameBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="identAbbreviationBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -398,12 +401,23 @@
     </Component>
     <Component class="javax.swing.JCheckBox" name="headerBox">
       <Properties>
+        <Property name="selected" type="boolean" value="true"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.headerBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="headerBoxActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="identGelNameBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.identGelNameBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="identGelNameBoxActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

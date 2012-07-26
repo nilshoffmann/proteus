@@ -29,7 +29,7 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
     public static final String PROPERTY_SHOW_IDENT_PLATE384_POSITION = "show identification plate384 position";
     public static final String PROPERTY_SHOW_IDENT_ABBREVIATION = "show identification abbreviation";
     public static final String PROPERTY_SHOW_IDENT_ACCESSION = "show identification accession number";
-    public static final String PROPERTY_SHOW_IDENT_KEGG_NUMBERS = "show identification kegg numbers";
+    public static final String PROPERTY_SHOW_IDENT_KEGG_NUMBERS = "show identification EC numbers";
     public static final String PROPERTY_SHOW_IDENT_COVERAGE = "show identification MS Coverage";
     public static final String PROPERTY_SHOW_IDENT_PI_VALUE = "show identification pI value";
     public static final String PROPERTY_SHOW_IDENT_SCORE = "show identification mascot score";
@@ -77,8 +77,8 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
         return identAccessionBox.isSelected();
     }
 
-    public boolean isShowIdentKeggNumbers() {
-        return identKeggNumbersBox.isSelected();
+    public boolean isShowIdentEcNumbers() {
+        return identEcNumbersBox.isSelected();
     }
 
     public boolean isShowIdentCoverage() {
@@ -173,7 +173,7 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
         identAbbreviationBox = new javax.swing.JCheckBox();
         identAccessionBox = new javax.swing.JCheckBox();
         identCoverageBox = new javax.swing.JCheckBox();
-        identKeggNumbersBox = new javax.swing.JCheckBox();
+        identEcNumbersBox = new javax.swing.JCheckBox();
         identPIValueBox = new javax.swing.JCheckBox();
         identScoreBox = new javax.swing.JCheckBox();
         identWeightBox = new javax.swing.JCheckBox();
@@ -300,11 +300,11 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
             }
         });
 
-        identKeggNumbersBox.setSelected(true);
-        org.openide.awt.Mnemonics.setLocalizedText(identKeggNumbersBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.identKeggNumbersBox.text")); // NOI18N
-        identKeggNumbersBox.addActionListener(new java.awt.event.ActionListener() {
+        identEcNumbersBox.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(identEcNumbersBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.identEcNumbersBox.text")); // NOI18N
+        identEcNumbersBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                identKeggNumbersBoxActionPerformed(evt);
+                identEcNumbersBoxActionPerformed(evt);
             }
         });
 
@@ -373,7 +373,7 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
                                     .addComponent(identAbbreviationBox)
                                     .addComponent(identAccessionBox)
                                     .addComponent(identCoverageBox)
-                                    .addComponent(identKeggNumbersBox)
+                                    .addComponent(identEcNumbersBox)
                                     .addComponent(identPIValueBox)
                                     .addComponent(identScoreBox)
                                     .addComponent(identWeightBox))))
@@ -426,7 +426,7 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(identAccessionBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(identKeggNumbersBox)
+                .addComponent(identEcNumbersBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(identCoverageBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -449,7 +449,7 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
         identAbbreviationBox.setEnabled(identificationBox.isSelected());
         identAccessionBox.setEnabled(identificationBox.isSelected());
         identCoverageBox.setEnabled(identificationBox.isSelected());
-        identKeggNumbersBox.setEnabled(identificationBox.isSelected());
+        identEcNumbersBox.setEnabled(identificationBox.isSelected());
         identMethodNameBox.setEnabled(identificationBox.isSelected());
         identNameBox.setEnabled(identificationBox.isSelected());
         identPIValueBox.setEnabled(identificationBox.isSelected());
@@ -512,9 +512,9 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
         firePropertyChange(PROPERTY_SHOW_IDENT_COVERAGE, !identCoverageBox.isSelected(), identCoverageBox.isSelected());
     }//GEN-LAST:event_identCoverageBoxActionPerformed
 
-    private void identKeggNumbersBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_identKeggNumbersBoxActionPerformed
-        firePropertyChange(PROPERTY_SHOW_IDENT_KEGG_NUMBERS, !identKeggNumbersBox.isSelected(), identKeggNumbersBox.isSelected());
-    }//GEN-LAST:event_identKeggNumbersBoxActionPerformed
+    private void identEcNumbersBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_identEcNumbersBoxActionPerformed
+        firePropertyChange(PROPERTY_SHOW_IDENT_KEGG_NUMBERS, !identEcNumbersBox.isSelected(), identEcNumbersBox.isSelected());
+    }//GEN-LAST:event_identEcNumbersBoxActionPerformed
 
     private void identPIValueBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_identPIValueBoxActionPerformed
         firePropertyChange(PROPERTY_SHOW_IDENT_PI_VALUE, !identPIValueBox.isSelected(), identPIValueBox.isSelected());
@@ -544,7 +544,7 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
     private javax.swing.JCheckBox identAbbreviationBox;
     private javax.swing.JCheckBox identAccessionBox;
     private javax.swing.JCheckBox identCoverageBox;
-    private javax.swing.JCheckBox identKeggNumbersBox;
+    private javax.swing.JCheckBox identEcNumbersBox;
     private javax.swing.JCheckBox identMethodNameBox;
     private javax.swing.JCheckBox identNameBox;
     private javax.swing.JCheckBox identPIValueBox;

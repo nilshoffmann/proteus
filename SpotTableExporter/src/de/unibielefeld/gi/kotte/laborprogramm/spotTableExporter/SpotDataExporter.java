@@ -52,7 +52,7 @@ public class SpotDataExporter {
         boolean showIdentPlate384Position = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_PLATE384_POSITION);
         boolean showIdentAbbreviation = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_ABBREVIATION);
         boolean showIdentAccession = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_ACCESSION);
-        boolean showIdentKeggNumbers = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_ABBREVIATION);
+        boolean showIdentEcNumbers = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_ABBREVIATION);
         boolean showIdentCoverage = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_COVERAGE);
         boolean showIdentPIValue = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_PI_VALUE);
         boolean showIdentScore = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_SCORE);
@@ -105,9 +105,9 @@ public class SpotDataExporter {
                     header.append('\t');
                     header.append("Accession Number");
                 }
-                if (showIdentKeggNumbers) {
+                if (showIdentEcNumbers) {
                     header.append('\t');
-                    header.append("Kegg Numbers");
+                    header.append("EC Numbers");
                 }
                 if (showIdentCoverage) {
                     header.append('\t');
@@ -247,14 +247,15 @@ public class SpotDataExporter {
                                             filled = true;
                                         }
                                     }
-                                    if (showIdentKeggNumbers) {
+                                    if (showIdentEcNumbers) {
                                         sb.append('\t');
-                                        List<String> keggNumbers = ident.getKeggNumbers();
+                                        List<String> ecNumbers = ident.getEcNumbers();
                                         int i = 0;
-                                        for (String kn : keggNumbers) {
+                                        for (String kn : ecNumbers) {
                                             sb.append(kn);
-                                            if (i < keggNumbers.size() -1) {
+                                            if (i < ecNumbers.size() -1) {
                                                 sb.append(", ");
+                                                i++;
                                             }
                                             if (!kn.isEmpty()) {
                                                 filled = true;

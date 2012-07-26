@@ -15,6 +15,7 @@ public interface IIdentification extends IPropertyChangeSource, IUniqueObject {
     public static final String PROPERTY_ABBREVIATION = "abbreviation";
     public static final String PROPERTY_NAME = "name";
     public static final String PROPERTY_KEGG = "Kegg number";
+    public static final String PROPERTY_EC_NUMBER = "EC number";
     public static final String PROPERTY_GENDB_ID = "GenDB-ID";
     public static final String PROPERTY_GENDB_PROJECT = "GenDB-Project";
     public static final String PROPERTY_PROTEIN_MW = "protein molecular weight";
@@ -39,9 +40,15 @@ public interface IIdentification extends IPropertyChangeSource, IUniqueObject {
     public void setGendbId(int gendbId);
     public String getGendbProject();
     public void setGendbProject(String gendbProject);
+    @Deprecated
     public List<String> getKeggNumbers();
+    @Deprecated
     public void addKeggNumber(String keggNumber);
+    @Deprecated
     public void setKeggNumbers(List<String> keggNumbers);
+    public List<String> getEcNumbers();
+    public void addEcNumber(String ecNumber);
+    public void setEcNumbers(List<String> ecNumbers);
     public float getPiValue();
     public void setPiValue(float piValue);
     public float getProteinMolecularWeight();

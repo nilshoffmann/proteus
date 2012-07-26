@@ -45,7 +45,7 @@ public class BTRReader {
             Pattern gendbPattern = Pattern.compile("\\(GenDB-ID=(\\d+)\\)");
             Pattern gendbProjectPattern = Pattern.compile(
                     "\\(GenDB-Project=(\\d+)\\)");
-            Pattern keggPattern = Pattern.compile(
+            Pattern ecPattern = Pattern.compile(
                     "(\\d+\\.\\d+\\.\\d+\\.[\\d\\-]+)");
 
             String line;
@@ -147,10 +147,10 @@ public class BTRReader {
                             if (genDbProjectMatcher.find()) {
                                 genDbProject = genDbProjectMatcher.group();
                             }
-                            List<String> keggNumbers = new ArrayList<String>();
-                            Matcher keggMatcher = keggPattern.matcher(title);
-                            while (keggMatcher.find()) {
-                                keggNumbers.add(keggMatcher.group(1));
+                            List<String> ecNumbers = new ArrayList<String>();
+                            Matcher ecMatcher = ecPattern.matcher(title);
+                            while (ecMatcher.find()) {
+                                ecNumbers.add(ecMatcher.group(1));
                             }
 
                             //clean up name
@@ -158,7 +158,7 @@ public class BTRReader {
                                 //name.replaceFirst(abbreviation, "");
                                 name = name.substring(abbreviation.length());
                             }
-                            if (!keggNumbers.isEmpty()) {
+                            if (!ecNumbers.isEmpty()) {
                                 name = name.substring(0, Math.max(0, name.length() - 2));
                             }
                             name = name.trim();
@@ -168,7 +168,7 @@ public class BTRReader {
                             identification.setName(name);
                             identification.setGendbId(gendbId);
                             identification.setGendbProject(genDbProject);
-                            identification.setKeggNumbers(keggNumbers);
+                            identification.setEcNumbers(ecNumbers);
                             break;
                         default:
                     }

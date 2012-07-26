@@ -198,6 +198,32 @@ public class Identification implements IIdentification, Activatable {
         getPropertyChangeSupport().firePropertyChange(PROPERTY_KEGG, null,
                 keggNumbers);
     }
+    
+    @Override
+    public List<String> getEcNumbers() {
+        activate(ActivationPurpose.READ);
+        return keggNumbers;
+    }
+
+    @Override
+    public void addEcNumber(String ecNumber) {
+        activate(ActivationPurpose.WRITE);
+        this.keggNumbers.add(ecNumber);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_KEGG, null,
+                keggNumbers);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_EC_NUMBER, null,
+                keggNumbers);
+    }
+
+    @Override
+    public void setEcNumbers(List<String> ecNumbers) {
+        activate(ActivationPurpose.WRITE);
+        this.keggNumbers = ecNumbers;
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_KEGG, null,
+                keggNumbers);
+        getPropertyChangeSupport().firePropertyChange(PROPERTY_EC_NUMBER, null,
+                keggNumbers);
+    }
 
     @Override
     public float getPiValue() {
@@ -271,7 +297,7 @@ public class Identification implements IIdentification, Activatable {
 
     @Override
     public String toString() {
-        return "Identification{accession=" + getAccession() + " abbreviation=" + getAbbreviation() + " name=" + getName() + " keggNumber=" + getKeggNumbers() + " gendbId=" + getGendbId() + " proteinMolecularWeight=" + getProteinMolecularWeight() + " piValue=" + getPiValue() + " coverage=" + getCoverage() + " difference=" + getDifference() + " score=" + getScore() + '}';
+        return "Identification{accession=" + getAccession() + " abbreviation=" + getAbbreviation() + " name=" + getName() + " ecNumber=" + getEcNumbers() + " gendbId=" + getGendbId() + " proteinMolecularWeight=" + getProteinMolecularWeight() + " piValue=" + getPiValue() + " coverage=" + getCoverage() + " difference=" + getDifference() + " score=" + getScore() + '}';
     }
     private UUID objectId = UUID.randomUUID();
 

@@ -75,7 +75,7 @@
                                   <Component id="identAbbreviationBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="identAccessionBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="identCoverageBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="identKeggNumbersBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="identEcNumbersBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="identPIValueBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="identScoreBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="identWeightBox" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -136,7 +136,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="identAccessionBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="identKeggNumbersBox" min="-2" max="-2" attributes="0"/>
+              <Component id="identEcNumbersBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="identCoverageBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -355,15 +355,15 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="identCoverageBoxActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="identKeggNumbersBox">
+    <Component class="javax.swing.JCheckBox" name="identEcNumbersBox">
       <Properties>
         <Property name="selected" type="boolean" value="true"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.identKeggNumbersBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="de/unibielefeld/gi/kotte/laborprogramm/spotTableExporter/Bundle.properties" key="ExportOptionsVisualPanel1.identEcNumbersBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="identKeggNumbersBoxActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="identEcNumbersBoxActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JCheckBox" name="identPIValueBox">

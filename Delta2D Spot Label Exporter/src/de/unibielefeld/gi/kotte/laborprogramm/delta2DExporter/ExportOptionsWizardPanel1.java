@@ -1,4 +1,4 @@
-package de.unibielefeld.gi.kotte.laborprogramm.spotTableExporter;
+package de.unibielefeld.gi.kotte.laborprogramm.delta2DExporter;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationMethod;
@@ -61,7 +61,7 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
                     "Please pick at least one output column (other than group number).");
             return false;
         }
-        if (component.isShowIdentification() && !component.isShowIdentMethodName() && !component.isShowIdentName()
+        if (component.isShowIdentification() && !component.isShowMethodName() && !component.isShowIdentName()
                 && !component.isShowIdentPlate96Position() && !component.isShowIdentPlate384Position()
                 && !component.isShowIdentGelName() && !component.isShowIdentAbbreviation()
                 && !component.isShowIdentAccession() && !component.isShowIdentEcNumbers()
@@ -138,16 +138,13 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_DIRECTORY, eovp.getDirectory());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_FILENAME, eovp.getFileName());
         
-        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_HEADER, eovp.isShowHeader());
-        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_GROUP_NUMBER, eovp.isShowGroupNumber());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_GROUP_LABEL, eovp.isShowGroupLabel());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_METHOD_NAME, eovp.isShowMethodName());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENTIFICATION, eovp.isShowIdentification());
         
-        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_METHOD_NAME, eovp.isShowIdentMethodName());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_NAME, eovp.isShowIdentName());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_PLATE96_POSITION, eovp.isShowIdentPlate96Position());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_PLATE384_POSITION, eovp.isShowIdentPlate384Position());
-        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_GEL_NAME, eovp.isShowIdentGelName());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_ABBREVIATION, eovp.isShowIdentAbbreviation());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_ACCESSION, eovp.isShowIdentAccession());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_KEGG_NUMBERS, eovp.isShowIdentEcNumbers());

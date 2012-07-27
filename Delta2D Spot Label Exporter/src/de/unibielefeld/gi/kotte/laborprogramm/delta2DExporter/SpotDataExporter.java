@@ -1,4 +1,4 @@
-package de.unibielefeld.gi.kotte.laborprogramm.spotTableExporter;
+package de.unibielefeld.gi.kotte.laborprogramm.delta2DExporter;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
@@ -43,11 +43,9 @@ public class SpotDataExporter {
         Set<String> methods = (Set<String>) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_METHODS);
 
         //get output parameters
-        boolean showHeader = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_HEADER);
-        boolean showGroupNumber = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_GROUP_NUMBER);
         boolean showGroupLabel = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_GROUP_LABEL);
         boolean showIdentification = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENTIFICATION);
-        boolean showIdentMethodName = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_METHOD_NAME);
+        boolean showMethodName = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_METHOD_NAME);
         boolean showIdentName = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_NAME);
         boolean showIdentPlate96Position = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_PLATE96_POSITION);
         boolean showIdentPlate384Position = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_PLATE384_POSITION);
@@ -72,72 +70,24 @@ public class SpotDataExporter {
 
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(outFile));
-            
-            //add row headers
-            if (showHeader) {
-                StringBuilder header = new StringBuilder();
-                if (showGroupNumber) {
-                    header.append("Group Number");
-                }
-                if (showGroupLabel) {
-                    header.append('\t');
-                    header.append("Group Label");
-                }
-                if (showIdentMethodName) {
-                    header.append('\t');
-                    header.append("Method Name");
-                }
-                if (showIdentification) {
-                    if (showIdentName) {
-                        header.append('\t');
-                        header.append("Name");
-                    }
-                    if (showIdentPlate96Position) {
-                        header.append('\t');
-                        header.append("96 Well Plate");
-                    }
-                    if (showIdentPlate384Position) {
-                        header.append('\t');
-                        header.append("384 Well Plate");
-                    }
-                    if (showIdentGelName) {
-                        header.append('\t');
-                        header.append("Gel Name");
-                    }
-                    if (showIdentAbbreviation) {
-                        header.append('\t');
-                        header.append("Abbbreviation");
-                    }
-                    if (showIdentAccession) {
-                        header.append('\t');
-                        header.append("Accession Number");
-                    }
-                    if (showIdentEcNumbers) {
-                        header.append('\t');
-                        header.append("EC Numbers");
-                    }
-                    if (showIdentCoverage) {
-                        header.append('\t');
-                        header.append("MS Coverage");
-                    }
-                    if (showIdentPIValue) {
-                        header.append('\t');
-                        header.append("pI Value");
-                    }
-                    if (showIdentScore) {
-                        header.append('\t');
-                        header.append("Mascot Score");
-                    }
-                    if (showIdentWeight) {
-                        header.append('\t');
-                        header.append("Molecular Weight");
-                    }
-                }
-                bw.write(header.toString());
-                bw.newLine();
-            }
-            
             for (ISpotGroup group : spotGroups) {
+                //use StringBuilder to generate output line
+                StringBuilder globalStringBuilder = new StringBuilder();
+                //always start with group number and a tab
+                globalStringBuilder.append(group.getNumber());
+                globalStringBuilder.append('\t');
+                //skip empty lines
+                boolean lineFilled = false;
+
+                //write label
+                if (showGroupLabel) {
+                    
+                    if (group.getLabel() != null && !group.getLabel().isEmpty()) {
+                        globalStringBuilder.append(group.getLabel());
+                        lineFilled = true;
+                    }
+                }
+                
                 if (showIdentification) {
                     //get identifications for output
                     List<ISpot> spots = group.getSpots();
@@ -185,42 +135,25 @@ public class SpotDataExporter {
                     }
 
                     if (!methodToIdentification.isEmpty()) {
-                        //skip empty lines
-                        boolean filled = false;
-                        //use StringBuilder to generate output line
-                        StringBuilder sb = null;
                         for (IIdentificationMethod method : methodToIdentification.keySet()) {
+                            StringBuilder methodStringBuilder = new StringBuilder();
+                            boolean methodFilled = false;
+                            if (showMethodName) {
+                                methodStringBuilder.append('[');
+                                methodStringBuilder.append(method.getName());
+                            }
+                            
                             Set<IIdentification> idents = methodToIdentification.get(method);
                             if (!idents.isEmpty()) {
-                                //// OUTPUT GENERATION (for identification) ////
                                 for (IIdentification ident : idents) {
-                                    //initialize line
-                                    sb = new StringBuilder();
-                                    filled = false;
-                                    //write leftmost column (SpotID)
-                                    if (showGroupNumber) {
-                                        sb.append(group.getNumber());
-                                    }
-                                    //write label
-                                    if (showGroupLabel) {
-                                        sb.append('\t');
-                                        if (group.getLabel() != null && !group.getLabel().isEmpty()) {
-                                            sb.append(group.getLabel());
-                                            filled = true;
-                                        }
-                                    }
-                                    if (showIdentMethodName) {
-                                        sb.append('\t');
-                                        sb.append(method.getName());
-//                                        if (!method.getName().isEmpty()) {
-//                                            filled = true;
-//                                        }
-                                    }
+                                    //initialize identification output
+                                    StringBuilder identStringBuilder = new StringBuilder();
+                                    identStringBuilder.append('(');
+                                    boolean identFilled = false;
                                     if (showIdentName) {
-                                        sb.append('\t');
-                                        sb.append(ident.getName());
+                                        identStringBuilder.append(ident.getName());
                                         if (!ident.getName().isEmpty()) {
-                                            filled = true;
+                                            identFilled = true;
                                         }
                                     }
                                     //get remote objects
@@ -228,120 +161,108 @@ public class SpotDataExporter {
                                     IWell96 well96 = well384.getWell96();
                                     IGel gel = well96.getSpot().getGel();
                                     if (showIdentPlate96Position) {
-                                        sb.append('\t');
-                                        if (well96 != null) {
-                                            sb.append(well96.getParent().getName());
-                                            sb.append(':');
-                                            sb.append(well96.getWellPosition());
-                                            filled = true;
-                                        }
+                                        identStringBuilder.append('|');
+                                        identStringBuilder.append(well96.getParent().getName());
+                                        identStringBuilder.append(':');
+                                        identStringBuilder.append(well96.getWellPosition());
+                                        identFilled = true;
                                     }
                                     if (showIdentPlate384Position) {
-                                        sb.append('\t');
-                                        if (well384 != null) {
-                                            sb.append(well384.getParent().getName());
-                                            sb.append(':');
-                                            sb.append(well384.getWellPosition());
-                                            filled = true;
-                                        }
+                                        identStringBuilder.append('|');
+                                        identStringBuilder.append(well384.getParent().getName());
+                                        identStringBuilder.append(':');
+                                        identStringBuilder.append(well384.getWellPosition());
+                                        identFilled = true;
                                     }
                                     if (showIdentGelName) {
-                                        sb.append('\t');
-                                        if (gel != null) {
-                                            sb.append(gel.getName());
-                                            filled = true;
-                                        }
+                                        identStringBuilder.append('|');
+                                        identStringBuilder.append(gel.getName());
+                                        identFilled = true;
                                     }
                                     if (showIdentAbbreviation) {
-                                        sb.append('\t');
-                                        sb.append(ident.getAbbreviation());
+                                        identStringBuilder.append('|');
+                                        identStringBuilder.append(ident.getAbbreviation());
                                         if (!ident.getAbbreviation().isEmpty()) {
-                                            filled = true;
+                                            identFilled = true;
                                         }
                                     }
                                     if (showIdentAccession) {
-                                        sb.append('\t');
-                                        sb.append(ident.getAccession());
+                                        identStringBuilder.append('|');
+                                        identStringBuilder.append(ident.getAccession());
                                         if (!ident.getAccession().isEmpty()) {
-                                            filled = true;
+                                            identFilled = true;
                                         }
                                     }
                                     if (showIdentEcNumbers) {
-                                        sb.append('\t');
+                                        identStringBuilder.append('|');
                                         List<String> ecNumbers = ident.getEcNumbers();
                                         int i = 0;
-                                        for (String kn : ecNumbers) {
-                                            sb.append(kn);
+                                        for (String en : ecNumbers) {
+                                            identStringBuilder.append(en);
                                             if (i < ecNumbers.size() -1) {
-                                                sb.append(", ");
+                                                identStringBuilder.append(", ");
                                                 i++;
                                             }
-                                            if (!kn.isEmpty()) {
-                                                filled = true;
+                                            if (!en.isEmpty()) {
+                                                identFilled = true;
                                             }
                                         }
                                     }
                                     if (showIdentCoverage) {
-                                        sb.append('\t');
-                                        sb.append(ident.getCoverage());
+                                        identStringBuilder.append('|');
+                                        identStringBuilder.append(ident.getCoverage());
                                         if (ident.getCoverage() != -1) {
-                                            filled = true;
+                                            identFilled = true;
                                         }
                                     }
                                     if (showIdentPIValue) {
-                                        sb.append('\t');
-                                        sb.append(ident.getPiValue());
+                                        identStringBuilder.append('|');
+                                        identStringBuilder.append(ident.getPiValue());
                                         if (ident.getPiValue() != 0.0) {
-                                            filled = true;
+                                            identFilled = true;
                                         }
                                     }
                                     if (showIdentScore) {
-                                        sb.append('\t');
-                                        sb.append(ident.getScore());
+                                        identStringBuilder.append('|');
+                                        identStringBuilder.append(ident.getScore());
                                         if (ident.getScore() != -1.0) {
-                                            filled = true;
+                                            identFilled = true;
                                         }
                                     }
                                     if (showIdentWeight) {
-                                        sb.append('\t');
-                                        sb.append(ident.getProteinMolecularWeight());
+                                        identStringBuilder.append('|');
+                                        identStringBuilder.append(ident.getProteinMolecularWeight());
                                         if (ident.getProteinMolecularWeight() != 0.0) {
-                                            filled = true;
+                                            identFilled = true;
                                         }
                                     }
-                                    //finish output line
-                                    if (filled) {
-                                        bw.write(sb.toString());
-                                        bw.newLine();
+                                    //finish ident output
+                                    if (identFilled) {
+                                        identStringBuilder.append(')');
+                                        if (identStringBuilder.charAt(1) == '|') {
+                                            identStringBuilder.delete(1, 2);
+                                        }
+                                        methodStringBuilder.append(identStringBuilder);
+                                        methodFilled = true;
                                     }
                                 }
-                                //finish output line (yes, again!)
-                                if (filled) {
-                                    bw.write(sb.toString());
-                                    bw.newLine();
-                                }
-                                ////////////////////////////////////////////////
                             } else {
                                 System.out.println("Skipping empty method results for " + method.getName());
+                            }
+                            
+                            //finish method output
+                            if (methodFilled) {
+                                globalStringBuilder.append(methodStringBuilder);
+                                globalStringBuilder.append(']');
                             }
                         }
                     } else {
                         System.out.println("Skipping spot group " + group.getNumber() + " without annotations!");
                     }
-                } else { //generate output WITHOUT identifications
-                    StringBuilder line = new StringBuilder();
-                    //write group number
-                    if (showGroupNumber) {
-                        line.append(group.getNumber());
-                    }
-                    //write label
-                    if (showGroupLabel) {
-                        line.append('\t');
-                        if (group.getLabel() != null && !group.getLabel().isEmpty()) {
-                            line.append(group.getLabel());
-                        }
-                    }
-                    bw.write(line.toString());
+                }
+                //finish output line
+                if (lineFilled) {
+                    bw.write(globalStringBuilder.toString());
                     bw.newLine();
                 }
             }

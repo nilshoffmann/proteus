@@ -33,10 +33,21 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
     public static final String PROPERTY_SHOW_IDENT_KEGG_NUMBERS = "show identification EC numbers";
     public static final String PROPERTY_SHOW_IDENT_COVERAGE = "show identification MS Coverage";
     public static final String PROPERTY_SHOW_IDENT_PI_VALUE = "show identification pI value";
-    public static final String PROPERTY_SHOW_IDENT_SCORE = "show identification mascot score";
+    public static final String PROPERTY_SHOW_IDENT_SCORE = "show identification Mascot score";
     public static final String PROPERTY_SHOW_IDENT_WEIGHT = "show identification molecular weight";
     
+    public static final String PROPERTY_FILTER_MASCOT_USAGE = "Mascot score filter usage";
+    public static final String PROPERTY_FILTER_MASCOT_VALUE = "Mascot score filter value";
+    
     private File directory;
+    
+    public boolean isFilterMascotUsed() {
+        return filterMascotBox.isSelected();
+    }
+    
+    public String getFilterMascotValue() {
+        return filterMascotField.getText();
+    }
     
     public boolean isShowHeader() {
         return headerBox.isSelected();
@@ -184,6 +195,10 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
         identWeightBox = new javax.swing.JCheckBox();
         headerBox = new javax.swing.JCheckBox();
         identGelNameBox = new javax.swing.JCheckBox();
+        identFilterLabel = new javax.swing.JLabel();
+        filterMascotBox = new javax.swing.JCheckBox();
+        filterMascotField = new javax.swing.JTextField();
+        identDetailLabel = new javax.swing.JLabel();
 
         jList1.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -350,6 +365,25 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(identFilterLabel, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.identFilterLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(filterMascotBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.filterMascotBox.text")); // NOI18N
+        filterMascotBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterMascotBoxActionPerformed(evt);
+            }
+        });
+
+        filterMascotField.setText(org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.filterMascotField.text")); // NOI18N
+        filterMascotField.setEnabled(false);
+        filterMascotField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterMascotFieldActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(identDetailLabel, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.identDetailLabel.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -358,42 +392,54 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(fileNameTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(fileDirectoryTextField))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fileChooserButton))
-                    .addComponent(filePathTextField)
-                    .addComponent(jScrollPane2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(fileNameTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(fileDirectoryTextField))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(fileChooserButton))
+                            .addComponent(filePathTextField)
+                            .addComponent(jScrollPane2)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(spotGroupIDBox)
+                                    .addComponent(outputHeadingLabel)
+                                    .addComponent(spotGroupLabelBox)
+                                    .addComponent(fileNameLabel)
+                                    .addComponent(fileDirectoryLabel)
+                                    .addComponent(filePathLabel)
+                                    .addComponent(methodsLabel)
+                                    .addComponent(identificationBox)
+                                    .addComponent(headerBox))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(21, 21, 21)
+                                .addComponent(filterMascotBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(filterMascotField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(identMethodNameBox)
                                     .addComponent(identNameBox)
                                     .addComponent(identPlate96Box)
-                                    .addComponent(identPlate384Box)
                                     .addComponent(identGelNameBox)
                                     .addComponent(identAbbreviationBox)
-                                    .addComponent(identAccessionBox)
-                                    .addComponent(identCoverageBox)
-                                    .addComponent(identEcNumbersBox)
-                                    .addComponent(identPIValueBox)
+                                    .addComponent(identPlate384Box))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(identScoreBox)
-                                    .addComponent(identWeightBox)))
-                            .addComponent(headerBox)
-                            .addComponent(spotGroupIDBox)
-                            .addComponent(identificationBox)
-                            .addComponent(spotGroupLabelBox)
-                            .addComponent(fileNameLabel)
-                            .addComponent(fileDirectoryLabel)
-                            .addComponent(filePathLabel)
-                            .addComponent(methodsLabel)
-                            .addComponent(outputHeadingLabel))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                                    .addComponent(identWeightBox)
+                                    .addComponent(identCoverageBox)
+                                    .addComponent(identPIValueBox)
+                                    .addComponent(identAccessionBox)
+                                    .addComponent(identEcNumbersBox)))
+                            .addComponent(identDetailLabel)
+                            .addComponent(identFilterLabel))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -428,30 +474,39 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
                 .addComponent(spotGroupLabelBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(identificationBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(identDetailLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(identMethodNameBox)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(identMethodNameBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(identNameBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(identPlate96Box)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(identPlate384Box)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(identGelNameBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(identAbbreviationBox))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(identAccessionBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(identEcNumbersBox)
+                        .addComponent(identCoverageBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(identPIValueBox)
+                        .addGap(0, 0, 0)
+                        .addComponent(identScoreBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(identWeightBox)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(identFilterLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(identNameBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(identPlate96Box)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(identPlate384Box)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(identGelNameBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(identAbbreviationBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(identAccessionBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(identEcNumbersBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(identCoverageBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(identPIValueBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(identScoreBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(identWeightBox)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(filterMascotBox)
+                    .addComponent(filterMascotField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -553,6 +608,15 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
         firePropertyChange(PROPERTY_SHOW_IDENT_GEL_NAME, !identGelNameBox.isSelected(), identGelNameBox.isSelected());
     }//GEN-LAST:event_identGelNameBoxActionPerformed
 
+    private void filterMascotFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterMascotFieldActionPerformed
+        firePropertyChange(PROPERTY_FILTER_MASCOT_VALUE, null, filterMascotField.getText());
+    }//GEN-LAST:event_filterMascotFieldActionPerformed
+
+    private void filterMascotBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterMascotBoxActionPerformed
+        firePropertyChange(PROPERTY_FILTER_MASCOT_USAGE, !filterMascotBox.isSelected(), filterMascotBox.isSelected());
+        filterMascotField.setEnabled(filterMascotBox.isSelected());
+    }//GEN-LAST:event_filterMascotBoxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton fileChooserButton;
     private javax.swing.JLabel fileDirectoryLabel;
@@ -561,12 +625,16 @@ public final class ExportOptionsVisualPanel1 extends JPanel {
     private javax.swing.JTextField fileNameTextField;
     private javax.swing.JLabel filePathLabel;
     private javax.swing.JTextField filePathTextField;
+    private javax.swing.JCheckBox filterMascotBox;
+    private javax.swing.JTextField filterMascotField;
     private javax.swing.JCheckBox headerBox;
     private javax.swing.JCheckBox identAbbreviationBox;
     private javax.swing.JCheckBox identAccessionBox;
     private javax.swing.JCheckBox identCoverageBox;
-    private javax.swing.JCheckBox identGelNameBox;
+    private javax.swing.JLabel identDetailLabel;
     private javax.swing.JCheckBox identEcNumbersBox;
+    private javax.swing.JLabel identFilterLabel;
+    private javax.swing.JCheckBox identGelNameBox;
     private javax.swing.JCheckBox identMethodNameBox;
     private javax.swing.JCheckBox identNameBox;
     private javax.swing.JCheckBox identPIValueBox;

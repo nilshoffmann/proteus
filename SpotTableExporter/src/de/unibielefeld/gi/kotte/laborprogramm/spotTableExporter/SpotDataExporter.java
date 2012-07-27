@@ -60,6 +60,10 @@ public class SpotDataExporter {
         boolean showIdentScore = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_SCORE);
         boolean showIdentWeight = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_WEIGHT);
 
+        //get filters
+        boolean filterMascotUsed = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_FILTER_MASCOT_USAGE);
+        float filterMascotValue = (Float) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_FILTER_MASCOT_VALUE);
+        
         //get sorted list of spotGroups
         List<ISpotGroup> spotGroups = context.getLookup().lookup(IProject.class).getSpotGroups();
         Collections.sort(spotGroups, new Comparator<ISpotGroup>() {
@@ -174,11 +178,10 @@ public class SpotDataExporter {
                                     methodToIdentification.put(method, idents);
                                 }
                                 for (IIdentification identification : method.getIdentifications()) {
-                                    //if (!identification.getName().isEmpty()) {
+                                    //apply filters
+                                    if (!(filterMascotUsed && identification.getScore() >= filterMascotValue)) {
                                         idents.add(identification);
-                                    //} else {
-                                    //  System.out.println("Skipping empty identification for export!");
-                                    //}
+                                    }
                                 }
                             }
                         }

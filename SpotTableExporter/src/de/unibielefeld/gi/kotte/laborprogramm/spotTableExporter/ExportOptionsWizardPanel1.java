@@ -70,6 +70,15 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
             descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Cannot show empty identifications.");
             return false;
         }
+        if (component.isFilterMascotUsed()) {
+            String filterMascotValue = component.getFilterMascotValue();
+            try {
+                Float value = Float.parseFloat(filterMascotValue);
+            } catch (NumberFormatException nfe) {
+                descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "That is not a number!");
+                return false;
+            }
+        }
 
         //wenn Werte vollstaendig, Infomeldung zuruecksetzen
         descriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, null);
@@ -155,6 +164,10 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_PI_VALUE, eovp.isShowIdentPIValue());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_SCORE, eovp.isShowIdentScore());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_WEIGHT, eovp.isShowIdentWeight());
+        
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_FILTER_MASCOT_USAGE, eovp.isFilterMascotUsed());
+        String filterMascotValue = eovp.getFilterMascotValue();
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_FILTER_MASCOT_USAGE, Float.parseFloat(filterMascotValue));
     }
 
     @Override

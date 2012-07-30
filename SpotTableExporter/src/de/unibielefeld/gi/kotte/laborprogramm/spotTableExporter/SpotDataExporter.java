@@ -63,11 +63,10 @@ public class SpotDataExporter {
         //get filters
         boolean filterMascotUsed = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_FILTER_MASCOT_USAGE);
         float filterMascotValue = (Float) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_FILTER_MASCOT_VALUE);
-        
+
         //get sorted list of spotGroups
         List<ISpotGroup> spotGroups = context.getLookup().lookup(IProject.class).getSpotGroups();
         Collections.sort(spotGroups, new Comparator<ISpotGroup>() {
-
             @Override
             public int compare(ISpotGroup t, ISpotGroup t1) {
                 return t.getNumber() - t1.getNumber();
@@ -76,7 +75,7 @@ public class SpotDataExporter {
 
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(outFile));
-            
+
             //add row headers
             if (showHeader) {
                 StringBuilder header = new StringBuilder();
@@ -140,7 +139,7 @@ public class SpotDataExporter {
                 bw.write(header.toString());
                 bw.newLine();
             }
-            
+
             for (ISpotGroup group : spotGroups) {
                 if (showIdentification) {
                     //get identifications for output
@@ -154,15 +153,15 @@ public class SpotDataExporter {
                                     if (well384.getStatus() == Well384Status.IDENTIFIED) {
                                         IWellIdentification ident = well384.getIdentification();
                                         identifications.add(ident);
-                                    //} else {
-                                    //  System.out.println("Skipping well384 " + well384.toString());
+                                        //} else {
+                                        //  System.out.println("Skipping well384 " + well384.toString());
                                     }
                                 }
-                            //} else {
-                            //  System.out.println("Skipping well96 " + well96.toString());
+                                //} else {
+                                //  System.out.println("Skipping well96 " + well96.toString());
                             }
-                        //} else {
-                        //  System.out.println("Skipping unpicked spot " + spot + " in group #" + group.getNumber() + ": " + group.getLabel());
+                            //} else {
+                            //  System.out.println("Skipping unpicked spot " + spot + " in group #" + group.getNumber() + ": " + group.getLabel());
                         }
                     }
                     //System.out.println("Processing " + identifications.size() + " identifications of " + spots.size() + " spots in spot group!");
@@ -180,15 +179,12 @@ public class SpotDataExporter {
                                 for (IIdentification identification : method.getIdentifications()) {
                                     //apply filters
                                     if (filterMascotUsed) {
-                                        if(identification.getScore() >= filterMascotValue) {
+                                        if (identification.getScore() >= filterMascotValue) {
                                             idents.add(identification);
                                         }
-                                    }else{
+                                    } else {
                                         idents.add(identification);
                                     }
-//                                    if (!(filterMascotUsed && (identification.getScore() >= filterMascotValue))) {
-//                                        idents.add(identification);
-//                                    }
                                 }
                             }
                         }
@@ -282,7 +278,7 @@ public class SpotDataExporter {
                                         int i = 0;
                                         for (String kn : ecNumbers) {
                                             sb.append(kn);
-                                            if (i < ecNumbers.size() -1) {
+                                            if (i < ecNumbers.size() - 1) {
                                                 sb.append(", ");
                                                 i++;
                                             }
@@ -323,12 +319,16 @@ public class SpotDataExporter {
                                     if (filled) {
                                         bw.write(sb.toString());
                                         bw.newLine();
+                                    } else {
+                                        System.out.println("Skipping empty identification output: " + sb.toString());
                                     }
                                 }
                                 //finish output line (yes, again!)
                                 if (filled) {
                                     bw.write(sb.toString());
                                     bw.newLine();
+                                } else {
+                                    System.out.println("Skipping empty output line: " + sb.toString());
                                 }
                                 ////////////////////////////////////////////////
                             } else {

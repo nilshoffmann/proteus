@@ -58,10 +58,13 @@ public class SpotDataExporter {
         boolean showIdentScore = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_SCORE);
         boolean showIdentWeight = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_WEIGHT);
 
+        //get filters
+        boolean filterMascotUsed = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_FILTER_MASCOT_USAGE);
+        float filterMascotValue = (Float) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_FILTER_MASCOT_VALUE);
+        
         //get sorted list of spotGroups
         List<ISpotGroup> spotGroups = context.getLookup().lookup(IProject.class).getSpotGroups();
         Collections.sort(spotGroups, new Comparator<ISpotGroup>() {
-
             @Override
             public int compare(ISpotGroup t, ISpotGroup t1) {
                 return t.getNumber() - t1.getNumber();
@@ -81,13 +84,16 @@ public class SpotDataExporter {
 
                 //write label
                 if (showGroupLabel) {
-                    
+
                     if (group.getLabel() != null && !group.getLabel().isEmpty()) {
                         globalStringBuilder.append(group.getLabel());
                         lineFilled = true;
-                    }
+                    } //else {
+                        //globalStringBuilder.append("unlabeled");
+                        //lineFilled = true;
+                    //}
                 }
-                
+
                 if (showIdentification) {
                     //get identifications for output
                     List<ISpot> spots = group.getSpots();
@@ -100,15 +106,15 @@ public class SpotDataExporter {
                                     if (well384.getStatus() == Well384Status.IDENTIFIED) {
                                         IWellIdentification ident = well384.getIdentification();
                                         identifications.add(ident);
-                                    //} else {
-                                    //  System.out.println("Skipping well384 " + well384.toString());
+                                        //} else {
+                                        //  System.out.println("Skipping well384 " + well384.toString());
                                     }
                                 }
-                            //} else {
-                            //  System.out.println("Skipping well96 " + well96.toString());
+                                //} else {
+                                //  System.out.println("Skipping well96 " + well96.toString());
                             }
-                        //} else {
-                        //  System.out.println("Skipping unpicked spot " + spot + " in group #" + group.getNumber() + ": " + group.getLabel());
+                            //} else {
+                            //  System.out.println("Skipping unpicked spot " + spot + " in group #" + group.getNumber() + ": " + group.getLabel());
                         }
                     }
                     //System.out.println("Processing " + identifications.size() + " identifications of " + spots.size() + " spots in spot group!");
@@ -124,11 +130,14 @@ public class SpotDataExporter {
                                     methodToIdentification.put(method, idents);
                                 }
                                 for (IIdentification identification : method.getIdentifications()) {
-                                    //if (!identification.getName().isEmpty()) {
+                                    //apply filters
+                                    if (filterMascotUsed) {
+                                        if (identification.getScore() >= filterMascotValue) {
+                                            idents.add(identification);
+                                        }
+                                    } else {
                                         idents.add(identification);
-                                    //} else {
-                                    //  System.out.println("Skipping empty identification for export!");
-                                    //}
+                                    }
                                 }
                             }
                         }
@@ -138,11 +147,17 @@ public class SpotDataExporter {
                         for (IIdentificationMethod method : methodToIdentification.keySet()) {
                             StringBuilder methodStringBuilder = new StringBuilder();
                             boolean methodFilled = false;
-                            methodStringBuilder.append('[');
+                            //only use [] brackets if there are multiple methods
+                            if (methods.size() > 1) {
+                                methodStringBuilder.append('[');
+                            } else if (lineFilled && showMethodName) {
+                                //placeholder between label and method name
+                                methodStringBuilder.append(' ');
+                            }
                             if (showMethodName) {
                                 methodStringBuilder.append(method.getName());
                             }
-                            
+
                             Set<IIdentification> idents = methodToIdentification.get(method);
                             if (!idents.isEmpty()) {
                                 for (IIdentification ident : idents) {
@@ -199,7 +214,7 @@ public class SpotDataExporter {
                                         int i = 0;
                                         for (String en : ecNumbers) {
                                             identStringBuilder.append(en);
-                                            if (i < ecNumbers.size() -1) {
+                                            if (i < ecNumbers.size() - 1) {
                                                 identStringBuilder.append(", ");
                                                 i++;
                                             }
@@ -244,17 +259,24 @@ public class SpotDataExporter {
                                         }
                                         methodStringBuilder.append(identStringBuilder);
                                         methodFilled = true;
+                                    } else {
+                                        System.out.println("Skipping empty identification output: " + identStringBuilder.toString());
                                     }
                                 }
                             } else {
                                 System.out.println("Skipping empty method results for " + method.getName());
                             }
-                            
+
                             //finish method output
                             if (methodFilled) {
+                                //only use [] brackets if there are multiple methods
+                                if (methods.size() > 1) {
+                                    methodStringBuilder.append(']');
+                                }
                                 globalStringBuilder.append(methodStringBuilder);
-                                globalStringBuilder.append(']');
                                 lineFilled = true;
+                            } else {
+                                System.out.println("Skipping empty method information: " + methodStringBuilder.toString());
                             }
                         }
                     } else {
@@ -265,6 +287,8 @@ public class SpotDataExporter {
                 if (lineFilled) {
                     bw.write(globalStringBuilder.toString());
                     bw.newLine();
+                } else {
+                    System.out.println("Skipping empty line: " + globalStringBuilder.toString());
                 }
             }
             //finish output

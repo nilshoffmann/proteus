@@ -61,7 +61,7 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
                     "Please pick at least one output column (other than group number).");
             return false;
         }
-        if (component.isShowIdentification() && !component.isShowIdentMethodName() && !component.isShowIdentName()
+        if (component.isShowIdentification() && !component.isShowIdentName()
                 && !component.isShowIdentPlate96Position() && !component.isShowIdentPlate384Position()
                 && !component.isShowIdentGelName() && !component.isShowIdentAbbreviation()
                 && !component.isShowIdentAccession() && !component.isShowIdentEcNumbers()
@@ -70,15 +70,15 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
             descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Cannot show empty identifications.");
             return false;
         }
-        if (component.isFilterMascotUsed()) {
+//        if (component.isFilterMascotUsed()) {
             String filterMascotValue = component.getFilterMascotValue();
             try {
                 Float value = Float.parseFloat(filterMascotValue);
             } catch (NumberFormatException nfe) {
-                descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "That is not a number!");
+                descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Mascot Score Filter is not a number!");
                 return false;
             }
-        }
+//        }
 
         //wenn Werte vollstaendig, Infomeldung zuruecksetzen
         descriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, null);
@@ -98,7 +98,7 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
             listeners.remove(l);
         }
     }
-    
+
     protected final void fireChangeEvent() {
         Iterator<ChangeListener> it;
         synchronized (listeners) {
@@ -132,7 +132,7 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
 //        }
         //this is much faster
         Collection<IIdentificationMethod> identificationMethod = project.retrieve(IIdentificationMethod.class);
-        for(IIdentificationMethod method:identificationMethod) {
+        for (IIdentificationMethod method : identificationMethod) {
             methods.add(method.getName());
         }
         ((ExportOptionsVisualPanel1) getComponent()).setAvailableMethods(methods);
@@ -146,12 +146,12 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_METHODS, eovp.getSelectedMethods());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_DIRECTORY, eovp.getDirectory());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_FILENAME, eovp.getFileName());
-        
+
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_HEADER, eovp.isShowHeader());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_GROUP_NUMBER, eovp.isShowGroupNumber());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_GROUP_LABEL, eovp.isShowGroupLabel());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENTIFICATION, eovp.isShowIdentification());
-        
+
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_METHOD_NAME, eovp.isShowIdentMethodName());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_NAME, eovp.isShowIdentName());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_PLATE96_POSITION, eovp.isShowIdentPlate96Position());
@@ -164,7 +164,7 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_PI_VALUE, eovp.isShowIdentPIValue());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_SCORE, eovp.isShowIdentScore());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_WEIGHT, eovp.isShowIdentWeight());
-        
+
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_FILTER_MASCOT_USAGE, eovp.isFilterMascotUsed());
         String filterMascotValue = eovp.getFilterMascotValue();
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_FILTER_MASCOT_VALUE, Float.parseFloat(filterMascotValue));

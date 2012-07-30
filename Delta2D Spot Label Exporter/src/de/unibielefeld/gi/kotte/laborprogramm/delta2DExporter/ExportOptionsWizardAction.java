@@ -23,7 +23,8 @@ import org.openide.util.NbBundle;
 @ActionID(category = "Proteus",
 id = "de.unibielefeld.gi.kotte.laborprogramm.delta2DExporter.ExportOptionsWizardAction")
 @ActionRegistration(displayName = "#CTL_ExportOptionsWizardAction")
-@ActionReferences({@ActionReference(path="Actions/ProteomicProject")})
+@ActionReferences({
+    @ActionReference(path = "Actions/ProteomicProject")})
 @NbBundle.Messages("CTL_ExportOptionsWizardAction=Export Spot Information for Delta2D Re-Import")
 public final class ExportOptionsWizardAction implements ActionListener {
 
@@ -53,14 +54,14 @@ public final class ExportOptionsWizardAction implements ActionListener {
     }
 
     /**
-     * Initialize panels representing individual wizard's steps and sets
-     * various properties for them influencing wizard appearance.
+     * Initialize panels representing individual wizard's steps and sets various
+     * properties for them influencing wizard appearance.
      */
     private WizardDescriptor.Panel[] getPanels() {
         if (panels == null) {
             panels = new WizardDescriptor.Panel[]{
-                        new ExportOptionsWizardPanel1()
-                    };
+                new ExportOptionsWizardPanel1()
+            };
             String[] steps = new String[panels.length];
             for (int i = 0; i < panels.length; i++) {
                 Component c = panels[i].getComponent();

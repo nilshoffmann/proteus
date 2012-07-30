@@ -167,7 +167,7 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
         
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_FILTER_MASCOT_USAGE, eovp.isFilterMascotUsed());
         String filterMascotValue = eovp.getFilterMascotValue();
-        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_FILTER_MASCOT_USAGE, Float.parseFloat(filterMascotValue));
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_FILTER_MASCOT_VALUE, Float.parseFloat(filterMascotValue));
     }
 
     @Override

@@ -145,6 +145,7 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_NAME, eovp.isShowIdentName());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_PLATE96_POSITION, eovp.isShowIdentPlate96Position());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_PLATE384_POSITION, eovp.isShowIdentPlate384Position());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_GEL_NAME, eovp.isShowIdentGelName());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_ABBREVIATION, eovp.isShowIdentAbbreviation());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_ACCESSION, eovp.isShowIdentAccession());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_IDENT_KEGG_NUMBERS, eovp.isShowIdentEcNumbers());

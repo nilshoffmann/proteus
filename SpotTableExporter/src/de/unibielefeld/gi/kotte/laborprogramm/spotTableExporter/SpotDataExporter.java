@@ -179,9 +179,16 @@ public class SpotDataExporter {
                                 }
                                 for (IIdentification identification : method.getIdentifications()) {
                                     //apply filters
-                                    if (!(filterMascotUsed && identification.getScore() >= filterMascotValue)) {
+                                    if (filterMascotUsed) {
+                                        if(identification.getScore() >= filterMascotValue) {
+                                            idents.add(identification);
+                                        }
+                                    }else{
                                         idents.add(identification);
                                     }
+//                                    if (!(filterMascotUsed && (identification.getScore() >= filterMascotValue))) {
+//                                        idents.add(identification);
+//                                    }
                                 }
                             }
                         }

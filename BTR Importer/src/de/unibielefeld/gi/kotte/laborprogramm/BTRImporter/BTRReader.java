@@ -40,7 +40,7 @@ public class BTRReader {
             in.readLine(); // Sternchen Zeile
 
             //Pattern definition (re-usable)
-            Pattern abbreviationPattern = Pattern.compile("^(\\w{3,4}) ");
+            Pattern abbreviationPattern = Pattern.compile("^(\\w{3,5}) ");
             Pattern namePattern = Pattern.compile("([\\w/\\- ]*)");
             Pattern gendbPattern = Pattern.compile("\\(GenDB-ID=(\\d+)\\)");
             Pattern gendbProjectPattern = Pattern.compile(

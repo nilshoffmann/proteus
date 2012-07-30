@@ -138,8 +138,8 @@ public class SpotDataExporter {
                         for (IIdentificationMethod method : methodToIdentification.keySet()) {
                             StringBuilder methodStringBuilder = new StringBuilder();
                             boolean methodFilled = false;
+                            methodStringBuilder.append('[');
                             if (showMethodName) {
-                                methodStringBuilder.append('[');
                                 methodStringBuilder.append(method.getName());
                             }
                             
@@ -254,6 +254,7 @@ public class SpotDataExporter {
                             if (methodFilled) {
                                 globalStringBuilder.append(methodStringBuilder);
                                 globalStringBuilder.append(']');
+                                lineFilled = true;
                             }
                         }
                     } else {

@@ -66,7 +66,9 @@ public final class RecreateVisualSpotAnnotations implements ActionListener {
                     Collection<GelSpotAnnotations> gelSpotAnnotations = AnnotationManager.getAnnotations(ipp);
                     for (GelSpotAnnotations gsa : gelSpotAnnotations) {
                         for (SpotAnnotation sa : gsa.getSpotAnnotations()) {
-                            ipp.delete(sa);
+                            if(sa!=null) {
+                                ipp.delete(sa);
+                            }
                         }
                         ipp.delete(gsa);
                     }

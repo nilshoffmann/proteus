@@ -24,9 +24,9 @@ import com.db4o.collections.ActivatableArrayList;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
+import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -58,11 +58,13 @@ public class AnnotationManager {
         for (ISpot spot : gel.getSpots()) {
             SpotAnnotation ann = new SpotAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()), spot);
             spotAnnotations.add(ann);
+            project.store(ann);
         }
+        project.store(spotAnnotations);
         GelSpotAnnotations gsa = new GelSpotAnnotations();
         gsa.setGel(gel);
         gsa.setSpotAnnotations(spotAnnotations);
-        project.persist(Arrays.asList(gsa));
+        project.store(gsa);
         return gsa;
     }
 
@@ -77,7 +79,7 @@ public class AnnotationManager {
 
     public static GelSpotAnnotations getAnnotationsForGel(IProteomicProject project, IGel gel) {
         for (GelSpotAnnotations gsa : getAnnotations(project)) {
-            if (gsa.getGel().getName().equals(gel.getName())) {
+            if (gsa.getGel().getId().equals(gel.getId())){
                 System.out.println("Found existing GelSpotAnnotations for gel " + gel.getFilename());
                 return gsa;
             }
@@ -100,22 +102,22 @@ public class AnnotationManager {
     }
 
     public void open() {
-        Collection<AnnotationsResetMarker> c = project.retrieve(AnnotationsResetMarker.class);
-        if(c.isEmpty()) {
-            System.out.println("Resetting annotations");
-            //reset annotations
-            Collection<GelSpotAnnotations> gelSpotAnnotations = getAnnotations(project);
-            for(GelSpotAnnotations gsa:gelSpotAnnotations) {
-                for(SpotAnnotation sa:gsa.getSpotAnnotations()){
-                    project.delete(sa);
-                }
-                project.delete(gsa);
-            }
-            System.out.println("Storing annotations reset marker!");
-            AnnotationsResetMarker ars = new AnnotationsResetMarker();
-            ars.setUpdated(true);
-            project.store(ars);
-        }
+//        Collection<AnnotationsResetMarker> c = project.retrieve(AnnotationsResetMarker.class);
+//        if(c.isEmpty()) {
+//            System.out.println("Resetting annotations");
+//            //reset annotations
+//            Collection<GelSpotAnnotations> gelSpotAnnotations = getAnnotations(project);
+//            for(GelSpotAnnotations gsa:gelSpotAnnotations) {
+//                for(SpotAnnotation sa:gsa.getSpotAnnotations()){
+//                    project.delete(sa);
+//                }
+//                project.delete(gsa);
+//            }
+//            System.out.println("Storing annotations reset marker!");
+//            AnnotationsResetMarker ars = new AnnotationsResetMarker();
+//            ars.setUpdated(true);
+//            project.store(ars);
+//        }
         Collection<GelSpotAnnotations> gelSpotAnnotations = getAnnotations(project);
         if (gelSpotAnnotations.isEmpty()) {
             System.out.println("Did not find any spot GelSpotAnnotations in database!");
@@ -129,6 +131,7 @@ public class AnnotationManager {
         }
 
         try {
+            boolean updated = false;
             for (Annotation ann : gelSpotAnnotation.getSpotAnnotations()) {
                 SpotAnnotation annotation = (SpotAnnotation) ann;
                 ISpot spot = annotation.getPayload();
@@ -137,13 +140,22 @@ public class AnnotationManager {
                 } else {
                     if (annotation.getShape()==null) {
                         System.err.println("Shape for annotation was null, setting default rectangle!");
-                        annotation.setShape(new Rectangle2D.Double(spot.getPosX() - 10, spot.getPosX() - 10, 20, 20));
+                        Shape s = annotation.getPayload().getShape();
+                        if(s==null) {
+                            annotation.setShape(new Rectangle2D.Double(spot.getPosX() - 10, spot.getPosX() - 10, 20, 20));
+                        }else{
+                            annotation.setShape(s);
+                        }
+                        annotation.setDrawSpotBox(true);
+                        updated = true;
                     }
                     spot.addPropertyChangeListener(hp);
                     annotation.addPropertyChangeListener(hp);
                     hmd.addAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()), annotation);
-                    annotation.setDrawSpotBox(true);
                 }
+            }
+            if(updated) {
+                project.store(gelSpotAnnotation);
             }
         } catch (java.lang.IllegalStateException ise) {
             ise.printStackTrace();

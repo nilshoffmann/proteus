@@ -4,19 +4,17 @@
  */
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.project.spi.factory.ProteomicProjectFactory2;
 import de.unibielefeld.gi.kotte.laborprogramm.project.spi.factory.ProteomikProjectFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.beans.ExceptionListener;
+import java.beans.XMLDecoder;
 import java.io.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
-import net.sf.maltcms.io.xml.serialization.api.ActivatableArrayListConverter;
-import net.sf.maltcms.io.xml.serialization.api.GeneralPathConverter;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
@@ -61,7 +59,7 @@ public final class LoadFromXml implements ActionListener {
         Future<IProject> task = rp.submit(runnable);
     }
     
-    private class ImportFromXmlCallable implements Callable<IProject>, Cancellable {
+    private class ImportFromXmlCallable implements Callable<IProject>, Cancellable, ExceptionListener {
         
         private final IProteomicProject context;
         private ProgressHandle handle;
@@ -87,13 +85,8 @@ public final class LoadFromXml implements ActionListener {
             System.out.println("Project: " + project.toString());
             IProject projectFromBackup = project;
             try {
-                XStream xstream = new XStream(new StaxDriver());
-                xstream.setClassLoader(Lookup.getDefault().lookup(
-                        ClassLoader.class));
-                xstream.registerConverter(new GeneralPathConverter());
-                //xstream.registerConverter(new ActivatableArrayListConverter());
-                projectFromBackup = (IProject) xstream.fromXML(new BufferedInputStream(
-                        new FileInputStream(backupFile)));
+                XMLDecoder decoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(backupFile)), null, this, Lookup.getDefault().lookup(ClassLoader.class));
+                projectFromBackup = (IProject)decoder.readObject();
                 ProteomicProjectFactory2 ppf = new ProteomicProjectFactory2();
                 File oldDatabaseFile = new File(output.getParentFile(), ProteomikProjectFactory.PROJECT_FILE);
                 oldDatabaseFile.renameTo(new File(output.getParent(), ProteomikProjectFactory.PROJECT_FILE + ".bak"));
@@ -112,6 +105,7 @@ public final class LoadFromXml implements ActionListener {
                     Exceptions.printStackTrace(ex);
                 }
             } catch (FileNotFoundException e) {
+                Exceptions.printStackTrace(e);
             } finally {
                 handle.finish();
             }
@@ -121,6 +115,11 @@ public final class LoadFromXml implements ActionListener {
         @Override
         public boolean cancel() {
             throw new UnsupportedOperationException("Cancellation not supported!");
+        }
+
+        @Override
+        public void exceptionThrown(Exception e) {
+            Exceptions.printStackTrace(e);
         }
     }
 }

@@ -4,20 +4,20 @@
  */
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.beans.ExceptionListener;
+import java.beans.Introspector;
+import java.beans.XMLEncoder;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
-import net.sf.maltcms.io.xml.serialization.api.ActivatableArrayListConverter;
-import net.sf.maltcms.io.xml.serialization.api.GeneralPathConverter;
+import net.sf.maltcms.io.xml.serialization.api.IPersistenceDelegateRegistration;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 
@@ -84,30 +84,30 @@ public final class ExportToXml implements ActionListener {
             System.out.println("Project: " + project.toString());
             File outputFile = new File(output, project.getName() + ".xml");
             
-            XStream xstream = new XStream(new StaxDriver());
-            xstream.setClassLoader(Lookup.getDefault().lookup(
-                    ClassLoader.class));
-            //xstream.registerConverter(new FileConverter());
-            xstream.registerConverter(new GeneralPathConverter());
-            //xstream.registerConverter(new ActivatableArrayListConverter());
-            xstream.toXML(project, new BufferedOutputStream(new FileOutputStream(outputFile)));
+//            XStream xstream = new XStream(new StaxDriver());
+//            xstream.setClassLoader(Lookup.getDefault().lookup(
+//                    ClassLoader.class));
+//            //xstream.registerConverter(new FileConverter());
+//            xstream.registerConverter(new GeneralPathConverter());
+//            //xstream.registerConverter(new ActivatableArrayListConverter());
+//            xstream.toXML(project, new BufferedOutputStream(new FileOutputStream(outputFile)));
 //            
-//            try {
-//                XMLEncoder encoder = new XMLEncoder(new BufferedOutputStream(
-//                        new FileOutputStream(outputFile)));
-//                encoder.setExceptionListener(this);
-//                //remove any previously retrieved BeanInfo objects
-//                Introspector.flushCaches();
-//                for (IPersistenceDelegateRegistration registration : Lookup.getDefault().lookupAll(IPersistenceDelegateRegistration.class)) {
-//                    registration.registerPersistenceDelegates(encoder);
-//                }
-//                encoder.writeObject(project);
-//                encoder.close();
-//            } catch (FileNotFoundException e) {
-//            } finally {
-//                handle.finish();
-//            }
-            handle.finish();
+            try {
+                XMLEncoder encoder = new XMLEncoder(new BufferedOutputStream(
+                        new FileOutputStream(outputFile)));
+                encoder.setExceptionListener(this);
+                //remove any previously retrieved BeanInfo objects
+                Introspector.flushCaches();
+                for (IPersistenceDelegateRegistration registration : Lookup.getDefault().lookupAll(IPersistenceDelegateRegistration.class)) {
+                    encoder.setPersistenceDelegate(registration.appliesTo(), registration.getPersistenceDelegate());
+                }
+                encoder.writeObject(project);
+                encoder.close();
+            } catch (FileNotFoundException e) {
+            } finally {
+                handle.finish();
+            }
+//            handle.finish();
             return outputFile;
         }
         

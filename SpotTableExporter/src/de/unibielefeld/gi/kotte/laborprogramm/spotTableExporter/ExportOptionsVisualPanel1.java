@@ -379,6 +379,7 @@ public final class ExportOptionsVisualPanel1 extends JPanel implements DocumentL
             }
         });
 
+        filterMascotField.setColumns(5);
         filterMascotField.setText(org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.filterMascotField.text")); // NOI18N
         filterMascotField.setEnabled(false);
         filterMascotField.addActionListener(new java.awt.event.ActionListener() {
@@ -499,6 +500,7 @@ public final class ExportOptionsVisualPanel1 extends JPanel implements DocumentL
                         .addComponent(identAccessionBox)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(identEcNumbersBox)
+                        .addGap(0, 0, 0)
                         .addComponent(identCoverageBox)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(identPIValueBox)

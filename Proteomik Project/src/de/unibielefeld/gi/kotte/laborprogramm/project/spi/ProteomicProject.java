@@ -279,6 +279,7 @@ public class ProteomicProject implements IProteomicProject {
                 instanceContent.add(this);
             } catch (RuntimeException re) {
                 closeSession();
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE,"Caught exception while opening database!",re);
                 throw new RuntimeException("Project database is already in use. If there is no open project, please delete the lock file!");
             }
         }

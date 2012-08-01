@@ -3,12 +3,15 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.spi.gel;
 import com.db4o.activation.ActivationPurpose;
 import com.db4o.activation.Activator;
 import com.db4o.ta.Activatable;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.PersistentShape;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import java.awt.Shape;
+import java.awt.geom.Path2D;
+import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.UUID;
@@ -21,11 +24,9 @@ import java.util.UUID;
 public class Spot implements ISpot, Activatable {
 
     /**
-     * PropertyChangeSupport ala JavaBeans(tm)
-     * Not persisted!
+     * PropertyChangeSupport ala JavaBeans(tm) Not persisted!
      */
     private transient PropertyChangeSupport pcs = null;
-    
 
     @Override
     public synchronized void removePropertyChangeListener(
@@ -133,7 +134,7 @@ public class Spot implements ISpot, Activatable {
         this.normVolume = normVolume;
         getPropertyChangeSupport().firePropertyChange(PROPERTY_NORM_VOLUME, null, normVolume);
     }
-    
+
     @Override
     public double getGreyVolume() {
         activate(ActivationPurpose.READ);
@@ -146,7 +147,7 @@ public class Spot implements ISpot, Activatable {
         this.greyVolume = greyVolume;
         getPropertyChangeSupport().firePropertyChange(PROPERTY_GREY_VOLUME, null, greyVolume);
     }
-    
+
     @Override
     public void setWell(IWell96 well) {
         activate(ActivationPurpose.WRITE);
@@ -245,14 +246,20 @@ public class Spot implements ISpot, Activatable {
     @Override
     public Shape getShape() {
         activate(ActivationPurpose.READ);
+        if (this.shape == null) {
+            setShape(new Rectangle2D.Double(getPosX() - 10.0, getPosY() - 10.0, 20, 20));
+        }
+        if (!(this.shape instanceof PersistentShape)) {
+            setShape(new Rectangle2D.Double(getPosX() - 10.0, getPosY() - 10.0, 20, 20));
+        }
         return this.shape;
     }
 
     @Override
     public void setShape(Shape shape) {
         activate(ActivationPurpose.WRITE);
-        System.out.println("setShape called on Spot with "+shape.getBounds2D());
-        this.shape = shape;
+        System.out.println("setShape called on Spot with " + shape.getBounds2D()+" instanceof "+shape.getClass().getName());
+        this.shape = new PersistentShape(shape);
         getPropertyChangeSupport().firePropertyChange(PROPERTY_SHAPE, null,
                 shape);
     }

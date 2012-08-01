@@ -124,7 +124,7 @@ public final class GelViewerTopComponent extends TopComponent implements
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
     private static final String PREFERRED_ID = "GelViewerTopComponent";
     private InstanceContent ic = new InstanceContent();
-    private Tuple2D<Point2D, Annotation<ISpot>> annotation;
+    private Tuple2D<Point2D, SpotAnnotation> annotation;
     private Result<IGel> result;
     private JXLayer<JComponent> layer;
     private LookupResultListeners lookupListeners;
@@ -133,7 +133,7 @@ public final class GelViewerTopComponent extends TopComponent implements
     private boolean centerView = true;
     private boolean showPickedSpots = true;
     private boolean showUnpickedSpots = true;
-    private boolean showUnlabeledSpots = false;
+    private boolean showUnlabeledSpots = true;
     private boolean showLabeledSpots = true;
 
     @Override
@@ -669,7 +669,7 @@ public final class GelViewerTopComponent extends TopComponent implements
         if (ds != null) {
             Iterator<?> iter2 = ds.getAnnotationIterator();
             while (iter2.hasNext()) {
-                Tuple2D<Point2D, Annotation<?>> tple = (Tuple2D<Point2D, Annotation<?>>) iter2.next();
+                Tuple2D<Point2D, SpotAnnotation> tple = (Tuple2D<Point2D, SpotAnnotation>) iter2.next();
                 SpotAnnotation spot = (SpotAnnotation) tple.getSecond();
                 boolean drawSpot = false;
                 boolean isUnlabeled = spot.getPayload().getLabel() == null || spot.getPayload().getLabel().isEmpty();
@@ -804,8 +804,8 @@ public final class GelViewerTopComponent extends TopComponent implements
         if ("annotationPointSelection".equals(evt.getPropertyName())) {
             System.out.println("GelViewer for gel " + getLookup().lookup(
                     IGel.class) + " received annotationPointSelection: " + evt.getNewValue());
-            Tuple2D<Point2D, Annotation<ISpot>> newAnnotation = (Tuple2D<Point2D, Annotation<ISpot>>) evt.getNewValue();
-            Tuple2D<Point2D, Annotation<ISpot>> oldAnnotation = (Tuple2D<Point2D, Annotation<ISpot>>) evt.getOldValue();
+            Tuple2D<Point2D, SpotAnnotation> newAnnotation = (Tuple2D<Point2D, SpotAnnotation>) evt.getNewValue();
+            Tuple2D<Point2D, SpotAnnotation> oldAnnotation = (Tuple2D<Point2D, SpotAnnotation>) evt.getOldValue();
             if (oldAnnotation != null) {
                 removeAnnotation(oldAnnotation.getSecond());
             }
@@ -825,7 +825,7 @@ public final class GelViewerTopComponent extends TopComponent implements
 ////        PathIterator pi = l.getPathIterator()
 //    }
     protected void setSelection(
-            Tuple2D<Point2D, Annotation<ISpot>> newAnnotation) {
+            Tuple2D<Point2D, SpotAnnotation> newAnnotation) {
         Point2D startPoint = null;
         if (annotation != null) {
             startPoint = getLookup().lookup(HeatmapDataset.class).toViewPoint(
@@ -838,7 +838,7 @@ public final class GelViewerTopComponent extends TopComponent implements
 //            if (annotation != null) {
                 resetSelection();
 //            }
-                Annotation<ISpot> sa = newAnnotation.getSecond();
+                SpotAnnotation sa = newAnnotation.getSecond();
                 if (sa != null) {
                     ic.add(sa);
                     ISpot spot = newAnnotation.getSecond().getPayload();
@@ -873,7 +873,7 @@ public final class GelViewerTopComponent extends TopComponent implements
 
     }
 
-    protected void removeAnnotation(Annotation<ISpot> sa) {
+    protected void removeAnnotation(SpotAnnotation sa) {
         if (sa != null) {
             //sa.removePropertyChangeListener(this);
             ic.remove(sa);
@@ -1013,7 +1013,7 @@ public final class GelViewerTopComponent extends TopComponent implements
                                 } else if (applyToAllOnGel.isSelected()) {
                                     Iterator<?> iter2 = ds.getAnnotationIterator();
                                     while (iter2.hasNext()) {
-                                        Tuple2D<Point2D, Annotation<?>> tple = (Tuple2D<Point2D, Annotation<?>>) iter2.next();
+                                        Tuple2D<Point2D, SpotAnnotation> tple = (Tuple2D<Point2D, SpotAnnotation>) iter2.next();
                                         SpotAnnotation spot = (SpotAnnotation) tple.getSecond();
                                         setSpotProperties(spot, sa);
                                     }

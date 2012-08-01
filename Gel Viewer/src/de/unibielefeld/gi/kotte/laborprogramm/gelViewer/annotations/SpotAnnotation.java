@@ -11,13 +11,16 @@ import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
-import net.sf.maltcms.ui.plot.heatmap.Annotation;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import net.sf.maltcms.ui.plot.heatmap.IAnnotation;
 import net.sf.maltcms.ui.plot.heatmap.Tuple2D;
 import net.sf.maltcms.ui.plot.heatmap.painter.PainterTools;
 
@@ -25,32 +28,32 @@ import net.sf.maltcms.ui.plot.heatmap.painter.PainterTools;
  *
  * @author nils
  */
-public class SpotAnnotation extends Annotation<ISpot> implements Activatable {
+public class SpotAnnotation implements IAnnotation<ISpot>, Activatable {
 
-//    /**
-//     * PropertyChangeSupport ala JavaBeans(tm)
-//     * Not persisted!
-//     */
-//    private transient PropertyChangeSupport pcs = null;
-//
-//    @Override
-//    public synchronized void removePropertyChangeListener(
-//            PropertyChangeListener listener) {
-//        getPropertyChangeSupport().removePropertyChangeListener(listener);
-//    }
-//
-//    @Override
-//    public synchronized void addPropertyChangeListener(
-//            PropertyChangeListener listener) {
-//        getPropertyChangeSupport().addPropertyChangeListener(listener);
-//    }
-//
-//    private PropertyChangeSupport getPropertyChangeSupport() {
-//        if (this.pcs == null) {
-//            this.pcs = new PropertyChangeSupport(this);
-//        }
-//        return this.pcs;
-//    }
+/**
+     * PropertyChangeSupport ala JavaBeans(tm)
+     * Not persisted!
+     */
+    private transient PropertyChangeSupport pcs = null;
+
+    @Override
+    public synchronized void removePropertyChangeListener(
+            PropertyChangeListener listener) {
+        getPropertyChangeSupport().removePropertyChangeListener(listener);
+    }
+
+    @Override
+    public synchronized void addPropertyChangeListener(
+            PropertyChangeListener listener) {
+        getPropertyChangeSupport().addPropertyChangeListener(listener);
+    }
+
+    protected PropertyChangeSupport getPropertyChangeSupport() {
+        if (this.pcs == null) {
+            this.pcs = new PropertyChangeSupport(this);
+        }
+        return this.pcs;
+    }
     private transient Activator activator;
 
     @Override
@@ -86,15 +89,157 @@ public class SpotAnnotation extends Annotation<ISpot> implements Activatable {
     private Font font = Font.decode("Plain-10");
     private boolean drawSpotBox = true;
 
+    private ISpot payload;
+    private Point2D position;
+    private boolean selected;
+
     public SpotAnnotation(Point2D position, ISpot t) {
-        super(position, t);
-        if (t.getShape() == null) {
-            setShape(new RoundRectangle2D.Double(position.getX() - 10, position.getY() - 10, 20, 20, 5, 5));
-        } else {
-            System.out.println("Shape bounds in SpotAnnotation: " + t.getShape().getBounds2D());
-            setShape(t.getShape());
-        }
+        this.position = position;
+        this.payload = t;
     }
+
+    @Override
+    public void setShape(Shape shape) {
+        throw new UnsupportedOperationException("Can not change shape of SpotAnnotation!");
+    }
+
+    @Override
+    public Shape getShape() {
+        activate(ActivationPurpose.READ);
+        return getPayload().getShape();
+    }
+
+    @Override
+    public Point2D getPosition() {
+        activate(ActivationPurpose.READ);
+        return this.position;
+    }
+
+    @Override
+    public void setPosition(Point2D point) {
+        activate(ActivationPurpose.WRITE);
+        Point2D old = this.position;
+        this.position = point;
+        getPropertyChangeSupport().firePropertyChange(PROP_POSITION, old, point);
+    }
+
+    @Override
+    public String toString() {
+        if(payload==null) {
+            return "<NA>";
+        }
+        return getPayload().toString();
+    }
+
+    @Override
+    public void setPayload(ISpot t) {
+        activate(ActivationPurpose.WRITE);
+        ISpot old = this.payload;
+        this.payload = t;
+        getPropertyChangeSupport().firePropertyChange(PROP_PAYLOAD, old, t);
+    }
+
+    @Override
+    public ISpot getPayload() {
+        activate(ActivationPurpose.READ);
+        return payload;
+    }
+
+    @Override
+    public void setSelected(boolean selected) {
+        activate(ActivationPurpose.WRITE);
+        boolean old = this.selected;
+        this.selected = selected;
+        getPropertyChangeSupport().firePropertyChange(PROP_SELECTED, old, selected);
+    }
+
+    @Override
+    public boolean isSelected() {
+        activate(ActivationPurpose.READ);
+        return selected;
+    }
+
+    @Override
+    public void draw(Graphics2D g) {
+        ISpot t = getPayload();
+        IWell96 well = t.getWell();
+        StringBuilder sb = new StringBuilder();
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+        if (well != null) {
+            sb.append(well.getParent().getName());
+            sb.append(": ");
+            sb.append(well.getWellPosition());
+            setStrokeColor(well.getStatus().getColor());
+        } else {
+            setStrokeColor(Color.BLACK);
+        }
+
+        if (t.getLabel() != null && !t.getLabel().isEmpty()) {
+            if (sb.length() == 0) {
+                sb.append("Label: ");
+            } else {
+                sb.append(" | Label: ");
+            }
+            sb.append(t.getLabel());
+        }
+
+        if (isDrawSpotBox()) {
+            Color color = g.getColor();
+            g.setPaint(Color.BLACK);
+            Composite comp = g.getComposite();
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 0.7f));
+            Line2D.Double criss = new Line2D.Double(getPosition().getX() - 5, getPosition().getY(), getPosition().getX() + 5, getPosition().getY());
+            Line2D.Double cross = new Line2D.Double(getPosition().getX(), getPosition().getY() - 5, getPosition().getX(), getPosition().getY() + 5);
+            g.draw(criss);
+            g.draw(cross);
+            g.setComposite(comp);
+            g.setColor(color);
+            if (!isSelected()) {
+                g.setPaint(getFillColor());
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getFillAlpha()));
+                g.fill(getShape());
+                g.setPaint(getStrokeColor());
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getStrokeAlpha()));
+                g.draw(getShape());
+                g.setPaint(Color.BLACK);
+
+            } else {
+                g.setPaint(getSelectedFillColor());
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getFillAlpha()));
+                g.fill(getShape());
+                g.setPaint(getSelectedStrokeColor());
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getStrokeAlpha()));
+                Stroke stroke = g.getStroke();
+                Stroke lineStroke = new BasicStroke(3.0f);
+                g.setStroke(lineStroke);
+                g.draw(getShape());
+                g.setStroke(stroke);
+//            PainterTools.drawCrossInBox(g, selectionCrossColor, getShape().getBounds2D(), 2);
+            }
+        }
+        
+        if (isDrawSpotId() && sb.length() > 0) {
+            Color fill = getSelectedFillColor();
+            Color stroke = getSelectedStrokeColor().darker();
+            if (getFont() == null) {
+                setFont(g.getFont().deriveFont(10.0f));
+            }
+            g.setFont(getFont());
+            Tuple2D<Rectangle2D, Point2D> tple = PainterTools.getBoundingBox(sb.toString(), g, 5);
+            AffineTransform at = AffineTransform.getTranslateInstance(getPosition().getX() + getDisplacementX(), getPosition().getY() + getDisplacementY());
+            Point2D textOrigin = at.transform(tple.getSecond(), null);
+//            g.setColor(fill);
+//            g.fill(s);
+            g.setColor(getLineColor());
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getStrokeAlpha()));
+            Line2D.Double line = new Line2D.Double(getPosition(), textOrigin);
+            g.draw(line);
+            g.setColor(getTextColor());
+            g.drawString(sb.toString(), (float) textOrigin.getX(), (float) textOrigin.getY());
+        }
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+    }
+
     public static final String PROP_DRAWSPOTBOX = "drawSpotBox";
 
     public boolean isDrawSpotBox() {
@@ -278,84 +423,4 @@ public class SpotAnnotation extends Annotation<ISpot> implements Activatable {
         getPropertyChangeSupport().firePropertyChange(PROP_TEXTCOLOR, old, textColor);
     }
 
-    @Override
-    public void draw(Graphics2D g) {
-        ISpot t = getPayload();
-        IWell96 well = t.getWell();
-        StringBuilder sb = new StringBuilder();
-        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-        if (well != null) {
-            sb.append(well.getParent().getName());
-            sb.append(": ");
-            sb.append(well.getWellPosition());
-            setStrokeColor(well.getStatus().getColor());
-        } else {
-            setStrokeColor(Color.BLACK);
-        }
-
-        if (t.getLabel() != null && !t.getLabel().isEmpty()) {
-            if (sb.length() == 0) {
-                sb.append("Label: ");
-            } else {
-                sb.append(" | Label: ");
-            }
-            sb.append(t.getLabel());
-        }
-
-        if (isDrawSpotBox()) {
-            Color color = g.getColor();
-            g.setPaint(Color.BLACK);
-            Composite comp = g.getComposite();
-            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 0.7f));
-            Line2D.Double criss = new Line2D.Double(getPosition().getX() - 5, getPosition().getY(), getPosition().getX() + 5, getPosition().getY());
-            Line2D.Double cross = new Line2D.Double(getPosition().getX(), getPosition().getY() - 5, getPosition().getX(), getPosition().getY() + 5);
-            g.draw(criss);
-            g.draw(cross);
-            g.setComposite(comp);
-            g.setColor(color);
-            if (!isSelected()) {
-                g.setPaint(getFillColor());
-                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getFillAlpha()));
-                g.fill(getShape());
-                g.setPaint(getStrokeColor());
-                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getStrokeAlpha()));
-                g.draw(getShape());
-                g.setPaint(Color.BLACK);
-
-            } else {
-                g.setPaint(getSelectedFillColor());
-                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getFillAlpha()));
-                g.fill(getShape());
-                g.setPaint(getSelectedStrokeColor());
-                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getStrokeAlpha()));
-                Stroke stroke = g.getStroke();
-                Stroke lineStroke = new BasicStroke(3.0f);
-                g.setStroke(lineStroke);
-                g.draw(getShape());
-                g.setStroke(stroke);
-//            PainterTools.drawCrossInBox(g, selectionCrossColor, getShape().getBounds2D(), 2);
-            }
-        }
-        
-        if (isDrawSpotId() && sb.length() > 0) {
-            Color fill = getSelectedFillColor();
-            Color stroke = getSelectedStrokeColor().darker();
-            if (getFont() == null) {
-                setFont(g.getFont().deriveFont(10.0f));
-            }
-            g.setFont(getFont());
-            Tuple2D<Rectangle2D, Point2D> tple = PainterTools.getBoundingBox(sb.toString(), g, 5);
-            AffineTransform at = AffineTransform.getTranslateInstance(getPosition().getX() + getDisplacementX(), getPosition().getY() + getDisplacementY());
-            Point2D textOrigin = at.transform(tple.getSecond(), null);
-//            g.setColor(fill);
-//            g.fill(s);
-            g.setColor(getLineColor());
-            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getStrokeAlpha()));
-            Line2D.Double line = new Line2D.Double(getPosition(), textOrigin);
-            g.draw(line);
-            g.setColor(getTextColor());
-            g.drawString(sb.toString(), (float) textOrigin.getX(), (float) textOrigin.getY());
-        }
-        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-    }
 }

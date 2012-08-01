@@ -24,13 +24,10 @@ import com.db4o.collections.ActivatableArrayList;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
-import java.awt.Shape;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import net.sf.maltcms.ui.plot.heatmap.Annotation;
 import net.sf.maltcms.ui.plot.heatmap.HeatmapDataset;
 import net.sf.maltcms.ui.plot.heatmap.HeatmapPanel;
 
@@ -58,9 +55,8 @@ public class AnnotationManager {
         for (ISpot spot : gel.getSpots()) {
             SpotAnnotation ann = new SpotAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()), spot);
             spotAnnotations.add(ann);
-            project.store(ann);
         }
-        project.store(spotAnnotations);
+        project.store(spotAnnotations.toArray(new SpotAnnotation[spotAnnotations.size()]));
         GelSpotAnnotations gsa = new GelSpotAnnotations();
         gsa.setGel(gel);
         gsa.setSpotAnnotations(spotAnnotations);
@@ -72,6 +68,7 @@ public class AnnotationManager {
         try {
             return project.retrieve(GelSpotAnnotations.class);
         } catch (Exception e) {
+            System.err.println("Exception: "+e);
             return Collections.emptyList();
         }
 
@@ -79,8 +76,9 @@ public class AnnotationManager {
 
     public static GelSpotAnnotations getAnnotationsForGel(IProteomicProject project, IGel gel) {
         for (GelSpotAnnotations gsa : getAnnotations(project)) {
-            if (gsa.getGel().getId().equals(gel.getId())){
-                System.out.println("Found existing GelSpotAnnotations for gel " + gel.getFilename());
+            System.out.println("Checking GelSpotAnnotations from database for gel " + gsa.getGel().getFilename() + " with UUID " + gsa.getGel().getId());
+            if (gsa.getGel().getId().toString().equals(gel.getId().toString())) {
+                System.out.println("Found existing GelSpotAnnotations for gel " + gel.getFilename() + " with UUID " + gsa.getGel().getId());
                 return gsa;
             }
         }
@@ -92,7 +90,7 @@ public class AnnotationManager {
         if (annotations == null) {
             return null;
         }
-        for (Annotation ann : annotations.getSpotAnnotations()) {
+        for (SpotAnnotation ann : annotations.getSpotAnnotations()) {
             SpotAnnotation sann = (SpotAnnotation) ann;
             if (sann.getPayload() == spot) {
                 return sann;
@@ -102,60 +100,27 @@ public class AnnotationManager {
     }
 
     public void open() {
-//        Collection<AnnotationsResetMarker> c = project.retrieve(AnnotationsResetMarker.class);
-//        if(c.isEmpty()) {
-//            System.out.println("Resetting annotations");
-//            //reset annotations
-//            Collection<GelSpotAnnotations> gelSpotAnnotations = getAnnotations(project);
-//            for(GelSpotAnnotations gsa:gelSpotAnnotations) {
-//                for(SpotAnnotation sa:gsa.getSpotAnnotations()){
-//                    project.delete(sa);
-//                }
-//                project.delete(gsa);
-//            }
-//            System.out.println("Storing annotations reset marker!");
-//            AnnotationsResetMarker ars = new AnnotationsResetMarker();
-//            ars.setUpdated(true);
-//            project.store(ars);
-//        }
         Collection<GelSpotAnnotations> gelSpotAnnotations = getAnnotations(project);
-        if (gelSpotAnnotations.isEmpty()) {
-            System.out.println("Did not find any spot GelSpotAnnotations in database!");
-            gelSpotAnnotation = addAnnotations(project, gel);
-        } else {
-            gelSpotAnnotation = getAnnotationsForGel(project, gel);
-            if (gelSpotAnnotation == null) {
-                System.out.println("Could not find existing GelSpotAnnotations for gel " + gel.getFilename());
-                gelSpotAnnotation = addAnnotations(project, gel);
-            }
+        if(gelSpotAnnotations.isEmpty()) {
+            System.err.println("No annotations found for project!");
+            addAnnotations(project, gel);
         }
-
+        gelSpotAnnotation = getAnnotationsForGel(project, gel);
+        if(gelSpotAnnotation==null || gelSpotAnnotation.getSpotAnnotations().isEmpty()) {
+            System.err.println("No annotations found for gel "+gel.getName());
+            addAnnotations(project, gel);
+        }
         try {
-            boolean updated = false;
-            for (Annotation ann : gelSpotAnnotation.getSpotAnnotations()) {
+            for (SpotAnnotation ann : gelSpotAnnotation.getSpotAnnotations()) {
                 SpotAnnotation annotation = (SpotAnnotation) ann;
                 ISpot spot = annotation.getPayload();
                 if (spot == null) {
                     System.err.println("Spot for annotation: " + annotation + " was null!");
                 } else {
-                    if (annotation.getShape()==null) {
-                        System.err.println("Shape for annotation was null, setting default rectangle!");
-                        Shape s = annotation.getPayload().getShape();
-                        if(s==null) {
-                            annotation.setShape(new Rectangle2D.Double(spot.getPosX() - 10, spot.getPosX() - 10, 20, 20));
-                        }else{
-                            annotation.setShape(s);
-                        }
-                        annotation.setDrawSpotBox(true);
-                        updated = true;
-                    }
                     spot.addPropertyChangeListener(hp);
                     annotation.addPropertyChangeListener(hp);
                     hmd.addAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()), annotation);
                 }
-            }
-            if(updated) {
-                project.store(gelSpotAnnotation);
             }
         } catch (java.lang.IllegalStateException ise) {
             ise.printStackTrace();

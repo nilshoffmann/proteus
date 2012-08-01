@@ -182,6 +182,7 @@ public class ProteomicProject implements IProteomicProject {
     public Lookup getLookup() {
         if (lookup == null) {
             lookup = new AbstractLookup(instanceContent);
+            instanceContent.add(this);
             instanceContent.add(new ProjectState() {
 
                 @Override
@@ -276,7 +277,6 @@ public class ProteomicProject implements IProteomicProject {
                     ics.create(activeProject);
                 }
                 instanceContent.add(activeProject);
-                instanceContent.add(this);
             } catch (RuntimeException re) {
                 closeSession();
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE,"Caught exception while opening database!",re);

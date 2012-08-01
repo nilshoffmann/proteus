@@ -22,10 +22,12 @@ package net.sf.maltcms.ui.plot.heatmap;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.awt.geom.RoundRectangle2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import net.sf.maltcms.io.xml.serialization.api.GeneralPathPersistenceUnit;
 import net.sf.maltcms.ui.plot.heatmap.painter.PainterTools;
 
 /**
@@ -63,6 +65,7 @@ public class Annotation<T> implements IAnnotation<T> {
     private Point2D position;
     private boolean selected;
     private Shape shape;
+    private String shapeRepresentation;
 
     public Annotation(Point2D position, T t) {
         this.position = position;
@@ -79,7 +82,23 @@ public class Annotation<T> implements IAnnotation<T> {
 
     @Override
     public Shape getShape() {
+        //return this.shape;
+        if(this.shape==null) {
+            setShape(new RoundRectangle2D.Double(position.getX() - 10, position.getY() - 10, 20, 20,2,2));
+        }
         return this.shape;
+    }
+    
+    public static final String PROP_SHAPEREP = "shapeRepresentation";
+    
+    public void setShapeRepresentation(String shapeRepresentation) {
+        String old = this.shapeRepresentation;
+        this.shapeRepresentation = shapeRepresentation;
+        getPropertyChangeSupport().firePropertyChange(PROP_SHAPE, old, shape);
+    }
+
+    public String getShapeRepresentation() {
+        return this.shapeRepresentation;
     }
 
     @Override

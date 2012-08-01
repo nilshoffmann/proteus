@@ -5,25 +5,23 @@
 package de.unibielefeld.gi.kotte.laborprogramm.gelViewer.actions;
 
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.AnnotationManager;
-import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.AnnotationsResetMarker;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.GelSpotAnnotations;
 import de.unibielefeld.gi.kotte.laborprogramm.gelViewer.annotations.SpotAnnotation;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
 import net.sf.maltcms.chromaui.ui.support.api.AProgressAwareRunnable;
+import net.sf.maltcms.ui.plot.heatmap.IAnnotation;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ui.OpenProjects;
 
 import org.openide.awt.ActionRegistration;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionID;
-import org.openide.awt.ActionReference;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.Utilities;
 
 @ActionID(category = "ProteomicProject",
 id = "de.unibielefeld.gi.kotte.laborprogramm.gelViewer.actions.RecreateVisualSpotAnnotations")
@@ -56,25 +54,36 @@ public final class RecreateVisualSpotAnnotations implements ActionListener {
         public void run() {
             try {
                 getProgressHandle().setDisplayName("Recreating Visual Spot Annotations");
-                IProteomicProject ipp = Utilities.actionsGlobalContext().lookup(IProteomicProject.class);
                 Collection<? extends IGel> gels = project.retrieve(IGel.class);
-                getProgressHandle().start(gels.size());
+                getProgressHandle().start(gels.size()+1);
                 int cnt = 0;
+                getProgressHandle().progress("Deleting old visual spot annotations!", cnt++);
+                Collection<IAnnotation> oldAnnotations = project.retrieve(IAnnotation.class);
+//                for (IAnnotation annotation : oldAnnotations) {
+//                    project.delete(annotation);
+//                }
+                project.delete(oldAnnotations.toArray());
+                
+                Collection<SpotAnnotation> oldSpotAnnotations = project.retrieve(SpotAnnotation.class);
+//                for (SpotAnnotation annotation : oldSpotAnnotations) {
+//                    project.delete(annotation);
+//                }
+                project.delete(oldSpotAnnotations.toArray());
+                
+                Collection<GelSpotAnnotations> oldGelSpotAnnotations = project.retrieve(GelSpotAnnotations.class);
+//                for (GelSpotAnnotations annotation : oldGelSpotAnnotations) {
+//                    project.delete(annotation);
+//                }
+                project.delete(oldGelSpotAnnotations.toArray());
+                
+                System.out.println("Finished deletion of old visual spot annotations!");
+                System.out.println("Recreating new ones!");
                 for (IGel iGel : gels) {
                     getProgressHandle().progress("Processing gel "+iGel.getName(), cnt++);
-                    System.out.println("Deleting old annotations for " + iGel.getName());
-                    Collection<GelSpotAnnotations> gelSpotAnnotations = AnnotationManager.getAnnotations(ipp);
-                    for (GelSpotAnnotations gsa : gelSpotAnnotations) {
-                        for (SpotAnnotation sa : gsa.getSpotAnnotations()) {
-                            if(sa!=null) {
-                                ipp.delete(sa);
-                            }
-                        }
-                        ipp.delete(gsa);
-                    }
-                    System.out.println("Recreating annotations!");
                     AnnotationManager.addAnnotations(project, iGel);
                 }
+                OpenProjects.getDefault().close(new Project[]{project});
+                OpenProjects.getDefault().open(new Project[]{project},false,true);
             } catch (Exception e) {
                 Exceptions.printStackTrace(e);
             } finally {

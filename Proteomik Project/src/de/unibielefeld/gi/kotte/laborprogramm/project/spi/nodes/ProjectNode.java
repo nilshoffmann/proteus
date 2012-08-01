@@ -3,14 +3,12 @@ package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.nodes.AbstractNode;
@@ -20,7 +18,7 @@ import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
-import org.openide.util.lookup.InstanceContent;
+import org.openide.util.WeakListeners;
 
 /**
  * Node representing a Proteomik Project.
@@ -31,13 +29,14 @@ public class ProjectNode extends AbstractNode implements PropertyChangeListener 
 
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/ProjectIcon.png";
 //    private Result<SaveCookie> result = null;
-    private InstanceContent content = null;
+//    private InstanceContent content = null;
+    private IProteomicProject project;
 
-    public ProjectNode(IProteomicProject ipp) {
-        super(Children.create(new ProjectChildNodeFactory(ipp), true), ipp.
-                getLookup());
+    public ProjectNode(IProteomicProject ipp, Lookup lookup) {
+        super(Children.create(new ProjectChildNodeFactory(ipp), true), lookup);
+        this.project = ipp;
 //        this(ipp, new InstanceContent(), ipp.getLookup());
-        ipp.addPropertyChangeListener(this);
+        ipp.addPropertyChangeListener(WeakListeners.propertyChange(this, ipp));
     }
 
     /**
@@ -62,7 +61,7 @@ public class ProjectNode extends AbstractNode implements PropertyChangeListener 
 //    }
     @Override
     public Action[] getActions(boolean arg0) {
-        Action[] nodeActions = new Action[6];
+        Action[] nodeActions = new Action[3];
 //        CreatePlate96Action cP96Action = new CreatePlate96Action(getLookup().lookup(IProteomicProject.class).getLookup().lookup(IProject.class));
 //        cP96Action.addPropertyChangeListener(this);
 //        nodeActions[0] = cP96Action;
@@ -72,19 +71,19 @@ public class ProjectNode extends AbstractNode implements PropertyChangeListener 
         //nodeActions[0] = CommonProjectActions.newFileAction();
         //nodeActions[1] = CommonProjectActions.copyProjectAction();
         final ProjectNode node = this;
-        nodeActions[0] = new AbstractAction("Refresh") {
+//        nodeActions[0] = new AbstractAction("Refresh") {
+//
+//            @Override
+//            public void actionPerformed(ActionEvent ae) {
+//                getLookup().lookup(IProteomicProject.class).
+//                        propertyChange(new PropertyChangeEvent(node,
+//                        "REFRESH", null, node));
+//            }
+//        };
+        nodeActions[0] = CommonProjectActions.deleteProjectAction();
+        nodeActions[1] = CommonProjectActions.setAsMainProjectAction();
 
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                getLookup().lookup(IProteomicProject.class).
-                        propertyChange(new PropertyChangeEvent(node,
-                        "REFRESH", null, node));
-            }
-        };
-        nodeActions[2] = CommonProjectActions.deleteProjectAction();
-        nodeActions[4] = CommonProjectActions.setAsMainProjectAction();
-
-        nodeActions[5] = CommonProjectActions.closeProjectAction();
+        nodeActions[2] = CommonProjectActions.closeProjectAction();
         List<? extends Action> projectActions = Utilities.actionsForPath(
                 "/Actions/ProteomicProject/");
         List<? extends Action> actions = Utilities.actionsForPath(
@@ -166,7 +165,7 @@ public class ProjectNode extends AbstractNode implements PropertyChangeListener 
 
     @Override
     public String getDisplayName() {
-        IProteomicProject project = getLookup().lookup(IProteomicProject.class);
+        //IProteomicProject project = getLookup().lookup(IProteomicProject.class);
         if (project != null) {
             return project.getProjectDirectory().
                     getName();
@@ -178,6 +177,7 @@ public class ProjectNode extends AbstractNode implements PropertyChangeListener 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         System.out.println("Received change event on ProjectNode: " + evt);
+//        setDisplayName(PROP_NAME);
         //getLookup().lookup(IProteomicProject.class).propertyChange(evt);
         //setChildren(Children.create(new ProjectChildNodeFactory(getLookup().lookup(IProteomicProject.class)), true));
     }

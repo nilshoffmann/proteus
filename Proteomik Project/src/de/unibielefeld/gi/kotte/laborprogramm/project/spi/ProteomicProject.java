@@ -181,6 +181,7 @@ public class ProteomicProject implements IProteomicProject {
     @Override
     public Lookup getLookup() {
         if (lookup == null) {
+            instanceContent = new InstanceContent();
             lookup = new AbstractLookup(instanceContent);
             instanceContent.add(this);
             instanceContent.add(new ProjectState() {
@@ -246,6 +247,7 @@ public class ProteomicProject implements IProteomicProject {
     }
 
     private synchronized void openSession() {
+        getLookup();
         try {
             File lockFile = new File(new File(dblocation.toURI()).getParentFile(), "lock");
             if (lockFile.exists()) {
@@ -276,6 +278,7 @@ public class ProteomicProject implements IProteomicProject {
                 } else {
                     ics.create(activeProject);
                 }
+//                getLookup();
                 instanceContent.add(activeProject);
             } catch (RuntimeException re) {
                 closeSession();
@@ -306,12 +309,14 @@ public class ProteomicProject implements IProteomicProject {
             instanceContent.remove(activeProject);
             activeProject = null;
         }
-        instanceContent.remove(this);
+        //instanceContent.remove(this);
         Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().
                 closeTopComponentsFor(this);
         if (lock != null && lock.exists()) {
             lock.delete();
         }
+        lookup = null;
+        instanceContent = null;
         //CentralLookup.getDefault().remove(this);
     }
 

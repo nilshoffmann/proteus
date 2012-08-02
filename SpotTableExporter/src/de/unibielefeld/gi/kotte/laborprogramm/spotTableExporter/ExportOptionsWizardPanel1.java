@@ -1,6 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.spotTableExporter;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationMethod;
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
@@ -136,6 +137,13 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
             methods.add(method.getName());
         }
         ((ExportOptionsVisualPanel1) getComponent()).setAvailableMethods(methods);
+        //Liste der Gele erstellen
+        Set<String> gels = new LinkedHashSet<String>();
+        Collection<IGel> gelCollection = project.retrieve(IGel.class);
+        for (IGel gel : gelCollection) {
+            gels.add(gel.getName());
+        }
+        ((ExportOptionsVisualPanel1) getComponent()).setAvailableGels(gels);
     }
 
     @Override
@@ -143,9 +151,10 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
         WizardDescriptor s = settings;
         ExportOptionsVisualPanel1 eovp = (ExportOptionsVisualPanel1) getComponent();
 
-        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_METHODS, eovp.getSelectedMethods());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_DIRECTORY, eovp.getDirectory());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_FILENAME, eovp.getFileName());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_METHODS, eovp.getSelectedMethods());
+        s.putProperty(ExportOptionsVisualPanel1.PROPERTY_GELS, eovp.getSelectedGels());
 
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_HEADER, eovp.isShowHeader());
         s.putProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_GROUP_NUMBER, eovp.isShowGroupNumber());

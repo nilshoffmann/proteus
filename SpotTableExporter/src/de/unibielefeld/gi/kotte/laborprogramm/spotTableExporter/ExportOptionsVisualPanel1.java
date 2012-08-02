@@ -15,15 +15,18 @@ import javax.swing.event.DocumentListener;
  */
 public final class ExportOptionsVisualPanel1 extends JPanel implements DocumentListener {
 
+    //general properties
     public static final String PROPERTY_PROJECT = "project";
-    public static final String PROPERTY_METHODS = "methods";
     public static final String PROPERTY_FILENAME = "filename";
     public static final String PROPERTY_DIRECTORY = "directory";
+    public static final String PROPERTY_METHODS = "methods";
+    public static final String PROPERTY_GELS = "gels";
+    //output parameters
     public static final String PROPERTY_SHOW_HEADER = "add row header";
     public static final String PROPERTY_SHOW_GROUP_NUMBER = "show spot group number";
     public static final String PROPERTY_SHOW_GROUP_LABEL = "show spot group label";
     public static final String PROPERTY_SHOW_IDENTIFICATION = "show spot identifications";
-    
+    //identification details
     public static final String PROPERTY_SHOW_IDENT_METHOD_NAME = "show identification method name";
     public static final String PROPERTY_SHOW_IDENT_NAME = "show identification name";
     public static final String PROPERTY_SHOW_IDENT_PLATE96_POSITION = "show identification plate96 position";
@@ -36,10 +39,10 @@ public final class ExportOptionsVisualPanel1 extends JPanel implements DocumentL
     public static final String PROPERTY_SHOW_IDENT_PI_VALUE = "show identification pI value";
     public static final String PROPERTY_SHOW_IDENT_SCORE = "show identification Mascot score";
     public static final String PROPERTY_SHOW_IDENT_WEIGHT = "show identification molecular weight";
-    
+    //filter properties
     public static final String PROPERTY_FILTER_MASCOT_USAGE = "Mascot score filter usage";
     public static final String PROPERTY_FILTER_MASCOT_VALUE = "Mascot score filter value";
-    
+    //private variable declaration
     private File directory;
 
     public boolean isFilterMascotUsed() {
@@ -147,6 +150,26 @@ public final class ExportOptionsVisualPanel1 extends JPanel implements DocumentL
         }
         return methodsSet;
     }
+    
+    protected void setAvailableGels(Set<String> gels) {
+        //put methods in JList
+        gelsList.setListData(gels.toArray());
+        //select all JList entries
+        int[] indices = new int[gels.size()];
+        for (int i = 0; i < indices.length; i++) {
+            indices[i] = i;
+        }
+        gelsList.setSelectedIndices(indices);
+    }
+
+    public Set<String> getSelectedGels() {
+        Object[] methods = (Object[]) gelsList.getSelectedValues();
+        LinkedHashSet<String> gelSet = new LinkedHashSet<String>();
+        for (Object obj : methods) {
+            gelSet.add(obj.toString());
+        }
+        return gelSet;
+    }
 
     /**
      * Creates new form ExportOptionsVisualPanel1
@@ -170,8 +193,6 @@ public final class ExportOptionsVisualPanel1 extends JPanel implements DocumentL
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
         outputHeadingLabel = new javax.swing.JLabel();
         identMethodNameBox = new javax.swing.JCheckBox();
         identificationBox = new javax.swing.JCheckBox();
@@ -184,7 +205,7 @@ public final class ExportOptionsVisualPanel1 extends JPanel implements DocumentL
         fileNameLabel = new javax.swing.JLabel();
         methodsLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        methodsList = new javax.swing.JList();
+        gelsList = new javax.swing.JList();
         outputSeparator = new javax.swing.JSeparator();
         spotGroupLabelBox = new javax.swing.JCheckBox();
         identNameBox = new javax.swing.JCheckBox();
@@ -204,13 +225,9 @@ public final class ExportOptionsVisualPanel1 extends JPanel implements DocumentL
         filterMascotBox = new javax.swing.JCheckBox();
         filterMascotField = new javax.swing.JTextField();
         identDetailLabel = new javax.swing.JLabel();
-
-        jList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(jList1);
+        gelsLabel = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        methodsList = new javax.swing.JList();
 
         org.openide.awt.Mnemonics.setLocalizedText(outputHeadingLabel, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.outputHeadingLabel.text")); // NOI18N
 
@@ -258,12 +275,12 @@ public final class ExportOptionsVisualPanel1 extends JPanel implements DocumentL
 
         org.openide.awt.Mnemonics.setLocalizedText(methodsLabel, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.methodsLabel.text")); // NOI18N
 
-        methodsList.setModel(new javax.swing.AbstractListModel() {
+        gelsList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane2.setViewportView(methodsList);
+        jScrollPane2.setViewportView(gelsList);
 
         spotGroupLabelBox.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(spotGroupLabelBox, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.spotGroupLabelBox.text")); // NOI18N
@@ -390,6 +407,15 @@ public final class ExportOptionsVisualPanel1 extends JPanel implements DocumentL
 
         org.openide.awt.Mnemonics.setLocalizedText(identDetailLabel, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.identDetailLabel.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(gelsLabel, org.openide.util.NbBundle.getMessage(ExportOptionsVisualPanel1.class, "ExportOptionsVisualPanel1.gelsLabel.text")); // NOI18N
+
+        methodsList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane3.setViewportView(methodsList);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -398,31 +424,22 @@ public final class ExportOptionsVisualPanel1 extends JPanel implements DocumentL
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(fileNameTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(fileDirectoryTextField))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fileChooserButton))
+                    .addComponent(filePathTextField)
+                    .addComponent(jScrollPane2)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(fileNameTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(fileDirectoryTextField))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(fileChooserButton))
-                            .addComponent(filePathTextField)
-                            .addComponent(jScrollPane2)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(spotGroupIDBox)
-                                    .addComponent(outputHeadingLabel)
-                                    .addComponent(spotGroupLabelBox)
-                                    .addComponent(fileNameLabel)
-                                    .addComponent(fileDirectoryLabel)
-                                    .addComponent(filePathLabel)
-                                    .addComponent(methodsLabel)
-                                    .addComponent(identificationBox)
-                                    .addComponent(headerBox))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(spotGroupIDBox)
+                            .addComponent(outputHeadingLabel)
+                            .addComponent(spotGroupLabelBox)
+                            .addComponent(identificationBox)
+                            .addComponent(headerBox)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(filterMascotBox)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -445,7 +462,17 @@ public final class ExportOptionsVisualPanel1 extends JPanel implements DocumentL
                                     .addComponent(identEcNumbersBox)))
                             .addComponent(identDetailLabel)
                             .addComponent(identFilterLabel))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fileNameLabel)
+                            .addComponent(fileDirectoryLabel)
+                            .addComponent(filePathLabel)
+                            .addComponent(methodsLabel)
+                            .addComponent(gelsLabel))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -469,8 +496,12 @@ public final class ExportOptionsVisualPanel1 extends JPanel implements DocumentL
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(methodsLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(gelsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(outputHeadingLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(headerBox)
@@ -620,6 +651,7 @@ public final class ExportOptionsVisualPanel1 extends JPanel implements DocumentL
         firePropertyChange(PROPERTY_FILTER_MASCOT_USAGE, !filterMascotBox.isSelected(), filterMascotBox.isSelected());
         filterMascotField.setEnabled(filterMascotBox.isSelected());
     }//GEN-LAST:event_filterMascotBoxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton fileChooserButton;
     private javax.swing.JLabel fileDirectoryLabel;
@@ -630,6 +662,8 @@ public final class ExportOptionsVisualPanel1 extends JPanel implements DocumentL
     private javax.swing.JTextField filePathTextField;
     private javax.swing.JCheckBox filterMascotBox;
     private javax.swing.JTextField filterMascotField;
+    private javax.swing.JLabel gelsLabel;
+    private javax.swing.JList gelsList;
     private javax.swing.JCheckBox headerBox;
     private javax.swing.JCheckBox identAbbreviationBox;
     private javax.swing.JCheckBox identAccessionBox;
@@ -646,9 +680,8 @@ public final class ExportOptionsVisualPanel1 extends JPanel implements DocumentL
     private javax.swing.JCheckBox identScoreBox;
     private javax.swing.JCheckBox identWeightBox;
     private javax.swing.JCheckBox identificationBox;
-    private javax.swing.JList jList1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel methodsLabel;
     private javax.swing.JList methodsList;
     private javax.swing.JLabel outputHeadingLabel;

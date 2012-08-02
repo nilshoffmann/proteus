@@ -39,8 +39,9 @@ public class SpotDataExporter {
         String filename = (String) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_FILENAME);
         File outFile = new File(directory, filename + ".csv");
 
-        //get methods
+        //get method and gel sets
         Set<String> methods = (Set<String>) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_METHODS);
+        Set<String> gels = (Set<String>) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_GELS);
 
         //get output parameters
         boolean showGroupLabel = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SHOW_GROUP_LABEL);
@@ -99,23 +100,27 @@ public class SpotDataExporter {
                     List<ISpot> spots = group.getSpots();
                     Set<IWellIdentification> identifications = new LinkedHashSet<IWellIdentification>();
                     for (ISpot spot : spots) {
-                        if (spot.getStatus() == SpotStatus.PICKED) {
-                            IWell96 well96 = spot.getWell();
-                            if (well96.getStatus() == Well96Status.PROCESSED) {
-                                for (IWell384 well384 : well96.get384Wells()) {
-                                    if (well384.getStatus() == Well384Status.IDENTIFIED) {
-                                        IWellIdentification ident = well384.getIdentification();
-                                        identifications.add(ident);
-                                        //} else {
-                                        //  System.out.println("Skipping well384 " + well384.toString());
+                        if (gels.contains(spot.getGel().getName())) {
+                            if (spot.getStatus() == SpotStatus.PICKED) {
+                                IWell96 well96 = spot.getWell();
+                                if (well96.getStatus() == Well96Status.PROCESSED) {
+                                    for (IWell384 well384 : well96.get384Wells()) {
+                                        if (well384.getStatus() == Well384Status.IDENTIFIED) {
+                                            IWellIdentification ident = well384.getIdentification();
+                                            identifications.add(ident);
+                                            //} else {
+                                            //  System.out.println("Skipping well384 " + well384.toString());
+                                        }
                                     }
+                                    //} else {
+                                    //  System.out.println("Skipping well96 " + well96.toString());
                                 }
                                 //} else {
-                                //  System.out.println("Skipping well96 " + well96.toString());
+                                //  System.out.println("Skipping unpicked spot " + spot + " in group #" + group.getNumber() + ": " + group.getLabel());
                             }
-                            //} else {
-                            //  System.out.println("Skipping unpicked spot " + spot + " in group #" + group.getNumber() + ": " + group.getLabel());
                         }
+                        //} else {
+                            //  System.out.println("Skipping spot " + spot + " on gel" + spot.getGel.getName() + " because the gel was not selected.");
                     }
                     //System.out.println("Processing " + identifications.size() + " identifications of " + spots.size() + " spots in spot group!");
 

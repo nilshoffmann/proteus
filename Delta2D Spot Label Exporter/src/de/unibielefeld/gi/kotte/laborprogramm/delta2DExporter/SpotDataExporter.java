@@ -77,7 +77,8 @@ public class SpotDataExporter {
             for (ISpotGroup group : spotGroups) {
                 //use StringBuilder to generate output line
                 StringBuilder globalStringBuilder = new StringBuilder();
-                //always start with group number and a tab
+                //always start with "ID" followed by the group number and a tab
+                globalStringBuilder.append("ID");
                 globalStringBuilder.append(group.getNumber());
                 globalStringBuilder.append('\t');
                 //skip empty lines

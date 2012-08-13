@@ -13,6 +13,7 @@ import org.openide.util.Lookup;
 import org.openide.util.WeakListeners;
 
 /**
+ * Factory for creating SpotGroupNode nodes as children of a SpotGroupFolderNode.
  *
  * @author kotte
  */

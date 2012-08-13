@@ -14,6 +14,7 @@ import org.openide.nodes.Node;
 import org.openide.util.WeakListeners;
 
 /**
+ * Factory for creating various nodes as Children of a ProjectNode.
  *
  * @author kotte
  */

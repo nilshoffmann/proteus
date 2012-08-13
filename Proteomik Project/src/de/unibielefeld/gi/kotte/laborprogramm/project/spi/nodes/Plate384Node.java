@@ -21,7 +21,7 @@ import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
 /**
- * Node representing a 384 well microplate.
+ * Node representing a 384 well MALDI target plate.
  *
  * @author kotte
  */

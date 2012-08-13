@@ -15,6 +15,7 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  * Node representing groups of gel spots.
@@ -26,7 +27,7 @@ public class SpotGroupNode extends AbstractNode implements PropertyChangeListene
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/SpotGroupIcon.png";
 
     public SpotGroupNode(ISpotGroup isg, Lookup lkp) {
-        super(Children.LEAF,Lookups.fixed(isg));
+        super(Children.create(new SpotGroupChildNodeFactory(new ProxyLookup(lkp,Lookups.fixed(isg))), true), new ProxyLookup(lkp,Lookups.fixed(isg)));
         isg.addPropertyChangeListener(WeakListeners.propertyChange(this, isg));
     }
 

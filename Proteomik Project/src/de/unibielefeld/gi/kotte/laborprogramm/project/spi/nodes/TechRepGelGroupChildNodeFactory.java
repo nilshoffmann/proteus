@@ -10,6 +10,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
 /**
+ * Factory for creating GelNode nodes as children of a TechRepGelGroupNode.
  *
  * @author kotte
  */

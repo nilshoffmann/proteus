@@ -22,6 +22,7 @@ import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
 /**
+ * Node representing a group of gels grouped by an experimental difference.
  *
  * @author kotte
  */

@@ -1,46 +1,45 @@
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import java.beans.IntrospectionException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import org.openide.nodes.BeanNode;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
 /**
- * Factory for creating SpotNodeAsGelChild nodes as children of a GelNode.
+ * Factory for creating SpotNodeAsGroupChild nodes as children of a SpotGroupNode.
  *
  * @author kotte
  */
-class GelChildNodeFactory extends ChildFactory<ISpot> implements PropertyChangeListener {
+class SpotGroupChildNodeFactory extends ChildFactory<ISpot> implements PropertyChangeListener {
 
     private Lookup lkp;
-    private boolean sortSpotGroupsNumerically = true;
+    private boolean sortSpotsByGel = true;
 
-    public GelChildNodeFactory() {
+    public SpotGroupChildNodeFactory() {
     }
 
-    public GelChildNodeFactory(Lookup lkp) {
+    public SpotGroupChildNodeFactory(Lookup lkp) {
         this.lkp = lkp;
     }
 
     @Override
     protected boolean createKeys(List<ISpot> toPopulate) {
-        IGel gel = lkp.lookup(IGel.class);
-        List<ISpot> l = gel.getSpots();
-        if (sortSpotGroupsNumerically) {
+        ISpotGroup group = lkp.lookup(ISpotGroup.class);
+        List<ISpot> l = group.getSpots();
+        if (sortSpotsByGel) {
             Collections.sort(l, new Comparator<ISpot>() {
 
                 @Override
-                public int compare(ISpot t, ISpot t1) {
-                    return t.getNumber() - t1.getNumber();
+                public int compare(ISpot spot1, ISpot spot2) {
+                    return spot1.getGel().getName().compareTo(spot2.getGel().getName());
                 }
             });
         }
@@ -59,7 +58,7 @@ class GelChildNodeFactory extends ChildFactory<ISpot> implements PropertyChangeL
     protected Node createNodeForKey(ISpot key) {
         key.addPropertyChangeListener(this);
         try {
-            return new SpotNodeAsGelChild(key,lkp);
+            return new SpotNodeAsGroupChild(key,lkp);
         } catch (IntrospectionException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -71,13 +70,13 @@ class GelChildNodeFactory extends ChildFactory<ISpot> implements PropertyChangeL
         refresh(true);
     }
 
-    public boolean isSortSpotGroupsNumerically() {
-        return sortSpotGroupsNumerically;
+    public boolean isSortSpotsByGel() {
+        return sortSpotsByGel;
     }
 
-    public void setSortSpotGroupsNumerically(boolean sortSpotGroupsNumerically) {
-        boolean oldValue = this.sortSpotGroupsNumerically;
-        this.sortSpotGroupsNumerically = sortSpotGroupsNumerically;
-        propertyChange(new PropertyChangeEvent(this, "sortSpotGroupsNumerically", oldValue, this.sortSpotGroupsNumerically));
+    public void setSortSpotsByGel(boolean sortSpotGroupsNumerically) {
+        boolean oldValue = this.sortSpotsByGel;
+        this.sortSpotsByGel = sortSpotGroupsNumerically;
+        propertyChange(new PropertyChangeEvent(this, "sortSpotsByGel", oldValue, this.sortSpotsByGel));
     }
 }

@@ -8,6 +8,7 @@ import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 
 /**
+ * Factory for creating TechRepGelGroupNode nodes as children of a BioRepGelGroupNode.
  *
  * @author kotte
  */

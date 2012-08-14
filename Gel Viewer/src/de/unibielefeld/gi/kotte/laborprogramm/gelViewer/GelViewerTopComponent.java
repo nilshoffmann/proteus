@@ -743,6 +743,8 @@ public final class GelViewerTopComponent extends TopComponent implements
         result.addLookupListener(this);
         resultChanged(new LookupEvent(result));
         lookupListeners.register(Utilities.actionsGlobalContext());
+        lookupListeners.resultChanged(new LookupEvent(Utilities.actionsGlobalContext().lookupResult(ISpot.class)));
+        lookupListeners.resultChanged(new LookupEvent(Utilities.actionsGlobalContext().lookupResult(ISpotGroup.class)));
         requestActive();
     }
 

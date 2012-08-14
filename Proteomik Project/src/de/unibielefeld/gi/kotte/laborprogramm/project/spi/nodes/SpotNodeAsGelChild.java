@@ -13,6 +13,7 @@ import org.openide.nodes.Children;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
+import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
@@ -27,10 +28,13 @@ public class SpotNodeAsGelChild extends BeanNode<ISpot> implements PropertyChang
 
     public SpotNodeAsGelChild(ISpot spot, Children children, Lookup lkp) throws IntrospectionException {
         super(spot, Children.LEAF, new ProxyLookup(lkp, Lookups.fixed(spot)));
+        spot.addPropertyChangeListener(WeakListeners.propertyChange(this, spot));
+        spot.getGel().addPropertyChangeListener(WeakListeners.propertyChange(this, spot.getGel()));
     }
 
     public SpotNodeAsGelChild(ISpot spot, Lookup lkp) throws IntrospectionException {
         super(spot, Children.LEAF, new ProxyLookup(lkp, Lookups.fixed(spot)));
+        spot.addPropertyChangeListener(WeakListeners.propertyChange(this, spot));
     }
 
     @Override
@@ -45,7 +49,7 @@ public class SpotNodeAsGelChild extends BeanNode<ISpot> implements PropertyChang
 
     @Override
     public String getDisplayName() {
-        return getLookup().lookup(ISpot.class).getNumber()+"";
+        return getLookup().lookup(ISpot.class).getNumber() + "";
     }
 
     @Override
@@ -63,7 +67,9 @@ public class SpotNodeAsGelChild extends BeanNode<ISpot> implements PropertyChang
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("name")) {
+        if (evt.getPropertyName().equals("displayName")) {
+            this.fireDisplayNameChange(null, getDisplayName());
+        }else if (evt.getPropertyName().equals("name")) {
             this.fireDisplayNameChange(null, getDisplayName());
         } else {
             this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());

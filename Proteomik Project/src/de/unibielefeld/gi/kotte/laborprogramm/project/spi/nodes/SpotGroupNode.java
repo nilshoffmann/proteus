@@ -27,7 +27,8 @@ public class SpotGroupNode extends AbstractNode implements PropertyChangeListene
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/SpotGroupIcon.png";
 
     public SpotGroupNode(ISpotGroup isg, Lookup lkp) {
-        super(Children.create(new SpotGroupChildNodeFactory(new ProxyLookup(lkp,Lookups.fixed(isg))), true), new ProxyLookup(lkp,Lookups.fixed(isg)));
+//        super(Children.create(new SpotGroupChildNodeFactory(new ProxyLookup(lkp,Lookups.fixed(isg))), true), new ProxyLookup(lkp,Lookups.fixed(isg)));
+        super(Children.create(new SpotGroupChildNodeFactory(Lookups.fixed(isg)), true), new ProxyLookup(lkp,Lookups.fixed(isg)));
         isg.addPropertyChangeListener(WeakListeners.propertyChange(this, isg));
     }
 

@@ -10,6 +10,7 @@ import java.util.List;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
+import org.openide.util.lookup.Lookups;
 import org.openide.util.WeakListeners;
 
 /**
@@ -70,7 +71,7 @@ class SpotGroupFolderChildNodeFactory extends ChildFactory<ISpotGroup> implement
     @Override
     protected Node createNodeForKey(ISpotGroup key) {
         key.addPropertyChangeListener(WeakListeners.propertyChange(this, key));
-        return new SpotGroupNode(key, lkp);
+        return new SpotGroupNode(key, Lookups.fixed());
     }
 
     @Override

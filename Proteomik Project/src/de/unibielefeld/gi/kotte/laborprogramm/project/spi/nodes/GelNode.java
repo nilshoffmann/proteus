@@ -27,11 +27,11 @@ public class GelNode extends BeanNode<IGel> implements PropertyChangeListener {
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/GelIcon.png";
 
     public GelNode(IGel gel, Children children, Lookup lkp) throws IntrospectionException {
-        super(gel, Children.create(new GelChildNodeFactory(Lookups.fixed(gel)), true), new ProxyLookup(lkp, Lookups.fixed(gel, Lookup.getDefault().lookup(IGelOpenCookie.class))));
+        super(gel, Children.create(new GelChildNodeFactory(new ProxyLookup(lkp, Lookups.fixed(gel))), true), new ProxyLookup(lkp, Lookups.fixed(gel, Lookup.getDefault().lookup(IGelOpenCookie.class))));
     }
 
     public GelNode(IGel gel, Lookup lkp) throws IntrospectionException {
-        super(gel, Children.create(new GelChildNodeFactory(Lookups.fixed(gel)), true), new ProxyLookup(lkp, Lookups.fixed(gel, Lookup.getDefault().lookup(IGelOpenCookie.class))));
+        super(gel, Children.create(new GelChildNodeFactory(new ProxyLookup(lkp, Lookups.fixed(gel))), true), new ProxyLookup(lkp, Lookups.fixed(gel, Lookup.getDefault().lookup(IGelOpenCookie.class))));
     }
 
     @Override

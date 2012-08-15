@@ -76,8 +76,7 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> implements Pro
         } else if (keyVal instanceof List) {
             List<?> keyValList = (List) keyVal;
             if (!keyValList.isEmpty()) {
-                SpotGroupFolderNode sgn = new SpotGroupFolderNode((List<ISpotGroup>) keyVal, ipp.getLookup());
-                node = sgn;
+                node = new SpotGroupFolderNode((List<ISpotGroup>) keyVal, ipp.getLookup());
             }
         }
         node.addPropertyChangeListener(WeakListeners.propertyChange(this,node));

@@ -71,7 +71,7 @@ class SpotGroupFolderChildNodeFactory extends ChildFactory<ISpotGroup> implement
     @Override
     protected Node createNodeForKey(ISpotGroup key) {
         key.addPropertyChangeListener(WeakListeners.propertyChange(this, key));
-        return new SpotGroupNode(key, Lookups.fixed());
+        return new SpotGroupNode(key, lkp);
     }
 
     @Override

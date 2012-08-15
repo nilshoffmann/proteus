@@ -41,7 +41,7 @@ public final class ExportOptionsWizardAction implements ActionListener {
         WizardDescriptor wizardDescriptor = new WizardDescriptor(getPanels());
         // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
         wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
-        wizardDescriptor.setTitle("Output Options for Spot Label Export for Delta2D Re-Import");
+        wizardDescriptor.setTitle("Output Options for Spot Export for Delta2D Re-Import");
         wizardDescriptor.putProperty(ExportOptionsVisualPanel1.PROPERTY_PROJECT, context);
         Dialog dialog = DialogDisplayer.getDefault().createDialog(wizardDescriptor);
         dialog.setVisible(true);

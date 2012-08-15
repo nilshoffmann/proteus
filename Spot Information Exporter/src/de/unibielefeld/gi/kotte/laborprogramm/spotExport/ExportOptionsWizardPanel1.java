@@ -1,6 +1,5 @@
 package de.unibielefeld.gi.kotte.laborprogramm.spotExport;
 
-import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationMethod;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
@@ -117,13 +116,9 @@ public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPan
     public void readSettings(WizardDescriptor settings) {
         //get descriptor
         this.descriptor = settings;
-        //get directory path
-//        IProteomicProject project = null; //FIXME woher den Pfad nehmen?
-        StringBuilder path = new StringBuilder();
-//        path.append(project.getProjectDirectory().getPath());
-        path.append(File.separator).append("export").append(File.separator).append("spotTables");
-        File dir = new File(path.toString());
-        ((ExportOptionsVisualPanel1) getComponent()).setDirectory(dir);
+        //set directory
+        File directory = (File) this.descriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_DIRECTORY);
+        ((ExportOptionsVisualPanel1) getComponent()).setDirectory(directory);
         //get spot list
         List<ISpot> spotList = (List<ISpot>) this.descriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SPOTLIST);
         //Liste der Methoden anhand der vorhandenen Identifikationen erstellen

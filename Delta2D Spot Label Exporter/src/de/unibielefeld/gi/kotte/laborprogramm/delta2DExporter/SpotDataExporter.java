@@ -28,7 +28,7 @@ import org.openide.util.Exceptions;
 public class SpotDataExporter {
 
     public static void export(WizardDescriptor wizardDescriptor) {
-        System.out.println("Exporting Spot Annotations");
+//        System.out.println("Exporting Spot Annotations with Delta2D Spot Label Exporter.");
 
         //get project
         IProteomicProject context = (IProteomicProject) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_PROJECT);
@@ -62,7 +62,7 @@ public class SpotDataExporter {
         //get filters
         boolean filterMascotUsed = (Boolean) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_FILTER_MASCOT_USAGE);
         float filterMascotValue = (Float) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_FILTER_MASCOT_VALUE);
-        
+
         //get sorted list of spotGroups
         List<ISpotGroup> spotGroups = context.getLookup().lookup(IProject.class).getSpotGroups();
         Collections.sort(spotGroups, new Comparator<ISpotGroup>() {
@@ -91,15 +91,15 @@ public class SpotDataExporter {
                         globalStringBuilder.append(group.getLabel());
                         lineFilled = true;
                     } //else {
-                        //globalStringBuilder.append("unlabeled");
-                        //lineFilled = true;
+                    //globalStringBuilder.append("unlabeled");
+                    //lineFilled = true;
                     //}
                 }
 
                 if (showIdentification) {
-                    //get identifications for output
+                    //get set of identification name strings for each Method object
+                    Map<IIdentificationMethod, Set<IIdentification>> methodToIdentification = new LinkedHashMap<IIdentificationMethod, Set<IIdentification>>();
                     List<ISpot> spots = group.getSpots();
-                    Set<IWellIdentification> identifications = new LinkedHashSet<IWellIdentification>();
                     for (ISpot spot : spots) {
                         if (gels.contains(spot.getGel().getName())) {
                             if (spot.getStatus() == SpotStatus.PICKED) {
@@ -108,7 +108,25 @@ public class SpotDataExporter {
                                     for (IWell384 well384 : well96.get384Wells()) {
                                         if (well384.getStatus() == Well384Status.IDENTIFIED) {
                                             IWellIdentification ident = well384.getIdentification();
-                                            identifications.add(ident);
+                                            for (IIdentificationMethod method : ident.getMethods()) {
+                                                if (methods.contains(method.getName())) {
+                                                    Set<IIdentification> idents = methodToIdentification.get(method);
+                                                    if (idents == null) {
+                                                        idents = new LinkedHashSet<IIdentification>();
+                                                        methodToIdentification.put(method, idents);
+                                                    }
+                                                    for (IIdentification identification : method.getIdentifications()) {
+                                                        //apply filters
+                                                        if (filterMascotUsed) {
+                                                            if (identification.getScore() >= filterMascotValue) {
+                                                                idents.add(identification);
+                                                            }
+                                                        } else {
+                                                            idents.add(identification);
+                                                        }
+                                                    }
+                                                }
+                                            }
                                             //} else {
                                             //  System.out.println("Skipping well384 " + well384.toString());
                                         }
@@ -121,33 +139,9 @@ public class SpotDataExporter {
                             }
                         }
                         //} else {
-                            //  System.out.println("Skipping spot " + spot + " on gel" + spot.getGel.getName() + " because the gel was not selected.");
+                        //  System.out.println("Skipping spot " + spot + " on gel" + spot.getGel.getName() + " because the gel was not selected.");
                     }
                     //System.out.println("Processing " + identifications.size() + " identifications of " + spots.size() + " spots in spot group!");
-
-                    //get set of identification name strings for each Method object
-                    Map<IIdentificationMethod, Set<IIdentification>> methodToIdentification = new LinkedHashMap<IIdentificationMethod, Set<IIdentification>>();
-                    for (IWellIdentification ident : identifications) {
-                        for (IIdentificationMethod method : ident.getMethods()) {
-                            if (methods.contains(method.getName())) {
-                                Set<IIdentification> idents = methodToIdentification.get(method);
-                                if (idents == null) {
-                                    idents = new LinkedHashSet<IIdentification>();
-                                    methodToIdentification.put(method, idents);
-                                }
-                                for (IIdentification identification : method.getIdentifications()) {
-                                    //apply filters
-                                    if (filterMascotUsed) {
-                                        if (identification.getScore() >= filterMascotValue) {
-                                            idents.add(identification);
-                                        }
-                                    } else {
-                                        idents.add(identification);
-                                    }
-                                }
-                            }
-                        }
-                    }
 
                     if (!methodToIdentification.isEmpty()) {
                         for (IIdentificationMethod method : methodToIdentification.keySet()) {

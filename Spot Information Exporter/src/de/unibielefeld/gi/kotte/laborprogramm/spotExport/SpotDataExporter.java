@@ -25,14 +25,10 @@ import org.openide.util.Exceptions;
 public class SpotDataExporter {
 
     public static void export(WizardDescriptor wizardDescriptor) {
-//        System.out.println("Exporting Spot Annotations");
+//        System.out.println("Exporting Spot Annotations with Spot Information Exporter.");
 
         //get list of spots
         List<ISpot> spotList = (List<ISpot>) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_SPOTLIST);
-//        System.out.println("Retrieved Spot List");
-//        for (ISpot spot : spotList) {
-//            System.out.println(spot.toString());
-//        }
 
         //get output file
         File directory = (File) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_DIRECTORY);
@@ -40,7 +36,7 @@ public class SpotDataExporter {
         String filename = (String) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_FILENAME);
         File outFile = new File(directory, filename + ".csv");
 
-        //get method and gel sets
+        //get method sets
         Set<String> methods = (Set<String>) wizardDescriptor.getProperty(ExportOptionsVisualPanel1.PROPERTY_METHODS);
 
         //get output parameters

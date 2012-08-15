@@ -1,10 +1,12 @@
 package de.unibielefeld.gi.kotte.laborprogramm.spotExport;
 
+import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.text.MessageFormat;
 import java.util.List;
 import javax.swing.JComponent;
@@ -13,6 +15,7 @@ import org.openide.WizardDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.Utilities;
 
 @ActionID(
     category = "SpotNode",
@@ -35,7 +38,17 @@ public final class ExportSpotsToDelta2DWizardAction implements ActionListener {
         // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
         wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
         wizardDescriptor.setTitle("Output Options for Spot Export for Delta2D Re-Import");
+        
+        //pass spots to the wizardDescriptor
         wizardDescriptor.putProperty(ExportOptionsVisualPanel1.PROPERTY_SPOTLIST, context);
+        //get path
+        IProteomicProject project = Utilities.actionsGlobalContext().lookup(IProteomicProject.class);
+        StringBuilder path = new StringBuilder();
+        path.append(project.getProjectDirectory().getPath());
+        path.append(File.separator).append("export").append(File.separator).append("spotTables");
+        File directory = new File(path.toString());
+        wizardDescriptor.putProperty(ExportOptionsVisualPanel1.PROPERTY_DIRECTORY, directory);
+        
         Dialog dialog = DialogDisplayer.getDefault().createDialog(wizardDescriptor);
         dialog.setVisible(true);
         dialog.toFront();

@@ -1,18 +1,23 @@
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
+import java.util.LinkedList;
+import java.util.List;
+import javax.swing.Action;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.PropertySupport.ReadWrite;
 import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
@@ -28,7 +33,7 @@ public class SpotGroupNode extends AbstractNode implements PropertyChangeListene
 
     public SpotGroupNode(ISpotGroup isg, Lookup lkp) {
 //        super(Children.create(new SpotGroupChildNodeFactory(new ProxyLookup(lkp,Lookups.fixed(isg))), true), new ProxyLookup(lkp,Lookups.fixed(isg)));
-        super(Children.create(new SpotGroupChildNodeFactory(new ProxyLookup(lkp,Lookups.fixed(isg))), true), new ProxyLookup(lkp,Lookups.fixed(isg)));
+        super(Children.create(new SpotGroupChildNodeFactory(Lookups.fixed(isg,lkp.lookup(IProteomicProject.class),lkp.lookup(IProject.class))), true), Lookups.fixed(isg,lkp.lookup(IProteomicProject.class),lkp.lookup(IProject.class)));
         isg.addPropertyChangeListener(WeakListeners.propertyChange(this, isg));
     }
 
@@ -79,6 +84,14 @@ public class SpotGroupNode extends AbstractNode implements PropertyChangeListene
         return sheet;
     }
 
+    @Override
+    public Action[] getActions(boolean arg0) {
+        List<? extends Action> actions = Utilities.actionsForPath(
+                "/Actions/SpotGroupNode");
+        List<Action> allActions = new LinkedList<Action>(actions);
+        return allActions.toArray(new Action[allActions.size()]);
+    }
+    
     @Override
     public Image getIcon(int type) {
         return ImageUtilities.loadImage(ICON_PATH);

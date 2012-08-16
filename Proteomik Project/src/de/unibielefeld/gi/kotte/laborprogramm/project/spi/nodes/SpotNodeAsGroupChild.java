@@ -1,6 +1,12 @@
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentification;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationMethod;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
 import java.awt.Image;
 import java.beans.IntrospectionException;
 import java.beans.PropertyChangeEvent;
@@ -55,7 +61,44 @@ public class SpotNodeAsGroupChild extends BeanNode<ISpot> implements PropertyCha
 
     @Override
     public String getShortDescription() {
-        return getLookup().lookup(ISpot.class).getLabel();
+//        return getLookup().lookup(ISpot.class).getLabel();
+        StringBuilder spotGroupLabel = new StringBuilder();
+        boolean filled = false;
+        ISpot spot = getLookup().lookup(ISpot.class);
+        if (spot.getStatus() == SpotStatus.PICKED) {
+            IWell96 well96 = spot.getWell();
+            if (well96.getStatus() == Well96Status.PROCESSED) {
+                for (IWell384 well384 : well96.get384Wells()) {
+                    for (IIdentificationMethod method : well384.getIdentification().getMethods()) {
+                        for (IIdentification ident : method.getIdentifications()) {
+                            if (filled) {
+                                spotGroupLabel.append(", ");
+                            }
+//                            spotGroupLabel.append(ident.getAbbreviation());
+                            spotGroupLabel.append(ident.getName());
+                            filled = true;
+                        }
+                    }
+                }
+            }
+        }
+        if (!filled) {
+            if (!spot.getLabel().isEmpty()) {
+                spotGroupLabel.append(spot.getLabel());
+                spotGroupLabel.append(" ");
+            }
+            if (spot.getStatus() == SpotStatus.PICKED) {
+                IWell96 well96 = spot.getWell();
+                spotGroupLabel.append(well96.getParent().getName());
+                spotGroupLabel.append(":");
+                spotGroupLabel.append(well96.getWellPosition());
+                spotGroupLabel.append(" is ");
+                spotGroupLabel.append(well96.getStatus());
+            } else {
+                spotGroupLabel.append("unpicked Spot");
+            }
+        }
+        return spotGroupLabel.toString();
     }
 
     @Override
@@ -70,7 +113,7 @@ public class SpotNodeAsGroupChild extends BeanNode<ISpot> implements PropertyCha
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("displayName")) {
             this.fireDisplayNameChange(null, getDisplayName());
-        }else if (evt.getPropertyName().equals("name")) {
+        } else if (evt.getPropertyName().equals("name")) {
             this.fireDisplayNameChange(null, getDisplayName());
         } else {
             this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());

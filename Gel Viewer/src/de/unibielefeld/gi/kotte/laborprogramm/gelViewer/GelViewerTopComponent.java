@@ -159,6 +159,7 @@ public final class GelViewerTopComponent extends TopComponent implements
                 ISpotGroup.class, getLookup());
         lookupListeners.add(sgsl);
         ic.add(new SpotGroupSelectionListener.SyncOnSpotGroupToken());
+        //ic.add(lookupListeners);
     }
 
     public void setGel(IGel gel) {

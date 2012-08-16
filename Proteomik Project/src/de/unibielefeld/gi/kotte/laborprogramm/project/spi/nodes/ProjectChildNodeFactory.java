@@ -6,11 +6,13 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGe
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96;
+import java.beans.IntrospectionException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
 import org.openide.util.WeakListeners;
 
 /**
@@ -70,7 +72,11 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> implements Pro
         if (keyVal instanceof ILogicalGelGroup) {
             node = new LogicalGelGroupNode((ILogicalGelGroup) keyVal, ipp.getLookup());
         } else if (keyVal instanceof IPlate384) {
-            node = new Plate384Node((IPlate384) keyVal, ipp.getLookup());
+            try {
+                node = new Plate384Node((IPlate384) keyVal, ipp.getLookup());
+            } catch (IntrospectionException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         } else if (keyVal instanceof IPlate96) {
             node = new Plate96Node((IPlate96) keyVal, ipp.getLookup());
         } else if (keyVal instanceof List) {

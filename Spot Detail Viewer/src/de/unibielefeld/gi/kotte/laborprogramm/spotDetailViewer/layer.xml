@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
-    <folder name="Actions">
+<!--    <folder name="Actions">
         <folder name="Window">
             <file name="de-unibielefeld-gi-kotte-laborprogramm-spotDetailViewer-SpotDetailViewerAction.instance">
                 <attr name="component" methodvalue="de.unibielefeld.gi.kotte.laborprogramm.spotDetailViewer.SpotDetailViewerTopComponent.findInstance"/>
@@ -26,5 +26,5 @@
                 <file name="SpotDetailViewerTopComponent.wstcref" url="SpotDetailViewerTopComponentWstcref.xml"/>
             </folder>
         </folder>
-    </folder>
+    </folder>-->
 </filesystem>

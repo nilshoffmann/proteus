@@ -35,11 +35,6 @@ autostore = false)
 public final class SpotDetailViewerTopComponent extends TopComponent implements
         LookupListener {
 
-    static {
-         PropertyEditorManager.registerEditor(IGel.class, GelPropertyEditor.class);
-         PropertyEditorManager.registerEditor(ISpotGroup.class, SpotGroupPropertyEditor.class);
-    }
-
     private static SpotDetailViewerTopComponent instance;
     /** path to the icon used by the component and its open action */
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";

@@ -3,13 +3,17 @@ package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.cookies.IPlate384OpenCookie;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import java.awt.Image;
+import java.beans.IntrospectionException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.Action;
+import org.openide.DialogDisplayer;
+import org.openide.explorer.propertysheet.PropertySheet;
 import org.openide.nodes.AbstractNode;
+import org.openide.nodes.BeanNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.PropertySupport.ReadWrite;
 import org.openide.nodes.Sheet;
@@ -25,56 +29,97 @@ import org.openide.util.lookup.ProxyLookup;
  *
  * @author kotte
  */
-public class Plate384Node extends AbstractNode implements PropertyChangeListener  {
+public class Plate384Node extends BeanNode<IPlate384> implements PropertyChangeListener {
 
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/Plate384Icon.png";
 
-    public Plate384Node(IPlate384 plate, Lookup lkp) {
-        super(Children.LEAF, new ProxyLookup(lkp, Lookups.fixed(plate, Lookup.getDefault().lookup(IPlate384OpenCookie.class))));
+    public Plate384Node(IPlate384 plate, Lookup lkp) throws IntrospectionException {
+        super(plate, Children.LEAF, new ProxyLookup(lkp, Lookups.fixed(plate, Lookup.getDefault().lookup(IPlate384OpenCookie.class))));
         plate.addPropertyChangeListener(WeakListeners.propertyChange(this, plate));
     }
 
     @Override
-    protected Sheet createSheet() {
-        Sheet sheet = Sheet.createDefault();
-        Sheet.Set set = Sheet.createPropertiesSet();
+    public PropertySet[] getPropertySets() {
+        PropertySet[] ps = super.getPropertySets();
         final IPlate384 plate = getLookup().lookup(IPlate384.class);
-        System.out.println("creating property sheet for Plate384 node");
-
-        Property nameProp = new ReadWrite<String>("name", String.class,
-                "Plate name", "The name of this 384 well plate.") {
-
+        PropertySet myProps = new PropertySet("custom", "Custom Properties", "Custom Properties for Plate384") {
             @Override
-            public String getValue() throws IllegalAccessException, InvocationTargetException {
-                return plate.getName();
-            }
+            public Property<?>[] getProperties() {
+                return new Property[]{
+                            new ReadWrite<String>("name", String.class,
+                            "Plate name", "The name of this 384 well plate.") {
+                                @Override
+                                public String getValue() throws IllegalAccessException, InvocationTargetException {
+                                    return plate.getName();
+                                }
 
-            @Override
-            public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                plate.setName(val);
+                                @Override
+                                public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                                    plate.setName(val);
+                                }
+                            },
+                            //                set.put(nameProp);
+
+                            new ReadWrite<String>("description", String.class,
+                            "Plate384 description", "This 384 well plate's description.") {
+                                @Override
+                                public String getValue() throws IllegalAccessException, InvocationTargetException {
+                                    return plate.getDescription();
+                                }
+
+                                @Override
+                                public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                                    plate.setDescription(val);
+                                }
+                            }
+                        };
             }
         };
-        set.put(nameProp);
-
-        Property descProp = new ReadWrite<String>("description", String.class,
-                "Plate384 description", "This 384 well plate's description.") {
-
-            @Override
-            public String getValue() throws IllegalAccessException, InvocationTargetException {
-                return plate.getDescription();
-            }
-
-            @Override
-            public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                plate.setDescription(val);
-            }
-        };
-        set.put(descProp);
-
-        sheet.put(set);
-        return sheet;
+        PropertySet[] props = new PropertySet[ps.length + 1];
+        System.arraycopy(ps, 0, props, 0, ps.length);
+        props[ps.length] = myProps;
+        return props;
     }
 
+//    @Override
+//    protected Sheet createSheet() {
+//        Sheet sheet = Sheet.createDefault();
+//        Sheet.Set set = Sheet.createPropertiesSet();
+//        final IPlate384 plate = getLookup().lookup(IPlate384.class);
+//        System.out.println(
+//                "creating property sheet for Plate384 node");
+//        Property nameProp = new ReadWrite<String>("name", String.class,
+//                "Plate name", "The name of this 384 well plate.") {
+//            @Override
+//            public String getValue() throws IllegalAccessException, InvocationTargetException {
+//                return plate.getName();
+//            }
+//
+//            @Override
+//            public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+//                plate.setName(val);
+//            }
+//        };
+//
+//        set.put(nameProp);
+//        Property descProp = new ReadWrite<String>("description", String.class,
+//                "Plate384 description", "This 384 well plate's description.") {
+//            @Override
+//            public String getValue() throws IllegalAccessException, InvocationTargetException {
+//                return plate.getDescription();
+//            }
+//
+//            @Override
+//            public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+//                plate.setDescription(val);
+//            }
+//        };
+//
+//        set.put(descProp);
+//
+//        sheet.put(set);
+//        return sheet;
+//    }
     @Override
     public Image getIcon(int type) {
         return ImageUtilities.loadImage(ICON_PATH);
@@ -89,7 +134,7 @@ public class Plate384Node extends AbstractNode implements PropertyChangeListener
     public String getDisplayName() {
         return getLookup().lookup(IPlate384.class).getName();
     }
-    
+
     @Override
     public Action[] getActions(boolean context) {
         List<? extends Action> actions = Utilities.actionsForPath("/Actions/Plate384Node");
@@ -100,12 +145,12 @@ public class Plate384Node extends AbstractNode implements PropertyChangeListener
     @Override
     public Action getPreferredAction() {
         Action[] actions = getActions(false);
-        if(actions.length>0) {
+        if (actions.length > 0) {
             return actions[0];
         }
         return null;
     }
-    
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(IPlate384.PROPERTY_NAME)) {

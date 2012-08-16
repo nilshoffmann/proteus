@@ -1,5 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
 
+import de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.OpenPropertiesViewAction;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentification;
@@ -8,11 +9,13 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
 import java.awt.Image;
+import java.awt.event.ActionListener;
 import java.beans.IntrospectionException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Children;
@@ -33,13 +36,13 @@ public class SpotNodeAsGroupChild extends BeanNode<ISpot> implements PropertyCha
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/SpotIcon.png";
 
     public SpotNodeAsGroupChild(ISpot spot, Children children, Lookup lkp) throws IntrospectionException {
-        super(spot, Children.LEAF, new ProxyLookup(lkp, Lookups.fixed(spot)));
+        super(spot, Children.LEAF, new ProxyLookup(lkp, Lookups.fixed(spot,spot.getGel())));
         spot.addPropertyChangeListener(WeakListeners.propertyChange(this, spot));
         spot.getGel().addPropertyChangeListener(WeakListeners.propertyChange(this, spot.getGel()));
     }
 
     public SpotNodeAsGroupChild(ISpot spot, Lookup lkp) throws IntrospectionException {
-        super(spot, Children.LEAF, new ProxyLookup(lkp, Lookups.fixed(spot)));
+        super(spot, Children.LEAF, new ProxyLookup(lkp, Lookups.fixed(spot,spot.getGel())));
         spot.addPropertyChangeListener(WeakListeners.propertyChange(this, spot));
         spot.getGel().addPropertyChangeListener(WeakListeners.propertyChange(this, spot.getGel()));
     }
@@ -83,7 +86,7 @@ public class SpotNodeAsGroupChild extends BeanNode<ISpot> implements PropertyCha
             }
         }
         if (!filled) {
-            if (!spot.getLabel().isEmpty()) {
+            if (spot.getLabel()!=null && !spot.getLabel().isEmpty()) {
                 spotGroupLabel.append(spot.getLabel());
                 spotGroupLabel.append(" ");
             }
@@ -106,6 +109,7 @@ public class SpotNodeAsGroupChild extends BeanNode<ISpot> implements PropertyCha
         List<? extends Action> actions = Utilities.actionsForPath(
                 "/Actions/SpotNode");
         List<Action> allActions = new LinkedList<Action>(actions);
+        allActions.addAll(Utilities.actionsForPath("/Actions/Properties"));
         return allActions.toArray(new Action[allActions.size()]);
     }
 

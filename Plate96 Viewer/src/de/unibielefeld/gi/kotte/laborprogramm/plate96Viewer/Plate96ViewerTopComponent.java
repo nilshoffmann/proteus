@@ -161,7 +161,6 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         if (plate != null) {
             initPlateComponent(plate);
         }
-
         if (result != null) {
             result.addLookupListener(this);
         }
@@ -234,6 +233,9 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
                 this.spot = spotInstance;
                 if (this.well96 != null) {
                     instanceContent.remove(this.well96);
+                }
+                if (platePanel == null) {
+                    initPlateComponent(this.spot.getWell().getParent());
                 }
                 this.well96 = platePanel.setSpot(this.spot);
                 if (this.well96 != null) {

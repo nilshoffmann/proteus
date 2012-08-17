@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import org.openide.util.Lookup;
 
 /**
+ * Action for opening IPlate96s.
  *
  * @author hoffmann
  */

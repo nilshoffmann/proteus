@@ -2,26 +2,7 @@
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
     <folder name="Actions">
-        <folder name="ProteomicProject">
-            <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-CreatePlate384Action.instance">
-                <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
-                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.Bundle#CTL_CreatePlate384Action"/>
-                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.CreatePlate384Action"/>
-                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
-                <attr name="noIconInMenu" boolvalue="false"/>
-                <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
-                <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject"/>
-            </file>
-            <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-CreatePlate96Action.instance">
-                <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
-                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.Bundle#CTL_CreatePlate96Action"/>
-                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.CreatePlate96Action"/>
-                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
-                <attr name="noIconInMenu" boolvalue="false"/>
-                <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
-                <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject"/>
-            </file>
-        </folder>
+        <folder name="ProteomicProject"/>
         <folder name="File">
             <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-ProjectSaveAction.instance">
                 <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
@@ -82,16 +63,6 @@
             </file>
         </folder>
         <folder name="Plate96Node">
-            <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-RemovePlate96Action.instance">
-                <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
-                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.Bundle#CTL_RemovePlate96Action"/>
-                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.RemovePlate96Action"/>
-                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
-                <attr name="noIconInMenu" boolvalue="false"/>
-                <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
-                <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IPlate96"/>
-                <attr name="position" intvalue="1"/>
-            </file>
             <file name="org-openide-actions-ToolsAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
                 <attr name="position" intvalue="100"/>
@@ -102,36 +73,6 @@
             </file>
         </folder>
         <folder name="Plate384Node">
-            <file name="de-unibielefeld-gi-kotte-laborprogramm-plate384Viewer-actions-Plate384ViewerOpenAction.instance">
-                <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
-                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer.actions.Bundle#CTL_Plate384ViewerOpenAction"/>
-                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer.actions.Plate384ViewerOpenAction"/>
-                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
-                <attr name="noIconInMenu" boolvalue="false"/>
-                <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
-                <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384"/><!--org.openide.cookies.OpenCookie"/>-->
-                <attr name="position" intvalue="1"/>
-            </file>
-            <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-DeleteIdentificationsAction.instance">
-                <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
-                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.Bundle#CTL_DeleteIdentificationsAction"/>
-                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.DeleteIdentificationsAction"/>
-                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
-                <attr name="noIconInMenu" boolvalue="false"/>
-                <attr name="selectionType" stringvalue="ANY"/>
-                <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384"/>
-                <attr name="position" intvalue="3"/>
-            </file>
-            <file name="de-unibielefeld-gi-kotte-laborprogramm-project-spi-actions-RemovePlate384Action.instance">
-                <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
-                <attr name="displayName" bundlevalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.Bundle#CTL_RemovePlate384Action"/>
-                <attr name="injectable" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.RemovePlate384Action"/>
-                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/>
-                <attr name="noIconInMenu" boolvalue="false"/>
-                <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
-                <attr name="type" stringvalue="de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384"/>
-                <attr name="position" intvalue="4"/>
-            </file>
             <file name="org-openide-actions-ToolsAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
                 <attr name="position" intvalue="100"/>

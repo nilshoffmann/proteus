@@ -1,4 +1,4 @@
-package de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions;
+package de.unibielefeld.gi.kotte.laborprogramm.gelViewer.actions;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
@@ -17,10 +18,10 @@ import org.openide.util.NbBundle.Messages;
 @ActionID(category = "GelNode",
 id = "de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.SpotLabelTransferAction")
 @ActionRegistration(displayName = "#CTL_SpotLabelTransferAction")
-@ActionReferences({})
+@ActionReferences({@ActionReference(path = "Actions/GelNode", position = 300)})
 @Messages("CTL_SpotLabelTransferAction=Transfer Spot Labels")
 /**
- * Action that transfers the labels of a gel to all other gels of a project.
+ * Action that transfers the labels of a gel to all other gels of its project.
  * 
  * @author kotte
  */

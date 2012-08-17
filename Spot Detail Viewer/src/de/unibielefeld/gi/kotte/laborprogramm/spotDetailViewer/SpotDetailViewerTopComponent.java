@@ -1,30 +1,22 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.unibielefeld.gi.kotte.laborprogramm.spotDetailViewer;
 
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGel;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import java.awt.BorderLayout;
 import java.beans.IntrospectionException;
-import java.beans.PropertyEditorManager;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
-import org.openide.util.Exceptions;
-import org.openide.util.LookupEvent;
-import org.openide.util.NbBundle;
-import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
-//import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.explorer.propertysheet.PropertySheet;
 import org.openide.nodes.BeanNode;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup.Result;
+import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
+import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
+import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.

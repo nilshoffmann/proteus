@@ -1,6 +1,6 @@
-package de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions;
+package de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer.actions;
 
-import de.unibielefeld.gi.kotte.laborprogramm.project.spi.dialogs.NameDialog;
+import de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer.dialogs.NameDialog;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384Factory;
@@ -8,29 +8,32 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionRegistration;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle.Messages;
 
 /**
- * Action to create a new 384 well microplate.
+ * Action for creating IPlate384s.
  *
  * @author kotte
  */
-public class CreatePlate384Action implements ActionListener {
+@ActionID(
+    category = "ProteomicProject",
+id = "de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer.actions.CreatePlate384Action")
+@ActionRegistration(
+    displayName = "#CTL_CreatePlate384Action")
+@Messages("CTL_CreatePlate384Action=Create New MALDI Target Plate")
+public final class CreatePlate384Action implements ActionListener {
 
-    private final IProject proj;
+    private final IProject context;
 
-    public CreatePlate384Action(IProject proj) {
-        this.proj = proj;
+    public CreatePlate384Action(IProject context) {
+        this.context = context;
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-//        IPlate384 plate384 = Lookup.getDefault().lookup(IPlate384Factory.class).createPlate384();
-//        this.proj.add384Plate(plate384);
-//        plate384.setParent(this.proj);
-//        listener.propertyChange(null);
-
-        System.out.println("CreatePlate384Action.actionPerformed() called");
+    public void actionPerformed(ActionEvent ev) {
         // Create a custom NotifyDescriptor, specify the panel instance as a parameter + other params
         NameDialog dialog = new NameDialog();
         NotifyDescriptor nd = new NotifyDescriptor(
@@ -50,12 +53,9 @@ public class CreatePlate384Action implements ActionListener {
             //     System.out.println(myPanel.getNameFieldValue());
             IPlate384 plate384 = Lookup.getDefault().lookup(
                     IPlate384Factory.class).createPlate384();
-            this.proj.add384Plate(plate384);
-            plate384.setParent(this.proj);
+            this.context.add384Plate(plate384);
+            plate384.setParent(this.context);
             plate384.setName(dialog.getNameText());
-//            System.out.println("Firing PropertyChangeEvent: PLATE384_CREATED");
-//            listener.propertyChange(new PropertyChangeEvent(this,
-//                    "PLATE384_CREATED", null, plate384));
         }
     }
 }

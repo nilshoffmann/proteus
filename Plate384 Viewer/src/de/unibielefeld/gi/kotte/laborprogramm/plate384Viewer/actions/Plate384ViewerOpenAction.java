@@ -4,12 +4,25 @@ import de.unibielefeld.gi.kotte.laborprogramm.project.api.cookies.IPlate384OpenC
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IPlate384;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
+import org.openide.awt.ActionRegistration;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 
 /**
+ * Action for opening IPlate384s.
  *
  * @author hoffmann
  */
+@ActionID(
+    category = "Plate384Node",
+id = "de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer.actions.Plate384ViewerOpenAction")
+@ActionRegistration(
+    displayName = "#CTL_OpenPlate384Action")
+@ActionReferences({@ActionReference(path = "Actions/Plate384Node", position = 0)})
+@NbBundle.Messages("CTL_OpenPlate384Action=Open MALDI Target Plate")
 public final class Plate384ViewerOpenAction implements ActionListener {
 
     private final IPlate384 context;

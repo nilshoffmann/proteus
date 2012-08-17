@@ -6,24 +6,34 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.JFileChooser;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
+import org.openide.awt.ActionRegistration;
+import org.openide.util.NbBundle.Messages;
 
 /**
- * Action for importing a protein identification file from MS and/or MSMS
- * identification in BTR format.
- *
+ * Action for using the BTR Importer Module.
+ * 
  * @author kotte
  */
-public class BTRImportAction implements ActionListener {
+@ActionID(
+    category = "Plate384Node",
+id = "de.unibielefeld.gi.kotte.laborprogramm.BTRImporter.actions.BTRImportAction")
+@ActionRegistration(
+    displayName = "#CTL_BTRImportAction")
+@ActionReferences({@ActionReference(path = "Actions/Plate384Node", position = 100)})
+@Messages("CTL_BTRImportAction=Import BTR Report")
+public final class BTRImportAction implements ActionListener {
 
     private final IPlate384 context;
 
     public BTRImportAction(IPlate384 context) {
-        assert context != null;
         this.context = context;
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         File f;
         JFileChooser jfc = new JFileChooser();
         //jfc.setCurrentDirectory(new java.io.File("."));

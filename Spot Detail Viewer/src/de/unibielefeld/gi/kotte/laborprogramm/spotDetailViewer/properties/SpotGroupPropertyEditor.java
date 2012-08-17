@@ -1,14 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.unibielefeld.gi.kotte.laborprogramm.spotDetailViewer.properties;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import java.beans.PropertyEditorSupport;
 
 /**
+ * Property Editor for ISpotGroup.
  *
  * @author hoffmann
  */

@@ -10,13 +10,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.Action;
-import org.openide.DialogDisplayer;
-import org.openide.explorer.propertysheet.PropertySheet;
-import org.openide.nodes.AbstractNode;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.PropertySupport.ReadWrite;
-import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
@@ -138,6 +134,11 @@ public class Plate384Node extends BeanNode<IPlate384> implements PropertyChangeL
     @Override
     public Action[] getActions(boolean context) {
         List<? extends Action> actions = Utilities.actionsForPath("/Actions/Plate384Node");
+        System.out.println("#######################################");
+        for (Action action : actions) {
+            System.out.println(action.getClass().getCanonicalName());
+        }
+        System.out.println("#######################################");
         List<Action> allActions = new LinkedList<Action>(actions);
         return allActions.toArray(new Action[allActions.size()]);
     }

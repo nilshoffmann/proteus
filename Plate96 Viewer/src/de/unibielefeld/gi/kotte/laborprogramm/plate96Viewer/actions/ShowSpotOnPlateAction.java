@@ -19,11 +19,17 @@ id = "de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer.actions.ShowSpotOnPla
 @ActionRegistration(
     displayName = "#CTL_ShowSpotOnPlateAction")
 @ActionReferences({@ActionReference(path = "Actions/SpotNode", position = 300)})
-@Messages("CTL_ShowSpotOnPlateAction=Show Plate")
+@Messages("CTL_ShowSpotOnPlateAction=Show on Plate")
 public final class ShowSpotOnPlateAction implements ActionListener {
 
     private final ISpot context;
 
+    //TODO für den Konstrukeor einer kontextsensitiven Aktion:
+    //putValue(Action.NAME, NbBundle.getMessage(ShowSpotOnPlateAction.class,"CTL_ShowSpotOnPlateAction"));
+    
+    //TODO Bedingung für condionally enabled Action:
+    //setEnabled(context.getStatus == SpotStatus.PICKED);
+    
     public ShowSpotOnPlateAction(ISpot context) {
         this.context = context;
     }

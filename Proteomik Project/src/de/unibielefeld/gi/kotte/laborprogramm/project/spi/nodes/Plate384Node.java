@@ -134,11 +134,6 @@ public class Plate384Node extends BeanNode<IPlate384> implements PropertyChangeL
     @Override
     public Action[] getActions(boolean context) {
         List<? extends Action> actions = Utilities.actionsForPath("/Actions/Plate384Node");
-        System.out.println("#######################################");
-        for (Action action : actions) {
-            System.out.println(action.getClass().getCanonicalName());
-        }
-        System.out.println("#######################################");
         List<Action> allActions = new LinkedList<Action>(actions);
         return allActions.toArray(new Action[allActions.size()]);
     }

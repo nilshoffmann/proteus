@@ -189,6 +189,7 @@ public class Well384Button extends JButton implements MouseInputListener {
                             }
                         }
                         well.setWell96(null);
+                        well.setStatus(Well384Status.EMPTY);
                         break;
                     case FILLED:
                         well96 = panel.getWell96();
@@ -198,24 +199,19 @@ public class Well384Button extends JButton implements MouseInputListener {
                             well96.add384Well(well);
                             well96.setStatus(Well96Status.PROCESSED);
                             well.setWell96(well96);
+                            well.setStatus(Well384Status.FILLED);
                         }
                         break;
-//                    case IDENTIFIED:
-//                        well.setIdentification("<MOCK IDENTIFICATION>");
-//                        break;
-//                    case MULTIPLE_IDENTIFICATIONS:
-//                        well.setIdentification("<MOCK IDENTIFICATION>,<MOCK IDENTIFICATION>,<MOCK IDENTIFICATION>");
-//                        break;
-//                    case UNCERTAIN:
-//                        well.setIdentification("<MAYBE MOCK IDENTIFICATION>,<MAYBE MOCK IDENTIFICATION>,<MAYBE MOCK IDENTIFICATION>");
-//                        break;
-//                    case UNIDENTIFIED:
-//                        well.setIdentification("MOCK UNIDENTIFIED");
-//                        break;
+                    case IDENTIFIED:
+                        well.setStatus(Well384Status.IDENTIFIED);
+                        break;
+                    case UNIDENTIFIED:
+                        well.setStatus(Well384Status.UNIDENTIFIED);
+                        break;
                     case ERROR:
+                        well.setStatus(Well384Status.ERROR);
                         break;
                 }
-                well.setStatus(nextStatus);
                 panel.setButtonForWell96Active(well96);
                 repaint();
             } else {

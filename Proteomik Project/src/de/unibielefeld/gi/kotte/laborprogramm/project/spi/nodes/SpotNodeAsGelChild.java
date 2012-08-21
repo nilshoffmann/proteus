@@ -5,6 +5,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentification;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationMethod;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.Well384Status;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
 import java.awt.Image;
@@ -31,6 +32,9 @@ import org.openide.util.lookup.ProxyLookup;
 public class SpotNodeAsGelChild extends BeanNode<ISpot> implements PropertyChangeListener {
 
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/SpotIcon.png";
+    private final static String ICON_PATH_PICKED = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/SpotIcon_picked.png";
+    private final static String ICON_PATH_IDENTIFIED = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/SpotIcon_identified.png";
+    private final static String ICON_PATH_ERROR = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/SpotIcon_error.png";
 
     public SpotNodeAsGelChild(ISpot spot, Children children, Lookup lkp) throws IntrospectionException {
         super(spot, Children.LEAF, new ProxyLookup(lkp, Lookups.fixed(spot)));
@@ -45,7 +49,24 @@ public class SpotNodeAsGelChild extends BeanNode<ISpot> implements PropertyChang
 
     @Override
     public Image getIcon(int type) {
-        return ImageUtilities.loadImage(ICON_PATH);
+        ISpot spot = getLookup().lookup(ISpot.class);
+        if (spot.getStatus() == SpotStatus.UNPICKED) {
+            return ImageUtilities.loadImage(ICON_PATH);
+        } else {
+            IWell96 well96 = spot.getWell();
+            if (well96.getStatus() == Well96Status.PROCESSED) {
+                for (IWell384 well384 : well96.get384Wells()) {
+                    if (well384.getStatus() == Well384Status.IDENTIFIED) {
+                        return ImageUtilities.loadImage(ICON_PATH_IDENTIFIED);
+                    } else if (well384.getStatus() == Well384Status.ERROR) {
+                        return ImageUtilities.loadImage(ICON_PATH_ERROR);
+                    }
+                }
+            } else if (well96.getStatus() == Well96Status.ERROR) {
+                return ImageUtilities.loadImage(ICON_PATH_ERROR);
+            }
+        }
+        return ImageUtilities.loadImage(ICON_PATH_PICKED);
     }
 
     @Override

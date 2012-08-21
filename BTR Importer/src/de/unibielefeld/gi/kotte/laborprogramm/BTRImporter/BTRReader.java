@@ -197,17 +197,27 @@ public class BTRReader {
 
     public static void checkWellStatus(IWell384 well) {
         if (well.getStatus() == Well384Status.FILLED) {
-            List<IIdentificationMethod> methods = well.getIdentification().
-                    getMethods();
+            List<IIdentificationMethod> methods = well.getIdentification().getMethods();
+//            int validIdents = 0;
             if (!methods.isEmpty()) {
-                for (IIdentificationMethod ident : methods) {
-                    if (!ident.getIdentifications().isEmpty()) {
-                        well.setStatus(Well384Status.IDENTIFIED);
-                        return;
+                for (IIdentificationMethod method : methods) {
+                    for (IIdentification ident : method.getIdentifications()) {
+                        if (ident.getScore() > 0) {
+//                            validIdents++;
+                            well.setStatus(Well384Status.IDENTIFIED);
+                            return;
+                        }
                     }
                 }
             }
-            well.setStatus(Well384Status.UNIDENTIFIED);
+//            if (validIdents == 0) {
+                well.setStatus(Well384Status.UNIDENTIFIED);
+//            } else if (validIdents == 1) {
+//                well.setStatus(Well384Status.IDENTIFIED);
+//            } else {
+//                //multiple identifications
+//                well.setStatus(Well384Status.IDENTIFIED);
+//            }
         }
     }
 

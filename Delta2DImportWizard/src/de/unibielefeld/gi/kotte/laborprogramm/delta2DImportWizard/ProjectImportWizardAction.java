@@ -22,9 +22,6 @@ import javax.swing.JComponent;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;
-import org.openide.awt.ActionID;
-import org.openide.awt.ActionReference;
-import org.openide.awt.ActionRegistration;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 

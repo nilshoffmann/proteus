@@ -17,11 +17,11 @@ import org.openide.util.NbBundle;
  * @author hoffmann
  */
 @ActionID(
-    category = "Plate384Node",
+    category = "Proteus/Plate384Node",
 id = "de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer.actions.Plate384ViewerOpenAction")
 @ActionRegistration(
     displayName = "#CTL_OpenPlate384Action")
-@ActionReferences({@ActionReference(path = "Actions/Plate384Node", position = 0)})
+@ActionReferences({@ActionReference(path = "Actions/Plate384Node", position = 100)})
 @NbBundle.Messages("CTL_OpenPlate384Action=Open MALDI Target Plate")
 public final class Plate384ViewerOpenAction implements ActionListener {
 

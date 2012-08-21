@@ -14,11 +14,11 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
 @ActionID(
-    category = "SpotNode",
+    category = "Proteus/SpotNode",
 id = "de.unibielefeld.gi.kotte.laborprogramm.plate96Viewer.actions.ShowSpotOnPlateAction")
 @ActionRegistration(
     displayName = "#CTL_ShowSpotOnPlateAction")
-@ActionReferences({@ActionReference(path = "Actions/SpotNode", position = 300)})
+@ActionReferences({@ActionReference(path = "Actions/SpotNode", position = 110)})
 @Messages("CTL_ShowSpotOnPlateAction=Show on Plate")
 public final class ShowSpotOnPlateAction implements ActionListener {
 

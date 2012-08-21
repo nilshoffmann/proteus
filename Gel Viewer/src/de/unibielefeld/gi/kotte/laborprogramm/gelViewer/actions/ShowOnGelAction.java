@@ -13,6 +13,8 @@ import de.unibielefeld.gi.kotte.laborprogramm.topComponentRegistry.api.IRegistry
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
@@ -21,10 +23,11 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 
 @ActionID(
-    category = "SpotNode",
+    category = "Proteus/SpotNode",
 id = "de.unibielefeld.gi.kotte.laborprogramm.gelViewer.actions.ShowOnGelAction")
 @ActionRegistration(
     displayName = "#CTL_ShowOnGelAction")
+@ActionReferences({@ActionReference(path = "Actions/SpotNode", position = 100)})
 @Messages("CTL_ShowOnGelAction=Show on Gel")
 public final class ShowOnGelAction implements ActionListener, LookupListener {
 

@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
@@ -19,10 +21,11 @@ import org.openide.util.NbBundle.Messages;
  * @author kotte
  */
 @ActionID(
-    category = "ProteomicProject",
+    category = "Proteus/ProteomicProject",
 id = "de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer.actions.CreatePlate384Action")
 @ActionRegistration(
     displayName = "#CTL_CreatePlate384Action")
+@ActionReferences({@ActionReference(path = "Actions/ProteomicProject", position = 110)})
 @Messages("CTL_CreatePlate384Action=Create New MALDI Target Plate")
 public final class CreatePlate384Action implements ActionListener {
 

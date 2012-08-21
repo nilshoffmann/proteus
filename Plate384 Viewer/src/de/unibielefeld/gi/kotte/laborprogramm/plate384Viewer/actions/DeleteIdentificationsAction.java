@@ -17,11 +17,11 @@ import org.openide.util.NbBundle.Messages;
  * @author kotte
  */
 @ActionID(
-    category = "Plate384Node",
+    category = "Proteus/Plate384Node",
 id = "de.unibielefeld.gi.kotte.laborprogramm.plate384Viewer.actions.DeleteIdentificationsAction")
 @ActionRegistration(
     displayName = "#CTL_DeleteIdentificationsAction")
-@ActionReferences({@ActionReference(path = "Actions/Plate384Node", position = 200)})
+@ActionReferences({@ActionReference(path = "Actions/Plate384Node", position = 400)})
 @Messages("CTL_DeleteIdentificationsAction=Delete Identifications")
 public final class DeleteIdentificationsAction implements ActionListener {
 

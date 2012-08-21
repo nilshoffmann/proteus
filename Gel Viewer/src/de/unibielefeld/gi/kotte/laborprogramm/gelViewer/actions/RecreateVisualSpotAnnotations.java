@@ -20,13 +20,14 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.openide.awt.ActionRegistration;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "ProteomicProject",
+@ActionID(category = "Proteus/ProteomicProject",
 id = "de.unibielefeld.gi.kotte.laborprogramm.gelViewer.actions.RecreateVisualSpotAnnotations")
 @ActionRegistration(displayName = "#CTL_RecreateVisualSpotAnnotations")
-@ActionReferences({})
+@ActionReferences({@ActionReference(path = "Actions/ProteomicProject", position = 400)})
 @Messages("CTL_RecreateVisualSpotAnnotations=Recreate Visual Spot Annotations")
 public final class RecreateVisualSpotAnnotations implements ActionListener {
 

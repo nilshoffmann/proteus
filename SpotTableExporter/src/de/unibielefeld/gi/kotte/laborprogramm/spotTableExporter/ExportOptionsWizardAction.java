@@ -9,12 +9,22 @@ import java.text.MessageFormat;
 import javax.swing.JComponent;
 import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
+import org.openide.awt.ActionRegistration;
+import org.openide.util.NbBundle;
 
 /**
  * Wizard Action for the Spot Data Export.
  *
  * @author kotte
  */
+@ActionID(category = "Proteus/ProteomicProject",
+id = "de.unibielefeld.gi.kotte.laborprogramm.spotTableExporter.ExportOptionsWizardAction")
+@ActionRegistration(displayName = "#CTL_ExportOptionsWizardAction")
+@ActionReferences({@ActionReference(path = "Actions/ProteomicProject", position = 310)})
+@NbBundle.Messages("CTL_ExportOptionsWizardAction=Export Spot Data Table")
 public final class ExportOptionsWizardAction implements ActionListener {
 
     private WizardDescriptor.Panel[] panels;

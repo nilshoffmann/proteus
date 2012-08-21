@@ -13,15 +13,18 @@ import javax.swing.JComponent;
 import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;
 import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 
 @ActionID(
-    category = "SpotNode",
+    category = "Proteus/SpotNode",
 id = "de.unibielefeld.gi.kotte.laborprogramm.spotExport.ExportSpotsToDelta2DAction")
 @ActionRegistration(
     displayName = "#CTL_ExportSpotsToDelta2DAction")
+@ActionReferences({@ActionReference(path = "Actions/SpotNode", position = 300)})
 @Messages("CTL_ExportSpotsToDelta2DAction=export selected spot(s) for Delta2D Re-Import")
 public final class ExportSpotsToDelta2DWizardAction implements ActionListener {
 

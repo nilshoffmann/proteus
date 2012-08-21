@@ -44,18 +44,18 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> implements Pro
                 toPopulate.add(ilgg);
             }
         }
-        for (IPlate384 ilgg : ipp.getLookup().lookup(IProject.class).get384Plates()) {
+        for (IPlate96 ip96 : ipp.getLookup().lookup(IProject.class).get96Plates()) {
             if (Thread.interrupted()) {
                 return false;
             } else {
-                toPopulate.add(ilgg);
+                toPopulate.add(ip96);
             }
         }
-        for (IPlate96 ilgg : ipp.getLookup().lookup(IProject.class).get96Plates()) {
+        for (IPlate384 ip384 : ipp.getLookup().lookup(IProject.class).get384Plates()) {
             if (Thread.interrupted()) {
                 return false;
             } else {
-                toPopulate.add(ilgg);
+                toPopulate.add(ip384);
             }
         }
         List<ISpotGroup> spotGroups = ipp.getLookup().lookup(IProject.class).getSpotGroups();
@@ -71,14 +71,14 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> implements Pro
         Node node = Node.EMPTY;
         if (keyVal instanceof ILogicalGelGroup) {
             node = new LogicalGelGroupNode((ILogicalGelGroup) keyVal, ipp.getLookup());
+        } else if (keyVal instanceof IPlate96) {
+            node = new Plate96Node((IPlate96) keyVal, ipp.getLookup());
         } else if (keyVal instanceof IPlate384) {
             try {
                 node = new Plate384Node((IPlate384) keyVal, ipp.getLookup());
             } catch (IntrospectionException ex) {
                 Exceptions.printStackTrace(ex);
             }
-        } else if (keyVal instanceof IPlate96) {
-            node = new Plate96Node((IPlate96) keyVal, ipp.getLookup());
         } else if (keyVal instanceof List) {
             List<?> keyValList = (List) keyVal;
             if (!keyValList.isEmpty()) {

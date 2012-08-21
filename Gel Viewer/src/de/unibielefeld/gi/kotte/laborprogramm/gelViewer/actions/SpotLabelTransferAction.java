@@ -15,10 +15,10 @@ import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "GelNode",
+@ActionID(category = "Proteus/GelNode",
 id = "de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.SpotLabelTransferAction")
 @ActionRegistration(displayName = "#CTL_SpotLabelTransferAction")
-@ActionReferences({@ActionReference(path = "Actions/GelNode", position = 300)})
+@ActionReferences({@ActionReference(path = "Actions/GelNode", position = 200)})
 @Messages("CTL_SpotLabelTransferAction=Transfer Spot Labels")
 /**
  * Action that transfers the labels of a gel to all other gels of its project.

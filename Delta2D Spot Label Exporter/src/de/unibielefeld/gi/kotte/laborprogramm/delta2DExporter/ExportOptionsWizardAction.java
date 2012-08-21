@@ -20,11 +20,10 @@ import org.openide.util.NbBundle;
  *
  * @author kotte
  */
-@ActionID(category = "Proteus",
+@ActionID(category = "Proteus/ProteomicProject",
 id = "de.unibielefeld.gi.kotte.laborprogramm.delta2DExporter.ExportOptionsWizardAction")
 @ActionRegistration(displayName = "#CTL_ExportOptionsWizardAction")
-@ActionReferences({
-    @ActionReference(path = "Actions/ProteomicProject")})
+@ActionReferences({@ActionReference(path = "Actions/ProteomicProject", position = 300)})
 @NbBundle.Messages("CTL_ExportOptionsWizardAction=Export Spot Information for Delta2D Re-Import")
 public final class ExportOptionsWizardAction implements ActionListener {
 

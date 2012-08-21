@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.JFileChooser;
 import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
@@ -17,10 +18,10 @@ import org.openide.util.NbBundle.Messages;
  * 
  * @author kotte
  */
-@ActionID(category = "ProteomicProject",
+@ActionID(category = "Proteus/ProteomicProject",
 id = "de.unibielefeld.gi.kotte.laborprogramm.dataImporter.actions.ImportExcelReportAction")
 @ActionRegistration(displayName = "#CTL_ImportExcelReportAction")
-@ActionReferences({})
+@ActionReferences({@ActionReference(path = "Actions/ProteomicProject", position = 200)})
 @Messages("CTL_ImportExcelReportAction=Import Quantification Data")
 public final class ImportExcelReportAction implements ActionListener {
 

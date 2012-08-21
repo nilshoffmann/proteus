@@ -1,4 +1,4 @@
-package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
+package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes.spotGroups;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup;
 import java.awt.Image;
@@ -65,7 +65,7 @@ public class SpotGroupFolderNode extends AbstractNode {
         Sheet sheet = Sheet.createDefault();
         Sheet.Set set = Sheet.createPropertiesSet();
         System.out.println("creating property sheet for SpotGroupFolder node");
-        Property sortProp = new ReadWrite<Boolean>("sortSpotGroupsNumerically", Boolean.class,
+        Property sortNumberProp = new ReadWrite<Boolean>("sortSpotGroupsNumerically", Boolean.class,
                 "Sort numerically", "Determines whether spot groups are sorted numerically or in order of definition.") {
 
             @Override
@@ -97,9 +97,23 @@ public class SpotGroupFolderNode extends AbstractNode {
                 }
             }
         };
+        Property groupStatusProp = new ReadWrite<Boolean>("groupSpotGroupsbyStatus", Boolean.class,
+                "Group by Status", "Determines whether spot groups are grouped by their processing status.") {
 
-        set.put(sortProp);
+            @Override
+            public Boolean getValue() throws IllegalAccessException, InvocationTargetException {
+                return sgfcnf.isGroupSpotGroupsByStatus();
+            }
+
+            @Override
+            public void setValue(Boolean val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                sgfcnf.setGroupSpotGroupsByStatus(val);
+            }
+        };
+
+        set.put(sortNumberProp);
         set.put(sortLabelProp);
+        set.put(groupStatusProp);
 
         sheet.put(set);
         return sheet;

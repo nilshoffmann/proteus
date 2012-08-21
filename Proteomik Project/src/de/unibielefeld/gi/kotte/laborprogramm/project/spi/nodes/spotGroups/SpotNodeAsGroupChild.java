@@ -1,4 +1,4 @@
-package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
+package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes.spotGroups;
 
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.ISpot;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.SpotStatus;

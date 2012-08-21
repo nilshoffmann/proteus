@@ -1,4 +1,4 @@
-package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes;
+package de.unibielefeld.gi.kotte.laborprogramm.project.spi.nodes.spotGroups;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
@@ -8,6 +8,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentification;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationMethod;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
+import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.Well384Status;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
 import java.awt.Image;
@@ -17,7 +18,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.Action;
-import org.netbeans.api.project.Project;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.PropertySupport.ReadWrite;
@@ -39,7 +39,7 @@ public class SpotGroupNode extends AbstractNode implements PropertyChangeListene
 
     public SpotGroupNode(ISpotGroup isg, Lookup lkp) {
 //        super(Children.create(new SpotGroupChildNodeFactory(new ProxyLookup(lkp,Lookups.fixed(isg))), true), new ProxyLookup(lkp,Lookups.fixed(isg)));
-        super(Children.create(new SpotGroupChildNodeFactory(Lookups.fixed(isg,lkp.lookup(IProteomicProject.class),lkp.lookup(IProject.class))), true), Lookups.fixed(isg,lkp.lookup(IProteomicProject.class),lkp.lookup(IProject.class)));
+        super(Children.create(new SpotGroupChildNodeFactory(Lookups.fixed(isg, lkp.lookup(IProteomicProject.class), lkp.lookup(IProject.class))), true), Lookups.fixed(isg, lkp.lookup(IProteomicProject.class), lkp.lookup(IProject.class)));
         isg.addPropertyChangeListener(WeakListeners.propertyChange(this, isg));
     }
 
@@ -52,7 +52,6 @@ public class SpotGroupNode extends AbstractNode implements PropertyChangeListene
 
         Property numberProp = new ReadWrite<Integer>("number", Integer.class,
                 "Spot group number", "The spot number of this group's spots.") {
-
             @Override
             public Integer getValue() throws IllegalAccessException, InvocationTargetException {
                 return sg.getNumber();
@@ -61,7 +60,7 @@ public class SpotGroupNode extends AbstractNode implements PropertyChangeListene
             @Override
             public void setValue(Integer val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
                 sg.setNumber(val);
-                for(ISpot spot: sg.getSpots()) {
+                for (ISpot spot : sg.getSpots()) {
                     spot.setNumber(val);
                 }
             }
@@ -70,7 +69,6 @@ public class SpotGroupNode extends AbstractNode implements PropertyChangeListene
 
         Property labelProp = new ReadWrite<String>("label", String.class,
                 "user defined label", "The user defined label for this spot group.") {
-
             @Override
             public String getValue() throws IllegalAccessException, InvocationTargetException {
                 return sg.getLabel();
@@ -79,7 +77,7 @@ public class SpotGroupNode extends AbstractNode implements PropertyChangeListene
             @Override
             public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
                 sg.setLabel(val);
-                for(ISpot spot: sg.getSpots()) {
+                for (ISpot spot : sg.getSpots()) {
                     spot.setLabel(val);
                 }
             }
@@ -97,7 +95,7 @@ public class SpotGroupNode extends AbstractNode implements PropertyChangeListene
         List<Action> allActions = new LinkedList<Action>(actions);
         return allActions.toArray(new Action[allActions.size()]);
     }
-    
+
     @Override
     public Image getIcon(int type) {
         return ImageUtilities.loadImage(ICON_PATH);
@@ -110,18 +108,34 @@ public class SpotGroupNode extends AbstractNode implements PropertyChangeListene
 
     @Override
     public String getDisplayName() {
-        StringBuilder spotGroupLabel = new StringBuilder();
-        if(getLookup().lookup(ISpotGroup.class).getLabel()!=null && !getLookup().lookup(ISpotGroup.class).getLabel().isEmpty()){
-            //spotGroupLabel.append("'");
-            spotGroupLabel.append(getLookup().lookup(ISpotGroup.class).getLabel());
-            //spotGroupLabel.append("'");
-        }else{
-            spotGroupLabel.append("#");
-            spotGroupLabel.append(getLookup().lookup(ISpotGroup.class).getNumber());
+        StringBuilder displayName = new StringBuilder();
+        ISpotGroup group = getLookup().lookup(ISpotGroup.class);
+        //group number
+        displayName.append('#');
+        displayName.append(getLookup().lookup(ISpotGroup.class).getNumber());
+        displayName.append(' ');
+        //group label
+        if (group.getLabel() != null && !group.getLabel().isEmpty()) {
+            displayName.append("labeled '");
+            displayName.append(getLookup().lookup(ISpotGroup.class).getLabel());
+            displayName.append("' ");
         }
-        return spotGroupLabel.toString();
+        //picking and identification status
+        switch (SpotGroupStatus.getSpotGroupStatus(group)) {
+            case ALL_UNPICKED:
+                displayName.append("unpicked");
+                break;
+            case HAS_IDENT:
+                displayName.append("identified");
+                break;
+            case PARTIALLY_PROCESSED:
+                displayName.append("partially processed");
+                break;
+        }
+        
+        return displayName.toString();
     }
-
+    
     @Override
     public String getShortDescription() {
         StringBuilder spotGroupLabel = new StringBuilder();
@@ -134,7 +148,7 @@ public class SpotGroupNode extends AbstractNode implements PropertyChangeListene
                     for (IWell384 well384 : well96.get384Wells()) {
                         for (IIdentificationMethod method : well384.getIdentification().getMethods()) {
                             for (IIdentification ident : method.getIdentifications()) {
-                                if(filled) {
+                                if (filled) {
                                     spotGroupLabel.append(", ");
                                 }
 //                                spotGroupLabel.append(ident.getAbbreviation());
@@ -149,16 +163,17 @@ public class SpotGroupNode extends AbstractNode implements PropertyChangeListene
         if (!filled) {
             spotGroupLabel.append("unidentified");
         }
+
         return spotGroupLabel.toString();
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if(evt.getPropertyName().equals(ISpotGroup.PROPERTY_LABEL) ||evt.getPropertyName().equals(PROP_DISPLAY_NAME)) {
+        if (evt.getPropertyName().equals(ISpotGroup.PROPERTY_LABEL) || evt.getPropertyName().equals(PROP_DISPLAY_NAME)) {
             fireDisplayNameChange(null, getDisplayName());
-        }else if(evt.getPropertyName().equals(PROP_NAME)) {
+        } else if (evt.getPropertyName().equals(PROP_NAME)) {
             fireNameChange(null, getName());
-        }else if(evt.getPropertyName().equals(PROP_SHORT_DESCRIPTION)) {
+        } else if (evt.getPropertyName().equals(PROP_SHORT_DESCRIPTION)) {
             fireShortDescriptionChange(null, getShortDescription());
         }
         firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());

@@ -22,7 +22,7 @@ class SpotGroupFolderChildNodeFactory extends ChildFactory<ISpotGroup> implement
     private Lookup lkp;
     private boolean sortSpotGroupsNumerically = false;
     private boolean sortSpotGroupsByLabel = false;
-    private boolean groupSpotGroupsByStatus = false;
+    private boolean groupSpotGroupsByStatus = true;
     public SpotGroupFolderChildNodeFactory() {
         
     }

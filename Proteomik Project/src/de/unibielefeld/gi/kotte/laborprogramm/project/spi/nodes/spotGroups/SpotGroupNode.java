@@ -8,7 +8,6 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentification;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.identification.IIdentificationMethod;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
-import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.Well384Status;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
 import java.awt.Image;
@@ -93,6 +92,7 @@ public class SpotGroupNode extends AbstractNode implements PropertyChangeListene
         List<? extends Action> actions = Utilities.actionsForPath(
                 "/Actions/SpotGroupNode");
         List<Action> allActions = new LinkedList<Action>(actions);
+        allActions.addAll(Utilities.actionsForPath("/Actions/Properties"));
         return allActions.toArray(new Action[allActions.size()]);
     }
 

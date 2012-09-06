@@ -185,7 +185,7 @@ public final class Plate96ViewerTopComponent extends TopComponent implements Loo
         }
         IPlate96 plate = getLookup().lookup(IPlate96.class);
         if (plate != null) {
-            Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().closeTopComponent(plate);
+            Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().closeTopComponentsFor(plate);
 //            CentralLookup.getDefault().remove(plate);
         }
     }

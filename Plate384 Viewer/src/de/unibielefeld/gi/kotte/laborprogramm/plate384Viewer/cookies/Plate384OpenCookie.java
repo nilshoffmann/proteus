@@ -19,7 +19,7 @@ public class Plate384OpenCookie implements IPlate384OpenCookie {
     public void open() {
         IPlate384 plate = Utilities.actionsGlobalContext().lookup(IPlate384.class);
         if(plate != null) {
-            Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().openTopComponent(plate,Plate384ViewerTopComponent.class);
+            Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().openTopComponentFor(plate,Plate384ViewerTopComponent.class);
         }
     }
 }

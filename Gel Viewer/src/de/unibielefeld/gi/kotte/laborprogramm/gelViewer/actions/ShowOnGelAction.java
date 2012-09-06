@@ -21,6 +21,7 @@ import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
+import org.openide.util.lookup.InstanceContent;
 
 @ActionID(
     category = "Proteus/SpotNode",
@@ -29,7 +30,7 @@ id = "de.unibielefeld.gi.kotte.laborprogramm.gelViewer.actions.ShowOnGelAction")
     displayName = "#CTL_ShowOnGelAction")
 @ActionReferences({@ActionReference(path = "Actions/SpotNode", position = 100)})
 @Messages("CTL_ShowOnGelAction=Show on Gel")
-public final class ShowOnGelAction implements ActionListener, LookupListener {
+public final class ShowOnGelAction implements ActionListener {
 
     private final ISpot context;
 
@@ -40,26 +41,15 @@ public final class ShowOnGelAction implements ActionListener, LookupListener {
     @Override
     public void actionPerformed(ActionEvent ev) {
         IGel gel = Utilities.actionsGlobalContext().lookup(IGel.class);
-        IProject ipr = Utilities.actionsGlobalContext().lookup(IProject.class);
-        IProteomicProject ipp = Utilities.actionsGlobalContext().lookup(IProteomicProject.class);
-        if(ipr==null || ipp == null) {
-            throw new NullPointerException("Project API and SPI not in lookup!");
-        }
+//        IProject ipr = Utilities.actionsGlobalContext().lookup(IProject.class);
+//        IProteomicProject ipp = Utilities.actionsGlobalContext().lookup(IProteomicProject.class);
+//        if(ipr==null || ipp == null) {
+//            throw new NullPointerException("Project API and SPI not in lookup!");
+//        }
         if (gel == null) {
             gel = context.getGel();
         }
-        Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().openTopComponent(gel, GelViewerTopComponent.class);
-//        GelViewerTopComponent gvtc = (GelViewerTopComponent) Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().getTopComponentFor(gel);
-//        InstanceContent ic = new InstanceContent();
-//        Lookup lookup = new AbstractLookup(ic);
-//            Result<ISpot> lres = lookup.lookupResult(ISpot.class);
-//            gvtc.getLookup().lookup(LookupResultListeners.class).
-
-
+        Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().openTopComponentFor(gel, GelViewerTopComponent.class);
     }
 
-    @Override
-    public void resultChanged(LookupEvent le) {
-//        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

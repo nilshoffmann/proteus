@@ -39,7 +39,7 @@ public class GelViewerOpenCookie implements IGelOpenCookie {
     public void open() {
         IGel gel = Utilities.actionsGlobalContext().lookup(IGel.class);
         if(gel != null) {
-            Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().openTopComponent(gel,GelViewerTopComponent.class);
+            Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().openTopComponentFor(gel,GelViewerTopComponent.class);
         }
     }
 

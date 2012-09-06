@@ -310,8 +310,7 @@ public class ProteomicProject implements IProteomicProject {
             activeProject = null;
         }
         //instanceContent.remove(this);
-        Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().
-                closeTopComponentsFor(this);
+        Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().closeTopComponentsFor(this);
         if (lock != null && lock.exists()) {
             lock.delete();
         }

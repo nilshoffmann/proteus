@@ -33,7 +33,7 @@ public final class RemovePlate384Action implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent ev) {
-        Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().closeTopComponent(this.context);
+        Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().closeTopComponentsFor(this.context);
         this.context.getParent().remove384Plate(context);
     }
 }

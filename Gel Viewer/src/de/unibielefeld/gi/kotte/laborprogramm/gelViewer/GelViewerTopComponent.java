@@ -159,7 +159,6 @@ public final class GelViewerTopComponent extends TopComponent implements
                 ISpotGroup.class, getLookup());
         lookupListeners.add(sgsl);
         ic.add(new SpotGroupSelectionListener.SyncOnSpotGroupToken());
-        //ic.add(lookupListeners);
     }
 
     public void setGel(IGel gel) {
@@ -742,8 +741,8 @@ public final class GelViewerTopComponent extends TopComponent implements
     public void componentOpened() {
         result = Utilities.actionsGlobalContext().lookupResult(IGel.class);
         result.addLookupListener(this);
-        resultChanged(new LookupEvent(result));
         lookupListeners.register(Utilities.actionsGlobalContext());
+        resultChanged(new LookupEvent(result));
         lookupListeners.resultChanged(new LookupEvent(Utilities.actionsGlobalContext().lookupResult(ISpot.class)));
         lookupListeners.resultChanged(new LookupEvent(Utilities.actionsGlobalContext().lookupResult(ISpotGroup.class)));
         requestActive();
@@ -758,7 +757,7 @@ public final class GelViewerTopComponent extends TopComponent implements
         IGel gel = getLookup().lookup(IGel.class);
         if (gel != null) {
             Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().
-                    closeTopComponent(gel);
+                    closeTopComponentsFor(gel);
         }
     }
 

@@ -245,7 +245,7 @@ public final class Plate384ViewerTopComponent extends TopComponent implements Lo
         }
         IPlate384 plate = getLookup().lookup(IPlate384.class);
         if (plate != null) {
-            Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().closeTopComponent(plate);
+            Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().closeTopComponentsFor(plate);
 //            CentralLookup.getDefault().remove(plate);
         }
     }

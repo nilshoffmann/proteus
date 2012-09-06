@@ -14,6 +14,9 @@ import java.util.List;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup.Result;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.util.WeakListeners;
 
 /**
@@ -21,9 +24,10 @@ import org.openide.util.WeakListeners;
  *
  * @author kotte
  */
-public class ProjectChildNodeFactory extends ChildFactory<Object> implements PropertyChangeListener {
+public class ProjectChildNodeFactory extends ChildFactory<Object> implements PropertyChangeListener, LookupListener {
 
     private IProteomicProject ipp;
+    private Result<IProject> project;
 
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
@@ -34,10 +38,16 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> implements Pro
     public ProjectChildNodeFactory(IProteomicProject ipp) {
         this.ipp = ipp;
         ipp.addPropertyChangeListener(WeakListeners.propertyChange(this,ipp));
+        project = this.ipp.getLookup().lookupResult(IProject.class);
+        project.addLookupListener(this);
     }
 
     @Override
     protected boolean createKeys(List<Object> toPopulate) {
+        if(ipp.getLookup().lookup(IProject.class)==null) {
+            toPopulate.add(null);
+            return true;
+        }
         for (ILogicalGelGroup ilgg : ipp.getLookup().lookup(IProject.class).getGelGroups()) {
             if (Thread.interrupted()) {
                 return false;
@@ -70,7 +80,9 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> implements Pro
     protected Node createNodeForKey(Object key) {
         Object keyVal = key;
         Node node = Node.EMPTY;
-        if (keyVal instanceof ILogicalGelGroup) {
+        if (keyVal == null) {
+            return createWaitNode();
+        }else if (keyVal instanceof ILogicalGelGroup) {
             node = new LogicalGelGroupNode((ILogicalGelGroup) keyVal, ipp.getLookup());
         } else if (keyVal instanceof IPlate96) {
             node = new Plate96Node((IPlate96) keyVal, ipp.getLookup());
@@ -88,5 +100,12 @@ public class ProjectChildNodeFactory extends ChildFactory<Object> implements Pro
         }
         node.addPropertyChangeListener(WeakListeners.propertyChange(this,node));
         return node;
+    }
+
+    @Override
+    public void resultChanged(LookupEvent le) {
+        if(!project.allInstances().isEmpty()) {
+            refresh(true);
+        }
     }
 }

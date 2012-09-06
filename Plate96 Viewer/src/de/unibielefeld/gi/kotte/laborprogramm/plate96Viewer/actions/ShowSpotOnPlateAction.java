@@ -37,6 +37,6 @@ public final class ShowSpotOnPlateAction implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ev) {
         IPlate96 plate = context.getWell().getParent();
-        Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().openTopComponent(plate, Plate96ViewerTopComponent.class);
+        Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().openTopComponentFor(plate, Plate96ViewerTopComponent.class);
     }
 }

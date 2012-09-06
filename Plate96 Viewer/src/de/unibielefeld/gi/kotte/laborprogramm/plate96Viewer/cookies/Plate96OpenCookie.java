@@ -19,7 +19,7 @@ public class Plate96OpenCookie implements IPlate96OpenCookie{
     public void open() {
         IPlate96 plate = Utilities.actionsGlobalContext().lookup(IPlate96.class);
         if(plate != null) {
-            Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().openTopComponent(plate,Plate96ViewerTopComponent.class);
+            Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().openTopComponentFor(plate,Plate96ViewerTopComponent.class);
         }
     }
 

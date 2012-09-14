@@ -74,7 +74,7 @@ public class SpotGroupSelectionListener extends AbstractLookupResultListener<ISp
 //                ToolTipPainter tp = getContentProviderLookup().lookup(ToolTipPainter.class);
                     IGel gel = getContentProviderLookup().lookup(IGel.class);
                     //this is our own spot
-                    if (gel.equals(spot.getGel())) {
+                    if (gel!=null && gel.equals(spot.getGel())) {
 //                        System.out.println("Spot is on gel");
                         //let's find the one that belongs to us
                         if (ap != null) {

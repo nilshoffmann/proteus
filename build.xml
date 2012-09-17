@@ -4,7 +4,11 @@
 <!-- If you delete this file and reopen the project it will be recreated. -->
 <project name="ProteomikLaborprogamm" basedir=".">
     <description>Builds the module suite ProteomikLaborprogamm.</description>
+    <property name="parent.projectdir" value="${basedir}/.."/>
+    <property name="platform.parentdir" value="${parent.projectdir}"/>
+    <import file="${parent.projectdir}/nbproject/platform-defaults.xml"/>
     <import file="nbproject/build-impl.xml"/>
+    
 	<!-- additional task to fix dependencies for all modules at once -->
     <target name="fix-dependencies" depends="-init">
        <subant target="fix-dependencies" buildpath="${modules.sorted}" inheritrefs="false" inheritall="false"/>

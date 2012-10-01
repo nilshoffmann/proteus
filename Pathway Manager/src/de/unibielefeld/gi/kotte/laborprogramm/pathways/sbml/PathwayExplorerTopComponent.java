@@ -1,5 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathways.sbml;
 
+import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
 import javax.xml.stream.XMLStreamException;
@@ -61,11 +62,7 @@ public final class PathwayExplorerTopComponent extends TopComponent implements L
     }
     
     private void initPathwayDisplay(SBMLDocument document) {
-        frame.setVisible(false);
-        frame.removeAll();
-        frame.getContentPane().add(new PathwayDisplay(document));
-        frame.pack();
-        frame.setVisible(true);
+        add(new PathwayDisplay(document),BorderLayout.CENTER);
     }
 
     /**
@@ -76,33 +73,10 @@ public final class PathwayExplorerTopComponent extends TopComponent implements L
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        frame = new javax.swing.JFrame();
-
-        javax.swing.GroupLayout frameLayout = new javax.swing.GroupLayout(frame.getContentPane());
-        frame.getContentPane().setLayout(frameLayout);
-        frameLayout.setHorizontalGroup(
-            frameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        frameLayout.setVerticalGroup(
-            frameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JFrame frame;
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {

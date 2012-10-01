@@ -26,7 +26,7 @@ autostore = false)
 @TopComponent.Description(
     preferredID = "PathwayExplorerTopComponent",
 //iconBase="SET/PATH/TO/ICON/HERE", 
-persistenceType = TopComponent.PERSISTENCE_ALWAYS)
+persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "properties", openAtStartup = false)
 @ActionID(category = "Window", id = "de.unibielefeld.gi.kotte.laborprogramm.pathways.visualization.PathwayExplorerTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)

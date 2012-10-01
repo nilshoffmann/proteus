@@ -14,13 +14,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import org.openide.util.Exceptions;
 
 /**
  * TODO JAvaDocs
@@ -36,53 +39,93 @@ public class MetacycController {
      * null
      */
     public List<PGDB> getOrganisms() {
-        PtoolsXml organisms = getStuff(DATABASE_URL + "xmlquery?dbs");
-        if (organisms != null) {
-            return organisms.getMetadata().getPGDB();
+        List<PGDB> list = Collections.emptyList();
+        URI uri;
+        try {
+            uri = new URI("http", null, "biocyc.org", 80, "/xmlquery",
+                    "dbs", null);
+            PtoolsXml organisms = getStuff(uri);
+            if (organisms != null) {
+                return organisms.getMetadata().getPGDB();
+            }
+        } catch (URISyntaxException ex) {
+            Exceptions.printStackTrace(ex);
         }
-        return new ArrayList<PGDB>();
+        return list;
     }
 
     public List<Pathway> getPathwaysForOrganism(String organismID) {
-        List<Pathway> list = new ArrayList<Pathway>();
-        PtoolsXml pathways = getStuff(DATABASE_URL + "xmlquery?[x:x<-" + organismID + "^^pathways]");
-        List<Object> children = pathways.getCompoundOrGOTermOrGene();
-        if (children != null) {
-            for (Object obj : children) {
-                if (obj instanceof Pathway) {
-                    list.add((Pathway) obj);
+        List<Pathway> list = Collections.emptyList();
+        URI uri;
+        try {
+            uri = new URI("http", null, "biocyc.org", 80, "/xmlquery", "[x:x<-" + organismID + "^^pathways]", null);
+            PtoolsXml pathways = getStuff(uri);
+            List<Object> children = pathways.getCompoundOrGOTermOrGene();
+            if (children != null) {
+                //FIXME eventuell children.size() weg
+                list = new ArrayList<Pathway>(children.size());
+                for (Object obj : children) {
+                    if (obj instanceof Pathway) {
+                        list.add((Pathway) obj);
+                    }
                 }
             }
+        } catch (URISyntaxException ex) {
+            Exceptions.printStackTrace(ex);
         }
         return list;
     }
 
     public List<Protein> getEnzymesForPathway(String organismID, String pathwayID) {
-        List<Protein> list = new ArrayList<Protein>();
-        PtoolsXml enzymes = getStuff(DATABASE_URL + "xmlquery?[x:y:=" + organismID + '~' + pathwayID + ",x<-(enzymes-of-pathway y)]");
-        List<Object> children = enzymes.getCompoundOrGOTermOrGene();
-        if (children != null) {
-            for (Object obj : children) {
-                if (obj instanceof Enzyme) {
-                    Protein protein = ((Enzyme) obj).getProtein();
-                    list.add(protein);
+        List<Protein> list = Collections.emptyList();
+        URI uri;
+        try {
+            uri = new URI("http", null, "biocyc.org", 80, "/xmlquery", "[x:y:=" + organismID + '~' + pathwayID + ",x<-(enzymes-of-pathway y)]", null);
+            PtoolsXml enzymes = getStuff(uri);
+            List<Object> children = enzymes.getCompoundOrGOTermOrGene();
+            if (children != null) {
+                //FIXME eventuell children.size() weg
+                list = new ArrayList<Protein>(children.size());
+                for (Object obj : children) {
+                    if (obj instanceof Protein) {
+                        System.out.println("Found Protein:");
+                        Protein protein = ((Protein) obj);
+                        System.out.println(protein);
+                        list.add(protein);
+                    } else if (obj instanceof Enzyme) {
+                        System.out.println("Found Enzyme:");
+                        Protein protein = ((Enzyme) obj).getProtein();
+                        System.out.println(protein);
+                        list.add(protein);
+                    }  
                 }
             }
+        } catch (URISyntaxException ex) {
+            Exceptions.printStackTrace(ex);
         }
         return list;
     }
 
-    public List<Compound> getCopoundsForPathway(String organismID, String pathwayID) {
-        List<Compound> list = new ArrayList<Compound>();
-        PtoolsXml compounds = getStuff(DATABASE_URL + "xmlquery?[x:y:=" + organismID + '~' + pathwayID + ",x<-(compounds-of-pathway y)]");
-        List<Object> children = compounds.getCompoundOrGOTermOrGene();
-        if (children != null) {
-            for (Object obj : children) {
-                if (obj instanceof Compound) {
-                    list.add((Compound) obj);
+    public List<Compound> getCompoundsForPathway(String organismID, String pathwayID) {
+        List<Compound> list = Collections.emptyList();
+        URI uri;
+        try {
+            uri = new URI("http", null, "biocyc.org", 80, "/xmlquery", "[x:y:=" + organismID + '~' + pathwayID + ",x<-(compounds-of-pathway y)]", null);
+            PtoolsXml compounds = getStuff(uri);
+            List<Object> children = compounds.getCompoundOrGOTermOrGene();
+            if (children != null) {
+                //FIXME eventuell children.size() weg
+                list = new ArrayList<Compound>(children.size());
+                for (Object obj : children) {
+                    if (obj instanceof Compound) {
+                        list.add((Compound) obj);
+                    }
                 }
             }
+        } catch (URISyntaxException ex) {
+            Exceptions.printStackTrace(ex);
         }
+
         return list;
     }
 
@@ -90,15 +133,14 @@ public class MetacycController {
 //        PtoolsXml entity = getStuff(DATABASE_URL + "getxml?" + id);
 //        return entity;
 //    }
-
-    private PtoolsXml getStuff(String address) {
-        PtoolsXml stuff = null;
+    private PtoolsXml getStuff(URI uri) {
         try {
+            String request = uri.toASCIIString();
+            System.out.println("Database query with address: " + request);
             File tmpFile = File.createTempFile("biocycquery", ".xml");
             JAXBContext jc = JAXBContext.newInstance("de.unibielefeld.gi.omicsTools.biocyc.ptools");
             Unmarshaller u = jc.createUnmarshaller();
-            URL url = new URL(address);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) uri.toURL().openConnection();
             //String encoding = new sun.misc.BASE64Encoder().encode("username assword".getBytes());
             //conn.setRequestProperty("Authorization", "Basic " + encoding);
             conn.setRequestMethod("GET");
@@ -116,12 +158,12 @@ public class MetacycController {
             reader.close();
             bw.flush();
             bw.close();
-            stuff = (PtoolsXml) u.unmarshal(tmpFile);
+            return (PtoolsXml) u.unmarshal(tmpFile);
         } catch (IOException ex) {
             ex.printStackTrace();
         } catch (JAXBException ex) {
             ex.printStackTrace();
         }
-        return stuff;
+        return null;
     }
 }

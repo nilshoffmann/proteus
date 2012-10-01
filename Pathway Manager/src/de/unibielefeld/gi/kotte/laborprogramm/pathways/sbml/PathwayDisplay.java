@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import org.sbml.jsbml.Compartment;
 import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Reaction;
@@ -27,6 +28,7 @@ import prefuse.action.assignment.DataSizeAction;
 import prefuse.action.assignment.FontAction;
 import prefuse.action.layout.Layout;
 import prefuse.action.layout.graph.ForceDirectedLayout;
+import prefuse.action.layout.graph.FruchtermanReingoldLayout;
 import prefuse.activity.Activity;
 import prefuse.controls.ControlAdapter;
 import prefuse.controls.NeighborHighlightControl;
@@ -118,11 +120,14 @@ public class PathwayDisplay extends Display {
         visual.add(new RepaintAction());
         m_vis.putAction("visual", visual);
         // now create the main layout routine
-        ActionList layout = new ActionList(Activity.INFINITY);
+//        ActionList layout = new ActionList(Activity.INFINITY);
+        ActionList layout = new ActionList();
         layout.add(colors);
         layout.add(text);
-        Layout frl = new ForceDirectedLayout("graph", false);
-        layout.add(frl);
+        FruchtermanReingoldLayout frl = new FruchtermanReingoldLayout("graph");
+        frl.setMaxIterations(2000);
+        Layout l = frl;//new ForceDirectedLayout("graph", false);
+        layout.add(l);
 //        layout.add(new AggregateLayout("aggregates"));
         layout.add(new RepaintAction());
         m_vis.putAction("layout", layout);
@@ -140,6 +145,9 @@ public class PathwayDisplay extends Display {
         m_vis.run("layout");
         m_vis.runAfter("layout", "visual");
         m_vis.runAfter("visual", "text");
+        ToolTipManager.sharedInstance().setInitialDelay(250);
+        ToolTipManager.sharedInstance().setDismissDelay(5000);
+        ToolTipManager.sharedInstance().setReshowDelay(0);
     }
 
     private void initDataGroups(SBMLDocument document) {
@@ -162,7 +170,7 @@ public class PathwayDisplay extends Display {
             Node speciesNode = g.addNode();
             speciesNodes.put(species, speciesNode);
             nodesSpecies.put(speciesNode, species);
-            speciesNode.setString("name", species.getId());
+            speciesNode.setString("name", species.getName());
             speciesNode.setInt("id", speciesNr++);
             speciesNode.setInt("compartment", compartmentIdMap.get(species.getCompartmentInstance()));
             speciesNode.setInt("inDegree", 1);
@@ -176,7 +184,7 @@ public class PathwayDisplay extends Display {
         System.out.println("Found " + listOfReactions.size() + " reactions.");
         for (Reaction r : listOfReactions) {
             Node reactionNode = g.addNode();
-            reactionNode.setString("name", r.getId());
+            reactionNode.setString("name", r.getName());
             reactionNode.setInt("compartment", 0);
             ListOf<SpeciesReference> listOfReactants = r.getListOfReactants();
             reactionNode.setInt("inDegree", listOfReactants.size());
@@ -222,17 +230,17 @@ public class PathwayDisplay extends Display {
                 //species node
                 node.setShape(Constants.SHAPE_ELLIPSE);
                 //exclude hubs
-                if (node.getInt("degree") >= 11) {
-                    node.setVisible(false);
-                }
+//                if (node.getInt("degree") >= 11) {
+//                    node.setVisible(false);
+//                }
             } else {
                 // reaction node
                 node.setShape(Constants.SHAPE_RECTANGLE);
                 node.setFillColor(ColorLib.getColor(0, 255, 0, 64).getRGB());
                 //exclude hubs
-                if (node.getInt("degree") >= 7) {
-                    node.setVisible(false);
-                }
+//                if (node.getInt("degree") >= 7) {
+//                    node.setVisible(false);
+//                }
             }
         }
     }
@@ -370,9 +378,12 @@ class AggregateDragControl extends ControlAdapter {
         Display d = (Display) e.getSource();
         d.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         activeItem = item;
+        
+        d.setToolTipText("<html>"+item.getString("name")+"</html>");
         if (!(item instanceof AggregateItem)) {
             setFixed(item, true);
         }
+        
     }
 
     /**
@@ -387,6 +398,7 @@ class AggregateDragControl extends ControlAdapter {
         }
         Display d = (Display) e.getSource();
         d.setCursor(Cursor.getDefaultCursor());
+        d.setToolTipText(null);
     }
 
     /**

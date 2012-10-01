@@ -367,8 +367,9 @@ public final class PathwayOverviewTopComponent extends TopComponent {
 //            if (document != null) {
 //                Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().openTopComponentFor(document,PathwayExplorerTopComponent.class);
             PathwayExplorerTopComponent petc = new PathwayExplorerTopComponent();
-            petc.openFile(jfc.getSelectedFile());
             petc.open();
+            petc.requestActive();
+            petc.openFile(jfc.getSelectedFile());
 //            } else {
 //                "SBMLReader konnte die ausgewählte Datei nicht einlesen."
 //            }

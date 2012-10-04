@@ -137,6 +137,7 @@ public class MetacycController {
         try {
             String request = uri.toASCIIString();
             System.out.println("Database query with address: " + request);
+            System.out.println("Cache dir is at "+System.getProperty("DEFAULT_CACHEDIR_ROOT"));
             File tmpFile = File.createTempFile("biocycquery", ".xml");
             JAXBContext jc = JAXBContext.newInstance("de.unibielefeld.gi.omicsTools.biocyc.ptools");
             Unmarshaller u = jc.createUnmarshaller();

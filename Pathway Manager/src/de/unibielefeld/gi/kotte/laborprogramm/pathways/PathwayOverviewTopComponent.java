@@ -124,16 +124,12 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                 setBackground(list.getBackground());
                 setForeground(list.getForeground());
             }
-            List<Object> content = pgdb.getSpecies().getContent();
-            if (content.size() != 1) {
-                System.err.println("Species list entry with not exactly one species: " + content);
-            }
-            String text = (String) content.iterator().next();
+            String species = (String) pgdb.getSpecies().getContent().iterator().next();
             Strain strain = pgdb.getStrain();
             if (strain != null) {
-                text += ' ' + strain.getContent();
+                species += ' ' + strain.getContent();
             }
-            setText(text);
+            setText(species);
             return this;
         }
     }
@@ -150,25 +146,8 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                 setBackground(list.getBackground());
                 setForeground(list.getForeground());
             }
-            StringBuilder sb = new StringBuilder();
-            sb.append("<html>");
-            boolean empty = true;
-            for (Object obj : pw.getCitationOrCommentOrCommonName()) {
-                if (obj instanceof CommonName) {
-                    CommonName name = (CommonName) obj;
-                    setText("<html>" + name.getContent() + "</html>");
-                    sb.append(name.getContent());
-                } else if (obj instanceof Synonym) {
-                    Synonym synonym = (Synonym) obj;
-                    sb.append(synonym.getContent());
-                }
-                if (!empty) {
-                    sb.append("<br>");
-                }
-                empty = false;
-            }
-            sb.append("</html>");
-            setToolTipText(sb.toString());
+            setText(getPathwayName(pw));
+            setToolTipText(getToolTip(pw.getCitationOrCommentOrCommonName()));
             return this;
         }
     }
@@ -185,12 +164,8 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                 setBackground(list.getBackground());
                 setForeground(list.getForeground());
             }
-            for (Object obj : prot.getCatalyzes().getEnzymaticReaction().iterator().next().getCitationOrCofactorOrComment()) {
-                if (obj instanceof CommonName) {
-                    setText("<html>" + ((CommonName) obj).getContent() + "</html>");
-                    break;
-                }
-            }
+            setText(getProteinName(prot));
+            setToolTipText(getToolTip(prot.getCatalyzes().getEnzymaticReaction().iterator().next().getCitationOrCofactorOrComment()));
             return this;
         }
     }
@@ -207,18 +182,8 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                 setBackground(list.getBackground());
                 setForeground(list.getForeground());
             }
-            setText("<html>" + cmp.getFrameid() + "</html>");
-            try {
-                List<Object> l = cmp.getAbbrevNameOrAppearsInLeftSideOfOrAppearsInRightSideOf();
-                for (Object obj : l) {
-                    if (obj instanceof CommonName) {
-                        setText("<html>" + ((CommonName) obj).getContent() + "</html>");
-                    }
-                }
-
-            } catch (Exception ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            setText(getCompoundName(cmp));
+            setToolTipText(getToolTip(cmp.getAbbrevNameOrAppearsInLeftSideOfOrAppearsInRightSideOf()));
             return this;
         }
     }
@@ -477,6 +442,14 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                     ph.start();
                     ph.progress("Querying database");
                     List<Protein> proteins = mc.getEnzymesForPathway(pathway.getOrgid(), pathway.getFrameid());
+                    Collections.sort(proteins, new Comparator<Protein>() {
+                        @Override
+                        public int compare(Protein o1, Protein o2) {
+                            String name1 = getProteinName(o1);
+                            String name2 = getProteinName(o2);
+                            return name1.compareTo(name2);
+                        }
+                    });
                     enzymesList.setListData(proteins.toArray());
                 } finally {
                     ph.finish();
@@ -496,6 +469,14 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                     ph.start();
                     ph.progress("Querying database");
                     List<Compound> compounds = mc.getCompoundsForPathway(pathway.getOrgid(), pathway.getFrameid());
+                    Collections.sort(compounds, new Comparator<Compound>() {
+                        @Override
+                        public int compare(Compound o1, Compound o2) {
+                            String name1 = getCompoundName(o1);
+                            String name2 = getCompoundName(o2);
+                            return name1.compareTo(name2);
+                        }
+                    });
                     compoundsList.setListData(compounds.toArray());
                 } finally {
                     ph.finish();
@@ -559,14 +540,53 @@ public final class PathwayOverviewTopComponent extends TopComponent {
     }
 
     String getPathwayName(Pathway pw) {
-        StringBuilder sb = new StringBuilder();
         for (Object obj : pw.getCitationOrCommentOrCommonName()) {
             if (obj instanceof CommonName) {
-                CommonName name = (CommonName) obj;
-                sb.append(name.getContent());
-                break;
+                return (new StringBuilder("<html>")).append(((CommonName) obj).getContent()).append("</html>").toString();
             }
         }
-        return sb.toString();
+        return pw.getFrameid();
+    }
+
+    String getProteinName(Protein prot) {
+        for (Object obj : prot.getCatalyzes().getEnzymaticReaction().iterator().next().getCitationOrCofactorOrComment()) {
+            if (obj instanceof CommonName) {
+                return (new StringBuilder("<html>")).append(((CommonName) obj).getContent()).append("</html>").toString();
+            }
+        }
+        return prot.getFrameid();
+    }
+
+    String getCompoundName(Compound cmp) {
+        for (Object obj : cmp.getAbbrevNameOrAppearsInLeftSideOfOrAppearsInRightSideOf()) {
+            if (obj instanceof CommonName) {
+                return (new StringBuilder("<html>")).append(((CommonName) obj).getContent()).append("</html>").toString();
+            }
+        }
+        return cmp.getFrameid();
+    }
+
+    String getToolTip(List<Object> l) {
+        StringBuilder tooltip = new StringBuilder("<html>");
+        boolean empty = true;
+        try {
+            for (Object obj : l) {
+                if (obj instanceof CommonName) {
+                    CommonName name = (CommonName) obj;
+                    tooltip.append(name.getContent());
+                } else if (obj instanceof Synonym) {
+                    Synonym synonym = (Synonym) obj;
+                    tooltip.append(synonym.getContent());
+                }
+                if (!empty) {
+                    tooltip.append("<br>");
+                }
+                empty = false;
+            }
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        tooltip.append("</html>");
+        return tooltip.toString();
     }
 }

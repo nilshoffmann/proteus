@@ -397,7 +397,9 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                         }
                     });
                     organismList.setListData(organisms.toArray());
-                } finally {
+                } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+        } finally {
                     ph.finish();
                 }
             }
@@ -424,7 +426,9 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                         }
                     });
                     pathwaysList.setListData(pathways.toArray());
-                } finally {
+                } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+        } finally {
                     ph.finish();
                 }
             }
@@ -451,7 +455,9 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                         }
                     });
                     enzymesList.setListData(proteins.toArray());
-                } finally {
+                } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+        } finally {
                     ph.finish();
                 }
             }
@@ -478,7 +484,9 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                         }
                     });
                     compoundsList.setListData(compounds.toArray());
-                } finally {
+                } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+        } finally {
                     ph.finish();
                 }
             }

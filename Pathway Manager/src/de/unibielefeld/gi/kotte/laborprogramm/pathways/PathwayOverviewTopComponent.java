@@ -8,14 +8,10 @@ import de.unibielefeld.gi.omicsTools.biocyc.ptools.Pathway;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.Protein;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.Strain;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.Synonym;
-import java.awt.Component;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JFileChooser;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.netbeans.api.progress.ProgressHandle;
@@ -55,18 +51,25 @@ public final class PathwayOverviewTopComponent extends TopComponent {
     PGDB organism = null;
     Pathway pathway = null;
     MetacycController mc = new MetacycController();
+    TypedListModel<PGDB> organismListModel = new TypedListModel<PGDB>();
+    TypedListModel<Pathway> pathwaysListModel = new TypedListModel<Pathway>();
+    TypedListModel<Protein> enzymesListModel = new TypedListModel<Protein>();
+    TypedListModel<Compound> compoundsListModel = new TypedListModel<Compound>();
 
     public PathwayOverviewTopComponent() {
         initComponents();
         organismList.addListSelectionListener(new OrganismListListener());
         organismList.setCellRenderer(new PGDBCellRenderer());
+        organismList.setModel(organismListModel);
         pathwaysList.addListSelectionListener(new PathwayListListener());
         pathwaysList.setCellRenderer(new PathwayCellRenderer());
+        pathwaysList.setModel(pathwaysListModel);
         enzymesList.setCellRenderer(new ProteinCellRenderer());
+        enzymesList.setModel(enzymesListModel);
         compoundsList.setCellRenderer(new CompoundCellRenderer());
+        compoundsList.setModel(compoundsListModel);
         setName(Bundle.CTL_PathwayOverviewTopComponent());
         setToolTipText(Bundle.HINT_PathwayOverviewTopComponent());
-
     }
 
     class OrganismListListener implements ListSelectionListener {
@@ -109,82 +112,6 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                 enzymesButton.setEnabled(false);
                 compoundsButton.setEnabled(false);
             }
-        }
-    }
-
-    class PGDBCellRenderer extends DefaultListCellRenderer implements ListCellRenderer {
-
-        @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            PGDB pgdb = (PGDB) value;
-            if (isSelected) {
-                setBackground(list.getSelectionBackground());
-                setForeground(list.getSelectionForeground());
-            } else {
-                setBackground(list.getBackground());
-                setForeground(list.getForeground());
-            }
-            String species = (String) pgdb.getSpecies().getContent().iterator().next();
-            Strain strain = pgdb.getStrain();
-            if (strain != null) {
-                species += ' ' + strain.getContent();
-            }
-            setText(species);
-            return this;
-        }
-    }
-
-    class PathwayCellRenderer extends DefaultListCellRenderer implements ListCellRenderer {
-
-        @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            Pathway pw = (Pathway) value;
-            if (isSelected) {
-                setBackground(list.getSelectionBackground());
-                setForeground(list.getSelectionForeground());
-            } else {
-                setBackground(list.getBackground());
-                setForeground(list.getForeground());
-            }
-            setText(getPathwayName(pw));
-            setToolTipText(getToolTip(pw.getCitationOrCommentOrCommonName()));
-            return this;
-        }
-    }
-
-    class ProteinCellRenderer extends DefaultListCellRenderer implements ListCellRenderer {
-
-        @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            Protein prot = (Protein) value;
-            if (isSelected) {
-                setBackground(list.getSelectionBackground());
-                setForeground(list.getSelectionForeground());
-            } else {
-                setBackground(list.getBackground());
-                setForeground(list.getForeground());
-            }
-            setText(getProteinName(prot));
-            setToolTipText(getToolTip(prot.getCatalyzes().getEnzymaticReaction().iterator().next().getCitationOrCofactorOrComment()));
-            return this;
-        }
-    }
-
-    class CompoundCellRenderer extends DefaultListCellRenderer implements ListCellRenderer {
-
-        @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            Compound cmp = (Compound) value;
-            if (isSelected) {
-                setBackground(list.getSelectionBackground());
-                setForeground(list.getSelectionForeground());
-            } else {
-                setBackground(list.getBackground());
-                setForeground(list.getForeground());
-            }
-            setText(getCompoundName(cmp));
-            setToolTipText(getToolTip(cmp.getAbbrevNameOrAppearsInLeftSideOfOrAppearsInRightSideOf()));
-            return this;
         }
     }
 
@@ -386,8 +313,10 @@ public final class PathwayOverviewTopComponent extends TopComponent {
             public void run() {
                 try {
                     ph.start();
+                    organismList.setVisible(false);
                     ph.progress("Querying database");
                     List<PGDB> organisms = mc.getOrganisms();
+                    ph.progress("Sorting results");
                     Collections.sort(organisms, new Comparator<PGDB>() {
                         @Override
                         public int compare(PGDB o1, PGDB o2) {
@@ -396,7 +325,9 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                             return name1.compareTo(name2);
                         }
                     });
-                    organismList.setListData(organisms.toArray());
+                    ph.progress("Adding results to the list");
+                    organismListModel.setList(organisms);
+                    organismList.setVisible(true);
                 } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
         } finally {
@@ -415,8 +346,10 @@ public final class PathwayOverviewTopComponent extends TopComponent {
             public void run() {
                 try {
                     ph.start();
+                    pathwaysList.setVisible(false);
                     ph.progress("Querying database");
                     List<Pathway> pathways = mc.getPathwaysForOrganism(organism.getOrgid());
+                    ph.progress("Sorting results");
                     Collections.sort(pathways, new Comparator<Pathway>() {
                         @Override
                         public int compare(Pathway o1, Pathway o2) {
@@ -425,7 +358,9 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                             return name1.compareTo(name2);
                         }
                     });
-                    pathwaysList.setListData(pathways.toArray());
+                    ph.progress("Adding results to the list");
+                    pathwaysListModel.setList(pathways);
+                    pathwaysList.setVisible(true);
                 } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
         } finally {
@@ -444,8 +379,10 @@ public final class PathwayOverviewTopComponent extends TopComponent {
             public void run() {
                 try {
                     ph.start();
+                    enzymesList.setVisible(false);
                     ph.progress("Querying database");
                     List<Protein> proteins = mc.getEnzymesForPathway(pathway.getOrgid(), pathway.getFrameid());
+                    ph.progress("Sorting results");
                     Collections.sort(proteins, new Comparator<Protein>() {
                         @Override
                         public int compare(Protein o1, Protein o2) {
@@ -454,7 +391,9 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                             return name1.compareTo(name2);
                         }
                     });
-                    enzymesList.setListData(proteins.toArray());
+                    ph.progress("Adding results to the list");
+                    enzymesListModel.setList(proteins);
+                    enzymesList.setVisible(true);
                 } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
         } finally {
@@ -473,8 +412,10 @@ public final class PathwayOverviewTopComponent extends TopComponent {
             public void run() {
                 try {
                     ph.start();
+                    compoundsList.setVisible(false);
                     ph.progress("Querying database");
                     List<Compound> compounds = mc.getCompoundsForPathway(pathway.getOrgid(), pathway.getFrameid());
+                    ph.progress("Sorting results");
                     Collections.sort(compounds, new Comparator<Compound>() {
                         @Override
                         public int compare(Compound o1, Compound o2) {
@@ -483,7 +424,9 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                             return name1.compareTo(name2);
                         }
                     });
-                    compoundsList.setListData(compounds.toArray());
+                    ph.progress("Adding results to the list");
+                    compoundsListModel.setList(compounds);
+                    compoundsList.setVisible(true);
                 } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
         } finally {
@@ -538,7 +481,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
         // TODO read your settings according to their version
     }
 
-    String getSpeciesName(PGDB pgdb) {
+    static String getSpeciesName(PGDB pgdb) {
         StringBuilder builder = new StringBuilder((String) pgdb.getSpecies().getContent().iterator().next());
         Strain strain = pgdb.getStrain();
         if (strain != null) {
@@ -547,7 +490,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
         return builder.toString();
     }
 
-    String getPathwayName(Pathway pw) {
+    static String getPathwayName(Pathway pw) {
         for (Object obj : pw.getCitationOrCommentOrCommonName()) {
             if (obj instanceof CommonName) {
                 return (new StringBuilder("<html>")).append(((CommonName) obj).getContent()).append("</html>").toString();
@@ -556,7 +499,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
         return pw.getFrameid();
     }
 
-    String getProteinName(Protein prot) {
+    static String getProteinName(Protein prot) {
         for (Object obj : prot.getCatalyzes().getEnzymaticReaction().iterator().next().getCitationOrCofactorOrComment()) {
             if (obj instanceof CommonName) {
                 return (new StringBuilder("<html>")).append(((CommonName) obj).getContent()).append("</html>").toString();
@@ -565,7 +508,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
         return prot.getFrameid();
     }
 
-    String getCompoundName(Compound cmp) {
+    static String getCompoundName(Compound cmp) {
         for (Object obj : cmp.getAbbrevNameOrAppearsInLeftSideOfOrAppearsInRightSideOf()) {
             if (obj instanceof CommonName) {
                 return (new StringBuilder("<html>")).append(((CommonName) obj).getContent()).append("</html>").toString();
@@ -574,7 +517,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
         return cmp.getFrameid();
     }
 
-    String getToolTip(List<Object> l) {
+    static String getToolTip(List<Object> l) {
         StringBuilder tooltip = new StringBuilder("<html>");
         boolean empty = true;
         try {

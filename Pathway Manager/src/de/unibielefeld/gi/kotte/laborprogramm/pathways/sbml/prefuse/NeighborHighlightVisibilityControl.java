@@ -1,7 +1,9 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathways.sbml.prefuse;
 
+import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import java.util.Iterator;
+import prefuse.Display;
 import prefuse.controls.ControlAdapter;
 
 import prefuse.visual.EdgeItem;
@@ -23,6 +25,7 @@ import prefuse.visual.VisualItem;
 public class NeighborHighlightVisibilityControl extends ControlAdapter {
 
     private String activity = null;
+    private VisualItem activeItem = null;
     private boolean highlightWithInvisibleEdge = false;
     private boolean changeVisibility = true;
     
@@ -46,17 +49,74 @@ public class NeighborHighlightVisibilityControl extends ControlAdapter {
      * @see prefuse.controls.Control#itemEntered(prefuse.visual.VisualItem, java.awt.event.MouseEvent)
      */
     public void itemEntered(VisualItem item, MouseEvent e) {
-        if ( item instanceof NodeItem )
-            setNeighborHighlight((NodeItem)item, true);
+        Display d = (Display) e.getSource();
+        d.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        d.setToolTipText("<html>Name: " + item.getString("name") + "<br>Type: " + item.getString("type") + "<br>Compartment: " + item.getString("compartment_name") + "<br>Degree: " + item.getInt("degree") + "</html>");
+//        if (!(item instanceof AggregateItem)) {
+//            setFixed(item, true);
+//        }
+        item.setHover(true);
+
+        if ( activity != null )
+            d.getVisualization().run(activity);
+//        if ( item instanceof NodeItem)
+//            setNeighborHighlight((NodeItem)item, true);
     }
     
     /**
      * @see prefuse.controls.Control#itemExited(prefuse.visual.VisualItem, java.awt.event.MouseEvent)
      */
     public void itemExited(VisualItem item, MouseEvent e) {
-        if ( item instanceof NodeItem )
-            setNeighborHighlight((NodeItem)item, false);
+        Display d = (Display) e.getSource();
+        d.setCursor(Cursor.getDefaultCursor());
+        d.setToolTipText(null);
+
+        item.setHover(false);
+        
+        if ( activity != null )
+            d.getVisualization().run(activity);
+//        if ( item instanceof NodeItem )
+//            setNeighborHighlight((NodeItem)item, false);
     }
+
+    @Override
+    public void itemPressed(VisualItem item, MouseEvent me) {
+        System.out.println("Received: "+item);
+//        if(item != activeItem) {
+//            
+//        }
+//        
+//        if(activeItem!=null && activeItem != item) {
+//            if(activeItem instanceof NodeItem) {
+//                ((NodeItem)item).setFixed(false);
+//                setNeighborHighlight((NodeItem)item, false);
+//            }
+//        }
+//        activeItem = item;
+//        activeItem.setFixed(true);
+        if ( item instanceof NodeItem ) {
+            NodeItem ni = (NodeItem)item;
+//            if(ni.isInteractive()) {
+//               ni.setInteractive(false); 
+//            }else{
+//               ni.setInteractive(true); 
+//            }
+            if(ni.isHighlighted()) {
+                setNeighborHighlight(ni, false);
+            }else{
+                setNeighborHighlight(ni, true);
+            }
+        }
+    }
+
+    @Override
+    public void itemReleased(VisualItem item, MouseEvent me) {
+//        if ( item instanceof NodeItem) {
+//            setNeighborHighlight((NodeItem)item, false);
+//        }
+    }
+    
+    
     
     /**
      * Set the highlighted state of the neighbors of a node.
@@ -70,8 +130,18 @@ public class NeighborHighlightVisibilityControl extends ControlAdapter {
             EdgeItem eitem = (EdgeItem)iter.next();
             NodeItem nitem = eitem.getAdjacentItem(n);
             if (eitem.isVisible() || highlightWithInvisibleEdge) {
-                eitem.setHighlighted(state);
-                nitem.setHighlighted(state);
+                Iterator neighIter = nitem.edges();
+                boolean changeVisibility = true;
+                while(neighIter.hasNext()) {
+                    EdgeItem neitem = (EdgeItem)neighIter.next();
+                    if(neitem!=eitem && neitem.isHighlighted()) {
+                        changeVisibility = false;
+                    }
+                }
+                if(changeVisibility) {
+                    eitem.setHighlighted(state);
+                    nitem.setHighlighted(state);
+                }
             }
         }
         if ( activity != null )

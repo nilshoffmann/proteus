@@ -3,21 +3,24 @@ package de.unibielefeld.gi.kotte.laborprogramm.pathways.sbml;
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
+import javax.swing.SwingUtilities;
 import javax.xml.stream.XMLStreamException;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
-import org.openide.awt.ActionReference;
 import org.openide.util.Exceptions;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.RequestProcessor;
 import org.openide.windows.TopComponent;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.xml.stax.SBMLReader;
 
 /**
  * Top component which displays pathways represented as SBML documents.
- * 
+ *
  * @author kotte
  */
 @ConvertAsProperties(
@@ -37,31 +40,69 @@ preferredID = "PathwayExplorerTopComponent")
     "CTL_PathwayExplorerTopComponent=Pathway Explorer",
     "HINT_PathwayExplorerTopComponent=This is a Pathway Explorer Window"
 })
-public final class PathwayExplorerTopComponent extends TopComponent implements LookupListener{
+public final class PathwayExplorerTopComponent extends TopComponent implements LookupListener {
+
+    private boolean initialized = false;
 
     public PathwayExplorerTopComponent() {
         initComponents();
         setName(Bundle.CTL_PathwayExplorerTopComponent());
         setToolTipText(Bundle.HINT_PathwayExplorerTopComponent());
     }
-    
-    public void openFile(File file) {
-        SBMLReader reader = new SBMLReader();
-        SBMLDocument document = null;
-        try {
-            document = reader.readSBML(file);
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (XMLStreamException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        if (document != null) {
-            initPathwayDisplay(document);
+
+    public void openFile(final File file) {
+        if (!initialized) {
+            final ProgressHandle ph = ProgressHandleFactory.createHandle("Loading SBML File");
+            RequestProcessor rp = new RequestProcessor(PathwayExplorerTopComponent.class);
+            rp.post(new SBMLDocumentLoader(file, ph));
+        }else {
+            throw new IllegalStateException("Pathway Explorer was already initialized with an SBML File!");
         }
     }
-    
-    private void initPathwayDisplay(SBMLDocument document) {
-        add(new PathwayDisplay(document),BorderLayout.CENTER);
+
+    final class SBMLDocumentLoader implements Runnable {
+
+        final File file;
+        final ProgressHandle handle;
+
+        public SBMLDocumentLoader(File file, ProgressHandle handle) {
+            this.file = file;
+            this.handle = handle;
+        }
+
+        @Override
+        public void run() {
+            try {
+                handle.start();
+                handle.progress("Loading SBML File " + file.getName());
+                SBMLReader reader = new SBMLReader();
+                SBMLDocument document = null;
+                document = reader.readSBML(file);
+                handle.progress("Creating Pathway Network Display");
+                initPathwayDisplay(file, document, new PathwayDisplay(document));
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (XMLStreamException ex) {
+                Exceptions.printStackTrace(ex);
+            } finally {
+                handle.finish();
+            }
+        }
+    }
+
+    private void initPathwayDisplay(final File file, final SBMLDocument document, final PathwayDisplay display) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                setDisplayName("Pathway Explorer of "+file.getName());
+                setToolTipText("Model Id: "+document.getSBMLDocument().getModel().getId());
+                open();
+                add(display, BorderLayout.CENTER);
+                requestActive();
+                initialized = true;
+            }
+        });
+
     }
 
     /**

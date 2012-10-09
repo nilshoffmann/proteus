@@ -177,7 +177,7 @@ public class PathwayDisplay extends Display {
         int[] nodeCompartmentPalette = getColorPalette(compartments.size() + 1, 0.05f);
         int[] nodeCompartmentHighlightPalette = getColorPalette(compartments.size() + 1, 0.25f);
         int[] nodeVisiblePalette = getColorPalette(compartments.size() + 1, 0.1f);
-        int[] nodeFixedPalette = getColorPalette(compartments.size() + 1, 0.66f);
+        int[] nodeFixedPalette = getColorPalette(compartments.size() + 1, 0.5f);
         int[] nodeHighlightPalette = getColorPalette(compartments.size() + 1, 0.75f);
         int[] nodeHoverPalette = getColorPalette(compartments.size() + 1, 1.0f);
         int[] edgePalette = new int[]{
@@ -193,21 +193,21 @@ public class PathwayDisplay extends Display {
 //                Constants.NOMINAL, VisualItem.FILLCOLOR, nodeCompartmentHighlightPalette));
 
         DataColorAction nodeFill = new DataColorAction("graph.nodes", "compartment", Constants.NOMINAL, VisualItem.FILLCOLOR, nodeVisiblePalette);
-        nodeFill.add(VisualItem.FIXED, new DataColorAction("graph.nodes", "compartment", Constants.NOMINAL, VisualItem.FILLCOLOR, nodeFixedPalette));
         nodeFill.add(VisualItem.HOVER, new DataColorAction("graph.nodes", "compartment", Constants.NOMINAL, VisualItem.FILLCOLOR, nodeHoverPalette));
         nodeFill.add(VisualItem.HIGHLIGHT, new DataColorAction("graph.nodes", "compartment", Constants.NOMINAL, VisualItem.FILLCOLOR, nodeHighlightPalette));
+        nodeFill.add(VisualItem.FIXED, new DataColorAction("graph.nodes", "compartment", Constants.NOMINAL, VisualItem.FILLCOLOR, nodeFixedPalette));
 
         DataColorAction nodeStroke = new DataColorAction("graph.nodes", "compartment", Constants.NOMINAL, VisualItem.STROKECOLOR, nodeVisiblePalette);
-        nodeFill.add(VisualItem.FIXED, new DataColorAction("graph.nodes", "compartment", Constants.NOMINAL, VisualItem.STROKECOLOR, getDarkerColorPalette(nodeFixedPalette)));
         nodeStroke.add(VisualItem.HOVER, new DataColorAction("graph.nodes", "compartment", Constants.NOMINAL, VisualItem.STROKECOLOR, getDarkerColorPalette(nodeHoverPalette)));
         nodeStroke.add(VisualItem.HIGHLIGHT, new DataColorAction("graph.nodes", "compartment", Constants.NOMINAL, VisualItem.STROKECOLOR, getDarkerColorPalette(nodeHighlightPalette)));
+        nodeStroke.add(VisualItem.FIXED, new DataColorAction("graph.nodes", "compartment", Constants.NOMINAL, VisualItem.STROKECOLOR, getDarkerColorPalette(nodeFixedPalette)));
 
         ColorAction edgeFill = new ColorAction("graph.edges", VisualItem.FILLCOLOR, edgePalette[0]);
-        edgeFill.add(VisualItem.FIXED, new ColorAction("graph.edges", VisualItem.FILLCOLOR, edgePalette[0]));
         edgeFill.add(VisualItem.HIGHLIGHT, new ColorAction("graph.edges", VisualItem.FILLCOLOR, edgePalette[1]));
+        edgeFill.add(VisualItem.FIXED, new ColorAction("graph.edges", VisualItem.FILLCOLOR, edgePalette[0]));
         ColorAction edgeStroke = new ColorAction("graph.edges", VisualItem.STROKECOLOR, edgePalette[0]);
-        edgeStroke.add(VisualItem.FIXED, new ColorAction("graph.edges", VisualItem.STROKECOLOR, edgePalette[0]));
         edgeStroke.add(VisualItem.HIGHLIGHT, new ColorAction("graph.edges", VisualItem.STROKECOLOR, edgePalette[1]));
+        edgeStroke.add(VisualItem.FIXED, new ColorAction("graph.edges", VisualItem.STROKECOLOR, edgePalette[0]));
 
         // bundle the color actions
         ActionList colors = new ActionList();
@@ -316,7 +316,7 @@ public class PathwayDisplay extends Display {
         pan(250, 250);
         setHighQuality(true);
 //        addControlListener(new FocusControl(1));
-        addControlListener(new AggregateDragControl());
+//        addControlListener(new AggregateDragControl());
         addControlListener(new ZoomControl());
         addControlListener(new PanControl());
         addControlListener(new WheelZoomControl());
@@ -634,9 +634,9 @@ class AggregateDragControl extends ControlAdapter {
         d.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         activeItem = item;
         d.setToolTipText("<html>Name: " + item.getString("name") + "<br>Type: " + item.getString("type") + "<br>Compartment: " + item.getString("compartment_name") + "<br>Degree: " + item.getInt("degree") + "</html>");
-        if (!(item instanceof AggregateItem)) {
-            setFixed(item, true);
-        }
+//        if (!(item instanceof AggregateItem)) {
+//            setFixed(item, true);
+//        }
 
         d.getVisualization().run("visual");
     }
@@ -646,10 +646,10 @@ class AggregateDragControl extends ControlAdapter {
      * java.awt.event.MouseEvent)
      */
     public void itemExited(VisualItem item, MouseEvent e) {
-        if (activeItem == item) {
-            activeItem = null;
-            setFixed(item, false);
-        }
+//        if (activeItem == item) {
+//            activeItem = null;
+//            setFixed(item, false);
+//        }
         Display d = (Display) e.getSource();
         d.setCursor(Cursor.getDefaultCursor());
         d.setToolTipText(null);
@@ -668,9 +668,10 @@ class AggregateDragControl extends ControlAdapter {
         dragged = false;
         Display d = (Display) e.getComponent();
         d.getAbsoluteCoordinate(e.getPoint(), down);
-        if (item instanceof AggregateItem) {
-            setFixed(item, true);
+        if (activeItem!=null) {// instanceof AggregateItem) {
+            setFixed(activeItem, false);
         }
+        setFixed(item, true);
 
         d.getVisualization().run("visual");
     }

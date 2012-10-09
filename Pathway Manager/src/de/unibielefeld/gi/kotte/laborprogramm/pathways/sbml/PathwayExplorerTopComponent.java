@@ -29,7 +29,6 @@ autostore = false)
 persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "properties", openAtStartup = false)
 @ActionID(category = "Window", id = "de.unibielefeld.gi.kotte.laborprogramm.pathways.visualization.PathwayExplorerTopComponent")
-@ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(
     displayName = "#CTL_PathwayExplorerAction",
 preferredID = "PathwayExplorerTopComponent")

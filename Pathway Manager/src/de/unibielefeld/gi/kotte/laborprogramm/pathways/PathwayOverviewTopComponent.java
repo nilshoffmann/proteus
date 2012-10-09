@@ -520,23 +520,27 @@ public final class PathwayOverviewTopComponent extends TopComponent {
     static String getToolTip(List<Object> l) {
         StringBuilder tooltip = new StringBuilder("<html>");
         boolean empty = true;
-        try {
+//        try {
             for (Object obj : l) {
                 if (obj instanceof CommonName) {
+                    if (!empty) {
+                        tooltip.append("<br>");
+                    }
                     CommonName name = (CommonName) obj;
                     tooltip.append(name.getContent());
+                    empty = false;
                 } else if (obj instanceof Synonym) {
+                    if (!empty) {
+                        tooltip.append("<br>");
+                    }
                     Synonym synonym = (Synonym) obj;
                     tooltip.append(synonym.getContent());
+                    empty = false;
                 }
-                if (!empty) {
-                    tooltip.append("<br>");
-                }
-                empty = false;
             }
-        } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
-        }
+//        } catch (Exception ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
         tooltip.append("</html>");
         return tooltip.toString();
     }

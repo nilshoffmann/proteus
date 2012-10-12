@@ -284,22 +284,8 @@ public final class PathwayOverviewTopComponent extends TopComponent {
         JFileChooser jfc = fcb.createFileChooser();
         int status = jfc.showOpenDialog(this);
         if (status == JFileChooser.APPROVE_OPTION) {
-//            SBMLReader reader = new SBMLReader();
-//            SBMLDocument document = null;
-//            try {
-//                document = reader.readSBML(jfc.getSelectedFile());
-//            } catch (IOException ex) {
-//                Exceptions.printStackTrace(ex);
-//            } catch (XMLStreamException ex) {
-//                Exceptions.printStackTrace(ex);
-//            }
-//            if (document != null) {
-//                Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().openTopComponentFor(document,PathwayExplorerTopComponent.class);
             PathwayExplorerTopComponent petc = new PathwayExplorerTopComponent();
             petc.openFile(jfc.getSelectedFile());
-//            } else {
-//                "SBMLReader konnte die ausgewählte Datei nicht einlesen."
-//            }
         }
     }//GEN-LAST:event_sbmlButtonActionPerformed
 

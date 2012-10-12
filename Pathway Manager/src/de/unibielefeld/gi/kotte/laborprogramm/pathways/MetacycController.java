@@ -6,30 +6,27 @@ import de.unibielefeld.gi.omicsTools.biocyc.ptools.PGDB;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.Pathway;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.Protein;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.PtoolsXml;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.prefs.Preferences;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import org.openide.awt.UndoRedo;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -231,15 +228,29 @@ public class MetacycController {
                     if (split.length != 2) {
                         throw new IllegalArgumentException("Properties file in unsuitable format. Check tabs.");
                     }
-                    if (split[0].equals(request)) {
-                        //if we find the file we looked for in the system we are done.
+                    if (split[0].equals(request)) { //we found the file we looked for in the system
                         System.out.println("Request string found in properties file! Name: " + split[1]);
                         File parentFolder = FileUtil.toFile(FileUtil.getConfigFile("proteus"));
-                        return new File(parentFolder, split[1]);
+                        File f = new File(parentFolder, split[1]);
+                        if (Preferences.userRoot().getBoolean("check cache age", false)) { //we are supposed to check for age
+                            int max_age_days = Preferences.userRoot().getInt("cache time to live", 14);
+                            long lastModified = f.lastModified();
+                            Date date = new Date();
+                            long currentTime = date.getTime();
+                            if ((lastModified + max_age_days * 86400000) < currentTime) { //the file is outdated
+                                System.out.println("Deleting outdated cache file " + f.getName());
+                                f.delete();
+                                break;
+                            } else { //the file is valid
+                                return f;
+                            }
+                        } else { //no need to check age
+                            return f;
+                        }
                     }
                 }
             }
-            System.out.println("Request not found in properties file.");
+            System.out.println("Request not found in properties file (or outdated cache file).");
             //create a new entry in the properties file
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(propFO.getOutputStream()));
             //first, write all old entries again, because propFO.getOutputStream() overrides

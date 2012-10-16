@@ -72,6 +72,7 @@ import prefuse.visual.AggregateTable;
 import prefuse.visual.VisualGraph;
 import prefuse.visual.VisualItem;
 
+
 /**
  * The frame that displays the prefuse graph of a pathway.
  *
@@ -144,10 +145,12 @@ public class PathwayDisplay extends Display {
         }
         return brighterPalette;
     }
+    private final PathwayController pathwayController;
 
-    public PathwayDisplay(SBMLDocument document) {
+    public PathwayDisplay(SBMLDocument document, PathwayController pathwayController) {
         //get a display
         super(new Visualization());
+        this.pathwayController = pathwayController;
         //get data from SBML document
         List<Compartment> compartments = initDataGroups(document);
         int nodes = m_vis.getGroup("graph.nodes").getTupleCount();
@@ -237,23 +240,25 @@ public class PathwayDisplay extends Display {
         // search listener can access it.
         final TupleSet focus = m_vis.getFocusGroup(Visualization.FOCUS_ITEMS);
         // create the search query binding
-        SearchQueryBinding searchQ = new SearchQueryBinding(vg.getNodes(), "name");
-        ListQueryBinding searchCompQ = new ListQueryBinding(vg.getNodes(), "compartment_name");
-        AndPredicate filter = new AndPredicate(searchQ.getPredicate());
-        filter.add(searchCompQ.getPredicate());
-        final SearchTupleSet search = searchQ.getSearchSet();
+        SearchQueryBinding nameSearchQB = new SearchQueryBinding(vg.getNodes(), "name");
+        ListQueryBinding pathwayListQB = new ListQueryBinding(vg.getNodes(), "pathway_name");
+        ListQueryBinding compatmentListQB = new ListQueryBinding(vg.getNodes(), "compartment_name");
+        AndPredicate filter = new AndPredicate(nameSearchQB.getPredicate());
+        filter.add(compatmentListQB.getPredicate());
+        filter.add(pathwayListQB.getPredicate());
+        final SearchTupleSet search = nameSearchQB.getSearchSet();
 
         ActionList update = new ActionList();
         HighlightFilter hfilter = new HighlightFilter("graph.nodes", filter);
         update.add(hfilter);
-        
+
         UpdateListener lstnr = new UpdateListener() {
             public void update(Object src) {
                 m_vis.run("visual");
             }
         };
         filter.addExpressionListener(lstnr);
-        
+
         // create the listener that collects search results into a focus set
         search.addTupleSetListener(new TupleSetListener() {
             public void tupleSetChanged(TupleSet t, Tuple[] add, Tuple[] rem) {
@@ -279,18 +284,19 @@ public class PathwayDisplay extends Display {
         });
         m_vis.addFocusGroup(Visualization.SEARCH_ITEMS, search);
 
-        
-        
-        // create and parameterize a search panel for searching on zip code
-        final JSearchPanel searcher = searchQ.createSearchPanel();
-        searcher.setLabelText("name>"); // the search box label
+
+
+        // create and parameterize a search panel for searching
+        final JSearchPanel nameSearcher = nameSearchQB.createSearchPanel();
+        nameSearcher.setLabelText("name>"); // the search box label
         setLayout(new BorderLayout());
         Box searchBox = new Box(BoxLayout.X_AXIS);
         searchBox.add(Box.createHorizontalStrut(5));
-        searchBox.add(searcher);
+        searchBox.add(nameSearcher);
         searchBox.add(Box.createHorizontalGlue());
         searchBox.add(Box.createHorizontalStrut(5));
-        searchBox.add(searchCompQ.createComboBox());
+        searchBox.add(compatmentListQB.createComboBox());
+        searchBox.add(pathwayListQB.createComboBox());
         searchBox.add(Box.createHorizontalStrut(16));
         add(searchBox, BorderLayout.SOUTH); // add the search box as a sub-component of the display
 
@@ -341,6 +347,8 @@ public class PathwayDisplay extends Display {
         g.addColumn("id", int.class);
         g.addColumn("compartment", int.class);
         g.addColumn("compartment_name", String.class);
+        g.addColumn("pathway_name", String.class);
+        g.addColumn("pathway_id", String.class);
         g.addColumn("type", String.class);
         g.addColumn("inDegree", int.class);
         g.addColumn("outDegree", int.class);
@@ -367,16 +375,18 @@ public class PathwayDisplay extends Display {
             nodesSpecies.put(speciesNode, species);
             speciesNode.setString("name", species.getName());
             speciesNode.setInt("id", speciesNr++);
+            speciesNode.setString("pathway_name", pathwayController.getPathwayName(species));
+            speciesNode.setString("pathway_id", pathwayController.getPathwayId(species));
             Compartment comp = species.getCompartmentInstance();
-            if(comp != null) {
+            if (comp != null) {
                 int value = compartmentIdMap.get(species.getCompartmentInstance()).intValue();
                 speciesNode.setInt("compartment", value);
                 speciesNode.setString("compartment_name", species.getCompartmentInstance().getName());
-            }else{
+            } else {
                 speciesNode.setInt("compartment", compartmentIdMap.size());
                 speciesNode.setString("compartment_name", "undefined");
             }
-            
+
             speciesNode.setString("type", "species");
             speciesNode.setInt("inDegree", 1);
             speciesNode.setInt("outDegree", 1);
@@ -392,6 +402,8 @@ public class PathwayDisplay extends Display {
         for (Reaction r : listOfReactions) {
             Node reactionNode = g.addNode();
             reactionNode.setString("name", r.getName());
+            reactionNode.setString("pathway_name", pathwayController.getPathwayName(r));
+            reactionNode.setString("pathway_id", pathwayController.getPathwayId(r));
             Compartment comp = r.getCompartmentInstance();
             if (comp != null) {
                 int value = compartmentIdMap.get(comp).intValue();
@@ -493,7 +505,7 @@ public class PathwayDisplay extends Display {
         m_vis.setValue("graph.edges", null, VisualItem.INTERACTIVE, Boolean.FALSE);
         VisualItem f = (VisualItem) vg.getNode(0);
         Iterator iter = m_vis.getVisualGroup("graph").tuples();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             System.out.println(iter.next());
         }
 //        m_vis.getGroup(Visualization.FOCUS_ITEMS).setTuple(f);
@@ -510,7 +522,6 @@ public class PathwayDisplay extends Display {
         return idMap;
     }
 }
-
 /**
  * Layout algorithm that computes a convex hull surrounding aggregate items and
  * saves it in the "_polygon" field.
@@ -668,7 +679,7 @@ class AggregateDragControl extends ControlAdapter {
         dragged = false;
         Display d = (Display) e.getComponent();
         d.getAbsoluteCoordinate(e.getPoint(), down);
-        if (activeItem!=null) {// instanceof AggregateItem) {
+        if (activeItem != null) {// instanceof AggregateItem) {
             setFixed(activeItem, false);
         }
         setFixed(item, true);

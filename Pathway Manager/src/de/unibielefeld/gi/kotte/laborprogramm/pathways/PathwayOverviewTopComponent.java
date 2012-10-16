@@ -1,5 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathways;
 
+import de.unibielefeld.gi.kotte.laborprogramm.pathways.sbml.PathwayController;
 import de.unibielefeld.gi.kotte.laborprogramm.pathways.sbml.PathwayExplorerTopComponent;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.CommonName;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.Compound;
@@ -50,6 +51,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
 
     PGDB organism = null;
     Pathway pathway = null;
+    List<Pathway> pathways = Collections.EMPTY_LIST;
     MetacycController mc = new MetacycController();
     TypedListModel<PGDB> organismListModel = new TypedListModel<PGDB>();
     TypedListModel<Pathway> pathwaysListModel = new TypedListModel<Pathway>();
@@ -143,6 +145,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
         pathwayFixedLabel = new javax.swing.JLabel();
         organismLabel = new javax.swing.JLabel();
         pathwayLabel = new javax.swing.JLabel();
+        organismWarningLabel = new javax.swing.JLabel();
 
         org.openide.awt.Mnemonics.setLocalizedText(sbmlLabel, org.openide.util.NbBundle.getMessage(PathwayOverviewTopComponent.class, "PathwayOverviewTopComponent.sbmlLabel.text")); // NOI18N
 
@@ -206,6 +209,8 @@ public final class PathwayOverviewTopComponent extends TopComponent {
 
         org.openide.awt.Mnemonics.setLocalizedText(pathwayLabel, org.openide.util.NbBundle.getMessage(PathwayOverviewTopComponent.class, "PathwayOverviewTopComponent.pathwayLabel.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(organismWarningLabel, org.openide.util.NbBundle.getMessage(PathwayOverviewTopComponent.class, "PathwayOverviewTopComponent.organismWarningLabel.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -215,7 +220,10 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(sbmlLabel)
-                    .addComponent(sbmlButton)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(sbmlButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(organismWarningLabel))
                     .addComponent(metacycLabel)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -249,7 +257,9 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                 .addContainerGap()
                 .addComponent(sbmlLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sbmlButton)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sbmlButton)
+                    .addComponent(organismWarningLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(sbmlSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -286,6 +296,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
         if (status == JFileChooser.APPROVE_OPTION) {
             PathwayExplorerTopComponent petc = new PathwayExplorerTopComponent();
             petc.openFile(jfc.getSelectedFile());
+            petc.setPathwayController(new PathwayController(pathways));
         }
     }//GEN-LAST:event_sbmlButtonActionPerformed
 
@@ -313,8 +324,8 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                     organismListModel.setList(organisms);
                     organismList.setVisible(true);
                 } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
-        } finally {
+                    Exceptions.printStackTrace(ex);
+                } finally {
                     ph.finish();
                 }
             }
@@ -332,7 +343,8 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                     ph.start();
                     pathwaysList.setVisible(false);
                     ph.progress("Querying database");
-                    List<Pathway> pathways = mc.getPathwaysForOrganism(organism.getOrgid());
+//                    List<Pathway> pathways;
+                    pathways = mc.getPathwaysForOrganism(organism.getOrgid());
                     ph.progress("Sorting results");
                     Collections.sort(pathways, new Comparator<Pathway>() {
                         @Override
@@ -344,10 +356,11 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                     });
                     ph.progress("Adding results to the list");
                     pathwaysListModel.setList(pathways);
+                    organismWarningLabel.setText("");
                     pathwaysList.setVisible(true);
                 } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
-        } finally {
+                    Exceptions.printStackTrace(ex);
+                } finally {
                     ph.finish();
                 }
             }
@@ -379,8 +392,8 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                     enzymesListModel.setList(proteins);
                     enzymesList.setVisible(true);
                 } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
-        } finally {
+                    Exceptions.printStackTrace(ex);
+                } finally {
                     ph.finish();
                 }
             }
@@ -412,8 +425,8 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                     compoundsListModel.setList(compounds);
                     compoundsList.setVisible(true);
                 } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
-        } finally {
+                    Exceptions.printStackTrace(ex);
+                } finally {
                     ph.finish();
                 }
             }
@@ -433,6 +446,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
     private javax.swing.JLabel organismFixedLabel;
     private javax.swing.JLabel organismLabel;
     private javax.swing.JList organismList;
+    private javax.swing.JLabel organismWarningLabel;
     private javax.swing.JButton organismsButton;
     private javax.swing.JLabel pathwayFixedLabel;
     private javax.swing.JLabel pathwayLabel;
@@ -505,23 +519,23 @@ public final class PathwayOverviewTopComponent extends TopComponent {
         StringBuilder tooltip = new StringBuilder("<html>");
         boolean empty = true;
 //        try {
-            for (Object obj : l) {
-                if (obj instanceof CommonName) {
-                    if (!empty) {
-                        tooltip.append("<br>");
-                    }
-                    CommonName name = (CommonName) obj;
-                    tooltip.append(name.getContent());
-                    empty = false;
-                } else if (obj instanceof Synonym) {
-                    if (!empty) {
-                        tooltip.append("<br>");
-                    }
-                    Synonym synonym = (Synonym) obj;
-                    tooltip.append(synonym.getContent());
-                    empty = false;
+        for (Object obj : l) {
+            if (obj instanceof CommonName) {
+                if (!empty) {
+                    tooltip.append("<br>");
                 }
+                CommonName name = (CommonName) obj;
+                tooltip.append(name.getContent());
+                empty = false;
+            } else if (obj instanceof Synonym) {
+                if (!empty) {
+                    tooltip.append("<br>");
+                }
+                Synonym synonym = (Synonym) obj;
+                tooltip.append(synonym.getContent());
+                empty = false;
             }
+        }
 //        } catch (Exception ex) {
 //            Exceptions.printStackTrace(ex);
 //        }

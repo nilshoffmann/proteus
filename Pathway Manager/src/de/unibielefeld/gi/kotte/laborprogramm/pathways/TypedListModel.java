@@ -44,4 +44,8 @@ public class TypedListModel<T> implements ListModel {
             l.contentsChanged(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0, model.size()-1));
         }
     }
+    
+    public List<T> getList() {
+        return model;
+    }
 }

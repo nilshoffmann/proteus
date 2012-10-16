@@ -43,6 +43,7 @@ preferredID = "PathwayExplorerTopComponent")
 public final class PathwayExplorerTopComponent extends TopComponent implements LookupListener {
 
     private boolean initialized = false;
+    private PathwayController pathwayController;
 
     public PathwayExplorerTopComponent() {
         initComponents();
@@ -58,6 +59,10 @@ public final class PathwayExplorerTopComponent extends TopComponent implements L
         }else {
             throw new IllegalStateException("Pathway Explorer was already initialized with an SBML File!");
         }
+    }
+
+    public void setPathwayController(PathwayController pathwayController) {
+        this.pathwayController = pathwayController;
     }
 
     final class SBMLDocumentLoader implements Runnable {
@@ -79,7 +84,7 @@ public final class PathwayExplorerTopComponent extends TopComponent implements L
                 SBMLDocument document = null;
                 document = reader.readSBML(file);
                 handle.progress("Creating Pathway Network Display");
-                initPathwayDisplay(file, document, new PathwayDisplay(document));
+                initPathwayDisplay(file, document, new PathwayDisplay(document, pathwayController));
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             } catch (XMLStreamException ex) {

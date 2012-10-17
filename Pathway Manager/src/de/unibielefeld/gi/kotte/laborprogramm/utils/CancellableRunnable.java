@@ -18,7 +18,7 @@ public abstract class CancellableRunnable implements Runnable, Cancellable {
         this.handle = handle;
     }
 
-    abstract void body();
+    public abstract void body();
 
     @Override
     public void run() {

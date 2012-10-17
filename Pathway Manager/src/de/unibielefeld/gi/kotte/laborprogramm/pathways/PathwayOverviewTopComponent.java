@@ -306,7 +306,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
     private void organismsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_organismsButtonActionPerformed
         CancellableRunnable cr = new CancellableRunnable() {
             @Override
-            void body() {
+            public void body() {
                 organismList.setVisible(false);
                 this.handle.progress("Querying database");
                 List<PGDB> organisms = mc.getOrganisms();
@@ -334,7 +334,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
     private void pathwaysButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pathwaysButtonActionPerformed
         CancellableRunnable cr = new CancellableRunnable() {
             @Override
-            void body() {
+            public void body() {
                 pathwaysList.setVisible(false);
                 this.handle.progress("Querying database");
 //                    List<Pathway> pathways;
@@ -364,7 +364,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
     private void enzymesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enzymesButtonActionPerformed
         CancellableRunnable cr = new CancellableRunnable() {
             @Override
-            void body() {
+            public void body() {
                 enzymesList.setVisible(false);
                 this.handle.progress("Querying database");
                 List<Protein> proteins = mc.getEnzymesForPathway(pathway.getOrgid(), pathway.getFrameid());
@@ -392,7 +392,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
     private void compoundsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compoundsButtonActionPerformed
         CancellableRunnable cr = new CancellableRunnable() {
             @Override
-            void body() {
+            public void body() {
                 compoundsList.setVisible(false);
                 this.handle.progress("Querying database");
                 List<Compound> compounds = mc.getCompoundsForPathway(pathway.getOrgid(), pathway.getFrameid());

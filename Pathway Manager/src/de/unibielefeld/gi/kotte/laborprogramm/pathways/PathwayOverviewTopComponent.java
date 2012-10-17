@@ -2,6 +2,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.pathways;
 
 import de.unibielefeld.gi.kotte.laborprogramm.pathways.sbml.PathwayController;
 import de.unibielefeld.gi.kotte.laborprogramm.pathways.sbml.PathwayExplorerTopComponent;
+import de.unibielefeld.gi.kotte.laborprogramm.utils.CancellableRunnable;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.CommonName;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.Compound;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.PGDB;
@@ -12,6 +13,7 @@ import de.unibielefeld.gi.omicsTools.biocyc.ptools.Synonym;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import javax.print.CancelablePrintJob;
 import javax.swing.JFileChooser;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -21,6 +23,7 @@ import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.filesystems.FileChooserBuilder;
+import org.openide.util.Cancellable;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
@@ -301,137 +304,117 @@ public final class PathwayOverviewTopComponent extends TopComponent {
     }//GEN-LAST:event_sbmlButtonActionPerformed
 
     private void organismsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_organismsButtonActionPerformed
-        final ProgressHandle ph = ProgressHandleFactory.createHandle("Fetching organism list");
-        RequestProcessor rp = new RequestProcessor(PathwayOverviewTopComponent.class);
-        Runnable r = new Runnable() {
+        CancellableRunnable cr = new CancellableRunnable() {
             @Override
-            public void run() {
-                try {
-                    ph.start();
-                    organismList.setVisible(false);
-                    ph.progress("Querying database");
-                    List<PGDB> organisms = mc.getOrganisms();
-                    ph.progress("Sorting results");
-                    Collections.sort(organisms, new Comparator<PGDB>() {
-                        @Override
-                        public int compare(PGDB o1, PGDB o2) {
-                            String name1 = getSpeciesName(o1);
-                            String name2 = getSpeciesName(o2);
-                            return name1.compareTo(name2);
-                        }
-                    });
-                    ph.progress("Adding results to the list");
-                    organismListModel.setList(organisms);
-                    organismList.setVisible(true);
-                } catch (Exception ex) {
-                    Exceptions.printStackTrace(ex);
-                } finally {
-                    ph.finish();
-                }
+            void body() {
+                organismList.setVisible(false);
+                this.handle.progress("Querying database");
+                List<PGDB> organisms = mc.getOrganisms();
+                this.handle.progress("Sorting results");
+                Collections.sort(organisms, new Comparator<PGDB>() {
+                    @Override
+                    public int compare(PGDB o1, PGDB o2) {
+                        String name1 = getSpeciesName(o1);
+                        String name2 = getSpeciesName(o2);
+                        return name1.compareTo(name2);
+                    }
+                });
+                this.handle.progress("Adding results to the list");
+                organismListModel.setList(organisms);
+                organismList.setVisible(true);
             }
         };
-        rp.post(r);
+
+        final ProgressHandle ph = ProgressHandleFactory.createHandle("Fetching organism list", cr);
+        cr.setHandle(ph);
+        RequestProcessor rp = new RequestProcessor(PathwayOverviewTopComponent.class);
+        rp.post(cr);
     }//GEN-LAST:event_organismsButtonActionPerformed
 
     private void pathwaysButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pathwaysButtonActionPerformed
-        final ProgressHandle ph = ProgressHandleFactory.createHandle("Fetching pathway list");
-        RequestProcessor rp = new RequestProcessor(PathwayOverviewTopComponent.class);
-        Runnable r = new Runnable() {
+        CancellableRunnable cr = new CancellableRunnable() {
             @Override
-            public void run() {
-                try {
-                    ph.start();
-                    pathwaysList.setVisible(false);
-                    ph.progress("Querying database");
+            void body() {
+                pathwaysList.setVisible(false);
+                this.handle.progress("Querying database");
 //                    List<Pathway> pathways;
-                    pathways = mc.getPathwaysForOrganism(organism.getOrgid());
-                    ph.progress("Sorting results");
-                    Collections.sort(pathways, new Comparator<Pathway>() {
-                        @Override
-                        public int compare(Pathway o1, Pathway o2) {
-                            String name1 = getPathwayName(o1);
-                            String name2 = getPathwayName(o2);
-                            return name1.compareTo(name2);
-                        }
-                    });
-                    ph.progress("Adding results to the list");
-                    pathwaysListModel.setList(pathways);
-                    organismWarningLabel.setText("");
-                    pathwaysList.setVisible(true);
-                } catch (Exception ex) {
-                    Exceptions.printStackTrace(ex);
-                } finally {
-                    ph.finish();
-                }
+                pathways = mc.getPathwaysForOrganism(organism.getOrgid());
+                this.handle.progress("Sorting results");
+                Collections.sort(pathways, new Comparator<Pathway>() {
+                    @Override
+                    public int compare(Pathway o1, Pathway o2) {
+                        String name1 = getPathwayName(o1);
+                        String name2 = getPathwayName(o2);
+                        return name1.compareTo(name2);
+                    }
+                });
+                this.handle.progress("Adding results to the list");
+                pathwaysListModel.setList(pathways);
+                organismWarningLabel.setText("");
+                pathwaysList.setVisible(true);
             }
         };
-        rp.post(r);
+
+        final ProgressHandle ph = ProgressHandleFactory.createHandle("Fetching organism list", cr);
+        cr.setHandle(ph);
+        RequestProcessor rp = new RequestProcessor(PathwayOverviewTopComponent.class);
+        rp.post(cr);
     }//GEN-LAST:event_pathwaysButtonActionPerformed
 
     private void enzymesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enzymesButtonActionPerformed
-        final ProgressHandle ph = ProgressHandleFactory.createHandle("Fetching enzymes list");
-        RequestProcessor rp = new RequestProcessor(PathwayOverviewTopComponent.class);
-        Runnable r = new Runnable() {
+        CancellableRunnable cr = new CancellableRunnable() {
             @Override
-            public void run() {
-                try {
-                    ph.start();
-                    enzymesList.setVisible(false);
-                    ph.progress("Querying database");
-                    List<Protein> proteins = mc.getEnzymesForPathway(pathway.getOrgid(), pathway.getFrameid());
-                    ph.progress("Sorting results");
-                    Collections.sort(proteins, new Comparator<Protein>() {
-                        @Override
-                        public int compare(Protein o1, Protein o2) {
-                            String name1 = getProteinName(o1);
-                            String name2 = getProteinName(o2);
-                            return name1.compareTo(name2);
-                        }
-                    });
-                    ph.progress("Adding results to the list");
-                    enzymesListModel.setList(proteins);
-                    enzymesList.setVisible(true);
-                } catch (Exception ex) {
-                    Exceptions.printStackTrace(ex);
-                } finally {
-                    ph.finish();
-                }
+            void body() {
+                enzymesList.setVisible(false);
+                this.handle.progress("Querying database");
+                List<Protein> proteins = mc.getEnzymesForPathway(pathway.getOrgid(), pathway.getFrameid());
+                this.handle.progress("Sorting results");
+                Collections.sort(proteins, new Comparator<Protein>() {
+                    @Override
+                    public int compare(Protein o1, Protein o2) {
+                        String name1 = getProteinName(o1);
+                        String name2 = getProteinName(o2);
+                        return name1.compareTo(name2);
+                    }
+                });
+                this.handle.progress("Adding results to the list");
+                enzymesListModel.setList(proteins);
+                enzymesList.setVisible(true);
             }
         };
-        rp.post(r);
+
+        final ProgressHandle ph = ProgressHandleFactory.createHandle("Fetching organism list", cr);
+        cr.setHandle(ph);
+        RequestProcessor rp = new RequestProcessor(PathwayOverviewTopComponent.class);
+        rp.post(cr);
     }//GEN-LAST:event_enzymesButtonActionPerformed
 
     private void compoundsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compoundsButtonActionPerformed
-        final ProgressHandle ph = ProgressHandleFactory.createHandle("Fetching compounds list");
-        RequestProcessor rp = new RequestProcessor(PathwayOverviewTopComponent.class);
-        Runnable r = new Runnable() {
+        CancellableRunnable cr = new CancellableRunnable() {
             @Override
-            public void run() {
-                try {
-                    ph.start();
-                    compoundsList.setVisible(false);
-                    ph.progress("Querying database");
-                    List<Compound> compounds = mc.getCompoundsForPathway(pathway.getOrgid(), pathway.getFrameid());
-                    ph.progress("Sorting results");
-                    Collections.sort(compounds, new Comparator<Compound>() {
-                        @Override
-                        public int compare(Compound o1, Compound o2) {
-                            String name1 = getCompoundName(o1);
-                            String name2 = getCompoundName(o2);
-                            return name1.compareTo(name2);
-                        }
-                    });
-                    ph.progress("Adding results to the list");
-                    compoundsListModel.setList(compounds);
-                    compoundsList.setVisible(true);
-                } catch (Exception ex) {
-                    Exceptions.printStackTrace(ex);
-                } finally {
-                    ph.finish();
-                }
+            void body() {
+                compoundsList.setVisible(false);
+                this.handle.progress("Querying database");
+                List<Compound> compounds = mc.getCompoundsForPathway(pathway.getOrgid(), pathway.getFrameid());
+                this.handle.progress("Sorting results");
+                Collections.sort(compounds, new Comparator<Compound>() {
+                    @Override
+                    public int compare(Compound o1, Compound o2) {
+                        String name1 = getCompoundName(o1);
+                        String name2 = getCompoundName(o2);
+                        return name1.compareTo(name2);
+                    }
+                });
+                this.handle.progress("Adding results to the list");
+                compoundsListModel.setList(compounds);
+                compoundsList.setVisible(true);
             }
         };
-        rp.post(r);
+
+        final ProgressHandle ph = ProgressHandleFactory.createHandle("Fetching organism list", cr);
+        cr.setHandle(ph);
+        RequestProcessor rp = new RequestProcessor(PathwayOverviewTopComponent.class);
+        rp.post(cr);
     }//GEN-LAST:event_compoundsButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton compoundsButton;

@@ -26,8 +26,7 @@ public class PathwayController {
         if (pathway != null) {
             for (Object obj : pathway.getCitationOrCommentOrCommonName()) {
                 if (obj instanceof CommonName) {
-                    CommonName commonName = (CommonName) obj;
-                    return commonName.getContent();
+                    return (new StringBuilder("<html>")).append(((CommonName) obj).getContent()).append("</html>").toString();
                 }
             }
         }
@@ -47,8 +46,7 @@ public class PathwayController {
         if (pathway != null) {
             for (Object obj : pathway.getCitationOrCommentOrCommonName()) {
                 if (obj instanceof CommonName) {
-                    CommonName commonName = (CommonName) obj;
-                    return commonName.getContent();
+                    return (new StringBuilder("<html>")).append(((CommonName) obj).getContent()).append("</html>").toString();
                 }
             }
         }

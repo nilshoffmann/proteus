@@ -6,6 +6,7 @@ import de.unibielefeld.gi.omicsTools.biocyc.ptools.PGDB;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.Pathway;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.Protein;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.PtoolsXml;
+import de.unibielefeld.gi.omicsTools.biocyc.ptools.Reaction;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -32,7 +33,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 
 /**
- * TODO JAvaDocs
+ * Regelt den Zugriff auf Metacyc Daten, stellt Funktionen für Datenbankanfragen zur Verfügung.
  *
  * @author kotte
  */
@@ -182,6 +183,41 @@ public class MetacycController {
             Exceptions.printStackTrace(ex);
         }
         return null;
+    }
+
+    public List<Protein> getEnzymesByECNumber(String organismID, String ecNumber) {
+        List<Protein> list = Collections.emptyList();
+        URI uri;
+        try {
+            uri = new URI("http", null, "biocyc.org", 80, "/xmlquery", "[x:x<-" + organismID + "^^reactions,x^ec-number=\"" + ecNumber + "\"]", null);
+            PtoolsXml enzymes = getStuff(uri);
+            List<Object> children = enzymes.getCompoundOrGOTermOrGene();
+            if (children != null) {
+                //FIXME eventuell children.size() weg
+                list = new ArrayList<Protein>(children.size());
+                for (Object obj : children) {
+                    if (obj instanceof Reaction) {
+                        Reaction rea = (Reaction) obj;
+                        for (Object obj2 : rea.getReactionList().getPathwayOrReaction()) {
+                            if (obj2 instanceof Protein) {
+                                System.out.println("Found Protein:");
+                                Protein protein = ((Protein) obj2);
+                                System.out.println(protein);
+                                list.add(protein);
+                            } else if (obj2 instanceof Enzyme) {
+                                System.out.println("Found Enzyme:");
+                                Protein protein = ((Enzyme) obj2).getProtein();
+                                System.out.println(protein);
+                                list.add(protein);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (URISyntaxException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return list;
     }
 
     /**

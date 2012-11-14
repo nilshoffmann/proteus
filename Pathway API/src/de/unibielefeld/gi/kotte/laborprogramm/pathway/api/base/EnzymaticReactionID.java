@@ -1,12 +1,13 @@
-package de.unibielefeld.gi.kotte.laborprogramm.pathway.api;
+package de.unibielefeld.gi.kotte.laborprogramm.pathway.api.base;
 
 /**
  * Defines the type of an ID String to identify a reaction.
  *
  * @author kotte
  */
-public enum ReactionID {
-    /*
+public enum EnzymaticReactionID {
+
+    /**
      * The corresponding ID String is an EC number.
      */
     EC,

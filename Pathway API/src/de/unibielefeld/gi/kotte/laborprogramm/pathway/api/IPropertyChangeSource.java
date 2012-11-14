@@ -7,6 +7,7 @@ import java.beans.PropertyChangeListener;
  * @author hoffmann
  */
 public interface IPropertyChangeSource {
+
     public void addPropertyChangeListener(PropertyChangeListener pcl);
 
     public void removePropertyChangeListener(PropertyChangeListener pcl);

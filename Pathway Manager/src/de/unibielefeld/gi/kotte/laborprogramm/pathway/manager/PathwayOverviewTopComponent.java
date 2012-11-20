@@ -1,7 +1,8 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.manager;
 
-import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.MetacycController;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.CancellableRunnable;
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.MetacycController;
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.TypedListModel;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.CommonName;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.Compound;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.PGDB;

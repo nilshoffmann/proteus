@@ -327,6 +327,8 @@ public class PathwayDisplay extends Display {
         ToolTipManager.sharedInstance().setDismissDelay(5000);
         ToolTipManager.sharedInstance().setReshowDelay(0);
     }
+    
+    VisualGraph vg;
 
     private List<Compartment> initDataGroups(SBMLDocument document) {
         //create graph
@@ -441,7 +443,7 @@ public class PathwayDisplay extends Display {
         }
 
         // add visual data groups
-        VisualGraph vg = m_vis.addGraph("graph", g);
+        vg = m_vis.addGraph("graph", g);
 //        m_vis.setInteractive("graph.edges", new VisiblePredicate(), false);
         m_vis.setValue("graph.nodes", null, VisualItem.SHAPE,
                 new Integer(Constants.SHAPE_ELLIPSE));
@@ -499,7 +501,10 @@ public class PathwayDisplay extends Display {
 //        m_vis.getGroup(Visualization.FOCUS_ITEMS).setTuple(f);
 //        f.setFixed(false);
         
-        //PATHWAY TABLE
+        return document.getModel().getListOfCompartments();
+    }
+
+    public void initPathways() {
         Table pathways = new Table();
         pathways.addColumn("pathwayID", String.class);
         pathways.addColumn("pathwayName", String.class);
@@ -510,11 +515,8 @@ public class PathwayDisplay extends Display {
             VisualItem vi = (VisualItem) it.next();
             //TODO put node into pathway table
         }
-        //end of pathway table
-        
-        return document.getModel().getListOfCompartments();
     }
-
+    
     private Map<Compartment, Integer> getCompartmentIdMap(ListOf<Compartment> compartments) {
         HashMap<Compartment, Integer> idMap = new HashMap<Compartment, Integer>();
         for (int i = 0; i < compartments.size(); i++) {

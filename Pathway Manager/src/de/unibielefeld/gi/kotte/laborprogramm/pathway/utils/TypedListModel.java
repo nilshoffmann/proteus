@@ -1,4 +1,4 @@
-package de.unibielefeld.gi.kotte.laborprogramm.pathway.manager;
+package de.unibielefeld.gi.kotte.laborprogramm.pathway.utils;
 
 import java.util.ArrayList;
 import java.util.Collections;

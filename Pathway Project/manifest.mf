@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: de.unibielefeld.gi.kotte.laborprogramm.pathway.project
+OpenIDE-Module-Localizing-Bundle: de/unibielefeld/gi/kotte/laborprogramm/pathway/project/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

@@ -8,11 +8,11 @@ import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
 @OptionsPanelController.SubRegistration(
-    location = "BioCyc",
-displayName = "#AdvancedOption_DisplayName_PathwayManagerCache",
-keywords = "#AdvancedOption_Keywords_PathwayManagerCache",
-keywordsCategory = "de-unibielefeld-gi-kotte-laborprogramm-pathways-options-BioCycWebServiceOptionsPanelController/PathwayManagerCache")
-@org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_PathwayManagerCache=Pathway Manager Cache", "AdvancedOption_Keywords_PathwayManagerCache=Pathways Database Cache MetaCyc BioCyc"})
+    location = "Database",
+displayName = "#AdvancedOption_DisplayName_PathwayManager",
+keywords = "#AdvancedOption_Keywords_PathwayManager",
+keywordsCategory = "Database/PathwayManager")
+@org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_PathwayManager=Pathway Manager", "AdvancedOption_Keywords_PathwayManager=BioCyc MetaCyc Pathway Settings Cache"})
 public final class PathwayManagerCacheOptionsPanelController extends OptionsPanelController {
 
     private PathwayManagerCachePanel panel;

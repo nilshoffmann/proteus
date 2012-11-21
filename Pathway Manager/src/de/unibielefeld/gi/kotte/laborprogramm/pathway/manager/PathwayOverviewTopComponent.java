@@ -411,7 +411,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
         // TODO read your settings according to their version
     }
 
-    static String getSpeciesName(PGDB pgdb) {
+    public static String getSpeciesName(PGDB pgdb) {
         StringBuilder builder = new StringBuilder((String) pgdb.getSpecies().getContent().iterator().next());
         Strain strain = pgdb.getStrain();
         if (strain != null) {
@@ -420,7 +420,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
         return builder.toString();
     }
 
-    static String getPathwayName(Pathway pw) {
+    public static String getPathwayName(Pathway pw) {
         for (Object obj : pw.getCitationOrCommentOrCommonName()) {
             if (obj instanceof CommonName) {
                 return (new StringBuilder("<html>")).append(((CommonName) obj).getContent()).append("</html>").toString();

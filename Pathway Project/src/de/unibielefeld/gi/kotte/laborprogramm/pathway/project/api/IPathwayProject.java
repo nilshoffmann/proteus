@@ -8,20 +8,21 @@ import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectState;
 
 /**
+ * Project Datatype to handle Pathway Data.
  *
  * @author kotte
  */
 public interface IPathwayProject extends Project, IPropertyChangeSource, PropertyChangeListener {
 
-    public void activate(URL url);
-
-    public void close();
-    
-    public void setProjectState(ProjectState ps);
-
-    public <T> void store(T... t);
-
-    public <T> Collection<T> retrieve(Class<T> c);
-
-    public void delete(Object... obj);
+//    public void activate(URL url);
+//
+//    public void close();
+//    
+//    public void setProjectState(ProjectState ps);
+//
+//    public <T> void store(T... t);
+//
+//    public <T> Collection<T> retrieve(Class<T> c);
+//
+//    public void delete(Object... obj);
 }

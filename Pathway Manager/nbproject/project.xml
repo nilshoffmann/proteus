@@ -109,6 +109,7 @@
                 </dependency>
             </module-dependencies>
             <public-packages>
+                <package>de.unibielefeld.gi.kotte.laborprogramm.pathway.sbml.viewconstructor</package>
                 <package>de.unibielefeld.gi.kotte.laborprogramm.pathway.utils</package>
             </public-packages>
             <class-path-extension>

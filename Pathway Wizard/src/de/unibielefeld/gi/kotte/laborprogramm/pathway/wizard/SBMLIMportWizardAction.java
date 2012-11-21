@@ -50,6 +50,7 @@ public final class SBMLIMportWizardAction implements ActionListener {
 //            IPathwayProjectFactory ippf = Lookup.getDefault().lookup(IPathwayProjectFactory.class);
 //            IPathwayProject ipp = ippf.createProject();
             //TODO add name, organism and sbml file to ipp.
+//            PathwayExplorerTopComponent petc = new PathwayExplorerTopComponent();
         }
     }
 }

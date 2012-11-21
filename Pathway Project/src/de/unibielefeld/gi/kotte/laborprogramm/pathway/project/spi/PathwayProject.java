@@ -1,7 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.project.spi;
 
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.project.api.IPathwayProject;
-import de.unibielefeld.gi.kotte.laborprogramm.topComponentRegistry.api.IRegistryFactory;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -38,6 +37,7 @@ import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 
 /**
+ * Default implementation of IPathwayProject.
  *
  * @author kotte
  */
@@ -70,34 +70,33 @@ public class PathwayProject implements IPathwayProject {
         pcs.firePropertyChange(pce);
     }
 
-    @Override
-    public synchronized <T> Collection<T> retrieve(Class<T> c) {
-        Collection<T> coll = getCrudSession().retrieve(c);
-        return coll;
-//        T t = coll.iterator().next();
-//        return t;
-    }
-
-    @Override
-    public <T> void store(T... t) {
-        getCrudSession().create(t);
-    }
-
-    @Override
-    public void delete(Object... obj) {
-        getCrudSession().delete(obj);
-    }
-
-    @Override
-    public void activate(final URL url) {
-        if (this.dblocation != null) {
-            Exceptions.printStackTrace(new IllegalStateException(
-                    "ProteomicProject already activated for " + this.dblocation));
-        } else {
-            this.dblocation = url;
-        }
-    }
-
+//    @Override
+//    public synchronized <T> Collection<T> retrieve(Class<T> c) {
+//        Collection<T> coll = getCrudSession().retrieve(c);
+//        return coll;
+////        T t = coll.iterator().next();
+////        return t;
+//    }
+//
+//    @Override
+//    public <T> void store(T... t) {
+//        getCrudSession().create(t);
+//    }
+//
+//    @Override
+//    public void delete(Object... obj) {
+//        getCrudSession().delete(obj);
+//    }
+//
+//    @Override
+//    public void activate(final URL url) {
+//        if (this.dblocation != null) {
+//            Exceptions.printStackTrace(new IllegalStateException(
+//                    "ProteomicProject already activated for " + this.dblocation));
+//        } else {
+//            this.dblocation = url;
+//        }
+//    }
     @Override
     public FileObject getProjectDirectory() {
         try {
@@ -162,18 +161,17 @@ public class PathwayProject implements IPathwayProject {
         return lookup;
     }
 
-    @Override
-    public void close() {
-        closeSession();
-    }
-
-    @Override
-    public void setProjectState(ProjectState ps) {
-        System.out.println("Set project state called");
-        instanceContent.remove(getLookup().lookup(ProjectState.class));
-        instanceContent.add(ps);
-    }
-
+//    @Override
+//    public void close() {
+//        closeSession();
+//    }
+//
+//    @Override
+//    public void setProjectState(ProjectState ps) {
+//        System.out.println("Set project state called");
+//        instanceContent.remove(getLookup().lookup(ProjectState.class));
+//        instanceContent.add(ps);
+//    }
     private synchronized void openSession() {
         getLookup();
         try {

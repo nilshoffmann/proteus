@@ -1,11 +1,10 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.project.api;
 
-import java.io.File;
-
 /**
+ * Factory for creating new Pathway Projects.
  *
  * @author kotte
  */
 public interface IPathwayProjectFactory {
-    public IPathwayProject createProject(File projdir);
+    public IPathwayProject createProject();
 }

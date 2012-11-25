@@ -17,6 +17,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import com.db4o.activation.ActivationPurpose;
+import com.db4o.activation.Activator;
+import com.db4o.ta.Activatable;
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.sbml.IPathwayMap;
+import java.util.UUID;
 import net.sf.maltcms.chromaui.db.api.ICrudProvider;
 import net.sf.maltcms.chromaui.db.api.ICrudProviderFactory;
 import net.sf.maltcms.chromaui.db.api.ICrudSession;
@@ -35,6 +40,7 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
+import org.sbml.jsbml.SBMLDocument;
 
 /**
  * Default implementation of IPathwayProject.
@@ -42,8 +48,61 @@ import org.openide.util.lookup.InstanceContent;
  * @author kotte
  */
 @org.openide.util.lookup.ServiceProvider(service = Project.class)
-public class PathwayProject implements IPathwayProject {
+public class PathwayProject implements IPathwayProject, Activatable {
 
+    /**
+     * PropertyChangeSupport ala JavaBeans(tm) Not persisted!
+     */
+    private transient PropertyChangeSupport pcs = null;
+
+    @Override
+    public synchronized void removePropertyChangeListener(
+            PropertyChangeListener listener) {
+        getPropertyChangeSupport().removePropertyChangeListener(listener);
+    }
+
+    @Override
+    public synchronized void addPropertyChangeListener(
+            PropertyChangeListener listener) {
+        getPropertyChangeSupport().addPropertyChangeListener(listener);
+    }
+
+    private PropertyChangeSupport getPropertyChangeSupport() {
+        if (this.pcs == null) {
+            this.pcs = new PropertyChangeSupport(this);
+        }
+        return this.pcs;
+    }
+    private transient Activator activator;
+
+    @Override
+    public void bind(Activator activator) {
+        if (this.activator == activator) {
+            return;
+        }
+        if (activator != null && null != this.activator) {
+            throw new IllegalStateException(
+                    "Object can only be bound to one activator");
+        }
+        this.activator = activator;
+    }
+
+    @Override
+    public void activate(ActivationPurpose activationPurpose) {
+        if (null != activator) {
+            activator.activate(activationPurpose);
+        }
+    }
+    private UUID objectId = UUID.randomUUID();
+
+    @Override
+    public UUID getId() {
+        activate(ActivationPurpose.READ);
+        return objectId;
+    }
+    /**
+     * Object definition
+     */
     ICrudProvider icp = null;
     ICrudSession ics = null;
     //active project should not be available in lookup
@@ -52,8 +111,13 @@ public class PathwayProject implements IPathwayProject {
     Lookup lookup = null;
     URL dblocation = null;
 //    SaveCookie singletonSaveCookie = null;
-    PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     File lock;
+    String name;
+    SBMLDocument document;
+    IPathwayMap pathwayMap;
+    public final static String PROP_NAME = "Pathway Project name";
+    public final static String PROP_PATHWAY_MAP = "Pathway Map";
+    public final static String PROP_DOCUMENT = "SBML Document";
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/pathway/project/resources/PathwayProjectIcon.png";
 
     public PathwayProject() {
@@ -64,6 +128,48 @@ public class PathwayProject implements IPathwayProject {
         return ics;
     }
 
+    @Override
+    public String getName() {
+        activate(ActivationPurpose.READ);
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        activate(ActivationPurpose.WRITE);
+        String oldName = this.name;
+        this.name = name;
+        getPropertyChangeSupport().firePropertyChange(PROP_NAME, oldName, name);
+    }
+
+    @Override
+    public SBMLDocument getDocument() {
+        activate(ActivationPurpose.READ);
+        return document;
+    }
+
+    @Override
+    public void setDocument(SBMLDocument document) {
+        activate(ActivationPurpose.WRITE);
+        SBMLDocument oldDocument = this.document;
+        this.document = document;
+        getPropertyChangeSupport().firePropertyChange(PROP_DOCUMENT, oldDocument, document);
+    }
+
+    @Override
+    public IPathwayMap getPathwayMap() {
+        activate(ActivationPurpose.READ);
+        return pathwayMap;
+    }
+
+    @Override
+    public void setPathwayMap(IPathwayMap pathwayMap) {
+        activate(ActivationPurpose.WRITE);
+        IPathwayMap oldPathwayMap = this.pathwayMap;
+        this.pathwayMap = pathwayMap;
+        getPropertyChangeSupport().firePropertyChange(PROP_PATHWAY_MAP, oldPathwayMap, pathwayMap);
+    }
+    
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
         System.out.println("Received property change event in PathwayProject!");
@@ -232,16 +338,6 @@ public class PathwayProject implements IPathwayProject {
         lookup = null;
         instanceContent = null;
         //CentralLookup.getDefault().remove(this);
-    }
-
-    @Override
-    public void addPropertyChangeListener(PropertyChangeListener pcl) {
-        pcs.addPropertyChangeListener(pcl);
-    }
-
-    @Override
-    public void removePropertyChangeListener(PropertyChangeListener pcl) {
-        pcs.removePropertyChangeListener(pcl);
     }
 
     private final class OpenCloseHook extends ProjectOpenedHook {

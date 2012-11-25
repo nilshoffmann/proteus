@@ -1,5 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.sbml;
 
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.project.api.IPathwayProject;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.sbml.prefuse.HighlightFilter;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.sbml.prefuse.NeighborHighlightVisibilityControl;
 import java.awt.BorderLayout;
@@ -132,14 +133,12 @@ public class PathwayDisplay extends Display {
         }
         return brighterPalette;
     }
-    private final PathwayController pathwayController;
 
-    public PathwayDisplay(SBMLDocument document, PathwayController pathwayController) {
+    public PathwayDisplay(IPathwayProject project) {
         //get a display
         super(new Visualization());
-        this.pathwayController = pathwayController;
         //get data from SBML document
-        List<Compartment> compartments = initDataGroups(document);
+        List<Compartment> compartments = initDataGroups(project);
         int nodes = m_vis.getGroup("graph.nodes").getTupleCount();
         VisualGraph vg = (VisualGraph) m_vis.getVisualGroup("graph");
         System.out.println(vg.getGroup());
@@ -330,7 +329,7 @@ public class PathwayDisplay extends Display {
     
     VisualGraph vg;
 
-    private List<Compartment> initDataGroups(SBMLDocument document) {
+    private List<Compartment> initDataGroups(IPathwayProject project) {
         //create graph
         Graph g = new Graph(true);
         g.addColumn("name", String.class);
@@ -344,6 +343,9 @@ public class PathwayDisplay extends Display {
         g.addColumn("outDegree", int.class);
         g.addColumn("degree", int.class);
         g.addColumn("layout_weight", double.class);
+        
+        //get document
+        SBMLDocument document = project.getDocument();
 
         //create nodes for all species
         ListOf<Species> listOfSpecies = document.getModel().getListOfSpecies();
@@ -365,8 +367,9 @@ public class PathwayDisplay extends Display {
             nodesSpecies.put(speciesNode, species);
             speciesNode.setString("name", species.getName());
             speciesNode.setInt("id", speciesNr++);
-            speciesNode.setString("pathway_name", pathwayController.getPathwayName(species));
-            speciesNode.setString("pathway_id", pathwayController.getPathwayId(species));
+            //FIXME project.getPathwayMap()
+//            speciesNode.setString("pathway_name", pathwayController.getPathwayName(species));
+//            speciesNode.setString("pathway_id", pathwayController.getPathwayId(species));
             Compartment comp = species.getCompartmentInstance();
             if (comp != null) {
                 int value = compartmentIdMap.get(species.getCompartmentInstance()).intValue();
@@ -392,8 +395,9 @@ public class PathwayDisplay extends Display {
         for (Reaction r : listOfReactions) {
             Node reactionNode = g.addNode();
             reactionNode.setString("name", r.getName());
-            reactionNode.setString("pathway_name", pathwayController.getPathwayName(r));
-            reactionNode.setString("pathway_id", pathwayController.getPathwayId(r));
+            //FIXME project.getPathwayMap()
+//            reactionNode.setString("pathway_name", pathwayController.getPathwayName(r));
+//            reactionNode.setString("pathway_id", pathwayController.getPathwayId(r));
             Compartment comp = r.getCompartmentInstance();
             if (comp != null) {
                 int value = compartmentIdMap.get(comp).intValue();

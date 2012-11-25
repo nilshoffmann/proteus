@@ -1,8 +1,11 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.wizard;
 
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.sbml.viewconstructor.PathwayViewController;
+import de.unibielefeld.gi.omicsTools.biocyc.ptools.PGDB;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,10 +50,13 @@ public final class SBMLIMportWizardAction implements ActionListener {
         wiz.setTitleFormat(new MessageFormat("{0}"));
         wiz.setTitle("Import SBML File for Pathway View");
         if (DialogDisplayer.getDefault().notify(wiz) == WizardDescriptor.FINISH_OPTION) {
-//            IPathwayProjectFactory ippf = Lookup.getDefault().lookup(IPathwayProjectFactory.class);
-//            IPathwayProject ipp = ippf.createProject();
-            //TODO add name, organism and sbml file to ipp.
-//            PathwayExplorerTopComponent petc = new PathwayExplorerTopComponent();
+            //get fata from wizard descriptor
+            String projectName = (String) wiz.getProperty(SBMLIMportVisualPanel1.PROPERTY_PROJECT_NAME);
+            File sbmlFile = (File) wiz.getProperty(SBMLIMportVisualPanel1.PROPERTY_FILE);
+            PGDB organism = (PGDB) wiz.getProperty(SBMLIMportVisualPanel1.PROPERTY_ORGANISM);
+            //let project be created by the controller
+            PathwayViewController pvc = new PathwayViewController();
+            pvc.generate(projectName, sbmlFile, organism);
         }
     }
 }

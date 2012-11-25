@@ -4,21 +4,20 @@ import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.CancellableRunnable;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.MetacycController;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.TypedListModel;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.PGDB;
-import de.unibielefeld.gi.omicsTools.biocyc.ptools.Strain;
 import java.io.File;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.filesystems.FileChooserBuilder;
 import org.openide.util.RequestProcessor;
 
-public final class SBMLIMportVisualPanel1 extends JPanel {
+public final class SBMLIMportVisualPanel1 extends JPanel implements DocumentListener {
 
     public static final String PROPERTY_PROJECT_NAME = "Pathway Project Name";
     public static final String PROPERTY_FILE = "SBML File";
@@ -26,13 +25,13 @@ public final class SBMLIMportVisualPanel1 extends JPanel {
     
     private TypedListModel<PGDB> organismListModel = new TypedListModel<PGDB>();
     private File file;
-    private PGDB organism;
 
     /**
      * Creates new form SBMLIMportVisualPanel1
      */
     public SBMLIMportVisualPanel1() {
         initComponents();
+        organismList.setVisible(false);
         organismList.setModel(organismListModel);
         organismList.setCellRenderer(new PGDBCellRenderer());
         initOrganismList();
@@ -59,7 +58,6 @@ public final class SBMLIMportVisualPanel1 extends JPanel {
         CancellableRunnable cr = new CancellableRunnable() {
             @Override
             public void body() {
-                organismList.setVisible(false);
                 this.handle.progress("Querying database");
                 MetacycController mc = new MetacycController();
                 List<PGDB> organisms = mc.getOrganisms();
@@ -173,8 +171,7 @@ public final class SBMLIMportVisualPanel1 extends JPanel {
 
     private void fileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileButtonActionPerformed
         FileChooserBuilder fcb = new FileChooserBuilder(getClass());
-        fcb.setTitle("Choose project directory");
-        fcb.setDirectoriesOnly(true);
+        fcb.setTitle("Choose SBML Document");
         JFileChooser jfc = fcb.createFileChooser();
         int status = jfc.showOpenDialog(this);
         if (status == JFileChooser.APPROVE_OPTION) {
@@ -195,4 +192,25 @@ public final class SBMLIMportVisualPanel1 extends JPanel {
     private javax.swing.JList organismList;
     private javax.swing.JSeparator separator;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+//        updateTextField(e);
+        firePropertyChange("textfield change", 0, 1);
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+//        updateTextField(e);
+        firePropertyChange("textfield change", 0, 1);
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+//        updateTextField(e);
+        firePropertyChange("textfield change", 0, 1);
+    }
+    
+//    private void updateTextField(DocumentEvent e) {
+//    }
 }

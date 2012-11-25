@@ -1,22 +1,15 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.sbml;
 
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.project.api.IPathwayProject;
 import java.awt.BorderLayout;
-import java.io.File;
-import java.io.IOException;
 import javax.swing.SwingUtilities;
-import javax.xml.stream.XMLStreamException;
-import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
-import org.openide.util.Exceptions;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.RequestProcessor;
 import org.openide.windows.TopComponent;
 import org.sbml.jsbml.SBMLDocument;
-import org.sbml.jsbml.xml.stax.SBMLReader;
 
 /**
  * Top component which displays pathways represented as SBML documents.
@@ -43,7 +36,6 @@ preferredID = "PathwayExplorerTopComponent")
 public final class PathwayExplorerTopComponent extends TopComponent implements LookupListener {
 
     private boolean initialized = false;
-    private PathwayController pathwayController;
 
     public PathwayExplorerTopComponent() {
         initComponents();
@@ -51,63 +43,23 @@ public final class PathwayExplorerTopComponent extends TopComponent implements L
         setToolTipText(Bundle.HINT_PathwayExplorerTopComponent());
     }
 
-    public void openFile(final File file) {
+    public void openProject(final IPathwayProject project) {
         if (!initialized) {
-            final ProgressHandle ph = ProgressHandleFactory.createHandle("Loading SBML File");
-            RequestProcessor rp = new RequestProcessor(PathwayExplorerTopComponent.class);
-            rp.post(new SBMLDocumentLoader(file, ph));
-        }else {
-            throw new IllegalStateException("Pathway Explorer was already initialized with an SBML File!");
-        }
-    }
-
-    public void setPathwayController(PathwayController pathwayController) {
-        this.pathwayController = pathwayController;
-    }
-
-    final class SBMLDocumentLoader implements Runnable {
-
-        final File file;
-        final ProgressHandle handle;
-
-        public SBMLDocumentLoader(File file, ProgressHandle handle) {
-            this.file = file;
-            this.handle = handle;
-        }
-
-        @Override
-        public void run() {
-            try {
-                handle.start();
-                handle.progress("Loading SBML File " + file.getName());
-                SBMLReader reader = new SBMLReader();
-                SBMLDocument document = null;
-                document = reader.readSBML(file);
-                handle.progress("Creating Pathway Network Display");
-                initPathwayDisplay(file, document, new PathwayDisplay(document, pathwayController));
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (XMLStreamException ex) {
-                Exceptions.printStackTrace(ex);
-            } finally {
-                handle.finish();
-            }
-        }
-    }
-
-    private void initPathwayDisplay(final File file, final SBMLDocument document, final PathwayDisplay display) {
-        SwingUtilities.invokeLater(new Runnable() {
+            SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                setDisplayName("Pathway Explorer of "+file.getName());
-                setToolTipText("Model Id: "+document.getSBMLDocument().getModel().getId());
+                PathwayDisplay display = new PathwayDisplay(project);
+                setDisplayName("Pathway Explorer of project " + project.getName());
+                setToolTipText("Model Id: "+project.getDocument().getSBMLDocument().getModel().getId());
                 open();
                 add(display, BorderLayout.CENTER);
                 requestActive();
                 initialized = true;
             }
         });
-
+        }else {
+            throw new IllegalStateException("Pathway Explorer was already initialized with an SBML File!");
+        }
     }
 
     /**

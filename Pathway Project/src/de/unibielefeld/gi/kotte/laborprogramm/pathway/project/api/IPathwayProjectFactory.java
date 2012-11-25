@@ -6,5 +6,5 @@ package de.unibielefeld.gi.kotte.laborprogramm.pathway.project.api;
  * @author kotte
  */
 public interface IPathwayProjectFactory {
-    public IPathwayProject createProject();
+    public IPathwayProject createProject(String name);
 }

@@ -5,6 +5,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.MetacycController;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.ResultListener;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.TypedListModel;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.PGDB;
+import java.awt.Cursor;
 import java.io.File;
 import java.util.Collections;
 import java.util.Comparator;
@@ -13,12 +14,14 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.filesystems.FileChooserBuilder;
 import org.openide.util.RequestProcessor;
 
-public final class SBMLIMportVisualPanel1 extends JPanel implements DocumentListener {
+public final class SBMLIMportVisualPanel1 extends JPanel implements DocumentListener, ListSelectionListener {
 
     public static final String PROPERTY_PROJECT_NAME = "Pathway Project Name";
     public static final String PROPERTY_FILE = "SBML File";
@@ -31,9 +34,10 @@ public final class SBMLIMportVisualPanel1 extends JPanel implements DocumentList
      */
     public SBMLIMportVisualPanel1() {
         initComponents();
-        organismList.setVisible(false);
+        organismList.setEnabled(true);
         organismList.setModel(organismListModel);
         organismList.setCellRenderer(new PGDBCellRenderer());
+        organismList.addListSelectionListener(this);
         initOrganismList();
     }
 
@@ -59,6 +63,8 @@ public final class SBMLIMportVisualPanel1 extends JPanel implements DocumentList
             @Override
             public void body() {
                 this.handle.progress("Querying database");
+                organismList.setEnabled(false);
+                organismList.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 MetacycController mc = new MetacycController();
                 List<PGDB> organisms = mc.getOrganisms();
                 this.handle.progress("Sorting results");
@@ -78,7 +84,8 @@ public final class SBMLIMportVisualPanel1 extends JPanel implements DocumentList
             @Override
             public void listen(List<PGDB> organisms) {
                 organismListModel.setList(organisms);
-                organismList.setVisible(true);
+                organismList.setEnabled(true);
+                organismList.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             }
         });
 
@@ -96,26 +103,58 @@ public final class SBMLIMportVisualPanel1 extends JPanel implements DocumentList
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jPanel1 = new javax.swing.JPanel();
         organismLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         organismList = new javax.swing.JList();
-        separator = new javax.swing.JSeparator();
+        jPanel2 = new javax.swing.JPanel();
         fileLabel = new javax.swing.JLabel();
         fileTextField = new javax.swing.JTextField();
         fileButton = new javax.swing.JButton();
         nameLabel = new javax.swing.JLabel();
         nameTextField = new javax.swing.JTextField();
 
+        jSplitPane1.setDividerLocation(300);
+
         org.openide.awt.Mnemonics.setLocalizedText(organismLabel, org.openide.util.NbBundle.getMessage(SBMLIMportVisualPanel1.class, "SBMLIMportVisualPanel1.organismLabel.text")); // NOI18N
 
         organismList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(organismList);
 
-        separator.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane1)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(organismLabel)
+                            .addGap(0, 158, Short.MAX_VALUE)))
+                    .addContainerGap()))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 289, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(organismLabel)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+
+        jSplitPane1.setLeftComponent(jPanel1);
 
         org.openide.awt.Mnemonics.setLocalizedText(fileLabel, org.openide.util.NbBundle.getMessage(SBMLIMportVisualPanel1.class, "SBMLIMportVisualPanel1.fileLabel.text")); // NOI18N
 
         fileTextField.setEditable(false);
+        fileTextField.setColumns(50);
         fileTextField.setText(org.openide.util.NbBundle.getMessage(SBMLIMportVisualPanel1.class, "SBMLIMportVisualPanel1.fileTextField.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(fileButton, org.openide.util.NbBundle.getMessage(SBMLIMportVisualPanel1.class, "SBMLIMportVisualPanel1.fileButton.text")); // NOI18N
@@ -129,49 +168,52 @@ public final class SBMLIMportVisualPanel1 extends JPanel implements DocumentList
 
         nameTextField.setText(org.openide.util.NbBundle.getMessage(SBMLIMportVisualPanel1.class, "SBMLIMportVisualPanel1.nameTextField.text")); // NOI18N
 
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 272, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(nameLabel)
+                        .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(fileLabel)
+                        .addComponent(fileTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(fileButton)
+                    .addContainerGap()))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 289, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(nameLabel)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(fileLabel)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(fileTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(fileButton))
+                    .addContainerGap(159, Short.MAX_VALUE)))
+        );
+
+        jSplitPane1.setRightComponent(jPanel2);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(organismLabel)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nameLabel)
-                    .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(fileLabel)
-                    .addComponent(fileTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fileButton)
-                .addContainerGap())
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 572, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(separator)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(organismLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(nameLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(fileLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(fileTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(fileButton))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+            .addComponent(jSplitPane1)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -191,12 +233,14 @@ public final class SBMLIMportVisualPanel1 extends JPanel implements DocumentList
     private javax.swing.JButton fileButton;
     private javax.swing.JLabel fileLabel;
     private javax.swing.JTextField fileTextField;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JLabel organismLabel;
     private javax.swing.JList organismList;
-    private javax.swing.JSeparator separator;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -218,4 +262,9 @@ public final class SBMLIMportVisualPanel1 extends JPanel implements DocumentList
     }
 //    private void updateTextField(DocumentEvent e) {
 //    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent lse) {
+        firePropertyChange("organism selection change", null, organismList.getSelectedValue());
+    }
 }

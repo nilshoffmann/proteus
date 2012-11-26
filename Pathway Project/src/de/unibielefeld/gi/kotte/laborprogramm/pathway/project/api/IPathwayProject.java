@@ -4,6 +4,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.IPropertyChangeSource;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.IUniqueObject;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.sbml.IPathwayMap;
 import java.beans.PropertyChangeListener;
+import java.net.URL;
 import org.netbeans.api.project.Project;
 import org.sbml.jsbml.SBMLDocument;
 
@@ -14,9 +15,9 @@ import org.sbml.jsbml.SBMLDocument;
  */
 public interface IPathwayProject extends Project, IPropertyChangeSource, PropertyChangeListener, IUniqueObject {
 
-//    public void activate(URL url);
+    public void activate(URL url);
 //
-//    public void close();
+    public void close();
 //    
 //    public void setProjectState(ProjectState ps);
 //

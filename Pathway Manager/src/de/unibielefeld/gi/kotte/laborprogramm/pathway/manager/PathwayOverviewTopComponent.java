@@ -50,7 +50,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
 
     PGDB organism = null;
     Pathway pathway = null;
-    List<Pathway> pathways = Collections.EMPTY_LIST;
+    List<Pathway> pathways = Collections.emptyList();
     MetacycController mc = new MetacycController();
     TypedListModel<PGDB> organismListModel = new TypedListModel<PGDB>();
     TypedListModel<Pathway> pathwaysListModel = new TypedListModel<Pathway>();

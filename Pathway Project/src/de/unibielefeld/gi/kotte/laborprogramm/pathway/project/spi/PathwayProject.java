@@ -194,15 +194,16 @@ public class PathwayProject implements IPathwayProject, Activatable {
 //        getCrudSession().delete(obj);
 //    }
 //
-//    @Override
-//    public void activate(final URL url) {
-//        if (this.dblocation != null) {
-//            Exceptions.printStackTrace(new IllegalStateException(
-//                    "ProteomicProject already activated for " + this.dblocation));
-//        } else {
-//            this.dblocation = url;
-//        }
-//    }
+    @Override
+    public void activate(final URL url) {
+        if (this.dblocation != null) {
+            Exceptions.printStackTrace(new IllegalStateException(
+                    "PathwayProject already activated for " + this.dblocation));
+        } else {
+            this.dblocation = url;
+        }
+    }
+    
     @Override
     public FileObject getProjectDirectory() {
         try {
@@ -267,10 +268,10 @@ public class PathwayProject implements IPathwayProject, Activatable {
         return lookup;
     }
 
-//    @Override
-//    public void close() {
-//        closeSession();
-//    }
+    @Override
+    public void close() {
+        closeSession();
+    }
 //
 //    @Override
 //    public void setProjectState(ProjectState ps) {

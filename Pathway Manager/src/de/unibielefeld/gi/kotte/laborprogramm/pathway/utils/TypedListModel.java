@@ -15,7 +15,7 @@ import javax.swing.event.ListDataListener;
  */
 public class TypedListModel<T> implements ListModel {
     
-    List<T> model = Collections.EMPTY_LIST;
+    List<T> model = Collections.emptyList();
     List<ListDataListener> listeners = new ArrayList<ListDataListener>();
 
     @Override

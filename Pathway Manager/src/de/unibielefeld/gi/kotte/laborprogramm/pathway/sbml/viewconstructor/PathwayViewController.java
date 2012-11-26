@@ -7,6 +7,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.pathway.project.api.IPathwayProjec
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.project.api.IPathwayProjectFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.CancellableRunnable;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.MetacycController;
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.ResultListener;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.PGDB;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.Pathway;
 import java.io.File;
@@ -23,16 +24,14 @@ import org.sbml.jsbml.xml.stax.SBMLReader;
 
 public class PathwayViewController {
 
-    private IPathwayProject project;
-
     public void generate(final String name, final File sbmlFile, final PGDB organism) {
-        CancellableRunnable cr = new CancellableRunnable() {
+        CancellableRunnable<IPathwayProject> cr = new CancellableRunnable<IPathwayProject>() {
             @Override
             public void body() {
                 //create project
                 this.handle.progress("Setting up new Pathway Project");
                 IPathwayProjectFactory ippf = Lookup.getDefault().lookup(IPathwayProjectFactory.class);
-                project = ippf.createProject(name);
+                IPathwayProject project = ippf.createProject(name);
                 //load SBML document from File
                 try {
                     this.handle.progress("Loading SBML File " + sbmlFile.getName());
@@ -58,8 +57,15 @@ public class PathwayViewController {
                     pathwayMap.addPathway(p);
                 }
                 project.setPathwayMap(pathwayMap);
+                notifyListeners(project);
             }
         };
+        cr.addResultListener(new ResultListener<IPathwayProject>() {
+            @Override
+            public void listen(IPathwayProject project) {
+                //TODO Projekt öffnen
+            }
+        });
 
         final ProgressHandle ph = ProgressHandleFactory.createHandle("Generating SBML View", cr);
         cr.setHandle(ph);

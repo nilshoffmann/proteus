@@ -2,6 +2,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.pathway.wizard;
 
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.CancellableRunnable;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.MetacycController;
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.ResultListener;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.TypedListModel;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.PGDB;
 import java.io.File;
@@ -22,7 +23,6 @@ public final class SBMLIMportVisualPanel1 extends JPanel implements DocumentList
     public static final String PROPERTY_PROJECT_NAME = "Pathway Project Name";
     public static final String PROPERTY_FILE = "SBML File";
     public static final String PROPERTY_ORGANISM = "PGDB";
-    
     private TypedListModel<PGDB> organismListModel = new TypedListModel<PGDB>();
     private File file;
 
@@ -41,21 +41,21 @@ public final class SBMLIMportVisualPanel1 extends JPanel implements DocumentList
     public String getName() {
         return "Import SBML File";
     }
-    
+
     public File getSBMLFile() {
         return file;
     }
-    
+
     public PGDB getOrganism() {
         return (PGDB) organismList.getSelectedValue();
     }
-    
+
     public String getProjectName() {
         return nameTextField.getText();
     }
 
     private void initOrganismList() {
-        CancellableRunnable cr = new CancellableRunnable() {
+        CancellableRunnable<List<PGDB>> cr = new CancellableRunnable<List<PGDB>>() {
             @Override
             public void body() {
                 this.handle.progress("Querying database");
@@ -71,10 +71,16 @@ public final class SBMLIMportVisualPanel1 extends JPanel implements DocumentList
                     }
                 });
                 this.handle.progress("Adding results to the list");
+                notifyListeners(organisms);
+            }
+        };
+        cr.addResultListener(new ResultListener<List<PGDB>>() {
+            @Override
+            public void listen(List<PGDB> organisms) {
                 organismListModel.setList(organisms);
                 organismList.setVisible(true);
             }
-        };
+        });
 
         final ProgressHandle ph = ProgressHandleFactory.createHandle("Fetching organism list", cr);
         cr.setHandle(ph);
@@ -130,16 +136,16 @@ public final class SBMLIMportVisualPanel1 extends JPanel implements DocumentList
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(organismLabel))
+                    .addComponent(organismLabel)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(nameLabel)
                     .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(fileLabel)
-                    .addComponent(fileTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE))
+                    .addComponent(fileTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(fileButton)
                 .addContainerGap())
@@ -210,7 +216,6 @@ public final class SBMLIMportVisualPanel1 extends JPanel implements DocumentList
 //        updateTextField(e);
         firePropertyChange("textfield change", 0, 1);
     }
-    
 //    private void updateTextField(DocumentEvent e) {
 //    }
 }

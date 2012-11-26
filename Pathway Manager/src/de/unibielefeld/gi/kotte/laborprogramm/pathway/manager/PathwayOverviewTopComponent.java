@@ -259,7 +259,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
     }// </editor-fold>//GEN-END:initComponents
 
     private void organismsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_organismsButtonActionPerformed
-        CancellableRunnable cr = new CancellableRunnable() {
+        CancellableRunnable<List<PGDB>> cr = new CancellableRunnable<List<PGDB>>() {
             @Override
             public void body() {
                 organismList.setVisible(false);
@@ -275,10 +275,17 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                     }
                 });
                 this.handle.progress("Adding results to the list");
+                notifyListeners(organisms);
+            }
+        };
+        cr.addResultListener(new ResultListener<List<PGDB>>() {
+            @Override
+            public void listen(List<PGDB> organisms) {
+                System.out.println("Received organisms result list!");
                 organismListModel.setList(organisms);
                 organismList.setVisible(true);
             }
-        };
+        });
 
         final ProgressHandle ph = ProgressHandleFactory.createHandle("Fetching organism list", cr);
         cr.setHandle(ph);
@@ -314,7 +321,6 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                 pathways = r;
                 pathwaysListModel.setList(pathways);
                 pathwaysList.setVisible(true);
-                System.out.println("Set pathway result list list!");
             }
         });
 
@@ -325,7 +331,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
     }//GEN-LAST:event_pathwaysButtonActionPerformed
 
     private void enzymesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enzymesButtonActionPerformed
-        CancellableRunnable cr = new CancellableRunnable() {
+        CancellableRunnable<List<Protein>> cr = new CancellableRunnable<List<Protein>>() {
             @Override
             public void body() {
                 enzymesList.setVisible(false);
@@ -341,10 +347,17 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                     }
                 });
                 this.handle.progress("Adding results to the list");
+                notifyListeners(proteins);
+            }
+        };
+        cr.addResultListener(new ResultListener<List<Protein>>() {
+            @Override
+            public void listen(List<Protein> proteins) {
+                System.out.println("Received proteins result list!");
                 enzymesListModel.setList(proteins);
                 enzymesList.setVisible(true);
             }
-        };
+        });
 
         final ProgressHandle ph = ProgressHandleFactory.createHandle("Fetching enzymes list", cr);
         cr.setHandle(ph);
@@ -353,7 +366,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
     }//GEN-LAST:event_enzymesButtonActionPerformed
 
     private void compoundsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compoundsButtonActionPerformed
-        CancellableRunnable cr = new CancellableRunnable() {
+        CancellableRunnable<List<Compound>> cr = new CancellableRunnable<List<Compound>>() {
             @Override
             public void body() {
                 compoundsList.setVisible(false);
@@ -369,10 +382,17 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                     }
                 });
                 this.handle.progress("Adding results to the list");
+                notifyListeners(compounds);
+            }
+        };
+        cr.addResultListener(new ResultListener<List<Compound>>() {
+            @Override
+            public void listen(List<Compound> compounds) {
+                System.out.println("Received proteins result list!");
                 compoundsListModel.setList(compounds);
                 compoundsList.setVisible(true);
             }
-        };
+        });
 
         final ProgressHandle ph = ProgressHandleFactory.createHandle("Fetching compoun list", cr);
         cr.setHandle(ph);

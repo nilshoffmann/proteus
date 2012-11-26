@@ -2,6 +2,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.pathway.manager;
 
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.CancellableRunnable;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.MetacycController;
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.ResultListener;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.TypedListModel;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.CommonName;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.Compound;
@@ -286,13 +287,13 @@ public final class PathwayOverviewTopComponent extends TopComponent {
     }//GEN-LAST:event_organismsButtonActionPerformed
 
     private void pathwaysButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pathwaysButtonActionPerformed
-        CancellableRunnable cr = new CancellableRunnable() {
+        CancellableRunnable<List<Pathway>> cr = new CancellableRunnable<List<Pathway>>(true) {
             @Override
             public void body() {
                 pathwaysList.setVisible(false);
                 this.handle.progress("Querying database");
 //                    List<Pathway> pathways;
-                pathways = mc.getPathwaysForOrganism(organism.getOrgid());
+                List<Pathway> pathways = mc.getPathwaysForOrganism(organism.getOrgid());
                 this.handle.progress("Sorting results");
                 Collections.sort(pathways, new Comparator<Pathway>() {
                     @Override
@@ -303,10 +304,19 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                     }
                 });
                 this.handle.progress("Adding results to the list");
-                pathwaysListModel.setList(pathways);
-                pathwaysList.setVisible(true);
+                notifyListeners(pathways);
             }
         };
+        cr.addResultListener(new ResultListener<List<Pathway>>() {
+            @Override
+            public void listen(List<Pathway> r) {
+                System.out.println("Received pathway result list!");
+                pathways = r;
+                pathwaysListModel.setList(pathways);
+                pathwaysList.setVisible(true);
+                System.out.println("Set pathway result list list!");
+            }
+        });
 
         final ProgressHandle ph = ProgressHandleFactory.createHandle("Fetching organism list", cr);
         cr.setHandle(ph);
@@ -336,7 +346,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
             }
         };
 
-        final ProgressHandle ph = ProgressHandleFactory.createHandle("Fetching organism list", cr);
+        final ProgressHandle ph = ProgressHandleFactory.createHandle("Fetching enzymes list", cr);
         cr.setHandle(ph);
         RequestProcessor rp = new RequestProcessor(PathwayOverviewTopComponent.class);
         rp.post(cr);
@@ -364,7 +374,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
             }
         };
 
-        final ProgressHandle ph = ProgressHandleFactory.createHandle("Fetching organism list", cr);
+        final ProgressHandle ph = ProgressHandleFactory.createHandle("Fetching compoun list", cr);
         cr.setHandle(ph);
         RequestProcessor rp = new RequestProcessor(PathwayOverviewTopComponent.class);
         rp.post(cr);

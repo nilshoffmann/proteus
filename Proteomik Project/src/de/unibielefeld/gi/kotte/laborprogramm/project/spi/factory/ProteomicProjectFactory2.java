@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.unibielefeld.gi.kotte.laborprogramm.project.spi.factory;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
@@ -25,7 +20,7 @@ public class ProteomicProjectFactory2 implements IProteomicProjectFactory{
         ProteomicProject proproject = null;
         try {
             proproject = new ProteomicProject();
-            proproject.activate(new File(projdir, ProteomikProjectFactory.PROJECT_FILE).toURI().toURL());
+            proproject.activate(new File(projdir, ProteomicProjectFactory.PROJECT_FILE).toURI().toURL());
             proproject.setProjectData(project);
         } catch (MalformedURLException ex) {
             Exceptions.printStackTrace(ex);

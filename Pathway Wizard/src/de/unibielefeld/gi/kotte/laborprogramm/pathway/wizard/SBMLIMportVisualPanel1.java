@@ -2,6 +2,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.pathway.wizard;
 
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.CancellableRunnable;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.MetacycController;
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.NameTools;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.ResultListener;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.TypedListModel;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.PGDB;
@@ -71,8 +72,8 @@ public final class SBMLIMportVisualPanel1 extends JPanel implements DocumentList
                 Collections.sort(organisms, new Comparator<PGDB>() {
                     @Override
                     public int compare(PGDB o1, PGDB o2) {
-                        String name1 = PGDBCellRenderer.getSpeciesName(o1);
-                        String name2 = PGDBCellRenderer.getSpeciesName(o2);
+                        String name1 = NameTools.getSpeciesName(o1);
+                        String name2 = NameTools.getSpeciesName(o2);
                         return name1.compareTo(name2);
                     }
                 });

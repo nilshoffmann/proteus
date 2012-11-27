@@ -1,5 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.manager;
 
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.NameTools;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.PGDB;
 import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
@@ -7,6 +8,7 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 /**
+ * ListCellRenderer for Lists of PGDBs.
  *
  * @author kotte
  */
@@ -22,7 +24,7 @@ public class PGDBCellRenderer extends DefaultListCellRenderer implements ListCel
             setBackground(list.getBackground());
             setForeground(list.getForeground());
         }
-        setText(PathwayOverviewTopComponent.getSpeciesName(pgdb));
+        setText(NameTools.getSpeciesName(pgdb));
         return this;
     }
 }

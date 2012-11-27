@@ -41,7 +41,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProjectFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.project.spi.factory.ProteomicProjectFactory2;
-import de.unibielefeld.gi.kotte.laborprogramm.project.spi.factory.ProteomikProjectFactory;
+import de.unibielefeld.gi.kotte.laborprogramm.project.spi.factory.ProteomicProjectFactory;
 import java.io.File;
 import java.net.URL;
 import net.sf.maltcms.chromaui.db.api.NoAuthCredentials;
@@ -209,7 +209,7 @@ public class ProjectTest extends TestCase {
     public void testProject() {
         //set up project in test directory
         //IProteomicProjectFactory ippf = Lookup.getDefault().lookup(IProteomicProjectFactory.class);
-        ProjectFactory ippf = new ProteomikProjectFactory();
+        ProjectFactory ippf = new ProteomicProjectFactory();
         assertNotNull(ippf);
         IProject testProject = createTestProject();
         if (tmpProjectDir.exists()) {
@@ -246,7 +246,7 @@ public class ProjectTest extends TestCase {
 //        }
         try {
             //test retrieval from database
-            URL dbUrl = new File(tmpProjectDir, ProteomikProjectFactory.PROJECT_FILE).toURI().toURL();
+            URL dbUrl = new File(tmpProjectDir, ProteomicProjectFactory.PROJECT_FILE).toURI().toURL();
             ICrudProvider instance = Lookup.getDefault().lookup(ICrudProviderFactory.class).
                     getCrudProvider(
                     dbUrl,

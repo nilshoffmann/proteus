@@ -1,5 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.wizard;
 
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.NameTools;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.PGDB;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.Strain;
 import java.awt.Component;
@@ -23,16 +24,7 @@ public class PGDBCellRenderer extends DefaultListCellRenderer implements ListCel
             setBackground(list.getBackground());
             setForeground(list.getForeground());
         }
-        setText(getSpeciesName(pgdb));
+        setText(NameTools.getSpeciesName(pgdb));
         return this;
-    }
-
-    static String getSpeciesName(PGDB pgdb) {
-        StringBuilder builder = new StringBuilder((String) pgdb.getSpecies().getContent().iterator().next());
-        Strain strain = pgdb.getStrain();
-        if (strain != null) {
-            builder.append(' ').append(strain.getContent());
-        }
-        return builder.toString();
     }
 }

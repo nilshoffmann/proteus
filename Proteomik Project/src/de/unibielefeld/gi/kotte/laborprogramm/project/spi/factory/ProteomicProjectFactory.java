@@ -12,15 +12,14 @@ import org.openide.filesystems.FileObject;
  * @author kotte
  */
 @org.openide.util.lookup.ServiceProvider(service = ProjectFactory.class)
-//@org.openide.util.lookup.ServiceProvider(service=IProteomicProjectFactory.class)
-public class ProteomikProjectFactory implements ProjectFactory {
+public class ProteomicProjectFactory implements ProjectFactory {
 
     public static final String PROJECT_FILE = "plop.ppr";
 
     @Override
     public boolean isProject(FileObject fo) {
-        System.out.println("Checking if "+fo.getPath()+" contains a valid project file: "+fo.getFileObject(ProteomikProjectFactory.PROJECT_FILE));
-        return fo.getFileObject(ProteomikProjectFactory.PROJECT_FILE) != null;
+        System.out.println("Checking if "+fo.getPath()+" contains a valid project file: "+fo.getFileObject(ProteomicProjectFactory.PROJECT_FILE));
+        return fo.getFileObject(ProteomicProjectFactory.PROJECT_FILE) != null;
     }
 
     @Override

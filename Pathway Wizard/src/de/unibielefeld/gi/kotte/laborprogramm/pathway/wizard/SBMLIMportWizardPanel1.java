@@ -65,9 +65,8 @@ public class SBMLIMportWizardPanel1 implements WizardDescriptor.ValidatingPanel,
         descriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, null);
         return true;
     }
-
     private final Set<ChangeListener> listeners = new HashSet<ChangeListener>(1); // or can use ChangeSupport in NB 6.0
-    
+
     @Override
     public final void addChangeListener(ChangeListener l) {
         synchronized (listeners) {
@@ -107,7 +106,7 @@ public class SBMLIMportWizardPanel1 implements WizardDescriptor.ValidatingPanel,
         ((WizardDescriptor) settings).putProperty(SBMLIMportVisualPanel1.PROPERTY_ORGANISM,
                 ((SBMLIMportVisualPanel1) getComponent()).getOrganism());
     }
-    
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         fireChangeEvent();
@@ -115,7 +114,7 @@ public class SBMLIMportWizardPanel1 implements WizardDescriptor.ValidatingPanel,
 
     @Override
     public void validate() throws WizardValidationException {
-        isValid();
+//        isValid();
         //Infomeldungen setzen fuer noch nicht eingegebene Werte
         if (component.getProjectName().isEmpty()) {
             descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Please enter a Pathway Project name.");
@@ -124,7 +123,7 @@ public class SBMLIMportWizardPanel1 implements WizardDescriptor.ValidatingPanel,
         File f = component.getSBMLFile();
         if (!f.canRead()) {
             descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Can't read file.");
-            throw new WizardValidationException(component, "Can't read sbml file at "+f.getAbsolutePath(), "Can't read sbml file at "+f.getAbsolutePath());
+            throw new WizardValidationException(component, "Can't read sbml file at " + f.getAbsolutePath(), "Can't read sbml file at " + f.getAbsolutePath());
         }
         if (component.getOrganism() == null) {
 //            descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Please select an Organism.");

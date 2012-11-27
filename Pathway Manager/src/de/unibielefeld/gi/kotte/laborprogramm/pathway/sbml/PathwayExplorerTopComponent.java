@@ -1,6 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.sbml;
 
-import de.unibielefeld.gi.kotte.laborprogramm.pathway.project.api.IPathwayProject;
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.IPathwayProject;
 import java.awt.BorderLayout;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -9,10 +9,9 @@ import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
-import org.sbml.jsbml.SBMLDocument;
 
 /**
- * Top component which displays pathways represented as SBML documents.
+ * Top component which displays IPathwayProjects.
  *
  * @author kotte
  */
@@ -46,18 +45,18 @@ public final class PathwayExplorerTopComponent extends TopComponent implements L
     public void openProject(final IPathwayProject project) {
         if (!initialized) {
             SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                PathwayDisplay display = new PathwayDisplay(project);
-                setDisplayName("Pathway Explorer of project " + project.getName());
-                setToolTipText("Model Id: "+project.getDocument().getSBMLDocument().getModel().getId());
-                open();
-                add(display, BorderLayout.CENTER);
-                requestActive();
-                initialized = true;
-            }
-        });
-        }else {
+                @Override
+                public void run() {
+                    PathwayDisplay display = new PathwayDisplay(project);
+                    setDisplayName("Pathway Explorer of project " + project.getName());
+                    setToolTipText("Model Id: " + project.getDocument().getSBMLDocument().getModel().getId());
+                    open();
+                    add(display, BorderLayout.CENTER);
+                    requestActive();
+                    initialized = true;
+                }
+            });
+        } else {
             throw new IllegalStateException("Pathway Explorer was already initialized with an SBML File!");
         }
     }

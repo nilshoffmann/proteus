@@ -2,6 +2,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.pathway.manager;
 
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.CancellableRunnable;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.MetacycController;
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.NameTools;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.ResultListener;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.TypedListModel;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.CommonName;
@@ -269,8 +270,8 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                 Collections.sort(organisms, new Comparator<PGDB>() {
                     @Override
                     public int compare(PGDB o1, PGDB o2) {
-                        String name1 = getSpeciesName(o1);
-                        String name2 = getSpeciesName(o2);
+                        String name1 = NameTools.getSpeciesName(o1);
+                        String name2 = NameTools.getSpeciesName(o2);
                         return name1.compareTo(name2);
                     }
                 });
@@ -305,8 +306,8 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                 Collections.sort(pathways, new Comparator<Pathway>() {
                     @Override
                     public int compare(Pathway o1, Pathway o2) {
-                        String name1 = getPathwayName(o1);
-                        String name2 = getPathwayName(o2);
+                        String name1 = NameTools.getPathwayName(o1);
+                        String name2 = NameTools.getPathwayName(o2);
                         return name1.compareTo(name2);
                     }
                 });
@@ -341,8 +342,8 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                 Collections.sort(proteins, new Comparator<Protein>() {
                     @Override
                     public int compare(Protein o1, Protein o2) {
-                        String name1 = getProteinName(o1);
-                        String name2 = getProteinName(o2);
+                        String name1 = NameTools.getProteinName(o1);
+                        String name2 = NameTools.getProteinName(o2);
                         return name1.compareTo(name2);
                     }
                 });
@@ -376,8 +377,8 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                 Collections.sort(compounds, new Comparator<Compound>() {
                     @Override
                     public int compare(Compound o1, Compound o2) {
-                        String name1 = getCompoundName(o1);
-                        String name2 = getCompoundName(o2);
+                        String name1 = NameTools.getCompoundName(o1);
+                        String name2 = NameTools.getCompoundName(o2);
                         return name1.compareTo(name2);
                     }
                 });
@@ -439,42 +440,6 @@ public final class PathwayOverviewTopComponent extends TopComponent {
     void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
         // TODO read your settings according to their version
-    }
-
-    public static String getSpeciesName(PGDB pgdb) {
-        StringBuilder builder = new StringBuilder((String) pgdb.getSpecies().getContent().iterator().next());
-        Strain strain = pgdb.getStrain();
-        if (strain != null) {
-            builder.append(' ').append(strain.getContent());
-        }
-        return builder.toString();
-    }
-
-    public static String getPathwayName(Pathway pw) {
-        for (Object obj : pw.getCitationOrCommentOrCommonName()) {
-            if (obj instanceof CommonName) {
-                return (new StringBuilder("<html>")).append(((CommonName) obj).getContent()).append("</html>").toString();
-            }
-        }
-        return pw.getFrameid();
-    }
-
-    static String getProteinName(Protein prot) {
-        for (Object obj : prot.getCatalyzes().getEnzymaticReaction().iterator().next().getCitationOrCofactorOrComment()) {
-            if (obj instanceof CommonName) {
-                return (new StringBuilder("<html>")).append(((CommonName) obj).getContent()).append("</html>").toString();
-            }
-        }
-        return prot.getFrameid();
-    }
-
-    static String getCompoundName(Compound cmp) {
-        for (Object obj : cmp.getAbbrevNameOrAppearsInLeftSideOfOrAppearsInRightSideOf()) {
-            if (obj instanceof CommonName) {
-                return (new StringBuilder("<html>")).append(((CommonName) obj).getContent()).append("</html>").toString();
-            }
-        }
-        return cmp.getFrameid();
     }
 
     static String getToolTip(List<Object> l) {

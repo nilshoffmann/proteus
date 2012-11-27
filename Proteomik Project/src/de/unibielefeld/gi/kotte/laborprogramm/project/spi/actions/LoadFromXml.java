@@ -6,7 +6,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions;
 
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.project.spi.factory.ProteomicProjectFactory2;
-import de.unibielefeld.gi.kotte.laborprogramm.project.spi.factory.ProteomikProjectFactory;
+import de.unibielefeld.gi.kotte.laborprogramm.project.spi.factory.ProteomicProjectFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.XMLPersistenceFactory;
 import java.awt.event.ActionListener;
@@ -100,8 +100,8 @@ public final class LoadFromXml implements ActionListener {
 //                XMLDecoder decoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(backupFile)), null, this, Lookup.getDefault().lookup(ClassLoader.class));
 //                projectFromBackup = (IProject) decoder.readObject();
                 ProteomicProjectFactory2 ppf = new ProteomicProjectFactory2();
-                File oldDatabaseFile = new File(output.getParentFile(), ProteomikProjectFactory.PROJECT_FILE);
-                oldDatabaseFile.renameTo(new File(output.getParent(), ProteomikProjectFactory.PROJECT_FILE + ".bak"));
+                File oldDatabaseFile = new File(output.getParentFile(), ProteomicProjectFactory.PROJECT_FILE);
+                oldDatabaseFile.renameTo(new File(output.getParent(), ProteomicProjectFactory.PROJECT_FILE + ".bak"));
                 IProteomicProject proj = ppf.createProject(output.getParentFile(), projectFromBackup);
                 proj.close();
 

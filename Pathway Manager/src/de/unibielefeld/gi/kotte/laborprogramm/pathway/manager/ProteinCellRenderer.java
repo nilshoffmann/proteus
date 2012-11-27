@@ -1,5 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.manager;
 
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.NameTools;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.Protein;
 import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
@@ -7,6 +8,7 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 /**
+ * ListCellRenderer for Lists of Proteins.
  *
  * @author kotte
  */
@@ -22,7 +24,7 @@ public class ProteinCellRenderer extends DefaultListCellRenderer implements List
             setBackground(list.getBackground());
             setForeground(list.getForeground());
         }
-        setText(PathwayOverviewTopComponent.getProteinName(prot));
+        setText(NameTools.getProteinName(prot));
         setToolTipText(PathwayOverviewTopComponent.getToolTip(prot.getCatalyzes().getEnzymaticReaction().iterator().next().getCitationOrCofactorOrComment()));
         return this;
     }

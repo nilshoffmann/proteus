@@ -1,6 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.sbml;
 
-import de.unibielefeld.gi.kotte.laborprogramm.pathway.project.api.IPathwayProject;
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.IPathwayProject;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.sbml.prefuse.HighlightFilter;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.sbml.prefuse.NeighborHighlightVisibilityControl;
 import java.awt.BorderLayout;
@@ -59,7 +59,6 @@ import prefuse.visual.AggregateItem;
 import prefuse.visual.AggregateTable;
 import prefuse.visual.VisualGraph;
 import prefuse.visual.VisualItem;
-
 
 /**
  * The frame that displays the prefuse graph of a pathway.
@@ -140,8 +139,8 @@ public class PathwayDisplay extends Display {
         //get data from SBML document
         List<Compartment> compartments = initDataGroups(project);
         int nodes = m_vis.getGroup("graph.nodes").getTupleCount();
-        VisualGraph vg = (VisualGraph) m_vis.getVisualGroup("graph");
-        System.out.println(vg.getGroup());
+        VisualGraph vGraph = (VisualGraph) m_vis.getVisualGroup("graph");
+        System.out.println(vGraph.getGroup());
 
         // set up node renderer
         Renderer nodeRenderer = new ShapeRenderer(10);
@@ -226,10 +225,10 @@ public class PathwayDisplay extends Display {
         // search listener can access it.
         final TupleSet focus = m_vis.getFocusGroup(Visualization.FOCUS_ITEMS);
         // create the search query binding
-        SearchQueryBinding nameSearchQB = new SearchQueryBinding(vg.getNodes(), "name");
+        SearchQueryBinding nameSearchQB = new SearchQueryBinding(vGraph.getNodes(), "name");
         //TODO change to new pathway list
-        ListQueryBinding pathwayListQB = new ListQueryBinding(vg.getNodes(), "pathway_name");
-        ListQueryBinding compatmentListQB = new ListQueryBinding(vg.getNodes(), "compartment_name");
+        ListQueryBinding pathwayListQB = new ListQueryBinding(vGraph.getNodes(), "pathway_name");
+        ListQueryBinding compatmentListQB = new ListQueryBinding(vGraph.getNodes(), "compartment_name");
         AndPredicate filter = new AndPredicate(nameSearchQB.getPredicate());
         filter.add(compatmentListQB.getPredicate());
         filter.add(pathwayListQB.getPredicate());
@@ -240,6 +239,7 @@ public class PathwayDisplay extends Display {
         update.add(hfilter);
 
         UpdateListener lstnr = new UpdateListener() {
+            @Override
             public void update(Object src) {
                 m_vis.run("visual");
             }
@@ -248,6 +248,7 @@ public class PathwayDisplay extends Display {
 
         // create the listener that collects search results into a focus set
         search.addTupleSetListener(new TupleSetListener() {
+            @Override
             public void tupleSetChanged(TupleSet t, Tuple[] add, Tuple[] rem) {
 //                m_vis.cancel("animate");
                 System.out.println("Tuple set changed!");
@@ -326,7 +327,6 @@ public class PathwayDisplay extends Display {
         ToolTipManager.sharedInstance().setDismissDelay(5000);
         ToolTipManager.sharedInstance().setReshowDelay(0);
     }
-    
     VisualGraph vg;
 
     private List<Compartment> initDataGroups(IPathwayProject project) {
@@ -343,7 +343,7 @@ public class PathwayDisplay extends Display {
         g.addColumn("outDegree", int.class);
         g.addColumn("degree", int.class);
         g.addColumn("layout_weight", double.class);
-        
+
         //get document
         SBMLDocument document = project.getDocument();
 
@@ -465,7 +465,7 @@ public class PathwayDisplay extends Display {
 
             // add nodes to aggregates
             // create an aggregate for each 3-clique of nodes
-            AggregateItem aitem = null;
+            AggregateItem aitem;
             Integer compartmentId = Integer.valueOf(node.getInt("compartment"));
             if (compToAgg.containsKey(compartmentId)) {
                 aitem = compToAgg.get(compartmentId);
@@ -504,7 +504,7 @@ public class PathwayDisplay extends Display {
         }
 //        m_vis.getGroup(Visualization.FOCUS_ITEMS).setTuple(f);
 //        f.setFixed(false);
-        
+
         return document.getModel().getListOfCompartments();
     }
 
@@ -515,12 +515,12 @@ public class PathwayDisplay extends Display {
         pathways.addColumn("nodes", List.class);
         //iterate over all nodes of the graph
         Iterator it = vg.nodes();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             VisualItem vi = (VisualItem) it.next();
             //TODO put node into pathway table
         }
     }
-    
+
     private Map<Compartment, Integer> getCompartmentIdMap(ListOf<Compartment> compartments) {
         HashMap<Compartment, Integer> idMap = new HashMap<Compartment, Integer>();
         for (int i = 0; i < compartments.size(); i++) {

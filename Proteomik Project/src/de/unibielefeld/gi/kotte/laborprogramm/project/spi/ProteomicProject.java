@@ -55,16 +55,16 @@ import org.openide.util.lookup.InstanceContent;
 @org.openide.util.lookup.ServiceProvider(service = Project.class)
 public class ProteomicProject implements IProteomicProject {
 
-    ICrudProvider icp = null;
-    ICrudSession ics = null;
+    private ICrudProvider icp = null;
+    private ICrudSession ics = null;
     //active project should not be available in lookup
-    IProject activeProject = null;
-    InstanceContent instanceContent = new InstanceContent();
-    Lookup lookup = null;
-    URL dblocation = null;
-    SaveCookie singletonSaveCookie = null;
-    PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    File lock;
+    private IProject activeProject = null;
+    private InstanceContent instanceContent = new InstanceContent();
+    private Lookup lookup = null;
+    private URL dblocation = null;
+    private SaveCookie singletonSaveCookie = null;
+    private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private File lock;
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/ProjectIcon.png";
 
     public ProteomicProject() {

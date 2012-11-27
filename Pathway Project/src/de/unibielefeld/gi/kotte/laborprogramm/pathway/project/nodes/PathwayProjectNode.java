@@ -1,13 +1,15 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.project.nodes;
 
-import de.unibielefeld.gi.kotte.laborprogramm.pathway.project.api.IPathwayProject;
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.IPathwayProject;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.Action;
+import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.PropertySupport;
@@ -22,7 +24,8 @@ import org.openide.util.WeakListeners;
  *
  * @author kotte
  */
-public class PathwayProjectNode extends AbstractNode implements PropertyChangeListener  {
+public class PathwayProjectNode extends AbstractNode implements PropertyChangeListener {
+
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/pathway/project/resources/PathwayProjectIcon.png";
     private IPathwayProject project;
 
@@ -31,7 +34,7 @@ public class PathwayProjectNode extends AbstractNode implements PropertyChangeLi
         this.project = project;
         project.addPropertyChangeListener(WeakListeners.propertyChange(this, project));
     }
-    
+
     @Override
     public Image getIcon(int type) {
         return ImageUtilities.loadImage(ICON_PATH);
@@ -41,7 +44,7 @@ public class PathwayProjectNode extends AbstractNode implements PropertyChangeLi
     public Image getOpenedIcon(int type) {
         return getIcon(type);
     }
-    
+
     @Override
     protected Sheet createSheet() {
         Sheet sheet = Sheet.createDefault();
@@ -51,7 +54,6 @@ public class PathwayProjectNode extends AbstractNode implements PropertyChangeLi
 
         Property nameProp = new PropertySupport.ReadWrite<String>("name", String.class,
                 "Project name", "The project name.") {
-
             @Override
             public String getValue() throws IllegalAccessException, InvocationTargetException {
                 return proj.getName();
@@ -66,7 +68,7 @@ public class PathwayProjectNode extends AbstractNode implements PropertyChangeLi
         sheet.put(set);
         return sheet;
     }
-    
+
     @Override
     public String getDisplayName() {
         if (project != null) {
@@ -74,23 +76,29 @@ public class PathwayProjectNode extends AbstractNode implements PropertyChangeLi
         }
         return "<NA>";
     }
-    
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         System.out.println("Received change event on ProjectNode: " + evt);
     }
-    
+
     @Override
     public Action[] getActions(boolean context) {
+        Action[] nodeActions = new Action[2];
+        nodeActions[0] = CommonProjectActions.deleteProjectAction();
+        nodeActions[1] = CommonProjectActions.closeProjectAction();
         List<? extends Action> actions = Utilities.actionsForPath("/Actions/PathwayProjectNode");
         List<Action> allActions = new LinkedList<Action>(actions);
+        allActions.add(null);
+        allActions.addAll(Arrays.asList(nodeActions));
+        allActions.addAll(Arrays.asList(super.getActions(context)));
         return allActions.toArray(new Action[allActions.size()]);
     }
 
     @Override
     public Action getPreferredAction() {
         Action[] actions = getActions(false);
-        if(actions.length>0) {
+        if (actions.length > 0) {
             return actions[0];
         }
         return null;

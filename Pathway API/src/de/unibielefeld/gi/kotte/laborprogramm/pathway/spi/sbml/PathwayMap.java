@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import org.sbml.jsbml.SBMLDocument;
 
 public class PathwayMap implements IPathwayMap, Activatable {
 
@@ -68,28 +67,12 @@ public class PathwayMap implements IPathwayMap, Activatable {
     /**
      * Object definition
      */
-    private SBMLDocument document;
     private String organismID;
     private String organismName;
     private Map<String, Pathway> pathways = new HashMap<String, Pathway>();
     public static final String PROP_ORG_ID = "organism ID";
     public static final String PROP_ORG_NAME = "organism name";
-    public static final String PROP_DOCUMENT = "Document";
     public static final String PROP_PATHWAYS = "Pathways";
-
-    @Override
-    public SBMLDocument getDocument() {
-        activate(ActivationPurpose.READ);
-        return document;
-    }
-
-    @Override
-    public void setDocument(SBMLDocument document) {
-        activate(ActivationPurpose.WRITE);
-        SBMLDocument oldDocument = this.document;
-        this.document = document;
-        getPropertyChangeSupport().firePropertyChange(PROP_DOCUMENT, oldDocument, document);
-    }
 
     @Override
     public String getOrganismID() {

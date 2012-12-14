@@ -4,13 +4,8 @@ import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.IPropertyChangeSource;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.IUniqueObject;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.Pathway;
 import java.util.Collection;
-import org.sbml.jsbml.SBMLDocument;
 
 public interface IPathwayMap extends IPropertyChangeSource, IUniqueObject {
-
-    public SBMLDocument getDocument();
-
-    public void setDocument(SBMLDocument document);
 
     public String getOrganismID();
 

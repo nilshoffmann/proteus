@@ -39,6 +39,7 @@ public final class SBMLIMportVisualPanel1 extends JPanel implements DocumentList
         organismList.setModel(organismListModel);
         organismList.setCellRenderer(new PGDBCellRenderer());
         organismList.addListSelectionListener(this);
+        nameTextField.getDocument().addDocumentListener(this);
         initOrganismList();
     }
 

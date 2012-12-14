@@ -1,6 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.wizard;
 
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.IPathwayProject;
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.IPathwayProjectFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.sbml.IPathwayMap;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.sbml.IPathwayMapFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.project.api.IPathwayUIProject;
@@ -95,7 +96,9 @@ public final class SBMLIMportWizardAction implements ActionListener {
                 this.handle.progress("Setting up new Pathway Project");
                 IPathwayUIProjectFactory ippf = Lookup.getDefault().lookup(IPathwayUIProjectFactory.class);
                 IPathwayUIProject uiProject = ippf.createProject(parent, name);
-                IPathwayProject project = uiProject.getProjectData();
+                IPathwayProjectFactory ippf2 = Lookup.getDefault().lookup(IPathwayProjectFactory.class);
+                IPathwayProject project = ippf2.createProject(name);
+                uiProject.setProjectData(project);
                 //load SBML document from File
                 try {
                     this.handle.progress("Loading SBML File " + sbmlFile.getName());

@@ -1,8 +1,5 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.project.spi;
 
-import com.db4o.activation.ActivationPurpose;
-import com.db4o.activation.Activator;
-import com.db4o.ta.Activatable;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.IPathwayProject;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.project.api.IPathwayUIProject;
 import java.beans.PropertyChangeEvent;
@@ -13,10 +10,11 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
@@ -32,6 +30,7 @@ import org.netbeans.spi.project.DeleteOperationImplementation;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
+import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -46,7 +45,7 @@ import org.openide.util.lookup.InstanceContent;
  * @author kotte
  */
 @org.openide.util.lookup.ServiceProvider(service = Project.class)
-public class PathwayUIProject implements IPathwayUIProject, Activatable {
+public class PathwayUIProject implements IPathwayUIProject {
 
     /**
      * PropertyChangeSupport ala JavaBeans(tm) Not persisted!
@@ -72,52 +71,89 @@ public class PathwayUIProject implements IPathwayUIProject, Activatable {
         }
         return this.pcs;
     }
-    private transient Activator activator;
-
-    @Override
-    public void bind(Activator activator) {
-        if (this.activator == activator) {
-            return;
-        }
-        if (activator != null && null != this.activator) {
-            throw new IllegalStateException(
-                    "Object can only be bound to one activator");
-        }
-        this.activator = activator;
-    }
-
-    @Override
-    public void activate(ActivationPurpose activationPurpose) {
-        if (null != activator) {
-            activator.activate(activationPurpose);
-        }
-    }
-    private UUID objectId = UUID.randomUUID();
-
-    @Override
-    public UUID getId() {
-        activate(ActivationPurpose.READ);
-        return objectId;
-    }
     /**
      * Object definition
      */
-    private ICrudProvider icp = null;
+    private ICrudProvider icp;
     private ICrudSession ics = null;
     //active project should not be available in lookup
 //    IProject activeProject = null;
     private InstanceContent instanceContent = new InstanceContent();
     private Lookup lookup = null;
     private URL dblocation = null;
+    private FileLock fileLock;
+    private File lockFile;
 //    SaveCookie singletonSaveCookie = null;
-    private File lock;
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/pathway/project/resources/PathwayProjectIcon.png";
 
     public PathwayUIProject() {
         getLookup();
     }
 
-    private ICrudSession getCrudSession() {
+    private void lock(URL dblocation) {
+        try {
+//                if (activeProject != null) {
+//                    System.out.println("Project already open!");
+//                }
+            if (lockFile != null) {
+                throw new IllegalStateException("Project database is already in use. If there is no open project, please delete the lock file " + lockFile.getAbsolutePath());
+            }
+            lockFile = new File(new File(dblocation.toURI()).getParentFile(), "lock");
+            if (lockFile.exists() && lockFile.isFile()) {
+                //closeSession();
+                throw new IllegalStateException("Project database is already in use. If there is no open project, please delete the lock file " + lockFile.getAbsolutePath());
+            } else {
+                FileObject fo;
+                try {
+                    fo = FileUtil.createData(lockFile);
+                    if (fo.isLocked()) {
+                        //closeSession();
+                        throw new IllegalStateException("Project database is already in use. If there is no open project, please delete the lock file " + lockFile.getAbsolutePath());
+                    }
+                    fileLock = fo.lock();
+                    lockFile.deleteOnExit();
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                } finally {
+                    fileLock.releaseLock();
+                }
+            }
+
+        } catch (URISyntaxException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+
+    private synchronized ICrudSession getCrudSession() {
+        if (ics == null) {
+            if (this.dblocation == null) {
+                throw new IllegalStateException("No dblocation set! Set using 'activate(URL u)'!");
+            }
+            try {
+                lock(this.dblocation);
+                icp = Lookup.getDefault().lookup(ICrudProviderFactory.class).
+                        getCrudProvider(dblocation, new NoAuthCredentials(), Lookup.getDefault().lookup(
+                        ClassLoader.class));
+                Logger.getLogger(getClass().getName()).log(Level.INFO,
+                        "Using {0} as CRUD provider", icp.getClass().getName());
+                ics = icp.createSession();
+                ics.open();
+                Collection<IPathwayProject> c = ics.retrieve(IPathwayProject.class);
+                if (c.size() > 1) {
+                    throw new IllegalStateException("Project database contains more than one instance of IPathwayProject!");
+                }
+                if (!c.isEmpty()) {
+                    activeProject = c.iterator().next();
+                    instanceContent.add(activeProject);
+                    System.out.println("Setting project retrieved from db as active project!");
+                    //instanceContent.add(new PathwayProjectLogicalView(activeProject));
+                }
+            } catch (RuntimeException re) {
+                closeSession();
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Caught exception while opening database!", re);
+                throw new RuntimeException("Project database is already in use. If there is no open project, please delete the lock file!");
+            }
+        }
         return ics;
     }
 
@@ -127,24 +163,25 @@ public class PathwayUIProject implements IPathwayUIProject, Activatable {
         pcs.firePropertyChange(pce);
     }
 
-//    @Override
-//    public synchronized <T> Collection<T> retrieve(Class<T> c) {
-//        Collection<T> coll = getCrudSession().retrieve(c);
-//        return coll;
-////        T t = coll.iterator().next();
-////        return t;
-//    }
+    @Override
+    public synchronized <T> Collection<T> retrieve(Class<T> c) {
+        Collection<T> coll = getCrudSession().retrieve(c);
+        return coll;
+//        T t = coll.iterator().next();
+//        return t;
+    }
+
+    @Override
+    public <T> void store(T... t) {
+        getCrudSession().create(t);
+    }
+
+    @Override
+    public void delete(Object... obj) {
+        getCrudSession().delete(obj);
+    }
 //
-//    @Override
-//    public <T> void store(T... t) {
-//        getCrudSession().create(t);
-//    }
-//
-//    @Override
-//    public void delete(Object... obj) {
-//        getCrudSession().delete(obj);
-//    }
-//
+
     @Override
     public void activate(final URL url) {
         if (this.dblocation != null) {
@@ -152,6 +189,7 @@ public class PathwayUIProject implements IPathwayUIProject, Activatable {
                     "PathwayProject already activated for " + this.dblocation));
         } else {
             this.dblocation = url;
+            //getCrudSession();
         }
     }
 
@@ -171,6 +209,7 @@ public class PathwayUIProject implements IPathwayUIProject, Activatable {
             instanceContent = new InstanceContent();
             lookup = new AbstractLookup(instanceContent);
             instanceContent.add(this);
+            instanceContent.add(new PathwayProjectLogicalView(this));
             instanceContent.add(new ProjectState() {
                 @Override
                 public void markModified() {
@@ -185,38 +224,16 @@ public class PathwayUIProject implements IPathwayUIProject, Activatable {
                     System.out.println("Deleting project!");
                 }
             });
-            instanceContent.add(new ActionProviderImpl());
+            //instanceContent.add(new ActionProviderImpl());
             instanceContent.add(new OpenCloseHook());
             instanceContent.add(new Info());
-            instanceContent.add(new PathwayProjectLogicalView(activeProject));
-            instanceContent.add(new DeleteOperationImplementation() {
-                @Override
-                public void notifyDeleting() throws IOException {
-                }
-
-                @Override
-                public void notifyDeleted() throws IOException {
-                }
-
-                @Override
-                public List<FileObject> getMetadataFiles() {
-//                    throw new UnsupportedOperationException("Not supported yet.");
-                    return Collections.emptyList();
-                }
-
-                @Override
-                public List<FileObject> getDataFiles() {
-                    ArrayList<FileObject> dataFiles = new ArrayList<FileObject>();
-                    Enumeration<? extends FileObject> enumeration = getProjectDirectory().
-                            getChildren(true);
-                    while (enumeration.hasMoreElements()) {
-                        dataFiles.add(enumeration.nextElement());
-                    }
-                    return dataFiles;
-                }
-            });
         }
         return lookup;
+    }
+
+    @Override
+    public void open() {
+        openSession();
     }
 
     @Override
@@ -224,46 +241,20 @@ public class PathwayUIProject implements IPathwayUIProject, Activatable {
         closeSession();
     }
 //
-//    @Override
-//    public void setProjectState(ProjectState ps) {
-//        System.out.println("Set project state called");
-//        instanceContent.remove(getLookup().lookup(ProjectState.class));
-//        instanceContent.add(ps);
-//    }
+
+    @Override
+    public void setProjectState(ProjectState ps) {
+        System.out.println("Set project state called");
+        instanceContent.remove(getLookup().lookup(ProjectState.class));
+        instanceContent.add(ps);
+    }
 
     private synchronized void openSession() {
-        getLookup();
-        try {
-            File lockFile = new File(new File(dblocation.toURI()).getParentFile(), "lock");
-            if (lockFile.exists()) {
-                closeSession();
-                throw new RuntimeException("Project database is already in use. If there is no open project, please delete the lock file " + lockFile.getAbsolutePath());
-            }
-            try {
-                lockFile.createNewFile();
-                lockFile.deleteOnExit();
-                lock = lockFile;
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        } catch (URISyntaxException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        if (icp == null || ics == null) {
-            try {
-                icp = Lookup.getDefault().lookup(ICrudProviderFactory.class).
-                        getCrudProvider(dblocation, new NoAuthCredentials(), Lookup.getDefault().lookup(
-                        ClassLoader.class));
-                Logger.getLogger(getClass().getName()).log(Level.INFO,
-                        "Using {0} as CRUD provider", icp.getClass().getName());
-                ics = icp.createSession();
-                ics.open();
-//                getLookup();
-            } catch (RuntimeException re) {
-                closeSession();
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Caught exception while opening database!", re);
-                throw new RuntimeException("Project database is already in use. If there is no open project, please delete the lock file!");
-            }
+        ICrudSession session = getCrudSession();
+        Collection<IPathwayProject> c = session.retrieve(IPathwayProject.class);
+        if (!c.isEmpty()) {
+            activeProject = c.iterator().next();
+            instanceContent.add(activeProject);
         }
     }
 
@@ -274,28 +265,36 @@ public class PathwayUIProject implements IPathwayUIProject, Activatable {
         //instanceContent.remove(SaveCookie.class);
 //        getCrudSession()
         //allow gc of all session related objects
+        if(activeProject!=null) {
+            instanceContent.remove(activeProject);
+        }
         if (ics != null) {
-//            ics.update(Arrays.asList(activeProject));
-            ics.close();
+//            ics.update(activeProject);
+            try {
+                ics.close();
+            } catch (RuntimeException re) {
+            }
             ics = null;
         }
         if (icp != null) {
-            icp.close();
-            icp = null;
+            try {
+                icp.close();
+            } catch (RuntimeException re) {
+            }
         }
         //instanceContent.remove(this);
 //        Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().closeTopComponentsFor(this);
-        if (lock != null && lock.exists()) {
-            lock.delete();
+        if (fileLock != null) {
+            fileLock.releaseLock();
+            fileLock = null;
+        }
+        if (lockFile != null) {
+            lockFile.delete();
+            lockFile = null;
         }
         lookup = null;
         instanceContent = null;
         //CentralLookup.getDefault().remove(this);
-    }
-
-    @Override
-    public void setProjectState(ProjectState ps) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -304,8 +303,14 @@ public class PathwayUIProject implements IPathwayUIProject, Activatable {
             throw new IllegalArgumentException(
                     "Project is already activated, can not replace project!");
         }
-        activeProject = project;
-        openSession();
+        if (project == null) {
+            throw new NullPointerException("Project must not be null!");
+        }
+        System.out.println("Setting project as set via setProjectData as active project!");
+        store(project);
+        activeProject = retrieve(IPathwayProject.class).iterator().next();
+        instanceContent.add(activeProject);
+//        closeSession();
     }
 
     @Override

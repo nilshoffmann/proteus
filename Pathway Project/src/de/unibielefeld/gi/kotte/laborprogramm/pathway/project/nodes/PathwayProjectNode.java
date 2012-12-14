@@ -1,7 +1,9 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.project.nodes;
 
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.IPathwayProject;
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.project.api.IPathwayUIProject;
 import java.awt.Image;
+import java.beans.IntrospectionException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
@@ -10,29 +12,45 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.swing.Action;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
-import org.openide.nodes.AbstractNode;
+import org.openide.nodes.BeanNode;
 import org.openide.nodes.Children;
+import org.openide.nodes.FilterNode;
+import org.openide.nodes.Node;
+import org.openide.nodes.Node.Property;
 import org.openide.nodes.PropertySupport;
 import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  * Node representing a Pathway Project.
  *
  * @author kotte
  */
-public class PathwayProjectNode extends AbstractNode implements PropertyChangeListener {
+public class PathwayProjectNode extends BeanNode<IPathwayUIProject> implements PropertyChangeListener {
 
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/pathway/project/resources/PathwayProjectIcon.png";
-    private IPathwayProject project;
+    
+    public PathwayProjectNode(IPathwayUIProject bean, Children children, Lookup lkp) throws IntrospectionException {
+        super(bean, children, new ProxyLookup(lkp,Lookups.singleton(bean)));
+        bean.addPropertyChangeListener(WeakListeners.propertyChange(this, bean));
+    }
 
-    public PathwayProjectNode(IPathwayProject project, Lookup lookup) {
-        super(Children.LEAF, lookup);
-        this.project = project;
-        project.addPropertyChangeListener(WeakListeners.propertyChange(this, project));
+    public PathwayProjectNode(IPathwayUIProject bean, Children children) throws IntrospectionException {
+        super(bean, children, Lookups.singleton(bean));
+        bean.addPropertyChangeListener(WeakListeners.propertyChange(this, bean));
+    }
+
+    public PathwayProjectNode(IPathwayUIProject bean) throws IntrospectionException {
+        super(bean,Children.LEAF,
+                Lookups.singleton(bean));
+        setName(bean.getProjectDirectory().getName());
+//        setShortDescription(getName());
+        bean.addPropertyChangeListener(WeakListeners.propertyChange(this, bean));
     }
 
     @Override
@@ -69,13 +87,13 @@ public class PathwayProjectNode extends AbstractNode implements PropertyChangeLi
         return sheet;
     }
 
-    @Override
-    public String getDisplayName() {
-        if (project != null) {
-            return project.getName();
-        }
-        return "<NA>";
-    }
+//    @Override
+//    public String getDisplayName() {
+//        if (project != null) {
+//            return project.getName();
+//        }
+//        return "<NA>";
+//    }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
@@ -89,9 +107,9 @@ public class PathwayProjectNode extends AbstractNode implements PropertyChangeLi
         nodeActions[1] = CommonProjectActions.closeProjectAction();
         List<? extends Action> actions = Utilities.actionsForPath("/Actions/PathwayProjectNode");
         List<Action> allActions = new LinkedList<Action>(actions);
+        allActions.addAll(Arrays.asList(super.getActions(context)));
         allActions.add(null);
         allActions.addAll(Arrays.asList(nodeActions));
-        allActions.addAll(Arrays.asList(super.getActions(context)));
         return allActions.toArray(new Action[allActions.size()]);
     }
 

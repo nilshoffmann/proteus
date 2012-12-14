@@ -96,15 +96,15 @@ public final class SBMLIMportWizardAction implements ActionListener {
                 this.handle.progress("Setting up new Pathway Project");
                 IPathwayUIProjectFactory ippf = Lookup.getDefault().lookup(IPathwayUIProjectFactory.class);
                 IPathwayUIProject uiProject = ippf.createProject(parent, name);
-                IPathwayProjectFactory ippf2 = Lookup.getDefault().lookup(IPathwayProjectFactory.class);
-                IPathwayProject project = ippf2.createProject(name);
-                uiProject.setProjectData(project);
+//                IPathwayProjectFactory ippf2 = Lookup.getDefault().lookup(IPathwayProjectFactory.class);
+//                IPathwayProject project = ippf2.createProject(name);
+//                uiProject.setProjectData(project);
                 //load SBML document from File
                 try {
                     this.handle.progress("Loading SBML File " + sbmlFile.getName());
                     SBMLReader reader = new SBMLReader();
                     SBMLDocument document = reader.readSBML(sbmlFile);
-                    project.setDocument(document);
+                    uiProject.getProjectData().setDocument(document);
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
                 } catch (XMLStreamException ex) {
@@ -123,7 +123,7 @@ public final class SBMLIMportWizardAction implements ActionListener {
                 for (Pathway p : pathwaysForOrganism) {
                     pathwayMap.addPathway(p);
                 }
-                project.setPathwayMap(pathwayMap);
+                uiProject.getProjectData().setPathwayMap(pathwayMap);
                 notifyListeners(uiProject);
             }
         };

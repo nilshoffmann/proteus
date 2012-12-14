@@ -1,10 +1,11 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.project.spi;
 
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.IPathwayProject;
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.project.api.IPathwayUIProject;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.project.nodes.PathwayProjectNode;
+import java.beans.IntrospectionException;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.openide.nodes.Node;
-import org.openide.util.lookup.Lookups;
 
 /**
  * LogicalViewProvider for IPathwayProjects.
@@ -13,15 +14,19 @@ import org.openide.util.lookup.Lookups;
  */
 public class PathwayProjectLogicalView implements LogicalViewProvider {
 
-    private final IPathwayProject project;
+    private final IPathwayUIProject project;
 
-    public PathwayProjectLogicalView(IPathwayProject project) {
+    public PathwayProjectLogicalView(IPathwayUIProject project) {
         this.project = project;
     }
 
     @Override
     public Node createLogicalView() {
-        return new PathwayProjectNode(project, Lookups.fixed(project));
+        try {
+            return new PathwayProjectNode(project);
+        } catch (IntrospectionException ex) {
+            return Node.EMPTY;
+        }
     }
 
     @Override

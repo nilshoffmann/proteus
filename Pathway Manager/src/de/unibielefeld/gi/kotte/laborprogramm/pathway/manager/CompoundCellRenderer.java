@@ -12,7 +12,7 @@ import javax.swing.ListCellRenderer;
  *
  * @author kotte
  */
-public class CompoundCellRenderer extends DefaultListCellRenderer implements ListCellRenderer {
+public class CompoundCellRenderer extends DefaultListCellRenderer implements ListCellRenderer<Object> {
 
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {

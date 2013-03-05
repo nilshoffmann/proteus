@@ -3,8 +3,6 @@ package de.unibielefeld.gi.kotte.laborprogramm.project.spi;
 //import de.unibielefeld.gi.kotte.laborprogramm.centralLookup.CentralLookup;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
-import de.unibielefeld.gi.kotte.laborprogramm.topComponentRegistry.api.IRegistryFactory;
-import java.awt.BorderLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -13,7 +11,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -22,13 +19,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import net.sf.maltcms.chromaui.db.api.ICrudProvider;
 import net.sf.maltcms.chromaui.db.api.ICrudProviderFactory;
 import net.sf.maltcms.chromaui.db.api.ICrudSession;
 import net.sf.maltcms.chromaui.db.api.NoAuthCredentials;
-import net.sf.maltcms.chromaui.db.api.exceptions.AuthenticationException;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.spi.project.ActionProvider;
@@ -36,8 +30,6 @@ import org.netbeans.spi.project.DeleteOperationImplementation;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.cookies.SaveCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileStateInvalidException;
@@ -58,7 +50,6 @@ public class ProteomicProject implements IProteomicProject {
 
     private ICrudProvider icp = null;
     private ICrudSession ics = null;
-    //active project should not be available in lookup
     private IProject activeProject = null;
     private InstanceContent instanceContent = new InstanceContent();
     private Lookup lookup = null;
@@ -84,37 +75,37 @@ public class ProteomicProject implements IProteomicProject {
         pcs.firePropertyChange(pce);
     }
 
-    private IProject showOverwriteDatabaseDialog(IProject project) throws AuthenticationException {
-        if (project != null && activeProject != null) {
-            JPanel jp = new JPanel();
-            jp.add(new JLabel(
-                    "A project is already present in the database, discard and overwrite?"),
-                    BorderLayout.CENTER);
-            NotifyDescriptor nd = new NotifyDescriptor(jp,
-                    "Overwrite project in database?",
-                    NotifyDescriptor.YES_NO_OPTION,
-                    NotifyDescriptor.QUESTION_MESSAGE, null,
-                    NotifyDescriptor.NO_OPTION);
-            Object returnValue = DialogDisplayer.getDefault().notify(nd);
-            if (returnValue == NotifyDescriptor.YES_OPTION) {
-                ics.delete(Arrays.asList(activeProject));
-                ics.create(Arrays.asList(project));
-                //instanceContent.remove(singletonSaveCookie);
-                //singletonSaveCookie = null;
-                return getFromDB();
-            } else {
-                //instanceContent.remove(singletonSaveCookie);
-                //singletonSaveCookie = null;
-                return project;
-            }
-        } else if (project != null && activeProject == null) {
-            ics.create(Arrays.asList(project));
-            //instanceContent.remove(singletonSaveCookie);
-            //singletonSaveCookie = null;
-            return getFromDB();
-        }
-        return null;
-    }
+//    private IProject showOverwriteDatabaseDialog(IProject project) throws AuthenticationException {
+//        if (project != null && activeProject != null) {
+//            JPanel jp = new JPanel();
+//            jp.add(new JLabel(
+//                    "A project is already present in the database, discard and overwrite?"),
+//                    BorderLayout.CENTER);
+//            NotifyDescriptor nd = new NotifyDescriptor(jp,
+//                    "Overwrite project in database?",
+//                    NotifyDescriptor.YES_NO_OPTION,
+//                    NotifyDescriptor.QUESTION_MESSAGE, null,
+//                    NotifyDescriptor.NO_OPTION);
+//            Object returnValue = DialogDisplayer.getDefault().notify(nd);
+//            if (returnValue == NotifyDescriptor.YES_OPTION) {
+//                ics.delete(Arrays.asList(activeProject));
+//                ics.create(Arrays.asList(project));
+//                //instanceContent.remove(singletonSaveCookie);
+//                //singletonSaveCookie = null;
+//                return getFromDB();
+//            } else {
+//                //instanceContent.remove(singletonSaveCookie);
+//                //singletonSaveCookie = null;
+//                return project;
+//            }
+//        } else if (project != null && activeProject == null) {
+//            ics.create(Arrays.asList(project));
+//            //instanceContent.remove(singletonSaveCookie);
+//            //singletonSaveCookie = null;
+//            return getFromDB();
+//        }
+//        return null;
+//    }
 
 //    public final class ProjectSaveCookie implements SaveCookie {
 //
@@ -152,8 +143,10 @@ public class ProteomicProject implements IProteomicProject {
             throw new IllegalArgumentException(
                     "Found more than one instance of IProject in project database!");
         } else if (projects.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "Failed to find an instance of IProject in project database!");
+			System.out.println("Project db is empty");
+//            throw new IllegalArgumentException(
+//                    "Failed to find an instance of IProject in project database!");
+			return null;
         }
         IProject project = projects.iterator().next();
         project.addPropertyChangeListener(WeakListeners.propertyChange(this, project));
@@ -199,7 +192,6 @@ public class ProteomicProject implements IProteomicProject {
         if (lookup == null) {
             instanceContent = new InstanceContent();
             lookup = new AbstractLookup(instanceContent);
-            instanceContent.add(this);
             instanceContent.add(new ProjectState() {
 
                 @Override
@@ -263,7 +255,7 @@ public class ProteomicProject implements IProteomicProject {
     }
 
     private synchronized void openSession() {
-        getLookup();
+//        getLookup();
 //        try {
 //            File lockFile = new File(new File(dblocation.toURI()).getParentFile(), "lock");
 //            if (lockFile.exists()) {
@@ -316,7 +308,6 @@ public class ProteomicProject implements IProteomicProject {
                     ClassLoader.class));//new DB4oCrudProvider(pdbf, new NoAuthCredentials(), this.getClass().getClassLoader());
             icp.open();
             ics = icp.createSession();
-
             ics.open();
         } catch (FileStateInvalidException ex) {
             Exceptions.printStackTrace(ex);
@@ -374,6 +365,10 @@ public class ProteomicProject implements IProteomicProject {
         @Override
         protected void projectOpened() {
             openSession();
+			IProject current = getFromDB();
+			if(current!=null) {
+				setActiveProject(current);
+			}
         }
 
         @Override
@@ -458,14 +453,33 @@ public class ProteomicProject implements IProteomicProject {
         }
     }
 
+	private void setActiveProject(IProject project) {
+		if(activeProject!=null) {
+			instanceContent.remove(activeProject);
+			instanceContent.remove(this);
+		}
+		IProject old = activeProject;
+		activeProject = project;
+		instanceContent.add(activeProject);
+		instanceContent.add(this);
+		pcs.firePropertyChange("activeProject", old , activeProject);
+	}
+	
     @Override
     public void setProjectData(IProject project) {
         if (activeProject != null) {
             throw new IllegalArgumentException(
                     "Project is already activated, can not replace project!");
         }
-        activeProject = project;
-        openSession();
+		openSession();
+		IProject current = getFromDB();
+		if(current==null) {
+			//        activeProject = project;
+			store(project);
+			setActiveProject(getFromDB());
+		}else{
+			setActiveProject(current);
+		}
     }
 
     @Override

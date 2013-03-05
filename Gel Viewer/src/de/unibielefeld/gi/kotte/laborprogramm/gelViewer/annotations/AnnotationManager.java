@@ -30,6 +30,8 @@ import java.util.Collections;
 import java.util.List;
 import net.sf.maltcms.ui.plot.heatmap.HeatmapDataset;
 import net.sf.maltcms.ui.plot.heatmap.HeatmapPanel;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 
 /**
  *
@@ -37,96 +39,109 @@ import net.sf.maltcms.ui.plot.heatmap.HeatmapPanel;
  */
 public class AnnotationManager {
 
-    private IProteomicProject project;
-    private IGel gel;
-    private HeatmapDataset<ISpot> hmd;
-    private HeatmapPanel<ISpot> hp;
-    private GelSpotAnnotations gelSpotAnnotation = null;
+	private IProteomicProject project;
+	private IGel gel;
+	private HeatmapDataset<ISpot> hmd;
+	private HeatmapPanel<ISpot> hp;
+	private GelSpotAnnotations gelSpotAnnotation = null;
 
-    public AnnotationManager(IProteomicProject project, IGel gel, HeatmapDataset<ISpot> hmd, HeatmapPanel<ISpot> hp) {
-        this.project = project;
-        this.gel = gel;
-        this.hmd = hmd;
-        this.hp = hp;
-    }
+	public AnnotationManager(IProteomicProject project, IGel gel, HeatmapDataset<ISpot> hmd, HeatmapPanel<ISpot> hp) {
+		this.project = project;
+		this.gel = gel;
+		this.hmd = hmd;
+		this.hp = hp;
+	}
 
-    public static GelSpotAnnotations addAnnotations(IProteomicProject project, IGel gel) {
-        List<SpotAnnotation> spotAnnotations = new ActivatableArrayList<SpotAnnotation>();
-        for (ISpot spot : gel.getSpots()) {
-            SpotAnnotation ann = new SpotAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()), spot);
-            spotAnnotations.add(ann);
-        }
-        project.store(spotAnnotations.toArray(new SpotAnnotation[spotAnnotations.size()]));
-        GelSpotAnnotations gsa = new GelSpotAnnotations();
-        gsa.setGel(gel);
-        gsa.setSpotAnnotations(spotAnnotations);
-        project.store(gsa);
-        return gsa;
-    }
+	public static GelSpotAnnotations addAnnotations(IProteomicProject project, IGel gel) {
+		ProgressHandle handle = ProgressHandleFactory.createHandle("Adding annotations");
+		GelSpotAnnotations gsa = null;
+		try {
+			handle.start(gel.getSpots().size() + 2);
+			List<SpotAnnotation> spotAnnotations = new ActivatableArrayList<SpotAnnotation>();
+			int i = 1;
+			for (ISpot spot : gel.getSpots()) {
+				SpotAnnotation ann = new SpotAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()), spot);
+				spotAnnotations.add(ann);
+				handle.progress("Creating spot annotations", i);
+				i++;
+			}
+			handle.progress("Storing annotations", i++);
+			project.store(spotAnnotations.toArray(new SpotAnnotation[spotAnnotations.size()]));
+			gsa = new GelSpotAnnotations();
+			gsa.setGel(gel);
+			gsa.setSpotAnnotations(spotAnnotations);
+			project.store(gsa);
+			handle.progress("Updating project", i++);
+		} finally {
+			handle.finish();
+		}
+		return gsa;
+	}
 
-    public static Collection<GelSpotAnnotations> getAnnotations(IProteomicProject project) {
-        try {
-            return project.retrieve(GelSpotAnnotations.class);
-        } catch (Exception e) {
-            System.err.println("Exception: "+e);
-            return Collections.emptyList();
-        }
+	public static Collection<GelSpotAnnotations> getAnnotations(IProteomicProject project) {
+		try {
+			return project.retrieve(GelSpotAnnotations.class);
+		} catch (Exception e) {
+			System.err.println("Exception: " + e);
+			return Collections.emptyList();
+		}
 
-    }
+	}
 
-    public static GelSpotAnnotations getAnnotationsForGel(IProteomicProject project, IGel gel) {
-        for (GelSpotAnnotations gsa : getAnnotations(project)) {
-            System.out.println("Checking GelSpotAnnotations from database for gel " + gsa.getGel().getFilename() + " with UUID " + gsa.getGel().getId());
-            if (gsa.getGel().getId().toString().equals(gel.getId().toString())) {
-                System.out.println("Found existing GelSpotAnnotations for gel " + gel.getFilename() + " with UUID " + gsa.getGel().getId());
-                return gsa;
-            }
-        }
-        return null;
-    }
+	public static GelSpotAnnotations getAnnotationsForGel(IProteomicProject project, IGel gel) {
+		for (GelSpotAnnotations gsa : getAnnotations(project)) {
+			System.out.println("Checking GelSpotAnnotations from database for gel " + gsa.getGel().getFilename() + " with UUID " + gsa.getGel().getId());
+			if (gsa.getGel().getId().toString().equals(gel.getId().toString())) {
+				System.out.println("Found existing GelSpotAnnotations for gel " + gel.getFilename() + " with UUID " + gsa.getGel().getId());
+				return gsa;
+			}
+		}
+		return null;
+	}
 
-    public static SpotAnnotation getSpotAnnotation(IProteomicProject project, ISpot spot) {
-        GelSpotAnnotations annotations = getAnnotationsForGel(project, spot.getGel());
-        if (annotations == null) {
-            return null;
-        }
-        for (SpotAnnotation ann : annotations.getSpotAnnotations()) {
-            SpotAnnotation sann = (SpotAnnotation) ann;
-            if (sann.getPayload() == spot) {
-                return sann;
-            }
-        }
-        return null;
-    }
+	public static SpotAnnotation getSpotAnnotation(IProteomicProject project, ISpot spot) {
+		GelSpotAnnotations annotations = getAnnotationsForGel(project, spot.getGel());
+		if (annotations == null) {
+			return null;
+		}
+		for (SpotAnnotation ann : annotations.getSpotAnnotations()) {
+			SpotAnnotation sann = (SpotAnnotation) ann;
+			if (sann.getPayload() == spot) {
+				return sann;
+			}
+		}
+		return null;
+	}
 
-    public void open() {
-        Collection<GelSpotAnnotations> gelSpotAnnotations = getAnnotations(project);
-        if(gelSpotAnnotations.isEmpty()) {
-            System.err.println("No annotations found for project!");
-            addAnnotations(project, gel);
-        }
-        gelSpotAnnotation = getAnnotationsForGel(project, gel);
-        if(gelSpotAnnotation==null || gelSpotAnnotation.getSpotAnnotations().isEmpty()) {
-            System.err.println("No annotations found for gel "+gel.getName());
-            addAnnotations(project, gel);
-        }
-        try {
-            for (SpotAnnotation ann : gelSpotAnnotation.getSpotAnnotations()) {
-                SpotAnnotation annotation = (SpotAnnotation) ann;
-                ISpot spot = annotation.getPayload();
-                if (spot == null) {
-                    System.err.println("Spot for annotation: " + annotation + " was null!");
-                } else {
-                    spot.addPropertyChangeListener(hp);
-                    annotation.addPropertyChangeListener(hp);
-                    hmd.addAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()), annotation);
-                }
-            }
-        } catch (java.lang.IllegalStateException ise) {
-            ise.printStackTrace();
-        }
-    }
+	public void open() {
+		Collection<GelSpotAnnotations> gelSpotAnnotations = getAnnotations(project);
+		if (gelSpotAnnotations.isEmpty()) {
+			System.err.println("No annotations found for project!");
+			addAnnotations(project, gel);
+		}
+		gelSpotAnnotation = getAnnotationsForGel(project, gel);
+		if (gelSpotAnnotation == null || gelSpotAnnotation.getSpotAnnotations().isEmpty()) {
+			System.err.println("No annotations found for gel " + gel.getName());
+			addAnnotations(project, gel);
+		}
+		gelSpotAnnotation = getAnnotationsForGel(project, gel);
+		try {
+			for (SpotAnnotation ann : gelSpotAnnotation.getSpotAnnotations()) {
+				SpotAnnotation annotation = (SpotAnnotation) ann;
+				ISpot spot = annotation.getPayload();
+				if (spot == null) {
+					System.err.println("Spot for annotation: " + annotation + " was null!");
+				} else {
+					spot.addPropertyChangeListener(hp);
+					annotation.addPropertyChangeListener(hp);
+					hmd.addAnnotation(new Point2D.Double(spot.getPosX(), spot.getPosY()), annotation);
+				}
+			}
+		} catch (java.lang.IllegalStateException ise) {
+			ise.printStackTrace();
+		}
+	}
 
-    public void close() {
-    }
+	public void close() {
+	}
 }

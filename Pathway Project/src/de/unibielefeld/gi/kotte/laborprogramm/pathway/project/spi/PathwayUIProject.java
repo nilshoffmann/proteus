@@ -130,7 +130,7 @@ public class PathwayUIProject implements IPathwayUIProject {
                 throw new IllegalStateException("No dblocation set! Set using 'activate(URL u)'!");
             }
             try {
-                lock(this.dblocation);
+//                lock(this.dblocation);
                 icp = Lookup.getDefault().lookup(ICrudProviderFactory.class).
                         getCrudProvider(dblocation, new NoAuthCredentials(), Lookup.getDefault().lookup(
                         ClassLoader.class));

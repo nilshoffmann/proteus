@@ -26,86 +26,87 @@ import org.openide.util.WeakListeners;
  */
 public class ProjectChildNodeFactory extends ChildFactory<Object> implements PropertyChangeListener, LookupListener {
 
-    private IProteomicProject ipp;
-    private Result<IProject> project;
+	private IProteomicProject ipp;
+	private Result<IProject> project;
 
-    @Override
-    public void propertyChange(PropertyChangeEvent pce) {
-        System.out.println("ProjectChildNodeFactory: Received property change event: " + pce);
-        refresh(true);
-    }
+	@Override
+	public void propertyChange(PropertyChangeEvent pce) {
+		System.out.println("ProjectChildNodeFactory: Received property change event: " + pce);
+		refresh(true);
+	}
 
-    public ProjectChildNodeFactory(IProteomicProject ipp) {
-        this.ipp = ipp;
-        ipp.addPropertyChangeListener(WeakListeners.propertyChange(this,ipp));
-        project = this.ipp.getLookup().lookupResult(IProject.class);
-        project.addLookupListener(this);
-    }
+	public ProjectChildNodeFactory(IProteomicProject ipp) {
+		this.ipp = ipp;
+		ipp.addPropertyChangeListener(WeakListeners.propertyChange(this, ipp));
+		project = this.ipp.getLookup().lookupResult(IProject.class);
+		if (project != null) {
+			project.addLookupListener(this);
+		}
+	}
 
-    @Override
-    protected boolean createKeys(List<Object> toPopulate) {
-        if(ipp.getLookup().lookup(IProject.class)==null) {
-            toPopulate.add(null);
-            return true;
-        }
-        for (ILogicalGelGroup ilgg : ipp.getLookup().lookup(IProject.class).getGelGroups()) {
-            if (Thread.interrupted()) {
-                return false;
-            } else {
-                toPopulate.add(ilgg);
-            }
-        }
-        for (IPlate96 ip96 : ipp.getLookup().lookup(IProject.class).get96Plates()) {
-            if (Thread.interrupted()) {
-                return false;
-            } else {
-                toPopulate.add(ip96);
-            }
-        }
-        for (IPlate384 ip384 : ipp.getLookup().lookup(IProject.class).get384Plates()) {
-            if (Thread.interrupted()) {
-                return false;
-            } else {
-                toPopulate.add(ip384);
-            }
-        }
-        List<ISpotGroup> spotGroups = ipp.getLookup().lookup(IProject.class).getSpotGroups();
-        if (!spotGroups.isEmpty()) {
-            toPopulate.add(spotGroups);
-        }
-        return true;
-    }
+	@Override
+	protected boolean createKeys(List<Object> toPopulate) {
+		if (ipp.getLookup().lookup(IProject.class) == null) {
+			return true;
+		}
+		for (ILogicalGelGroup ilgg : ipp.getLookup().lookup(IProject.class).getGelGroups()) {
+			if (Thread.interrupted()) {
+				return false;
+			} else {
+				toPopulate.add(ilgg);
+			}
+		}
+		for (IPlate96 ip96 : ipp.getLookup().lookup(IProject.class).get96Plates()) {
+			if (Thread.interrupted()) {
+				return false;
+			} else {
+				toPopulate.add(ip96);
+			}
+		}
+		for (IPlate384 ip384 : ipp.getLookup().lookup(IProject.class).get384Plates()) {
+			if (Thread.interrupted()) {
+				return false;
+			} else {
+				toPopulate.add(ip384);
+			}
+		}
+		List<ISpotGroup> spotGroups = ipp.getLookup().lookup(IProject.class).getSpotGroups();
+		if (!spotGroups.isEmpty()) {
+			toPopulate.add(spotGroups);
+		}
+		return true;
+	}
 
-    @Override
-    protected Node createNodeForKey(Object key) {
-        Object keyVal = key;
-        Node node = Node.EMPTY;
-        if (keyVal == null) {
-            return createWaitNode();
-        }else if (keyVal instanceof ILogicalGelGroup) {
-            node = new LogicalGelGroupNode((ILogicalGelGroup) keyVal, ipp.getLookup());
-        } else if (keyVal instanceof IPlate96) {
-            node = new Plate96Node((IPlate96) keyVal, ipp.getLookup());
-        } else if (keyVal instanceof IPlate384) {
-            try {
-                node = new Plate384Node((IPlate384) keyVal, ipp.getLookup());
-            } catch (IntrospectionException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        } else if (keyVal instanceof List) {
-            List<?> keyValList = (List) keyVal;
-            if (!keyValList.isEmpty()) {
-                node = new SpotGroupFolderNode((List<ISpotGroup>) keyVal, ipp.getLookup());
-            }
-        }
-        node.addPropertyChangeListener(WeakListeners.propertyChange(this,node));
-        return node;
-    }
+	@Override
+	protected Node createNodeForKey(Object key) {
+		Object keyVal = key;
+		Node node = Node.EMPTY;
+		if (keyVal == null) {
+			return createWaitNode();
+		} else if (keyVal instanceof ILogicalGelGroup) {
+			node = new LogicalGelGroupNode((ILogicalGelGroup) keyVal, ipp.getLookup());
+		} else if (keyVal instanceof IPlate96) {
+			node = new Plate96Node((IPlate96) keyVal, ipp.getLookup());
+		} else if (keyVal instanceof IPlate384) {
+			try {
+				node = new Plate384Node((IPlate384) keyVal, ipp.getLookup());
+			} catch (IntrospectionException ex) {
+				Exceptions.printStackTrace(ex);
+			}
+		} else if (keyVal instanceof List) {
+			List<?> keyValList = (List) keyVal;
+			if (!keyValList.isEmpty()) {
+				node = new SpotGroupFolderNode((List<ISpotGroup>) keyVal, ipp.getLookup());
+			}
+		}
+		node.addPropertyChangeListener(WeakListeners.propertyChange(this, node));
+		return node;
+	}
 
-    @Override
-    public void resultChanged(LookupEvent le) {
-        if(!project.allInstances().isEmpty()) {
-            refresh(true);
-        }
-    }
+	@Override
+	public void resultChanged(LookupEvent le) {
+		if (!project.allInstances().isEmpty()) {
+			refresh(true);
+		}
+	}
 }

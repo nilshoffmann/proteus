@@ -1,6 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.delta2DProjectImporter;
 
-import de.unibielefeld.gi.kotte.laborprogramm.xml.labels.LabelData;
+import de.unibielefeld.gi.kotte.laborprogramm.xml.labelData.LabelData;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,8 +18,9 @@ import javax.xml.bind.Unmarshaller;
 class LabelDataReader {
     public LabelData parseLabels(File f) {
         try {
-            JAXBContext jc = JAXBContext.newInstance("de.unibielefeld.gi.kotte.laborprogramm.xml.labels");
+            JAXBContext jc = JAXBContext.newInstance("de.unibielefeld.gi.kotte.laborprogramm.xml.labelData");
             Unmarshaller u = jc.createUnmarshaller();
+			u.setSchema(null);
             LabelData ld = (LabelData) u.unmarshal(new FileInputStream(f));
             return ld;
         } catch (FileNotFoundException ex) {

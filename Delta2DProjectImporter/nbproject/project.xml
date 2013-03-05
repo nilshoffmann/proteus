@@ -41,16 +41,16 @@
                 <binary-origin>release/modules/ext/Delta2DProjectData.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/QuantitationData.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/QuantitationData.jar</binary-origin>
+                <runtime-relative-path>ext/Delta2DQuantitationData.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/Delta2DQuantitationData.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/Delta2DLabelData.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/Delta2DLabelData.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/Delta2DGelData.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/Delta2DGelData.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/LabelData.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/LabelData.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

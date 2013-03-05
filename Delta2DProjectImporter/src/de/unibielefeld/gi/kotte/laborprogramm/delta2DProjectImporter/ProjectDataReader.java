@@ -21,6 +21,7 @@ public class ProjectDataReader {
         try {
             JAXBContext jc = JAXBContext.newInstance("de.unibielefeld.gi.kotte.laborprogramm.xml.projectData");
             Unmarshaller u = jc.createUnmarshaller();
+			u.setSchema(null);
             ProjectData pd = (ProjectData) u.unmarshal(new FileInputStream(f));
             return pd;
         } catch (FileNotFoundException ex) {

@@ -1,6 +1,6 @@
 package de.unibielefeld.gi.kotte.laborprogramm.delta2DProjectImporter;
 
-import de.unibielefeld.gi.kotte.laborprogramm.xml.quantitation.QuantitationData;
+import de.unibielefeld.gi.kotte.laborprogramm.xml.quantitationData.QuantitationData;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,8 +18,9 @@ import javax.xml.bind.Unmarshaller;
 public class QuantitationDataReader {
     public QuantitationData parseQuantification(File f) {
         try {
-            JAXBContext jc = JAXBContext.newInstance("de.unibielefeld.gi.kotte.laborprogramm.xml.quantitation");
-            Unmarshaller u = jc.createUnmarshaller();
+            JAXBContext jc = JAXBContext.newInstance("de.unibielefeld.gi.kotte.laborprogramm.xml.quantitationData");
+			Unmarshaller u = jc.createUnmarshaller();
+			u.setSchema(null);
             QuantitationData qd = (QuantitationData) u.unmarshal(new FileInputStream(f));
             return qd;
         } catch (FileNotFoundException ex) {

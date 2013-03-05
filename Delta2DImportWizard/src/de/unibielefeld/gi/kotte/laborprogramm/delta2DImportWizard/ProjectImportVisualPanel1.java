@@ -20,7 +20,7 @@ public final class ProjectImportVisualPanel1 extends JPanel implements DocumentL
     public static final String PROPERTY_PROJECT_DIRECTORY = "Delta2D project directory";
     public static final String PROPERTY_PROJECT_PARENT_DIRECTORY = "Proteus project parent directory";
     public static final String PROPERTY_PROJECT_NAME = "Proteus project name";
-    public static final String PROPERTY_SELECTED_PROJECT_NAME = "selected Delta2D project";
+    public static final String PROPERTY_SELECTED_PROJECT_NAME = "Selected Delta2D project";
     
     private File projectDirectory;
     private File projectParentDirectoryFile;
@@ -247,4 +247,9 @@ public final class ProjectImportVisualPanel1 extends JPanel implements DocumentL
                     projectFolder + File.separatorChar + projectName);
         }
     }
+
+	public void setProjectParentDirectoryFile(File proteusProjects) {
+		projectParentDirectoryTextField.setText(proteusProjects.getAbsolutePath());
+		projectParentDirectoryFile = proteusProjects;
+	}
 }

@@ -21,6 +21,7 @@ public class GelDataReader {
         try {
             JAXBContext jc = JAXBContext.newInstance("de.unibielefeld.gi.kotte.laborprogramm.xml.gelData");
             Unmarshaller u = jc.createUnmarshaller();
+			u.setSchema(null);
             GelData gd = (GelData) u.unmarshal(new FileInputStream(f));
             return gd;
         } catch (FileNotFoundException ex) {

@@ -117,6 +117,12 @@ public class ProjectImportWizardPanel1 implements WizardDescriptor.Panel, Proper
     @Override
     public void readSettings(Object settings) {
         this.descriptor = (WizardDescriptor) settings;
+		if(descriptor.getProperty(ProjectImportVisualPanel1.PROPERTY_PROJECT_PARENT_DIRECTORY)==null) {
+			File proteusProjects = new File(System.getProperty("user.home"),"ProteusProjects");
+			proteusProjects.mkdirs();
+			descriptor.putProperty(ProjectImportVisualPanel1.PROPERTY_PROJECT_PARENT_DIRECTORY, proteusProjects);
+			((ProjectImportVisualPanel1)getComponent()).setProjectParentDirectoryFile(proteusProjects);
+		}
     }
 
     @Override

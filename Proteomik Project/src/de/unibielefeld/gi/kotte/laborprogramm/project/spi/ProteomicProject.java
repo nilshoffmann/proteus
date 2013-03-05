@@ -40,6 +40,7 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.cookies.SaveCookie;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
@@ -64,7 +65,8 @@ public class ProteomicProject implements IProteomicProject {
     private URL dblocation = null;
     private SaveCookie singletonSaveCookie = null;
     private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private File lock;
+    private FileObject projectDatabaseFile;
+    private FileObject parentFile;
     private final static String ICON_PATH = "de/unibielefeld/gi/kotte/laborprogramm/project/resources/ProjectIcon.png";
 
     public ProteomicProject() {
@@ -160,22 +162,36 @@ public class ProteomicProject implements IProteomicProject {
 
     @Override
     public void activate(final URL url) {
-        if (this.dblocation != null) {
-            Exceptions.printStackTrace(new IllegalStateException(
-                    "ProteomicProject already activated for " + this.dblocation));
-        } else {
-            this.dblocation = url;
+//        if (this.dblocation != null) {
+//            Exceptions.printStackTrace(new IllegalStateException(
+//                    "ProteomicProject already activated for " + this.dblocation));
+//        } else {
+//            this.dblocation = url;
+//        }
+		if (this.icp != null) {
+            this.icp.close();
+        }
+        File pdbf;
+        try {
+            pdbf = new File(url.toURI());
+            this.parentFile = FileUtil.toFileObject(pdbf.getParentFile());
+            this.projectDatabaseFile = FileUtil.createData(parentFile, pdbf.getName());//FileUtil.toFileObject(pdbf);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (URISyntaxException ex) {
+            Exceptions.printStackTrace(ex);
         }
     }
 
     @Override
     public FileObject getProjectDirectory() {
-        try {
-            return FileUtil.toFileObject(new File(dblocation.toURI()).getParentFile());
-        } catch (URISyntaxException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        return null;
+		return this.parentFile;
+//        try {
+//            return FileUtil.toFileObject(new File(dblocation.toURI()).getParentFile());
+//        } catch (URISyntaxException ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
+//        return null;
     }
 
     @Override
@@ -248,43 +264,62 @@ public class ProteomicProject implements IProteomicProject {
 
     private synchronized void openSession() {
         getLookup();
-        try {
-            File lockFile = new File(new File(dblocation.toURI()).getParentFile(), "lock");
-            if (lockFile.exists()) {
+//        try {
+//            File lockFile = new File(new File(dblocation.toURI()).getParentFile(), "lock");
+//            if (lockFile.exists()) {
+//                closeSession();
+//                throw new RuntimeException("Project database is already in use. If there is no open project, please delete the lock file " + lockFile.getAbsolutePath());
+//            }
+//            try {
+//                lockFile.createNewFile();
+//                lockFile.deleteOnExit();
+//                lock = lockFile;
+//            } catch (IOException ex) {
+//                Exceptions.printStackTrace(ex);
+//            }
+//        } catch (URISyntaxException ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
+//        if (icp == null || ics == null) {
+//            try {
+//                icp = Lookup.getDefault().lookup(ICrudProviderFactory.class).
+//                        getCrudProvider(dblocation, new NoAuthCredentials(), Lookup.getDefault().lookup(
+//                        ClassLoader.class));
+//                Logger.getLogger(getClass().getName()).log(Level.INFO,
+//                        "Using {0} as CRUD provider", icp.getClass().getName());
+//                ics = icp.createSession();
+//                ics.open();
+//                if (activeProject == null) {
+//                    activeProject = getFromDB();
+//                } else {
+//                    ics.create(activeProject);
+//                }
+////                getLookup();
+//                instanceContent.add(activeProject);
+//            } catch (RuntimeException re) {
+//                closeSession();
+//                Logger.getLogger(getClass().getName()).log(Level.SEVERE,"Caught exception while opening database!",re);
+//                throw new RuntimeException("Project database is already in use. If there is no open project, please delete the lock file!");
+//            }
+//        }
+		try {
+            if (icp != null) {
                 closeSession();
-                throw new RuntimeException("Project database is already in use. If there is no open project, please delete the lock file " + lockFile.getAbsolutePath());
             }
-            try {
-                lockFile.createNewFile();
-                lockFile.deleteOnExit();
-                lock = lockFile;
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
+            if (projectDatabaseFile == null) {
+                throw new IllegalStateException(
+                        "Project database file not set, please call 'activate(URL url)' with the appropriate location before 'openSession()' is called!");
             }
-        } catch (URISyntaxException ex) {
+            icp = Lookup.getDefault().lookup(ICrudProviderFactory.class).
+                    getCrudProvider(projectDatabaseFile.getURL(),
+                    new NoAuthCredentials(), Lookup.getDefault().lookup(
+                    ClassLoader.class));//new DB4oCrudProvider(pdbf, new NoAuthCredentials(), this.getClass().getClassLoader());
+            icp.open();
+            ics = icp.createSession();
+
+            ics.open();
+        } catch (FileStateInvalidException ex) {
             Exceptions.printStackTrace(ex);
-        }
-        if (icp == null || ics == null) {
-            try {
-                icp = Lookup.getDefault().lookup(ICrudProviderFactory.class).
-                        getCrudProvider(dblocation, new NoAuthCredentials(), Lookup.getDefault().lookup(
-                        ClassLoader.class));
-                Logger.getLogger(getClass().getName()).log(Level.INFO,
-                        "Using {0} as CRUD provider", icp.getClass().getName());
-                ics = icp.createSession();
-                ics.open();
-                if (activeProject == null) {
-                    activeProject = getFromDB();
-                } else {
-                    ics.create(activeProject);
-                }
-//                getLookup();
-                instanceContent.add(activeProject);
-            } catch (RuntimeException re) {
-                closeSession();
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE,"Caught exception while opening database!",re);
-                throw new RuntimeException("Project database is already in use. If there is no open project, please delete the lock file!");
-            }
         }
     }
 
@@ -295,28 +330,33 @@ public class ProteomicProject implements IProteomicProject {
         //instanceContent.remove(SaveCookie.class);
 //        getCrudSession()
         //allow gc of all session related objects
-        if (ics != null) {
-            ics.update(Arrays.asList(activeProject));
-            ics.close();
-            ics = null;
-        }
-        if (icp != null) {
+//        if (ics != null) {
+//            ics.update(Arrays.asList(activeProject));
+//            ics.close();
+//            ics = null;
+//        }
+//        if (icp != null) {
+//            icp.close();
+//            icp = null;
+//        }
+//        if (activeProject != null) {
+//            activeProject.removePropertyChangeListener(this);
+//            instanceContent.remove(activeProject);
+//            activeProject = null;
+//        }
+//        //instanceContent.remove(this);
+//        Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().closeTopComponentsFor(this);
+//        if (lock != null && lock.exists()) {
+//            lock.delete();
+//        }
+//        lookup = null;
+//        instanceContent = null;
+        //CentralLookup.getDefault().remove(this);
+		if (icp != null) {
+            //ics.close();
             icp.close();
             icp = null;
         }
-        if (activeProject != null) {
-            activeProject.removePropertyChangeListener(this);
-            instanceContent.remove(activeProject);
-            activeProject = null;
-        }
-        //instanceContent.remove(this);
-        Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().closeTopComponentsFor(this);
-        if (lock != null && lock.exists()) {
-            lock.delete();
-        }
-        lookup = null;
-        instanceContent = null;
-        //CentralLookup.getDefault().remove(this);
     }
 
     @Override

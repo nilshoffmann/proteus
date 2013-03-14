@@ -18,6 +18,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -341,8 +342,12 @@ public class MetacycController {
             reader.close();
             bw.flush();
             bw.close();
+		} catch (UnknownHostException ex) {
+			System.err.println("No network connection!");
+			file.delete();
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
+			file.delete();
         }
     }
 }

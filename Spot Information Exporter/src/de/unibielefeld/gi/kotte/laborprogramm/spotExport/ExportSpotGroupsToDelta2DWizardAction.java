@@ -27,7 +27,7 @@ id = "de.unibielefeld.gi.kotte.laborprogramm.spotExport.ExportSpotGroupsToDelta2
 @ActionRegistration(
     displayName = "#CTL_ExportSpotGroupsToDelta2DWizardAction")
 @ActionReferences({@ActionReference(path = "Actions/SpotGroupNode", position = 300)})
-@Messages("CTL_ExportSpotGroupsToDelta2DWizardAction=export selected spot group(s) for Delta2D Re-Import")
+@Messages("CTL_ExportSpotGroupsToDelta2DWizardAction=Export selected spot group(s) for Delta2D Re-Import")
 public final class ExportSpotGroupsToDelta2DWizardAction implements ActionListener {
 
     private final List<ISpotGroup> context;

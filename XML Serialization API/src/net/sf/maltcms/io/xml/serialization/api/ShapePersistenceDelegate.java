@@ -8,8 +8,7 @@ import java.awt.Shape;
 import java.beans.DefaultPersistenceDelegate;
 import java.beans.Encoder;
 import java.beans.PersistenceDelegate;
-import org.openide.util.lookup.ServiceProvider;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.openide.util.NotImplementedException;
 
 /**
  * FIXME reimplement

@@ -3,6 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.project.spi;
 //import de.unibielefeld.gi.kotte.laborprogramm.centralLookup.CentralLookup;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IProject;
+import de.unibielefeld.gi.kotte.laborprogramm.topComponentRegistry.api.IRegistryFactory;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -317,34 +318,8 @@ public class ProteomicProject implements IProteomicProject {
     private synchronized void closeSession() {
         Logger.getLogger(getClass().getName()).log(Level.INFO,
                 "Closing session for project ", dblocation);
-        //we are saving anyway, so remove SaveCookie
-        //instanceContent.remove(SaveCookie.class);
-//        getCrudSession()
-        //allow gc of all session related objects
-//        if (ics != null) {
-//            ics.update(Arrays.asList(activeProject));
-//            ics.close();
-//            ics = null;
-//        }
-//        if (icp != null) {
-//            icp.close();
-//            icp = null;
-//        }
-//        if (activeProject != null) {
-//            activeProject.removePropertyChangeListener(this);
-//            instanceContent.remove(activeProject);
-//            activeProject = null;
-//        }
-//        //instanceContent.remove(this);
-//        Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().closeTopComponentsFor(this);
-//        if (lock != null && lock.exists()) {
-//            lock.delete();
-//        }
-//        lookup = null;
-//        instanceContent = null;
-        //CentralLookup.getDefault().remove(this);
+        Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().closeTopComponentsForProject(this);
 		if (icp != null) {
-            //ics.close();
             icp.close();
             icp = null;
         }

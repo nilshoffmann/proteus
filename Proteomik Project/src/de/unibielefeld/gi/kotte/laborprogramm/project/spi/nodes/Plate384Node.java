@@ -152,8 +152,8 @@ public class Plate384Node extends BeanNode<IPlate384> implements PropertyChangeL
         if (evt.getPropertyName().equals(IPlate384.PROPERTY_NAME)) {
             this.fireDisplayNameChange(null, getDisplayName());
         } else {
-            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.
-                    getNewValue());
+//            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.
+//                    getNewValue());
         }
     }
 }

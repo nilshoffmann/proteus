@@ -174,7 +174,7 @@ public class SpotNodeAsGelChild extends BeanNode<ISpot> implements PropertyChang
         } else if (evt.getPropertyName().equals("name")) {
             this.fireDisplayNameChange(null, getDisplayName());
         } else {
-            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
+//            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
         }
     }
 }

@@ -115,8 +115,8 @@ public class LogicalGelGroupNode extends AbstractNode implements PropertyChangeL
         }else if (evt.getPropertyName().equals(ILogicalGelGroup.PROPERTY_DESCRIPTION)) {
             this.fireDisplayNameChange(null, getDisplayName());
         } else {
-            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.
-                    getNewValue());
+//            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.
+//                    getNewValue());
         }
     }
 }

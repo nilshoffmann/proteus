@@ -114,8 +114,8 @@ public class Plate96Node extends AbstractNode implements PropertyChangeListener 
         if (evt.getPropertyName().equals("name")) {
             this.fireDisplayNameChange(null, getDisplayName());
         } else {
-            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.
-                    getNewValue());
+//            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.
+//                    getNewValue());
         }
     }
 }

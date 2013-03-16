@@ -143,7 +143,7 @@ public class GelNode extends BeanNode<IGel> implements PropertyChangeListener {
         if (evt.getPropertyName().equals("name")) {
             this.fireDisplayNameChange(null, getDisplayName());
         } else {
-            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
+//            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
         }
     }
 }

@@ -108,8 +108,9 @@ public class BioRepGelGroupNode extends AbstractNode implements PropertyChangeLi
         if (evt.getPropertyName().equals("name")) {
             this.fireDisplayNameChange(null, getDisplayName());
         } else {
-            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.
-                    getNewValue());
+//			
+//            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.
+//                    getNewValue());
         }
     }
 }

@@ -176,6 +176,6 @@ public class SpotGroupNode extends AbstractNode implements PropertyChangeListene
         } else if (evt.getPropertyName().equals(PROP_SHORT_DESCRIPTION)) {
             fireShortDescriptionChange(null, getShortDescription());
         }
-        firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
+//        firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
     }
 }

@@ -176,7 +176,7 @@ public class SpotNodeAsGroupChild extends BeanNode<ISpot> implements PropertyCha
         } else if (evt.getPropertyName().equals("name")) {
             this.fireDisplayNameChange(null, getDisplayName());
         } else {
-            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
+//            this.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
             this.fireIconChange();
         }
     }

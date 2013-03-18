@@ -24,7 +24,11 @@
         <input addproperty="upload.username">Please enter username for upload:</input>
     </target>
 
-    <target name="prepare-release" description="Prepares a release" depends="build,test,nbms">
+<!--    <target name="prepare-release" description="Prepares a release" depends="build,test,nbms">
+    </target>-->
+
+    <target name="prepare-release" description="Prepares a release" depends="build,nbms">
+		<echo message="Preliminary release, tests are currently skipped!"/>
     </target>
 
     <target name="deploy" description="Deploys release files" depends="prepare-release,upload-credentials,upload-updatecenter">

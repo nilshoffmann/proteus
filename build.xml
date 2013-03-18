@@ -15,4 +15,28 @@
     <target name="fix-test-dependencies" depends="-init">
        <subant target="fix-test-dependencies" buildpath="${modules.sorted}" inheritrefs="false" inheritall="false"/>
     </target>
+	<property name="project.release.name" value="proteus"/>
+    <property name="project.release.version" value="1.0"/>
+    <property name="project.release.path" value="${project.release.name}/${project.release.version}"/>
+    <target name="release-and-deploy" description="Prepare a release" depends="prepare-release,deploy">    
+    </target>
+    <target name="upload-credentials" description="Ask for user credentials">
+        <input addproperty="upload.username">Please enter username for upload:</input>
+    </target>
+
+    <target name="prepare-release" description="Prepares a release" depends="build,test,nbms">
+    </target>
+
+    <target name="deploy" description="Deploys release files" depends="prepare-release,upload-credentials,upload-updatecenter">
+    </target>
+    
+    <target name="upload-updatecenter" description="Upload results of build" depends="upload-credentials">
+        <exec command="rsync" inputstring="">
+            <arg value="-avtruP"/>
+            <arg value="-e ssh "/>
+            <arg value="build/updates/"/>
+            <arg value="${upload.username},maltcms@web.sourceforge.net:htdocs/${project.release.path}/updates/"/>
+        </exec>
+    </target>
+	
 </project>

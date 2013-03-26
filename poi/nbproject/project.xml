@@ -5,7 +5,16 @@
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
             <code-name-base>org.apache.poi</code-name-base>
             <suite-component/>
-            <module-dependencies/>
+            <module-dependencies>
+                <dependency>
+                    <code-name-base>org.slf4j.slf4j.nbm</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.2.12</specification-version>
+                    </run-dependency>
+                </dependency>
+            </module-dependencies>
             <test-dependencies>
                 <test-type>
                     <name>unit</name>
@@ -28,25 +37,6 @@
                 <package>javax.xml.stream.util</package>
                 <package>org.apache.commons.logging</package>
                 <package>org.apache.commons.logging.impl</package>
-                <package>org.apache.log4j</package>
-                <package>org.apache.log4j.chainsaw</package>
-                <package>org.apache.log4j.config</package>
-                <package>org.apache.log4j.helpers</package>
-                <package>org.apache.log4j.jdbc</package>
-                <package>org.apache.log4j.jmx</package>
-                <package>org.apache.log4j.lf5</package>
-                <package>org.apache.log4j.lf5.util</package>
-                <package>org.apache.log4j.lf5.viewer</package>
-                <package>org.apache.log4j.lf5.viewer.categoryexplorer</package>
-                <package>org.apache.log4j.lf5.viewer.configure</package>
-                <package>org.apache.log4j.net</package>
-                <package>org.apache.log4j.nt</package>
-                <package>org.apache.log4j.or</package>
-                <package>org.apache.log4j.or.jms</package>
-                <package>org.apache.log4j.or.sax</package>
-                <package>org.apache.log4j.spi</package>
-                <package>org.apache.log4j.varia</package>
-                <package>org.apache.log4j.xml</package>
                 <package>org.apache.poi</package>
                 <package>org.apache.poi.common.usermodel</package>
                 <package>org.apache.poi.ddf</package>
@@ -288,10 +278,6 @@
             <class-path-extension>
                 <runtime-relative-path>ext/poi-scratchpad-3.7-20101029.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/poi-scratchpad-3.7-20101029.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/log4j-1.2.13.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/log4j-1.2.13.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/poi-ooxml-3.7-20101029.jar</runtime-relative-path>

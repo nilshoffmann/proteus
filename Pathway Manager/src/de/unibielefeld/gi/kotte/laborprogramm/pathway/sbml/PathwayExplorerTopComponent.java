@@ -45,8 +45,6 @@ public final class PathwayExplorerTopComponent extends TopComponent implements L
         initComponents();
         setName(Bundle.CTL_PathwayExplorerTopComponent());
         setToolTipText(Bundle.HINT_PathwayExplorerTopComponent());
-		result = Utilities.actionsGlobalContext().lookupResult(IPathwayProject.class);
-		result.addLookupListener(this);
     }
 
     public void openProject(final IPathwayProject project) {
@@ -85,6 +83,8 @@ public final class PathwayExplorerTopComponent extends TopComponent implements L
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
+		result = Utilities.actionsGlobalContext().lookupResult(IPathwayProject.class);
+		result.addLookupListener(this);
 //        IPathwayProject project = Utilities.actionsGlobalContext().lookup(IPathwayProject.class);
 //        if(project!=null) {
 //			openProject(project);
@@ -93,6 +93,9 @@ public final class PathwayExplorerTopComponent extends TopComponent implements L
 
     @Override
     public void componentClosed() {
+		if(result!=null) {
+			result.removeLookupListener(this);
+		}
 //        SBMLDocument doc = getLookup().lookup(SBMLDocument.class);
 //        if (doc != null) {
 //            Lookup.getDefault().lookup(IRegistryFactory.class).getDefault().closeTopComponentsFor(doc);
@@ -114,6 +117,7 @@ public final class PathwayExplorerTopComponent extends TopComponent implements L
     @Override
     public void resultChanged(LookupEvent le) {
 		if(!result.allInstances().isEmpty()) {
+			System.out.println("Received pathway project from lookup!");
 			openProject(result.allInstances().iterator().next());
 		}
     }

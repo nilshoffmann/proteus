@@ -15,8 +15,6 @@
         <file name="Versioning_hidden"/>
 		<folder name="Window">
 			<file name="LookupMonitorAction.shadow_hidden"/>
-			<file name="de-unibielefeld-gi-kotte-laborprogramm-pathways-overview-PathwayOverviewTopComponent.shadow_hidden"/>
-            <file name="de-unibielefeld-gi-kotte-laborprogramm-pathways-visualization-PathwayExplorerTopComponent.shadow_hidden"/>
             <file name="net-sf-maltcms-chromaui-charts-ui-XYChartComponentOpenAction.shadow_hidden"/>
 			<file name="net-sf-maltcms-chromaui-statistics-pcaViewer-PCAViewerTopComponent.shadow_hidden"/>
 			<file name="Versioning_hidden"/>

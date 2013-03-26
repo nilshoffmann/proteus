@@ -53,7 +53,7 @@ public class SBMLIMportWizardPanel1 implements WizardDescriptor.ValidatingPanel,
             return false;
         }
         File f = component.getSBMLFile();
-        if (!f.canRead()) {
+        if (f==null || !f.canRead()) {
             descriptor.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, "Can't read file.");
             return false;
         }

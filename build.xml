@@ -23,11 +23,32 @@
     <target name="upload-credentials" description="Ask for user credentials">
         <input addproperty="upload.username">Please enter username for upload:</input>
     </target>
+	
+	<target name="check-installers" description="Check that installers are ready">
+		<fail message="Installers have not been created! Please create them manually!">
+			<condition>
+				<and>
+					<not>
+						<available file="dist/maui-linux.sh"/>
+					</not>
+					<not>
+						<available file="dist/maui-macosx.tgz"/>
+					</not>					
+					<not>
+						<available file="dist/maui-solaris.sh"/>
+					</not>
+					<not>
+						<available file="dist/maui-windows.exe"/>
+					</not>
+				</and>
+			</condition>
+		</fail>
+	</target>
 
 <!--    <target name="prepare-release" description="Prepares a release" depends="build,test,nbms">
     </target>-->
 
-    <target name="prepare-release" description="Prepares a release" depends="build,nbms">
+    <target name="prepare-release" description="Prepares a release" depends="build,nbms,check-installers">
 		<echo message="Preliminary release, tests are currently skipped!"/>
     </target>
 

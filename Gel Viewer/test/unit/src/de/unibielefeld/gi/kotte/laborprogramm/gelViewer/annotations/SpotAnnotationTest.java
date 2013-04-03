@@ -81,7 +81,8 @@ public class SpotAnnotationTest extends NbTestCase {
     public void testConstructor() {
         File dblocation = null;
         try {
-            dblocation = temp.newFile("testDatabase.db40");
+			File folder = temp.newFolder();
+            dblocation = new File(folder,"testDatabase.db4o");
             if(dblocation.exists()) {
                 dblocation.delete();
             }

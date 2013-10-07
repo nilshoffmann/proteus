@@ -15,6 +15,22 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>net.sf.maltcms.chromaui.db</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>net.sf.maltcms.chromaui.db.spi.db4o</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.javahelp</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -33,10 +49,124 @@
                 </dependency>
             </module-dependencies>
             <public-packages>
+                <package>com.ctc.wstx.api</package>
+                <package>com.ctc.wstx.cfg</package>
+                <package>com.ctc.wstx.compat</package>
+                <package>com.ctc.wstx.dom</package>
+                <package>com.ctc.wstx.dtd</package>
+                <package>com.ctc.wstx.ent</package>
+                <package>com.ctc.wstx.evt</package>
+                <package>com.ctc.wstx.exc</package>
+                <package>com.ctc.wstx.io</package>
+                <package>com.ctc.wstx.msv</package>
+                <package>com.ctc.wstx.osgi</package>
+                <package>com.ctc.wstx.sax</package>
+                <package>com.ctc.wstx.sr</package>
+                <package>com.ctc.wstx.stax</package>
+                <package>com.ctc.wstx.sw</package>
+                <package>com.ctc.wstx.util</package>
+                <package>com.thoughtworks.xstream</package>
+                <package>com.thoughtworks.xstream.alias</package>
+                <package>com.thoughtworks.xstream.annotations</package>
+                <package>com.thoughtworks.xstream.converters</package>
+                <package>com.thoughtworks.xstream.converters.basic</package>
+                <package>com.thoughtworks.xstream.converters.collections</package>
+                <package>com.thoughtworks.xstream.converters.enums</package>
+                <package>com.thoughtworks.xstream.converters.extended</package>
+                <package>com.thoughtworks.xstream.converters.javabean</package>
+                <package>com.thoughtworks.xstream.converters.reflection</package>
+                <package>com.thoughtworks.xstream.core</package>
+                <package>com.thoughtworks.xstream.core.util</package>
+                <package>com.thoughtworks.xstream.io</package>
+                <package>com.thoughtworks.xstream.io.binary</package>
+                <package>com.thoughtworks.xstream.io.copy</package>
+                <package>com.thoughtworks.xstream.io.json</package>
+                <package>com.thoughtworks.xstream.io.path</package>
+                <package>com.thoughtworks.xstream.io.xml</package>
+                <package>com.thoughtworks.xstream.io.xml.xppdom</package>
+                <package>com.thoughtworks.xstream.mapper</package>
+                <package>com.thoughtworks.xstream.persistence</package>
                 <package>de.unibielefeld.gi.kotte.laborprogramm.pathway.api</package>
                 <package>de.unibielefeld.gi.kotte.laborprogramm.pathway.api.base</package>
                 <package>de.unibielefeld.gi.kotte.laborprogramm.pathway.api.sbml</package>
                 <package>de.unibielefeld.gi.omicsTools.biocyc.ptools</package>
+                <package>javax.xml</package>
+                <package>javax.xml.namespace</package>
+                <package>javax.xml.stream</package>
+                <package>javax.xml.stream.events</package>
+                <package>javax.xml.stream.util</package>
+                <package>junit.extensions</package>
+                <package>junit.framework</package>
+                <package>junit.runner</package>
+                <package>junit.textui</package>
+                <package>org.apache.log4j</package>
+                <package>org.apache.log4j.chainsaw</package>
+                <package>org.apache.log4j.config</package>
+                <package>org.apache.log4j.helpers</package>
+                <package>org.apache.log4j.jdbc</package>
+                <package>org.apache.log4j.jmx</package>
+                <package>org.apache.log4j.lf5</package>
+                <package>org.apache.log4j.lf5.util</package>
+                <package>org.apache.log4j.lf5.viewer</package>
+                <package>org.apache.log4j.lf5.viewer.categoryexplorer</package>
+                <package>org.apache.log4j.lf5.viewer.configure</package>
+                <package>org.apache.log4j.net</package>
+                <package>org.apache.log4j.nt</package>
+                <package>org.apache.log4j.or</package>
+                <package>org.apache.log4j.or.jms</package>
+                <package>org.apache.log4j.or.sax</package>
+                <package>org.apache.log4j.spi</package>
+                <package>org.apache.log4j.varia</package>
+                <package>org.apache.log4j.xml</package>
+                <package>org.biojava.bio</package>
+                <package>org.biojava.bio.seq.io</package>
+                <package>org.biojava.ontology</package>
+                <package>org.biojava.ontology.io</package>
+                <package>org.biojava.ontology.obo</package>
+                <package>org.biojava.utils</package>
+                <package>org.biojava.utils.cache</package>
+                <package>org.codehaus.stax2</package>
+                <package>org.codehaus.stax2.evt</package>
+                <package>org.codehaus.stax2.io</package>
+                <package>org.codehaus.stax2.osgi</package>
+                <package>org.codehaus.stax2.ri</package>
+                <package>org.codehaus.stax2.ri.dom</package>
+                <package>org.codehaus.stax2.ri.evt</package>
+                <package>org.codehaus.stax2.ri.typed</package>
+                <package>org.codehaus.stax2.typed</package>
+                <package>org.codehaus.stax2.util</package>
+                <package>org.codehaus.stax2.validation</package>
+                <package>org.codehaus.staxmate</package>
+                <package>org.codehaus.staxmate.dom</package>
+                <package>org.codehaus.staxmate.in</package>
+                <package>org.codehaus.staxmate.out</package>
+                <package>org.codehaus.staxmate.util</package>
+                <package>org.hamcrest</package>
+                <package>org.hamcrest.core</package>
+                <package>org.hamcrest.internal</package>
+                <package>org.junit</package>
+                <package>org.junit.experimental</package>
+                <package>org.junit.experimental.categories</package>
+                <package>org.junit.experimental.max</package>
+                <package>org.junit.experimental.results</package>
+                <package>org.junit.experimental.runners</package>
+                <package>org.junit.experimental.theories</package>
+                <package>org.junit.experimental.theories.internal</package>
+                <package>org.junit.experimental.theories.suppliers</package>
+                <package>org.junit.internal</package>
+                <package>org.junit.internal.builders</package>
+                <package>org.junit.internal.matchers</package>
+                <package>org.junit.internal.requests</package>
+                <package>org.junit.internal.runners</package>
+                <package>org.junit.internal.runners.model</package>
+                <package>org.junit.internal.runners.statements</package>
+                <package>org.junit.matchers</package>
+                <package>org.junit.rules</package>
+                <package>org.junit.runner</package>
+                <package>org.junit.runner.manipulation</package>
+                <package>org.junit.runner.notification</package>
+                <package>org.junit.runners</package>
+                <package>org.junit.runners.model</package>
                 <package>org.sbml.jsbml</package>
                 <package>org.sbml.jsbml.resources</package>
                 <package>org.sbml.jsbml.test</package>
@@ -52,6 +182,7 @@
                 <package>org.sbml.jsbml.xml.stax</package>
                 <package>org.sbml.jsbml.xml.test</package>
                 <package>org.sbml.jsbml.xml.xstream.converter</package>
+                <package>org.w3c.util</package>
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/pToolsBinding.jar</runtime-relative-path>

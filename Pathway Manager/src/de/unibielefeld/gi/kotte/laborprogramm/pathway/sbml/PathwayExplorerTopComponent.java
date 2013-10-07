@@ -1,7 +1,9 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.sbml;
 
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.IPathwayProject;
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.project.api.IPathwayUIProject;
 import java.awt.BorderLayout;
+import java.io.File;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
@@ -39,14 +41,36 @@ preferredID = "PathwayExplorerTopComponent")
 public final class PathwayExplorerTopComponent extends TopComponent implements LookupListener {
 
     private boolean initialized = false;
-	private Lookup.Result<IPathwayProject> result;
+	private Lookup.Result<IPathwayUIProject> result;
 
     public PathwayExplorerTopComponent() {
         initComponents();
         setName(Bundle.CTL_PathwayExplorerTopComponent());
         setToolTipText(Bundle.HINT_PathwayExplorerTopComponent());
+		result = Utilities.actionsGlobalContext().lookupResult(IPathwayUIProject.class);
     }
 
+	public void openDocument(final File sbmlDocument) {
+		final PathwayExplorerTopComponent tc = this;
+        if (!initialized) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    PathwayDisplay display = new PathwayDisplay(sbmlDocument);
+                    setDisplayName("Pathway Explorer of file " + sbmlDocument.getName());
+//                    setToolTipText("Model Id: " + display.getSBMLDocument().getModel().getId());
+                    open();
+                    add(display, BorderLayout.CENTER);
+                    requestActive();
+                    initialized = true;
+					result.removeLookupListener(tc);
+                }
+            });
+        } else {
+            throw new IllegalStateException("Pathway Explorer was already initialized with an SBML File!");
+        }
+	}
+	
     public void openProject(final IPathwayProject project) {
 		final PathwayExplorerTopComponent tc = this;
         if (!initialized) {
@@ -83,7 +107,6 @@ public final class PathwayExplorerTopComponent extends TopComponent implements L
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
-		result = Utilities.actionsGlobalContext().lookupResult(IPathwayProject.class);
 		result.addLookupListener(this);
 //        IPathwayProject project = Utilities.actionsGlobalContext().lookup(IPathwayProject.class);
 //        if(project!=null) {
@@ -118,7 +141,8 @@ public final class PathwayExplorerTopComponent extends TopComponent implements L
     public void resultChanged(LookupEvent le) {
 		if(!result.allInstances().isEmpty()) {
 			System.out.println("Received pathway project from lookup!");
-			openProject(result.allInstances().iterator().next());
+			IPathwayUIProject project = result.allInstances().iterator().next();
+			openProject(project.getProjectData());
 		}
     }
 }

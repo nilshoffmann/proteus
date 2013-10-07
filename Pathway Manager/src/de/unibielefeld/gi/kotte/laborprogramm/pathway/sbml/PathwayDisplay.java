@@ -6,6 +6,8 @@ import de.unibielefeld.gi.kotte.laborprogramm.pathway.sbml.prefuse.NeighborHighl
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Toolkit;
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -15,10 +17,13 @@ import java.util.Map;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ToolTipManager;
+import javax.xml.stream.XMLStreamException;
+import org.openide.util.Exceptions;
 import org.sbml.jsbml.Compartment;
 import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Reaction;
 import org.sbml.jsbml.SBMLDocument;
+import org.sbml.jsbml.SBMLReader;
 import org.sbml.jsbml.Species;
 import org.sbml.jsbml.SpeciesReference;
 import prefuse.Constants;
@@ -133,12 +138,21 @@ public class PathwayDisplay extends Display {
         return brighterPalette;
     }
 
-    public PathwayDisplay(IPathwayProject project) {
-        //get a display
+	public PathwayDisplay(File sbmlDocument) {
+		        //get a display
         super(new Visualization());
-        //get data from SBML document
-        List<Compartment> compartments = initDataGroups(project);
-        int nodes = m_vis.getGroup("graph.nodes").getTupleCount();
+		try {
+			SBMLDocument document = SBMLReader.read(sbmlDocument);
+			initDisplay(initDataGroups(document));
+		} catch (XMLStreamException ex) {
+			Exceptions.printStackTrace(ex);
+		} catch (IOException ex) {
+			Exceptions.printStackTrace(ex);
+		}
+	}
+	
+	private void initDisplay(List<Compartment> compartments) {
+		int nodes = m_vis.getGroup("graph.nodes").getTupleCount();
         VisualGraph vGraph = (VisualGraph) m_vis.getVisualGroup("graph");
         System.out.println(vGraph.getGroup());
 
@@ -326,11 +340,18 @@ public class PathwayDisplay extends Display {
         ToolTipManager.sharedInstance().setInitialDelay(250);
         ToolTipManager.sharedInstance().setDismissDelay(5000);
         ToolTipManager.sharedInstance().setReshowDelay(0);
+	}
+	
+    public PathwayDisplay(IPathwayProject project) {
+        //get a display
+        super(new Visualization());
+        //get data from SBML document
+		initDisplay(initDataGroups(project));
     }
     VisualGraph vg;
 
-    private List<Compartment> initDataGroups(IPathwayProject project) {
-        //create graph
+	private List<Compartment> initDataGroups(SBMLDocument document) {
+		//create graph
         Graph g = new Graph(true);
         g.addColumn("name", String.class);
         g.addColumn("id", int.class);
@@ -343,9 +364,6 @@ public class PathwayDisplay extends Display {
         g.addColumn("outDegree", int.class);
         g.addColumn("degree", int.class);
         g.addColumn("layout_weight", double.class);
-
-        //get document
-        SBMLDocument document = project.getDocument();
 
         //create nodes for all species
         ListOf<Species> listOfSpecies = document.getModel().getListOfSpecies();
@@ -506,6 +524,12 @@ public class PathwayDisplay extends Display {
 //        f.setFixed(false);
 
         return document.getModel().getListOfCompartments();
+	}
+	
+    private List<Compartment> initDataGroups(IPathwayProject project) {
+        //get document
+        SBMLDocument document = project.getDocument();
+		return initDataGroups(document);
     }
 
     public void initPathways() {

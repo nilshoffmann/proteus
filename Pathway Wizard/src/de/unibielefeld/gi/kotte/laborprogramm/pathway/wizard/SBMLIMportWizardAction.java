@@ -124,6 +124,7 @@ public final class SBMLIMportWizardAction implements ActionListener {
                     pathwayMap.addPathway(p);
                 }
                 uiProject.getProjectData().setPathwayMap(pathwayMap);
+				uiProject.close();
                 notifyListeners(uiProject);
             }
         };

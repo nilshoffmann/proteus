@@ -11,7 +11,7 @@ import javax.swing.event.ListDataListener;
 /**
  * ListModel which allows to replace it's underlying List.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class TypedListModel<T> implements ListModel {
     

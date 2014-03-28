@@ -3,7 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.pathway.api;
 /**
  * Factory for creating pathway projects.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface IPathwayProjectFactory {
 

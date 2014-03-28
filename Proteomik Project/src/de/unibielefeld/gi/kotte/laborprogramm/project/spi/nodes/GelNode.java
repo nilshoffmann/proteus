@@ -20,7 +20,7 @@ import org.openide.util.lookup.ProxyLookup;
 /**
  * Node representing a 2D gel.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class GelNode extends BeanNode<IGel> implements PropertyChangeListener {
 

@@ -7,7 +7,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 /**
  * Factory for creating 96 well microplates.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 @org.openide.util.lookup.ServiceProvider(service = IPlate96Factory.class)
 public class Plate96Factory implements IPlate96Factory {

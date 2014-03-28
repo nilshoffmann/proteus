@@ -7,7 +7,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.IWell384;
 /**
  * Factory for creating 384 well microplates.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 @org.openide.util.lookup.ServiceProvider(service = IPlate384Factory.class)
 public class Plate384Factory implements IPlate384Factory {

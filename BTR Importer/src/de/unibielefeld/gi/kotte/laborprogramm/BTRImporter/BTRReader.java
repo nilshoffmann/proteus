@@ -22,7 +22,7 @@ import org.openide.util.Lookup;
 /**
  * Reads in *.BTR files.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class BTRReader {
 

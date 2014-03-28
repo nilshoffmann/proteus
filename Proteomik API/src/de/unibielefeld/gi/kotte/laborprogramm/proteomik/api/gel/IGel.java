@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * A 2D protein gel containing gel spots.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface IGel extends IPropertyChangeSource, IUniqueObject {
 

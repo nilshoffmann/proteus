@@ -16,7 +16,7 @@ import java.util.UUID;
 /**
  * Default implementation for IWell384.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class Well384 implements IWell384, Activatable {
 

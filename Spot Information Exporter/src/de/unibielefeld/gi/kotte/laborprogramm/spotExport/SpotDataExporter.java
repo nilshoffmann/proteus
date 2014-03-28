@@ -20,7 +20,7 @@ import org.openide.util.Exceptions;
 
 /**
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class SpotDataExporter {
 

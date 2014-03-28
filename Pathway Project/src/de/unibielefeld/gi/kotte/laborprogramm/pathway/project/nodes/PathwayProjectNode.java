@@ -29,7 +29,7 @@ import org.openide.util.lookup.ProxyLookup;
 /**
  * Node representing a Pathway Project.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class PathwayProjectNode extends BeanNode<IPathwayUIProject> implements PropertyChangeListener {
 

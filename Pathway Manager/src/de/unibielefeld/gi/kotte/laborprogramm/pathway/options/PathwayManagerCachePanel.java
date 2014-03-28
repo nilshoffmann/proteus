@@ -1,13 +1,14 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.options;
 
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.MetacycController;
+import static de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.MetacycController.defaultBiocycLocation;
 import java.awt.GridLayout;
-import java.io.File;
-import java.io.IOException;
-import java.util.prefs.Preferences;
+import java.net.MalformedURLException;
+import java.net.URL;
+import javax.swing.InputVerifier;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.openide.DialogDisplayer;
@@ -15,7 +16,7 @@ import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileAlreadyLockedException;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
+import org.openide.util.NbPreferences;
 
 final class PathwayManagerCachePanel extends JPanel implements DocumentListener {
 
@@ -25,6 +26,15 @@ final class PathwayManagerCachePanel extends JPanel implements DocumentListener 
         this.controller = controller;
         initComponents();
         cacheFileMaxAgeTextField.getDocument().addDocumentListener(this);
+    }
+    
+    private boolean isUrl(String text) {
+        try {
+            URL u = new URL(text);
+            return true;
+        }catch(MalformedURLException e) {
+            return false;
+        }
     }
 
     /**
@@ -41,6 +51,10 @@ final class PathwayManagerCachePanel extends JPanel implements DocumentListener 
         cacheFileMaxAgeTextField = new javax.swing.JTextField();
         cacheAgeLabel = new javax.swing.JLabel();
         errorMessageLabel = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        serverLocationTextField = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
 
         org.openide.awt.Mnemonics.setLocalizedText(cacheDeleteLabel, org.openide.util.NbBundle.getMessage(PathwayManagerCachePanel.class, "PathwayManagerCachePanel.cacheDeleteLabel.text")); // NOI18N
 
@@ -64,6 +78,18 @@ final class PathwayManagerCachePanel extends JPanel implements DocumentListener 
 
         org.openide.awt.Mnemonics.setLocalizedText(errorMessageLabel, org.openide.util.NbBundle.getMessage(PathwayManagerCachePanel.class, "PathwayManagerCachePanel.errorMessageLabel.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(PathwayManagerCachePanel.class, "PathwayManagerCachePanel.jLabel1.text")); // NOI18N
+
+        serverLocationTextField.setText(org.openide.util.NbBundle.getMessage(PathwayManagerCachePanel.class, "PathwayManagerCachePanel.serverLocationTextField.text")); // NOI18N
+        serverLocationTextField.setInputVerifier(new InputVerifier() {
+            @Override
+            public boolean verify(JComponent arg0) {
+                return isUrl(serverLocationTextField.getText());
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(PathwayManagerCachePanel.class, "PathwayManagerCachePanel.jLabel2.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -74,13 +100,17 @@ final class PathwayManagerCachePanel extends JPanel implements DocumentListener 
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(oldCacheFilesCheckBox)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cacheFileMaxAgeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cacheFileMaxAgeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cacheAgeLabel))
+                        .addComponent(cacheAgeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(cacheDeleteLabel)
                     .addComponent(deleteCacheButton)
-                    .addComponent(errorMessageLabel))
-                .addContainerGap(53, Short.MAX_VALUE))
+                    .addComponent(errorMessageLabel)
+                    .addComponent(jLabel1)
+                    .addComponent(serverLocationTextField)
+                    .addComponent(jLabel2)
+                    .addComponent(jSeparator1))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -88,15 +118,23 @@ final class PathwayManagerCachePanel extends JPanel implements DocumentListener 
                 .addContainerGap()
                 .addComponent(cacheDeleteLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(serverLocationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(errorMessageLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(deleteCacheButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(oldCacheFilesCheckBox)
                     .addComponent(cacheFileMaxAgeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cacheAgeLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
-                .addComponent(errorMessageLabel)
-                .addContainerGap())
+                .addGap(18, 18, 18))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -110,7 +148,7 @@ final class PathwayManagerCachePanel extends JPanel implements DocumentListener 
             configFolder.delete();
         } catch (Exception ex) {
             JPanel panel = new JPanel();
-            panel.setLayout(new GridLayout(2,1));
+            panel.setLayout(new GridLayout(2, 1));
             panel.add(new JLabel("Cache could not be deleted"));
             if (ex instanceof NullPointerException) {
                 panel.add(new JLabel("Reason: There was no cache folder. Maybe it was already deleted."));
@@ -127,21 +165,25 @@ final class PathwayManagerCachePanel extends JPanel implements DocumentListener 
     }//GEN-LAST:event_deleteCacheButtonActionPerformed
 
     void load() {
-        oldCacheFilesCheckBox.setSelected(Preferences.userRoot().getBoolean("check cache age", false));
-        int i = Preferences.userRoot().getInt("cache time to live", 14);
+        oldCacheFilesCheckBox.setSelected(NbPreferences.forModule(MetacycController.class).getBoolean("check.cache.age", false));
+        int i = NbPreferences.forModule(MetacycController.class).getInt("cache.time.to.live", 14);
         cacheFileMaxAgeTextField.setText(Integer.toString(i));
+        serverLocationTextField.setText(NbPreferences.forModule(MetacycController.class).get("server.location", defaultBiocycLocation));
     }
 
     void store() {
-        Preferences.userRoot().putBoolean("check cache age", oldCacheFilesCheckBox.isSelected());
-        int i = Integer.parseInt(cacheFileMaxAgeTextField.getText());
-        Preferences.userRoot().putInt("cache time to live", i);
+        NbPreferences.forModule(MetacycController.class).putBoolean("check.cache.age", oldCacheFilesCheckBox.isSelected());
+        NbPreferences.forModule(MetacycController.class).putInt("cache.time.to.live", Integer.parseInt(cacheFileMaxAgeTextField.getText()));
+        NbPreferences.forModule(MetacycController.class).put(
+                "server.location",
+                serverLocationTextField.getText().isEmpty()?defaultBiocycLocation:serverLocationTextField.getText().trim()
+        );
     }
 
     boolean valid() {
         int i;
         try {
-        i = Integer.parseInt(cacheFileMaxAgeTextField.getText());
+            i = Integer.parseInt(cacheFileMaxAgeTextField.getText());
         } catch (NumberFormatException ex) {
             errorMessageLabel.setText("Amount of days to keep cache files is not a number!");
             return false;
@@ -159,7 +201,11 @@ final class PathwayManagerCachePanel extends JPanel implements DocumentListener 
     private javax.swing.JTextField cacheFileMaxAgeTextField;
     private javax.swing.JButton deleteCacheButton;
     private javax.swing.JLabel errorMessageLabel;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JCheckBox oldCacheFilesCheckBox;
+    private javax.swing.JTextField serverLocationTextField;
     // End of variables declaration//GEN-END:variables
 
     @Override

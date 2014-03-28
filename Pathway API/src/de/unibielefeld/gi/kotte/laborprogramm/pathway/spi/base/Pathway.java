@@ -12,7 +12,7 @@ import java.util.UUID;
 /**
  * Default implementation for IPathway.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class Pathway implements IPathway, Activatable {
 

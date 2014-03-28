@@ -16,7 +16,7 @@ import java.util.UUID;
 /**
  * Default implementation for IBioRepGelGroup.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class BioRepGelGroup implements IBioRepGelGroup, Activatable {
 

@@ -18,7 +18,7 @@ import org.openide.util.Exceptions;
 /**
  * Exporter for IGels in GelMap format.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class GelMapExporter {
 

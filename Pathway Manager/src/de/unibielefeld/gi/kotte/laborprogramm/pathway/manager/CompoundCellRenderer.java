@@ -10,7 +10,7 @@ import javax.swing.ListCellRenderer;
 /**
  * ListCellRenderer for Lists of Compounds.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class CompoundCellRenderer extends DefaultListCellRenderer implements ListCellRenderer<Object> {
 

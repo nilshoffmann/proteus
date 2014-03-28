@@ -9,7 +9,7 @@ import org.openide.filesystems.FileObject;
 
 /**
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 @org.openide.util.lookup.ServiceProvider(service = ProjectFactory.class)
 public class ProteomicProjectFactory implements ProjectFactory {

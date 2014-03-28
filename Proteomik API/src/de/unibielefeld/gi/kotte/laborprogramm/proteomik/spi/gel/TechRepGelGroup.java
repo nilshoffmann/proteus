@@ -16,7 +16,7 @@ import java.util.UUID;
 /**
  * Default implementation for ITechRepGelGroup.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class TechRepGelGroup implements ITechRepGelGroup, Activatable {
 

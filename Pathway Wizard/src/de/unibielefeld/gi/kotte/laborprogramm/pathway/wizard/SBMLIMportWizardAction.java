@@ -1,15 +1,11 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.wizard;
 
-import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.IPathwayProject;
-import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.IPathwayProjectFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.sbml.IPathwayMap;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.sbml.IPathwayMapFactory;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.project.api.IPathwayUIProject;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.project.api.IPathwayUIProjectFactory;
-import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.CancellableRunnable;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.MetacycController;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.NameTools;
-import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.ResultListener;
 import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.PGDB;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.Pathway;
@@ -23,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
 import javax.xml.stream.XMLStreamException;
+import net.sf.maltcms.chromaui.ui.support.api.CancellableRunnable;
+import net.sf.maltcms.chromaui.ui.support.api.ResultListener;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;

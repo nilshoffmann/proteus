@@ -31,7 +31,7 @@ import org.openide.util.lookup.ProxyLookup;
 /**
  * Node representing a gel spot as the child of its group.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class SpotNodeAsGroupChild extends BeanNode<ISpot> implements PropertyChangeListener {
 

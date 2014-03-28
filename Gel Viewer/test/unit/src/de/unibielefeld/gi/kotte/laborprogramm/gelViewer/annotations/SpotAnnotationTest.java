@@ -41,7 +41,7 @@ import org.netbeans.junit.NbTestCase;
 
 /**
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class SpotAnnotationTest extends NbTestCase {
 

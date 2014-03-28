@@ -16,7 +16,7 @@ import org.openide.util.HelpCtx;
 /**
  * Wizard Panel for the Delta2D project import.
  * 
- * @author kotte
+ * @author Konstantin Otte
  */
 public class ProjectImportWizardPanel1 implements WizardDescriptor.Panel, PropertyChangeListener {
 

@@ -10,7 +10,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 @ServiceProvider(service=IPlate384OpenCookie.class)
 public class Plate384OpenCookie implements IPlate384OpenCookie {

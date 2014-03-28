@@ -12,7 +12,7 @@ import org.netbeans.spi.project.ProjectState;
 /**
  * Interface for Proteomic Projects.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface IProteomicProject extends Project, IPropertyChangeSource, PropertyChangeListener {
 

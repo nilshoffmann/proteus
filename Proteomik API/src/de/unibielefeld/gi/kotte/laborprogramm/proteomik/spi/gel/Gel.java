@@ -17,7 +17,7 @@ import java.util.UUID;
 /**
  * Default implementation for IGel.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class Gel implements IGel, Activatable {
 

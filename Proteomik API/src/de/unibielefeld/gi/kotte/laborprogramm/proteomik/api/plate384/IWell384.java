@@ -8,7 +8,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.IWell96;
 /**
  * A well on a 384 well microplate.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface IWell384 extends IPropertyChangeSource, IUniqueObject {
 

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * A well on a 96 well microplate.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface IWell96 extends IPropertyChangeSource, IUniqueObject {
 

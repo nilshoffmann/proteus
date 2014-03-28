@@ -44,7 +44,7 @@ import org.openide.util.lookup.InstanceContent;
 
 /**
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 @org.openide.util.lookup.ServiceProvider(service = Project.class)
 public class ProteomicProject implements IProteomicProject {

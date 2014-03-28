@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Proteomic porject containing 2D gels and microplates.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface IProject extends IPropertyChangeSource, IUniqueObject {
 

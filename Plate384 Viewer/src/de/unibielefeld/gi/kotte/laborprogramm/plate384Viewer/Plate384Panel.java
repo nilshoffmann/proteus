@@ -23,7 +23,7 @@ import org.openide.util.lookup.InstanceContent;
  * GUI Panel that visually represents a IPlate384. Offers Well96Buttons to
  * manipulate plate wells.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class Plate384Panel extends JPanel implements PropertyChangeListener {
 

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * A group of spot objects representing the same spot on different gels.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface ISpotGroup extends IPropertyChangeSource, IUniqueObject {
 

@@ -6,7 +6,7 @@ import java.io.File;
 /**
  * Reads in gelImages/quantitations/<gelId>.xml files from Delta2D projects.
  * 
- * @author kotte
+ * @author Konstantin Otte
  */
 public class QuantitationDataReader {
     public QuantitationData parseQuantification(File f) {

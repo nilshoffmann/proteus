@@ -8,7 +8,7 @@ import java.util.List;
  * A group containing biological replications of groups of technical
  * replications of 2D gels.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface IBioRepGelGroup extends IPropertyChangeSource, IUniqueObject {
 

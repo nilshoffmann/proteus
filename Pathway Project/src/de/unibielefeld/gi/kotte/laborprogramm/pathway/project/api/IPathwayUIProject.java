@@ -11,7 +11,7 @@ import org.netbeans.spi.project.ProjectState;
 /**
  * Netbeans Project for IPathwayProject.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface IPathwayUIProject extends Project, IPropertyChangeSource, PropertyChangeListener {
 

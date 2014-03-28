@@ -6,7 +6,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ISpotGroup
 /**
  * Factory for creating new spot groups.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 @org.openide.util.lookup.ServiceProvider(service = ISpotGroupFactory.class)
 public class SpotGroupFactory implements ISpotGroupFactory {

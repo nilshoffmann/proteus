@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Factory for creating pathways.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface IPathwayFactory {
 

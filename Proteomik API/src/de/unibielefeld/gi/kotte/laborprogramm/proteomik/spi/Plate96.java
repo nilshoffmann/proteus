@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  * Default implementation for IPlate96.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class Plate96 implements IPlate96, Activatable {
 

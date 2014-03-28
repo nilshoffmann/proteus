@@ -23,7 +23,7 @@ import org.openide.util.WeakListeners;
 /**
  * Node representing a Proteomik Project.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class ProjectNode extends AbstractNode implements PropertyChangeListener {
 

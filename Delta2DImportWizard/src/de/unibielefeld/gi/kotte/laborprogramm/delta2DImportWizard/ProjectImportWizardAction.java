@@ -28,7 +28,7 @@ import org.openide.util.Lookup;
 /**
  * Wizard Action for the Delta2D project import.
  * 
- * @author kotte
+ * @author Konstantin Otte
  */
 public final class ProjectImportWizardAction implements ActionListener {
 

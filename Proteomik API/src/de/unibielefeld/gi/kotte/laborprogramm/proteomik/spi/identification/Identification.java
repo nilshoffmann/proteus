@@ -14,7 +14,7 @@ import java.util.UUID;
 /**
  * Default implementation of IIdentification.
  *
- * @author kotte, hoffmann
+ * @author Konstantin Otte, hoffmann
  */
 public class Identification implements IIdentification, Activatable {
 

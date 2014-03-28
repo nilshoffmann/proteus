@@ -14,7 +14,7 @@ import org.openide.util.NbBundle.Messages;
 /**
  * Action for deleting IPlate384s.
  * 
- * @author kotte
+ * @author Konstantin Otte
  */
 @ActionID(
     category = "Proteus/Plate384Node",

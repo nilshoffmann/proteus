@@ -23,7 +23,7 @@ id = "de.unibielefeld.gi.kotte.laborprogramm.project.spi.actions.SpotLabelTransf
 /**
  * Action that transfers the labels of a gel to all other gels of its project.
  * 
- * @author kotte
+ * @author Konstantin Otte
  */
 public final class SpotLabelTransferAction implements ActionListener {
 

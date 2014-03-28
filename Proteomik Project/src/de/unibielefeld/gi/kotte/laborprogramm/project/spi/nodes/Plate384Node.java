@@ -23,7 +23,7 @@ import org.openide.util.lookup.ProxyLookup;
 /**
  * Node representing a 384 well MALDI target plate.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class Plate384Node extends BeanNode<IPlate384> implements PropertyChangeListener {
 

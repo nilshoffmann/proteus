@@ -6,7 +6,7 @@ import java.io.File;
 /**
  * Reads in gelImages.xml files from Delta2D projects.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class GelDataReader {
 

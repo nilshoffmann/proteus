@@ -5,7 +5,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.base.IEnzymaticReactio
 /**
  * Factory for creating reaction annotations.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 @org.openide.util.lookup.ServiceProvider(service = IEnzymaticReactionFactory.class)
 public class EnzymaticReactionFactory implements IEnzymaticReactionFactory {

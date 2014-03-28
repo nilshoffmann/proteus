@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  * Default implementation for IPlate384.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class Plate384 implements IPlate384, Activatable {
 

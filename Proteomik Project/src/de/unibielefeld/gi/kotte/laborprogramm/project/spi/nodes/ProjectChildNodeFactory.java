@@ -22,7 +22,7 @@ import org.openide.util.WeakListeners;
 /**
  * Factory for creating various nodes as Children of a ProjectNode.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class ProjectChildNodeFactory extends ChildFactory<Object> implements PropertyChangeListener, LookupListener {
 

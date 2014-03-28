@@ -16,7 +16,7 @@ import org.openide.util.Lookup;
 /**
  * Factory for creating SpotNodeAsGelChild nodes as children of a GelNode.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 class GelChildNodeFactory extends ChildFactory<ISpot> implements PropertyChangeListener {
 

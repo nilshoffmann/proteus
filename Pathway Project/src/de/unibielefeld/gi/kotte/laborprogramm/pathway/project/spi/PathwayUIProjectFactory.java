@@ -10,7 +10,7 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Default implementation of IPathwayProjectFactory.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 @ServiceProvider(service = ProjectFactory.class)
 public class PathwayUIProjectFactory implements ProjectFactory {

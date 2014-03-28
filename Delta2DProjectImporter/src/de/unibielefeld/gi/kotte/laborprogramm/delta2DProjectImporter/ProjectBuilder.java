@@ -25,7 +25,7 @@ import org.openide.util.Lookup;
 /**
  * Builds up Proteus Projects from data files.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class ProjectBuilder {
 

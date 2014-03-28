@@ -18,7 +18,7 @@ import org.openide.util.NbBundle;
 /**
  * Wizard Action for the Spot Data Export.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 @ActionID(category = "Proteus/ProteomicProject",
 id = "de.unibielefeld.gi.kotte.laborprogramm.spotTableExporter.ExportOptionsWizardAction")

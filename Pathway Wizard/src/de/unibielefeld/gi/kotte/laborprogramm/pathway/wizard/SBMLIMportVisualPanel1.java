@@ -1,9 +1,7 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.wizard;
 
-import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.CancellableRunnable;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.MetacycController;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.NameTools;
-import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.ResultListener;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.TypedListModel;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.PGDB;
 import java.awt.Cursor;
@@ -17,6 +15,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import net.sf.maltcms.chromaui.ui.support.api.CancellableRunnable;
+import net.sf.maltcms.chromaui.ui.support.api.ResultListener;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.filesystems.FileChooserBuilder;

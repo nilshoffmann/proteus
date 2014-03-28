@@ -16,7 +16,7 @@ import org.openide.util.Lookup;
 /**
  * Factory for creating SpotNodeAsGroupChild nodes as children of a SpotGroupNode.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 class SpotGroupChildNodeFactory extends ChildFactory<ISpot> implements PropertyChangeListener {
 

@@ -6,7 +6,7 @@ import java.io.File;
 /**
  * Reads in gelImages/labels/<gelId>.xml files from Delta2D projects.
  * 
- * @author kotte
+ * @author Konstantin Otte
  */
 class LabelDataReader {
     public LabelData parseLabels(File f) {

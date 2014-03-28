@@ -12,7 +12,7 @@ import org.openide.util.Lookup;
 /**
  * Factory for creating GelNode nodes as children of a TechRepGelGroupNode.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 class TechRepGelGroupChildNodeFactory extends ChildFactory<IGel> {
     

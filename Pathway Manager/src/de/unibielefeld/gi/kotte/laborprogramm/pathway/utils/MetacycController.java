@@ -10,43 +10,64 @@ import de.unibielefeld.gi.omicsTools.biocyc.ptools.Reaction;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.prefs.Preferences;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import org.biopax.paxtools.io.BioPAXIOHandler;
+import org.biopax.paxtools.io.SimpleIOHandler;
+import org.biopax.paxtools.model.Model;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
+import org.openide.util.NbPreferences;
 
 /**
  * Provides access to Metacyc Database Informations to other classes.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class MetacycController {
 
-    static final public String DATABASE_URL = "http://biocyc.org/";
+    public static final String defaultBiocycLocation = "http://biocyc.org:80";
+//    static final public String DATABASE_URL = "http://biocyc.org/";
+
+    public URI getBaseURI() {
+        String serverLocation = NbPreferences.forModule(MetacycController.class).get("server.location", MetacycController.defaultBiocycLocation);
+        URL u;
+        try {
+            u = new URL(serverLocation);
+            return u.toURI();
+        } catch (MalformedURLException | URISyntaxException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 
     public List<PGDB> getOrganisms() {
         List<PGDB> list = Collections.emptyList();
         URI uri;
         try {
-            uri = new URI("http", null, "biocyc.org", 80, "/xmlquery",
+            URI baseUri = getBaseURI();
+            uri = new URI(baseUri.getScheme(), null, baseUri.getHost(), baseUri.getPort(), "/xmlquery",
                     "dbs", null);
             PtoolsXml organisms = getStuff(uri);
             if (organisms != null) {
@@ -62,7 +83,8 @@ public class MetacycController {
         List<Pathway> list = Collections.emptyList();
         URI uri;
         try {
-            uri = new URI("http", null, "biocyc.org", 80, "/xmlquery", "[x:x<-" + organismID + "^^pathways]", null);
+            URI baseUri = getBaseURI();
+            uri = new URI(baseUri.getScheme(), null, baseUri.getHost(), baseUri.getPort(), "/xmlquery", "[x:x<-" + organismID + "^^pathways]", null);
             PtoolsXml pathways = getStuff(uri);
             List<Object> children = pathways.getCompoundOrGOTermOrGene();
             if (children != null) {
@@ -84,7 +106,8 @@ public class MetacycController {
         List<Protein> list = Collections.emptyList();
         URI uri;
         try {
-            uri = new URI("http", null, "biocyc.org", 80, "/xmlquery", "[x:y:=" + organismID + '~' + pathwayID + ",x<-(enzymes-of-pathway y)]", null);
+            URI baseUri = getBaseURI();
+            uri = new URI(baseUri.getScheme(), null, baseUri.getHost(), baseUri.getPort(), "/xmlquery", "[x:y:=" + organismID + '~' + pathwayID + ",x<-(enzymes-of-pathway y)]", null);
             PtoolsXml enzymes = getStuff(uri);
             List<Object> children = enzymes.getCompoundOrGOTermOrGene();
             if (children != null) {
@@ -114,7 +137,8 @@ public class MetacycController {
         List<Compound> list = Collections.emptyList();
         URI uri;
         try {
-            uri = new URI("http", null, "biocyc.org", 80, "/xmlquery", "[x:y:=" + organismID + '~' + pathwayID + ",x<-(compounds-of-pathway y)]", null);
+            URI baseUri = getBaseURI();
+            uri = new URI(baseUri.getScheme(), null, baseUri.getHost(), baseUri.getPort(), "/xmlquery", "[x:y:=" + organismID + '~' + pathwayID + ",x<-(compounds-of-pathway y)]", null);
             PtoolsXml compounds = getStuff(uri);
             List<Object> children = compounds.getCompoundOrGOTermOrGene();
             if (children != null) {
@@ -136,7 +160,8 @@ public class MetacycController {
         List<Compound> list = Collections.emptyList();
         URI uri;
         try {
-            uri = new URI("http", null, "biocyc.org", 80, "/xmlquery", "[x:x<-" + organismID + "^^compounds]", null);
+            URI baseUri = getBaseURI();
+            uri = new URI(baseUri.getScheme(), null, baseUri.getHost(), baseUri.getPort(), "/xmlquery", "[x:x<-" + organismID + "^^compounds]", null);
             PtoolsXml compounds = getStuff(uri);
             List<Object> children = compounds.getCompoundOrGOTermOrGene();
             if (children != null) {
@@ -154,11 +179,29 @@ public class MetacycController {
         return list;
     }
 
+    public List<org.biopax.paxtools.model.level3.Pathway> getBiopaxPathway(String organismID, String pathwayID) {
+        try {
+            URI baseUri = getBaseURI();
+            URI uri = new URI(baseUri.getScheme(), null, "websvc."+baseUri.getHost(), baseUri.getPort(), "/" + organismID + "/pathway-biopax", "type=3&object=" + pathwayID, null);
+            Model m = getStuffBioPax(uri);
+            if (m == null) {
+                return Collections.emptyList();
+            }
+            Set<org.biopax.paxtools.model.level3.Pathway> pathways = m.getObjects(org.biopax.paxtools.model.level3.Pathway.class);
+            List<org.biopax.paxtools.model.level3.Pathway> l = new ArrayList<org.biopax.paxtools.model.level3.Pathway>(pathways);
+            return l;
+        } catch (URISyntaxException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return Collections.emptyList();
+    }
+
     public List<Pathway> getPathwaysForCompound(String organismID, String compoundID) {
         List<Pathway> list = Collections.emptyList();
         URI uri;
         try {
-            uri = new URI("http", null, "biocyc.org", 80, "/xmlquery", "[x:y:=" + organismID + '~' + compoundID + ",x<-(pathways-of-compound y)]", null);
+            URI baseUri = getBaseURI();
+            uri = new URI(baseUri.getScheme(), null, baseUri.getHost(), baseUri.getPort(), "/xmlquery", "[x:y:=" + organismID + '~' + compoundID + ",x<-(pathways-of-compound y)]", null);
             PtoolsXml pathways = getStuff(uri);
             List<Object> children = pathways.getCompoundOrGOTermOrGene();
             if (children != null) {
@@ -178,7 +221,8 @@ public class MetacycController {
 
     public PtoolsXml getEntity(String id) {
         try {
-            URI uri = new URI("http", null, "biocyc.org", 80, "/getxml", id, null);
+            URI baseUri = getBaseURI();
+            URI uri = new URI(baseUri.getScheme(), null, baseUri.getHost(), baseUri.getPort(), "/getxml", id, null);
             return getStuff(uri);
         } catch (URISyntaxException ex) {
             Exceptions.printStackTrace(ex);
@@ -190,7 +234,8 @@ public class MetacycController {
         List<Protein> list = Collections.emptyList();
         URI uri;
         try {
-            uri = new URI("http", null, "biocyc.org", 80, "/xmlquery", "[x:x<-" + organismID + "^^reactions,x^ec-number=\"" + ecNumber + "\"]", null);
+            URI baseUri = getBaseURI();
+            uri = new URI(baseUri.getScheme(), null, baseUri.getHost(), baseUri.getPort(), "/xmlquery", "[x:x<-" + organismID + "^^reactions,x^ec-number=\"" + ecNumber + "\"]", null);
             PtoolsXml enzymes = getStuff(uri);
             List<Object> children = enzymes.getCompoundOrGOTermOrGene();
             if (children != null) {
@@ -234,6 +279,36 @@ public class MetacycController {
             return (PtoolsXml) u.unmarshal(getFileForURI(uri));
         } catch (JAXBException ex) {
             Exceptions.printStackTrace(ex);
+        }
+        return null;
+    }
+
+    /**
+     * Gets a biopax Model object with the queried data.
+     *
+     * @param uri the query String
+     * @return the XML data Object
+     */
+    private Model getStuffBioPax(URI uri) {
+        BioPAXIOHandler handler = new SimpleIOHandler(); // auto-detects Level
+        File f = getFileForURI(uri);
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(f);
+            Model model = handler.convertFromOWL(fis);
+            return model;
+        } catch (org.biopax.paxtools.util.BioPaxIOException e) {
+            System.err.println("File may be empty!");
+        } catch (IOException e) {
+            Exceptions.printStackTrace(e);
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    Exceptions.printStackTrace(e);
+                }
+            }
         }
         return null;
     }
@@ -342,12 +417,12 @@ public class MetacycController {
             reader.close();
             bw.flush();
             bw.close();
-		} catch (UnknownHostException ex) {
-			System.err.println("No network connection!");
-			file.delete();
+        } catch (UnknownHostException ex) {
+            System.err.println("No network connection!");
+            file.delete();
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
-			file.delete();
+            file.delete();
         }
     }
 }

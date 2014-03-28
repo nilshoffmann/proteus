@@ -6,7 +6,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group.ILogicalGe
 /**
  * Factory for creating new groups of logically different gel groups.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 @org.openide.util.lookup.ServiceProvider(service = ILogicalGelGroupFactory.class)
 public class LogicalGelGroupFactory implements ILogicalGelGroupFactory {

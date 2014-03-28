@@ -10,7 +10,7 @@ import org.openide.nodes.Node;
 /**
  * LogicalViewProvider for IPathwayProjects.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class PathwayProjectLogicalView implements LogicalViewProvider {
 

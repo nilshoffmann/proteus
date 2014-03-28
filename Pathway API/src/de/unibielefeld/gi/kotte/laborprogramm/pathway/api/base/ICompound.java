@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Annotation of a molecule that can be part of a reaction.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface ICompound extends IPropertyChangeSource, IUniqueObject {
 

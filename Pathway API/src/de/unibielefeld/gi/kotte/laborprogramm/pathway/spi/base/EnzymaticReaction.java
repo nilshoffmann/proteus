@@ -16,7 +16,7 @@ import java.util.UUID;
 /**
  * Default implementation for IReactionAnnotation
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class EnzymaticReaction implements IEnzymaticReaction, Activatable {
 

@@ -10,7 +10,7 @@ import org.openide.util.Lookup;
 /**
  * Factory for creating TechRepGelGroupNode nodes as children of a BioRepGelGroupNode.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 class BioRepGelGroupChildNodeFactory extends ChildFactory<ITechRepGelGroup> {
 

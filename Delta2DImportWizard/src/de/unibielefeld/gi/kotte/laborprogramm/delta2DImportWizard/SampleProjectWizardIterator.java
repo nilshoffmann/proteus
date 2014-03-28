@@ -17,7 +17,7 @@ import org.openide.filesystems.FileUtil;
 /**
  * Descriptor for the Sample Project Wizard.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class SampleProjectWizardIterator implements WizardDescriptor.ProgressInstantiatingIterator<FileObject> {
 

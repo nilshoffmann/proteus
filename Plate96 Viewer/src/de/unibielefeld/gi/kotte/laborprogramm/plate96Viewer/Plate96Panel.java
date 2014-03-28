@@ -18,7 +18,7 @@ import org.openide.util.lookup.InstanceContent;
 /**
  * GUI Panel that visually represents a IPlate96. Offers Well96Buttons to manipulate plate wells.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class Plate96Panel extends JPanel {
 

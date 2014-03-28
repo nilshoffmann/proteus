@@ -11,13 +11,21 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ToolTipManager;
 import javax.xml.stream.XMLStreamException;
+import org.biopax.paxtools.model.level3.BiochemicalReaction;
+import org.biopax.paxtools.model.level3.ConversionDirectionType;
+import org.biopax.paxtools.model.level3.Entity;
+import org.biopax.paxtools.model.level3.Pathway;
+import org.biopax.paxtools.model.level3.PathwayStep;
+import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.openide.util.Exceptions;
 import org.sbml.jsbml.Compartment;
 import org.sbml.jsbml.ListOf;
@@ -36,7 +44,7 @@ import prefuse.action.assignment.ColorAction;
 import prefuse.action.assignment.DataColorAction;
 import prefuse.action.assignment.FontAction;
 import prefuse.action.layout.Layout;
-import prefuse.action.layout.graph.RadialTreeLayout;
+import prefuse.action.layout.graph.BalloonTreeLayout;
 import prefuse.controls.PanControl;
 import prefuse.controls.WheelZoomControl;
 import prefuse.controls.ZoomControl;
@@ -53,6 +61,7 @@ import prefuse.data.tuple.TupleSet;
 import prefuse.render.AbstractShapeRenderer;
 import prefuse.render.DefaultRendererFactory;
 import prefuse.render.EdgeRenderer;
+import prefuse.render.LabelRenderer;
 import prefuse.render.PolygonRenderer;
 import prefuse.render.Renderer;
 import prefuse.render.ShapeRenderer;
@@ -68,7 +77,7 @@ import prefuse.visual.VisualItem;
 /**
  * The frame that displays the prefuse graph of a pathway.
  *
- * @author kotte
+ * @author Konstantin Otte
  *
  * Based on the prefuse demo for aggregated view. Copyright (c) 2004-2006
  * Regents of the University of California.
@@ -138,27 +147,35 @@ public class PathwayDisplay extends Display {
         return brighterPalette;
     }
 
-	public PathwayDisplay(File sbmlDocument) {
-		        //get a display
+    public PathwayDisplay(Pathway pathway) {
         super(new Visualization());
-		try {
-			SBMLDocument document = SBMLReader.read(sbmlDocument);
-			initDisplay(initDataGroups(document));
-		} catch (XMLStreamException ex) {
-			Exceptions.printStackTrace(ex);
-		} catch (IOException ex) {
-			Exceptions.printStackTrace(ex);
-		}
-	}
-	
-	private void initDisplay(List<Compartment> compartments) {
-		int nodes = m_vis.getGroup("graph.nodes").getTupleCount();
+        initDisplay(initDataGroups(pathway));
+    }
+
+    public PathwayDisplay(File sbmlDocument) {
+        //get a display
+        super(new Visualization());
+        try {
+            SBMLDocument document = SBMLReader.read(sbmlDocument);
+            initDisplay(initDataGroups(document));
+        } catch (XMLStreamException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+
+    private void initDisplay(int groups) {
+//        int nodes = m_vis.getGroup("graph.nodes").getTupleCount();
         VisualGraph vGraph = (VisualGraph) m_vis.getVisualGroup("graph");
         System.out.println(vGraph.getGroup());
 
         // set up node renderer
         Renderer nodeRenderer = new ShapeRenderer(10);
-
+        LabelRenderer textRenderer = new LabelRenderer("name");
+        textRenderer.setRoundedCorner(5, 5);
+        textRenderer.setHorizontalPadding(2);
+        textRenderer.setVerticalPadding(2);
         // draw aggregates as polygons with curved edges
         Renderer polyR = new PolygonRenderer(Constants.POLY_TYPE_CURVE);
         ((PolygonRenderer) polyR).setCurveSlack(0.0f);
@@ -173,15 +190,16 @@ public class PathwayDisplay extends Display {
         drf.setDefaultRenderer(nodeRenderer);
         drf.setDefaultEdgeRenderer(er);
         drf.add("ingroup('graph.edges')", er);
+        drf.add("ingroup('graph.nodes')", textRenderer);
         drf.add("ingroup('aggregates')", polyR);
         m_vis.setRendererFactory(drf);
         //set up all the color actions
 //        int[] nodeCompartmentPalette = getColorPalette(compartments.size() + 1, 0.05f);
 //        int[] nodeCompartmentHighlightPalette = getColorPalette(compartments.size() + 1, 0.25f);
-        int[] nodeVisiblePalette = getColorPalette(compartments.size() + 1, 0.1f);
-        int[] nodeFixedPalette = getColorPalette(compartments.size() + 1, 0.5f);
-        int[] nodeHighlightPalette = getColorPalette(compartments.size() + 1, 0.75f);
-        int[] nodeHoverPalette = getColorPalette(compartments.size() + 1, 1.0f);
+        int[] nodeVisiblePalette = getColorPalette(groups + 1, 0.1f);
+        int[] nodeFixedPalette = getColorPalette(groups + 1, 0.5f);
+        int[] nodeHighlightPalette = getColorPalette(groups + 1, 0.75f);
+        int[] nodeHoverPalette = getColorPalette(groups + 1, 1.0f);
         int[] edgePalette = new int[]{
             ColorLib.rgba(225, 225, 225, 64),
             ColorLib.rgba(64, 64, 64, 192)
@@ -193,7 +211,6 @@ public class PathwayDisplay extends Display {
 //                Constants.NOMINAL, VisualItem.FILLCOLOR, nodeCompartmentHighlightPalette));
 //        aFill.add(VisualItem.HOVER, new DataColorAction("aggregates", "id",
 //                Constants.NOMINAL, VisualItem.FILLCOLOR, nodeCompartmentHighlightPalette));
-
         DataColorAction nodeFill = new DataColorAction("graph.nodes", "compartment", Constants.NOMINAL, VisualItem.FILLCOLOR, nodeVisiblePalette);
         nodeFill.add(VisualItem.HOVER, new DataColorAction("graph.nodes", "compartment", Constants.NOMINAL, VisualItem.FILLCOLOR, nodeHoverPalette));
         nodeFill.add(VisualItem.HIGHLIGHT, new DataColorAction("graph.nodes", "compartment", Constants.NOMINAL, VisualItem.FILLCOLOR, nodeHighlightPalette));
@@ -227,14 +244,12 @@ public class PathwayDisplay extends Display {
         m_vis.putAction("text", text);
 
         // -- search ----------------------------------------------------------
-
         // zipcode text search is performed using a prefix based search,
         // provided by a search dynamic query. to make this application run
         // more efficiently, we optimize data handling by taking all search
         // results (both added and removed) and shuttling them into a
         // focus set. we work with this reduced set for updating and
         // animating color changes in the action definitions above.
-
         // create a final reference to the focus set, so that the following
         // search listener can access it.
         final TupleSet focus = m_vis.getFocusGroup(Visualization.FOCUS_ITEMS);
@@ -242,9 +257,9 @@ public class PathwayDisplay extends Display {
         SearchQueryBinding nameSearchQB = new SearchQueryBinding(vGraph.getNodes(), "name");
         //TODO change to new pathway list
         ListQueryBinding pathwayListQB = new ListQueryBinding(vGraph.getNodes(), "pathway_name");
-        ListQueryBinding compatmentListQB = new ListQueryBinding(vGraph.getNodes(), "compartment_name");
+        ListQueryBinding compartmentListQB = new ListQueryBinding(vGraph.getNodes(), "compartment_name");
         AndPredicate filter = new AndPredicate(nameSearchQB.getPredicate());
-        filter.add(compatmentListQB.getPredicate());
+        filter.add(compartmentListQB.getPredicate());
         filter.add(pathwayListQB.getPredicate());
         final SearchTupleSet search = nameSearchQB.getSearchSet();
 
@@ -286,8 +301,6 @@ public class PathwayDisplay extends Display {
         });
         m_vis.addFocusGroup(Visualization.SEARCH_ITEMS, search);
 
-
-
         // create and parameterize a search panel for searching
         final JSearchPanel nameSearcher = nameSearchQB.createSearchPanel();
         nameSearcher.setLabelText("name>"); // the search box label
@@ -297,7 +310,7 @@ public class PathwayDisplay extends Display {
         searchBox.add(nameSearcher);
         searchBox.add(Box.createHorizontalGlue());
         searchBox.add(Box.createHorizontalStrut(5));
-        searchBox.add(compatmentListQB.createComboBox());
+        searchBox.add(compartmentListQB.createComboBox());
         searchBox.add(pathwayListQB.createComboBox());
         searchBox.add(Box.createHorizontalStrut(16));
         add(searchBox, BorderLayout.SOUTH); // add the search box as a sub-component of the display
@@ -312,10 +325,10 @@ public class PathwayDisplay extends Display {
         ActionList layout = new ActionList();
         layout.add(colors);
         layout.add(text);
-        RadialTreeLayout rtl = new RadialTreeLayout("graph", radius);
+//        layout.add(new AggregateLayout("aggregates"));
+        BalloonTreeLayout rtl = new BalloonTreeLayout("graph", radius);
         Layout l = rtl;
         layout.add(l);
-//        layout.add(new AggregateLayout("aggregates"));
         layout.add(new RepaintAction());
         m_vis.putAction("layout", layout);
 
@@ -324,12 +337,11 @@ public class PathwayDisplay extends Display {
         pan(250, 250);
         setHighQuality(true);
 //        addControlListener(new FocusControl(1));
-//        addControlListener(new AggregateDragControl());
+        addControlListener(new AggregateDragControl());
         addControlListener(new ZoomControl());
         addControlListener(new PanControl());
         addControlListener(new WheelZoomControl());
         addControlListener(new NeighborHighlightVisibilityControl("visual"));
-
 
         m_vis.runAfter("layout", "visual");
         m_vis.runAfter("visual", "text");
@@ -340,18 +352,359 @@ public class PathwayDisplay extends Display {
         ToolTipManager.sharedInstance().setInitialDelay(250);
         ToolTipManager.sharedInstance().setDismissDelay(5000);
         ToolTipManager.sharedInstance().setReshowDelay(0);
-	}
-	
+    }
+
     public PathwayDisplay(IPathwayProject project) {
         //get a display
         super(new Visualization());
         //get data from SBML document
-		initDisplay(initDataGroups(project));
+        initDisplay(initDataGroups(project));
     }
     VisualGraph vg;
 
-	private List<Compartment> initDataGroups(SBMLDocument document) {
-		//create graph
+    private int initDataGroups(Pathway document) {
+        //create graph
+        Graph g = new Graph(true);
+        g.addColumn("name", String.class);
+        g.addColumn("id", int.class);
+        g.addColumn("compartment", int.class);
+        g.addColumn("compartment_name", String.class);
+        g.addColumn("pathway_name", String.class);
+        g.addColumn("pathway_id", String.class);
+        g.addColumn("type", String.class);
+        g.addColumn("inDegree", int.class);
+        g.addColumn("outDegree", int.class);
+        g.addColumn("degree", int.class);
+        g.addColumn("layout_weight", double.class);
+
+        Set<org.biopax.paxtools.model.level3.Process> pathwayProcess = document.getPathwayComponent();
+        BiochemicalReaction reaction = null;
+        for (org.biopax.paxtools.model.level3.Process p : pathwayProcess) {
+            if (p instanceof PathwayStep) {
+                PathwayStep ps = (PathwayStep)p;
+                Set<org.biopax.paxtools.model.level3.Process> s = ps.getStepProcess();
+                for(org.biopax.paxtools.model.level3.Process process:s) {
+                    //process is the supertype of reaction and conversion
+                }
+            } else if (p instanceof Pathway) {
+                Pathway pathway = (Pathway) p;
+            } else if (p instanceof BiochemicalReaction) {
+//                List<Protein> proteins = new ArrayList<Protein>();
+//                List<SmallMolecule> smallMolecules = new ArrayList<SmallMolecule>();
+                reaction = (BiochemicalReaction) p;
+                Set<Entity> participants = reaction.getParticipant();
+                Node reactionNode = g.addNode();
+                reactionNode.setString("name", reaction.getECNumber().toString());
+                reactionNode.setString("type", p.getClass().getSimpleName());
+                reactionNode.setDouble("layout_weight", 5);
+                reactionNode.setInt("compartment", 0);
+                reactionNode.setString("compartment_name", "undefined");
+                int inDegree = 0;
+                int outDegree = 0;
+                ConversionDirectionType cdt = reaction.getConversionDirection();
+                Set<PhysicalEntity> left = reaction.getLeft();
+                for (PhysicalEntity e : left) {
+//                    if (e instanceof Protein) {
+//                        Protein protein = (Protein) e;
+//                        CellularLocationVocabulary location = protein.getCellularLocation();
+//                        proteins.add(protein);
+                    Node n = g.addNode();
+                    n.setString("name", e.getStandardName());
+                    n.setString("type", e.getClass().getSimpleName());
+                    n.setInt("inDegree", 1);
+                    n.setInt("outDegree", 1);
+                    n.setInt("degree", 2);
+                    n.setDouble("layout_weight", 2);
+                    n.setInt("compartment", 0);
+                    n.setString("compartment_name", "undefined");
+                    g.addEdge(n, reactionNode);
+//                    } else if (e instanceof SmallMolecule) {
+//                        SmallMolecule sm = (SmallMolecule) e;
+//                        smallMolecules.add(sm);
+//                        Node n = g.addNode();
+//                        n.setString("name", sm.getStandardName());
+//                        n.setString("type", e.getClass().getSimpleName());
+//                        n.setInt("inDegree", 1);
+//                        n.setInt("outDegree", 1);
+//                        n.setInt("degree", 2);
+//                        n.setDouble("layout_weight", 2);
+//                        n.setInt("compartment", 0);
+//                        n.setString("compartment_name", "undefined");
+//                        g.addEdge(n, reactionNode);
+//                    }
+                    inDegree++;
+                }
+                Set<PhysicalEntity> right = reaction.getRight();
+                for (Entity e : right) {
+//                    if (e instanceof Protein) {
+//                        Protein protein = (Protein) e;
+////                        CellularLocationVocabulary location = protein.getCellularLocation();
+//                        proteins.add(protein);
+//                        Node n = g.addNode();
+//                        n.setString("name", protein.getStandardName());
+//                        n.setString("type", e.getClass().getSimpleName());
+//                        n.setInt("inDegree", 1);
+//                        n.setInt("outDegree", 1);
+//                        n.setInt("degree", 2);
+//                        n.setDouble("layout_weight", 2);
+//                        n.setInt("compartment", 0);
+//                        n.setString("compartment_name", "undefined");
+//                        g.addEdge(reactionNode, n);
+//                    } else if (e instanceof SmallMolecule) {
+//                    SmallMolecule sm = (SmallMolecule) e;
+//                    smallMolecules.add(sm);
+                    Node n = g.addNode();
+                    n.setString("name", e.getStandardName());
+                    n.setString("type", e.getClass().getSimpleName());
+                    n.setInt("inDegree", 1);
+                    n.setInt("outDegree", 1);
+                    n.setInt("degree", 2);
+                    n.setDouble("layout_weight", 2);
+                    n.setInt("compartment", 0);
+                    n.setString("compartment_name", "undefined");
+                    g.addEdge(reactionNode, n);
+//                    }
+                    outDegree++;
+                }
+                reactionNode.setInt("inDegree", inDegree);
+                reactionNode.setInt("outDegree", outDegree);
+                reactionNode.setInt("degree", inDegree + outDegree + 1);
+            }
+        }
+//        //create nodes for all species
+//        ListOf<Species> listOfSpecies = document.getPathwayComponent();
+//        final Map<Compartment, Integer> compartmentIdMap = getCompartmentIdMap(document.getModel().getListOfCompartments());
+//        Collections.sort(listOfSpecies, new Comparator<Species>() {
+//            @Override
+//            public int compare(Species t, Species t1) {
+//                return compartmentIdMap.get(t.getCompartmentInstance()).compareTo(compartmentIdMap.get(t1.getCompartmentInstance()));
+//            }
+//        });
+//        System.out.println("Found " + listOfSpecies.size() + " species.");
+//        Map<Species, Node> speciesNodes = new HashMap<Species, Node>();
+//        Map<Node, Species> nodesSpecies = new HashMap<Node, Species>();
+//
+//        int speciesNr = 0;
+//        for (Species species : listOfSpecies) {
+//            Node speciesNode = g.addNode();
+//            speciesNodes.put(species, speciesNode);
+//            nodesSpecies.put(speciesNode, species);
+//            speciesNode.setString("name", species.getName());
+//            speciesNode.setInt("id", speciesNr++);
+//            //FIXME project.getPathwayMap()
+////            speciesNode.setString("pathway_name", pathwayController.getPathwayName(species));
+////            speciesNode.setString("pathway_id", pathwayController.getPathwayId(species));
+//            Compartment comp = species.getCompartmentInstance();
+//            if (comp != null) {
+//                int value = compartmentIdMap.get(species.getCompartmentInstance()).intValue();
+//                speciesNode.setInt("compartment", value);
+//                speciesNode.setString("compartment_name", species.getCompartmentInstance().getName());
+//            } else {
+//                speciesNode.setInt("compartment", compartmentIdMap.size());
+//                speciesNode.setString("compartment_name", "undefined");
+//            }
+//
+//            speciesNode.setString("type", "species");
+//            speciesNode.setInt("inDegree", 1);
+//            speciesNode.setInt("outDegree", 1);
+//            speciesNode.setInt("degree", 2);
+//        }
+//        int[] speciesReactantCounts = new int[listOfSpecies.size()];
+//        int[] speciesProductCounts = new int[listOfSpecies.size()];
+//        //create nodes for all reactions
+//        ListOf<Reaction> listOfReactions = document.getModel().getListOfReactions();
+//        radius = 100;//listOfReactions.size()+speciesNodes.size();//(int)Math.sqrt((listOfReactions.size()*listOfReactions.size())+(speciesNodes.size()*speciesNodes.size()));
+//        System.out.println("radius: " + radius);
+//        System.out.println("Found " + listOfReactions.size() + " reactions.");
+//        for (Reaction r : listOfReactions) {
+//            Node reactionNode = g.addNode();
+//            reactionNode.setString("name", r.getName());
+//            //FIXME project.getPathwayMap()
+////            reactionNode.setString("pathway_name", pathwayController.getPathwayName(r));
+////            reactionNode.setString("pathway_id", pathwayController.getPathwayId(r));
+//            reactionNode.setString("type", "reaction");
+//            ListOf<SpeciesReference> listOfReactants = r.getListOfReactants();
+//            reactionNode.setInt("inDegree", listOfReactants.size());
+//            ListOf<SpeciesReference> listOfProducts = r.getListOfProducts();
+//            reactionNode.setInt("outDegree", listOfProducts.size());
+//            reactionNode.setInt("degree", listOfReactants.size() + listOfProducts.size());
+//            float quotient = ((float) (listOfReactants.size() + listOfProducts.size())) / ((float) listOfReactions.size());
+//            reactionNode.setDouble("layout_weight", Math.max(1, quotient * (float) radius));
+////            reactionNode.setDouble("layout_weight", 2);
+////            System.out.println("Reaction node layout_weight: "+reactionNode.getInt("layout_weight"));
+//			Set<Compartment> reactantCompartments = new HashSet<Compartment>();
+//			Set<Compartment> productCompartments = new HashSet<Compartment>();
+//            //create an edge from each reactant...
+//            for (SpeciesReference reactant : listOfReactants) {
+//                Species r_species = reactant.getSpeciesInstance();
+//                //... to each product
+//                Node speciesNode = speciesNodes.get(r_species);
+//                speciesReactantCounts[speciesNode.getInt("id")]++;
+//                g.addEdge(speciesNode, reactionNode);
+//				reactantCompartments.add(r_species.getCompartmentInstance());
+//            }
+//            for (SpeciesReference product : listOfProducts) {
+//                Species p_species = product.getSpeciesInstance();
+//                Node speciesNode = speciesNodes.get(p_species);
+//                speciesProductCounts[speciesNode.getInt("id")]++;
+//                g.addEdge(reactionNode, speciesNode);
+//				productCompartments.add(p_species.getCompartmentInstance());
+//            }
+//			Compartment comp = r.getCompartmentInstance();
+//            if (comp != null) {
+//                int value = compartmentIdMap.get(comp).intValue();
+//                reactionNode.setInt("compartment", value);
+//                reactionNode.setString("compartment_name", r.getCompartmentInstance().getName());
+//            } else {
+//				//try to infer compartment from reactants
+//				if(!reactantCompartments.isEmpty() && reactantCompartments.size()<2){
+//					reactionNode.setInt("compartment", compartmentIdMap.get(reactantCompartments.iterator().next()).intValue());
+//					reactionNode.setString("compartment_name", reactantCompartments.iterator().next().getName());
+//				}else{
+//					//last resort
+//					reactionNode.setInt("compartment", compartmentIdMap.size());
+//					reactionNode.setString("compartment_name", "undefined");
+//				}
+//            }
+//        }
+//
+//        for (Species s : speciesNodes.keySet()) {
+//            Node node = speciesNodes.get(s);
+//            int inDegree = speciesReactantCounts[node.getInt("id")];
+//            int outDegree = speciesProductCounts[node.getInt("id")];
+//            node.setInt("inDegree", inDegree);
+//            node.setInt("outDegree", outDegree);
+//            node.setInt("degree", inDegree + outDegree);
+//            float quotient = ((float) (inDegree + outDegree)) / ((float) speciesNodes.size());
+//            node.setDouble("layout_weight", Math.max(1, quotient * (float) radius));
+////            node.setDouble("layout_weight", 2);
+////            System.out.println("SpeciesNode layout_weight: "+node.getInt("layout_weight"));
+//        }
+//
+//        // add visual data groups
+//        vg = m_vis.addGraph("graph", g);
+////        m_vis.setInteractive("graph.edges", new VisiblePredicate(), false);
+//        m_vis.setValue("graph.nodes", null, VisualItem.SHAPE,
+//                new Integer(Constants.SHAPE_ELLIPSE));
+//        Iterator nodes = vg.nodes();
+//        int[] nodeFixedPalette = getColorPalette(document.getModel().getListOfCompartments().size() + 1, 0.25f);
+//        AggregateTable at = m_vis.addAggregates("aggregates");
+//        at.addColumn(VisualItem.POLYGON, float[].class);
+//        at.addColumn("id", int.class);
+//        Map<Integer, AggregateItem> compToAgg = new HashMap<Integer, AggregateItem>();
+//        while (nodes.hasNext()) {
+//            VisualItem node = (VisualItem) nodes.next();
+//            Node original = (Node) node.getSourceTuple();
+//            node.setSize(node.getInt("layout_weight"));
+//            Species s = nodesSpecies.get(original);
+//
+//            // add nodes to aggregates
+//            // create an aggregate for each 3-clique of nodes
+//            AggregateItem aitem;
+//            Integer compartmentId = Integer.valueOf(node.getInt("compartment"));
+//            if (compToAgg.containsKey(compartmentId)) {
+//                aitem = compToAgg.get(compartmentId);
+//            } else {
+//                aitem = (AggregateItem) at.addItem();
+//                compToAgg.put(compartmentId, aitem);
+//            }
+//            aitem.setInt("id", node.getInt("compartment"));
+////            System.out.println("Node: "+aitem.getString("name") +" Compartment: "+aitem.getInt("compartment")+" name: "+aitem.getString("compartment_name"));
+//            if (s != null) {
+//                //species node
+//                node.setShape(Constants.SHAPE_ELLIPSE);
+//
+//                //exclude hubs
+////                if (node.getInt("degree") >= 11) {
+////                    node.setVisible(false);
+////                }
+//            } else {
+//                // reaction node
+//                node.setShape(Constants.SHAPE_RECTANGLE);
+////                node.setString("compartment_name","undefined");
+//                //exclude hubs
+////                if (node.getInt("degree") >= 7) {
+////                    node.setVisible(false);
+////                }
+//            }
+//            aitem.addItem(node);
+//            node.setFillColor(nodeFixedPalette[node.getInt("compartment")]);
+//            node.setStrokeColor(ColorLib.darker(nodeFixedPalette[node.getInt("compartment")]));
+//        }
+//        m_vis.setValue("graph.edges", null, VisualItem.INTERACTIVE, Boolean.FALSE);
+//        VisualItem f = (VisualItem) vg.getNode(0);
+//        Iterator iter = m_vis.getVisualGroup("graph").tuples();
+//        while (iter.hasNext()) {
+//            System.out.println(iter.next());
+//        }
+////        m_vis.getGroup(Visualization.FOCUS_ITEMS).setTuple(f);
+////        f.setFixed(false);
+//
+//        return document.getModel().getListOfCompartments().size();
+        // add visual data groups
+        vg = m_vis.addGraph("graph", g);
+//        m_vis.setInteractive("graph.edges", new VisiblePredicate(), false);
+        m_vis.setValue("graph.nodes", null, VisualItem.SHAPE,
+                new Integer(Constants.SHAPE_ELLIPSE));
+        Iterator nodes = vg.nodes();
+        int[] nodeFixedPalette = getColorPalette(1, 0.25f);
+        AggregateTable at = m_vis.addAggregates("aggregates");
+        at.addColumn(VisualItem.POLYGON, float[].class);
+        at.addColumn("id", int.class);
+        Map<Integer, AggregateItem> compToAgg = new HashMap<Integer, AggregateItem>();
+        while (nodes.hasNext()) {
+            VisualItem node = (VisualItem) nodes.next();
+            Node original = (Node) node.getSourceTuple();
+            node.setSize(node.getInt("layout_weight"));
+//            Species s = nodesSpecies.get(original);
+
+            // add nodes to aggregates
+            // create an aggregate for each 3-clique of nodes
+            AggregateItem aitem;
+            Integer compartmentId = Integer.valueOf(node.getInt("compartment"));
+            if (compToAgg.containsKey(compartmentId)) {
+                aitem = compToAgg.get(compartmentId);
+            } else {
+                aitem = (AggregateItem) at.addItem();
+                compToAgg.put(compartmentId, aitem);
+            }
+            aitem.setInt("id", node.getInt("compartment"));
+//            System.out.println("Node: "+aitem.getString("name") +" Compartment: "+aitem.getInt("compartment")+" name: "+aitem.getString("compartment_name"));
+//            if (s != null) {
+//                //species node
+//                node.setShape(Constants.SHAPE_ELLIPSE);
+//
+//                //exclude hubs
+////                if (node.getInt("degree") >= 11) {
+////                    node.setVisible(false);
+////                }
+//            } else {
+            // reaction node
+            node.setShape(Constants.SHAPE_RECTANGLE);
+//                node.setString("compartment_name","undefined");
+            //exclude hubs
+//                if (node.getInt("degree") >= 7) {
+//                    node.setVisible(false);
+//                }
+//            }
+            aitem.addItem(node);
+            node.setFillColor(nodeFixedPalette[node.getInt("compartment")]);
+            node.setStrokeColor(ColorLib.darker(nodeFixedPalette[node.getInt("compartment")]));
+        }
+        m_vis.setValue("graph.edges", null, VisualItem.INTERACTIVE, Boolean.FALSE);
+        VisualItem f = (VisualItem) vg.getNode(0);
+        Iterator iter = m_vis.getVisualGroup("graph").tuples();
+        while (iter.hasNext()) {
+            System.out.println(iter.next());
+        }
+//        m_vis.getGroup(Visualization.FOCUS_ITEMS).setTuple(f);
+//        f.setFixed(false);
+
+        return 1;
+    }
+
+    private int initDataGroups(SBMLDocument document) {
+        //create graph
         Graph g = new Graph(true);
         g.addColumn("name", String.class);
         g.addColumn("id", int.class);
@@ -416,15 +769,6 @@ public class PathwayDisplay extends Display {
             //FIXME project.getPathwayMap()
 //            reactionNode.setString("pathway_name", pathwayController.getPathwayName(r));
 //            reactionNode.setString("pathway_id", pathwayController.getPathwayId(r));
-            Compartment comp = r.getCompartmentInstance();
-            if (comp != null) {
-                int value = compartmentIdMap.get(comp).intValue();
-                reactionNode.setInt("compartment", value);
-                reactionNode.setString("compartment_name", r.getCompartmentInstance().getName());
-            } else {
-                reactionNode.setInt("compartment", compartmentIdMap.size());
-                reactionNode.setString("compartment_name", "undefined");
-            }
             reactionNode.setString("type", "reaction");
             ListOf<SpeciesReference> listOfReactants = r.getListOfReactants();
             reactionNode.setInt("inDegree", listOfReactants.size());
@@ -435,6 +779,8 @@ public class PathwayDisplay extends Display {
             reactionNode.setDouble("layout_weight", Math.max(1, quotient * (float) radius));
 //            reactionNode.setDouble("layout_weight", 2);
 //            System.out.println("Reaction node layout_weight: "+reactionNode.getInt("layout_weight"));
+            Set<Compartment> reactantCompartments = new HashSet<Compartment>();
+            Set<Compartment> productCompartments = new HashSet<Compartment>();
             //create an edge from each reactant...
             for (SpeciesReference reactant : listOfReactants) {
                 Species r_species = reactant.getSpeciesInstance();
@@ -442,12 +788,30 @@ public class PathwayDisplay extends Display {
                 Node speciesNode = speciesNodes.get(r_species);
                 speciesReactantCounts[speciesNode.getInt("id")]++;
                 g.addEdge(speciesNode, reactionNode);
+                reactantCompartments.add(r_species.getCompartmentInstance());
             }
             for (SpeciesReference product : listOfProducts) {
                 Species p_species = product.getSpeciesInstance();
                 Node speciesNode = speciesNodes.get(p_species);
                 speciesProductCounts[speciesNode.getInt("id")]++;
                 g.addEdge(reactionNode, speciesNode);
+                productCompartments.add(p_species.getCompartmentInstance());
+            }
+            Compartment comp = r.getCompartmentInstance();
+            if (comp != null) {
+                int value = compartmentIdMap.get(comp).intValue();
+                reactionNode.setInt("compartment", value);
+                reactionNode.setString("compartment_name", r.getCompartmentInstance().getName());
+            } else {
+                //try to infer compartment from reactants
+                if (!reactantCompartments.isEmpty() && reactantCompartments.size() < 2) {
+                    reactionNode.setInt("compartment", compartmentIdMap.get(reactantCompartments.iterator().next()).intValue());
+                    reactionNode.setString("compartment_name", reactantCompartments.iterator().next().getName());
+                } else {
+                    //last resort
+                    reactionNode.setInt("compartment", compartmentIdMap.size());
+                    reactionNode.setString("compartment_name", "undefined");
+                }
             }
         }
 
@@ -523,13 +887,13 @@ public class PathwayDisplay extends Display {
 //        m_vis.getGroup(Visualization.FOCUS_ITEMS).setTuple(f);
 //        f.setFixed(false);
 
-        return document.getModel().getListOfCompartments();
-	}
-	
-    private List<Compartment> initDataGroups(IPathwayProject project) {
+        return document.getModel().getListOfCompartments().size();
+    }
+
+    private int initDataGroups(IPathwayProject project) {
         //get document
         SBMLDocument document = project.getDocument();
-		return initDataGroups(document);
+        return initDataGroups(document);
     }
 
     public void initPathways() {

@@ -11,7 +11,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate96.Well96Status
 /**
  * Status of a ISpotGrooup for disply purposes.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 enum SpotGroupStatus {
     ALL_UNPICKED, HAS_IDENT, PARTIALLY_PROCESSED;

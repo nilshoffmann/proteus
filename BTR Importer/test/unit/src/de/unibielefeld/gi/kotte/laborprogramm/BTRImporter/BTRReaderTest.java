@@ -12,7 +12,7 @@ import org.openide.util.Lookup;
 /**
  * Tests the FileReader.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class BTRReaderTest {
 

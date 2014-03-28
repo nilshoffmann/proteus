@@ -3,7 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.picking.api;
 /**
  * The Picking Registry allows Picker classes to register as the active Picker.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class PickingRegistry {
     

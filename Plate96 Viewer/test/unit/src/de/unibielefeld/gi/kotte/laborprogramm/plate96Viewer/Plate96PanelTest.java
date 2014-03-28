@@ -22,7 +22,7 @@ import org.openide.util.lookup.InstanceContent;
 
 /**
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class Plate96PanelTest {
 

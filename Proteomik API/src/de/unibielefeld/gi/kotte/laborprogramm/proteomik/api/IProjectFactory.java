@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Factory for creating proteomic projects.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface IProjectFactory {
 

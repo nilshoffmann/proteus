@@ -24,7 +24,7 @@ import org.openide.util.lookup.ProxyLookup;
 /**
  * Node representing a group of gels grouped by an experimental difference.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class LogicalGelGroupNode extends AbstractNode implements PropertyChangeListener {
 

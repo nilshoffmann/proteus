@@ -16,7 +16,7 @@ import java.util.UUID;
 /**
  * Default implementation for ICompoundAnnotation
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class Compound implements ICompound, Activatable {
 

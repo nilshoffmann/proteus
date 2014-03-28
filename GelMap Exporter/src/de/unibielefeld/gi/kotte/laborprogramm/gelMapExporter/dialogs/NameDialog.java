@@ -3,7 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.gelMapExporter.dialogs;
 /**
  * Dialog for entering the name of the export file during GelMap Export.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class NameDialog extends javax.swing.JPanel {
 

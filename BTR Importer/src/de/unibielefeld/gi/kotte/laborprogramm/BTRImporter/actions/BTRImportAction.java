@@ -15,7 +15,7 @@ import org.openide.util.NbBundle.Messages;
 /**
  * Action for using the BTR Importer Module.
  * 
- * @author kotte
+ * @author Konstantin Otte
  */
 @ActionID(
     category = "Proteus/Plate384Node",

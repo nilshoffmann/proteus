@@ -5,7 +5,7 @@ import java.beans.*;
 
 /**
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class MethodPropertyEditor extends PropertyEditorSupport {
 

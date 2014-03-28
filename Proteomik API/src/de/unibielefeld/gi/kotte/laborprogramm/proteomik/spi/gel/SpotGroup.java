@@ -16,7 +16,7 @@ import java.util.UUID;
 /**
  * Default implementation for ISpotGroup.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class SpotGroup implements ISpotGroup, Activatable {
 

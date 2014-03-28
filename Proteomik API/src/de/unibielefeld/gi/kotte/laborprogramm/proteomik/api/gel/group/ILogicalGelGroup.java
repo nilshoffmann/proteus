@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * A group containing logically different gel groups.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface ILogicalGelGroup extends IPropertyChangeSource, IUniqueObject {
 

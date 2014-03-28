@@ -7,7 +7,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.IUniqueObject;
 /**
  * A 384 well microplate.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface IPlate384 extends IPropertyChangeSource, IUniqueObject {
 

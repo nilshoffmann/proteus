@@ -5,7 +5,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.plate384.Well384Stat
 /**
  * State Machine for Well384Status status changes. Defines legal transitions between states.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class StateMachine {
 

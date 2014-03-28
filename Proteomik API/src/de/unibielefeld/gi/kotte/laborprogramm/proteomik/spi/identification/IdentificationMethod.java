@@ -14,7 +14,7 @@ import java.util.UUID;
 
 /**
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class IdentificationMethod implements IIdentificationMethod, Activatable {
 

@@ -15,7 +15,7 @@ import org.openide.util.WeakListeners;
 /**
  * Factory for creating SpotGroupNode nodes as children of a SpotGroupFolderNode.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 class SpotGroupFolderChildNodeFactory extends ChildFactory<ISpotGroup> implements PropertyChangeListener {
 

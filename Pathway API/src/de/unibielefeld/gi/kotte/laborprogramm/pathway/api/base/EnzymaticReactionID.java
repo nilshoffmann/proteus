@@ -3,7 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.pathway.api.base;
 /**
  * Defines the type of an ID String to identify a reaction.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public enum EnzymaticReactionID {
 

@@ -5,7 +5,7 @@ import java.awt.Color;
 /**
  * Represents the status of a well on a 96 well microplate.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public enum Well96Status {
 

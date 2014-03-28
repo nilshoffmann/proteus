@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class Plate96ViewerTopComponentTest {
 

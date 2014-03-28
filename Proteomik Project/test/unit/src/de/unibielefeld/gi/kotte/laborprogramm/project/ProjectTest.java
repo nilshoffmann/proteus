@@ -54,7 +54,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class ProjectTest extends TestCase {
 

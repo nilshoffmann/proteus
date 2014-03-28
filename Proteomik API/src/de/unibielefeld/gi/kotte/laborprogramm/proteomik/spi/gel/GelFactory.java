@@ -6,7 +6,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.IGelFactory;
 /**
  * Factory for creating 2D gels.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 @org.openide.util.lookup.ServiceProvider(service = IGelFactory.class)
 public class GelFactory implements IGelFactory {

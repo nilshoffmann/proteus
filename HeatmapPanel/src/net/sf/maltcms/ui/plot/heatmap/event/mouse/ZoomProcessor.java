@@ -33,7 +33,7 @@ public class ZoomProcessor extends AEventProcessor<Tuple2D<Point2D, Double>> {
 
     Tuple2D<Point2D, Double> result = new Tuple2D<Point2D, Double>(new Point2D.Double(0, 0), 1.0d);
     double zoom = 1.0d;
-    private double minZoom = 0.25d;
+    private double minZoom = 0.1d;
     private double maxZoom = 5.0d;
     private double zoomDelta = 0.1d;
 

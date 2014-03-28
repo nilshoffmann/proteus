@@ -10,7 +10,7 @@ import javax.swing.ListCellRenderer;
 /**
  * ListCellRenderer for Lists of Pathways.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class PathwayCellRenderer extends DefaultListCellRenderer implements ListCellRenderer<Object> {
 

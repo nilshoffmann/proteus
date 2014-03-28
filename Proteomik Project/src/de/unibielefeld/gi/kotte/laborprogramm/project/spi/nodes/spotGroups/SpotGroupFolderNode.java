@@ -20,7 +20,7 @@ import org.openide.util.lookup.ProxyLookup;
 /**
  * Node representing a virtual folder containing all groups of gel spots.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class SpotGroupFolderNode extends AbstractNode {
 

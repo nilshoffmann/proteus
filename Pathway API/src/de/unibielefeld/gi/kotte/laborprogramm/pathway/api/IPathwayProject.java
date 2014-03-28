@@ -6,7 +6,7 @@ import org.sbml.jsbml.SBMLDocument;
 /**
  * Project datastructure for SBML View Projects.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface IPathwayProject extends IPropertyChangeSource, IUniqueObject {
 

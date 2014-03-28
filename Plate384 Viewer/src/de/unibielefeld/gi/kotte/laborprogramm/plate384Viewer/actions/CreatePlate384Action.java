@@ -18,7 +18,7 @@ import org.openide.util.NbBundle.Messages;
 /**
  * Action for creating IPlate384s.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 @ActionID(
     category = "Proteus/ProteomicProject",

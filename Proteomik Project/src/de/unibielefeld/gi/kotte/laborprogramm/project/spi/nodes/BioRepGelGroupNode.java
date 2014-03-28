@@ -24,7 +24,7 @@ import org.openide.util.lookup.ProxyLookup;
 /**
  * Node representing a group of biological replicates of 2D gels.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class BioRepGelGroupNode extends AbstractNode implements PropertyChangeListener {
 

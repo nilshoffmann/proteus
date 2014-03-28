@@ -19,7 +19,7 @@ import java.util.UUID;
 /**
  * Default implementation for ISpot.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class Spot implements ISpot, Activatable {
 

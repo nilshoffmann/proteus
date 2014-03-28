@@ -13,7 +13,7 @@ import org.openide.filesystems.FileChooserBuilder;
 /**
  * Visual Panel for the Delta2D project import.
  * 
- * @author kotte
+ * @author Konstantin Otte
  */
 public final class ProjectImportVisualPanel1 extends JPanel implements DocumentListener {
 

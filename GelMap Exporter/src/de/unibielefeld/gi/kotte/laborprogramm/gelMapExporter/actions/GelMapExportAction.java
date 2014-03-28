@@ -27,7 +27,7 @@ id = "de.unibielefeld.gi.kotte.laborprogramm.gelMapExporter.actions.GelMapExport
 /**
  * Export Action to call the Exporter for IGels in GelMap format.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public final class GelMapExportAction implements ActionListener {
 

@@ -13,7 +13,7 @@ import org.sbml.jsbml.SBMLDocument;
 /**
  * Default implementation of IPathwayProject.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class PathwayProject implements IPathwayProject, Activatable {
 

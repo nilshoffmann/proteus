@@ -3,7 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group;
 /**
  * Factory for creating new spot groups.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface ISpotGroupFactory {
 

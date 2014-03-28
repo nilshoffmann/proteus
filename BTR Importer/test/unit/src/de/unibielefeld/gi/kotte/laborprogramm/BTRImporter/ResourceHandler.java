@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 /**
  * Provides resource handling for BTRImporter Readers.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class ResourceHandler {
 

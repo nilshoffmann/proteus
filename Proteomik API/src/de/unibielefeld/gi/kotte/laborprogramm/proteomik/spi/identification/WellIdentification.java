@@ -16,7 +16,7 @@ import java.util.UUID;
 /**
  * Default implementation of IWellIdentification
  *
- * @author kotte, hoffmann
+ * @author Konstantin Otte, hoffmann
  */
 public class WellIdentification implements IWellIdentification, Activatable {
 

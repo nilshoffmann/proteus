@@ -10,7 +10,7 @@ import javax.swing.ListCellRenderer;
 
 /**
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class PGDBCellRenderer extends DefaultListCellRenderer implements ListCellRenderer<Object> {
 

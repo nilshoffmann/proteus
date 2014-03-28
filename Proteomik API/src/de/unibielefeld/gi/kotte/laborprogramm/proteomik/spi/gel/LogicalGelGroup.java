@@ -16,7 +16,7 @@ import java.util.UUID;
 /**
  * Default implementation for ILogicalGelGroup.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class LogicalGelGroup implements ILogicalGelGroup, Activatable {
 

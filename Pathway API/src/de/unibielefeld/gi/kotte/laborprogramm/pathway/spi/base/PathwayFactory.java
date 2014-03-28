@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Factory for creating pathways.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 @org.openide.util.lookup.ServiceProvider(service = IPathwayFactory.class)
 public class PathwayFactory implements IPathwayFactory {

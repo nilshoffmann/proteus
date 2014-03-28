@@ -16,7 +16,7 @@ import org.openide.util.NbBundle.Messages;
  * Action for importing Delta2D Escel report files in order to add 
  * additional informations to the selected Proteus project.
  * 
- * @author kotte
+ * @author Konstantin Otte
  */
 @ActionID(category = "Proteus/ProteomicProject",
 id = "de.unibielefeld.gi.kotte.laborprogramm.dataImporter.actions.ImportExcelReportAction")

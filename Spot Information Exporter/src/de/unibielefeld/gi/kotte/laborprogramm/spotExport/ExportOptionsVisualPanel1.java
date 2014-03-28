@@ -11,7 +11,7 @@ import javax.swing.event.DocumentListener;
 /**
  * Wizard Panel for the Delta2D Re-Import Options.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public final class ExportOptionsVisualPanel1 extends JPanel implements DocumentListener {
 

@@ -3,7 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel;
 /**
  * Factory for creating 2D gels.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface IGelFactory {
 

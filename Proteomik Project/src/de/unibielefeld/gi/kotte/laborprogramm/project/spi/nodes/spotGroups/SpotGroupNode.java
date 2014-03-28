@@ -30,7 +30,7 @@ import org.openide.util.lookup.Lookups;
 /**
  * Node representing groups of gel spots.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class SpotGroupNode extends AbstractNode implements PropertyChangeListener {
 

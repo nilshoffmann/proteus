@@ -11,7 +11,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.2.1</specification-version>
+                        <specification-version>1.3.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -31,6 +31,22 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>net.sf.maltcms.maltcms.nbm</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.3.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.apache.apache.commons.nbm</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.3.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.javahelp</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -45,6 +61,14 @@
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>8.11.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.slf4j.slf4j.nbm</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.3.1</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>
@@ -89,35 +113,18 @@
                 <package>de.unibielefeld.gi.kotte.laborprogramm.pathway.api</package>
                 <package>de.unibielefeld.gi.kotte.laborprogramm.pathway.api.base</package>
                 <package>de.unibielefeld.gi.kotte.laborprogramm.pathway.api.sbml</package>
+                <package>de.unibielefeld.gi.kotte.laborprogramm.pathway.spi</package>
+                <package>de.unibielefeld.gi.kotte.laborprogramm.pathway.spi.base</package>
+                <package>de.unibielefeld.gi.kotte.laborprogramm.pathway.spi.sbml</package>
                 <package>de.unibielefeld.gi.omicsTools.biocyc.ptools</package>
-                <package>javax.xml</package>
-                <package>javax.xml.namespace</package>
-                <package>javax.xml.stream</package>
-                <package>javax.xml.stream.events</package>
-                <package>javax.xml.stream.util</package>
-                <package>junit.extensions</package>
-                <package>junit.framework</package>
-                <package>junit.runner</package>
-                <package>junit.textui</package>
-                <package>org.apache.log4j</package>
-                <package>org.apache.log4j.chainsaw</package>
-                <package>org.apache.log4j.config</package>
-                <package>org.apache.log4j.helpers</package>
-                <package>org.apache.log4j.jdbc</package>
-                <package>org.apache.log4j.jmx</package>
-                <package>org.apache.log4j.lf5</package>
-                <package>org.apache.log4j.lf5.util</package>
-                <package>org.apache.log4j.lf5.viewer</package>
-                <package>org.apache.log4j.lf5.viewer.categoryexplorer</package>
-                <package>org.apache.log4j.lf5.viewer.configure</package>
-                <package>org.apache.log4j.net</package>
-                <package>org.apache.log4j.nt</package>
-                <package>org.apache.log4j.or</package>
-                <package>org.apache.log4j.or.jms</package>
-                <package>org.apache.log4j.or.sax</package>
-                <package>org.apache.log4j.spi</package>
-                <package>org.apache.log4j.varia</package>
-                <package>org.apache.log4j.xml</package>
+                <package>info.monitorenter.cpdetector</package>
+                <package>info.monitorenter.cpdetector.io</package>
+                <package>info.monitorenter.cpdetector.io.parser</package>
+                <package>info.monitorenter.cpdetector.reflect</package>
+                <package>info.monitorenter.cpdetector.util</package>
+                <package>info.monitorenter.cpdetector.util.collections</package>
+                <package>jargs.gnu</package>
+                <package>org.apache.servicemix.specs.locator</package>
                 <package>org.biojava.bio</package>
                 <package>org.biojava.bio.seq.io</package>
                 <package>org.biojava.ontology</package>
@@ -125,6 +132,31 @@
                 <package>org.biojava.ontology.obo</package>
                 <package>org.biojava.utils</package>
                 <package>org.biojava.utils.cache</package>
+                <package>org.biopax.paxtools</package>
+                <package>org.biopax.paxtools.client</package>
+                <package>org.biopax.paxtools.command</package>
+                <package>org.biopax.paxtools.controller</package>
+                <package>org.biopax.paxtools.converter</package>
+                <package>org.biopax.paxtools.examples</package>
+                <package>org.biopax.paxtools.impl</package>
+                <package>org.biopax.paxtools.impl.level2</package>
+                <package>org.biopax.paxtools.impl.level3</package>
+                <package>org.biopax.paxtools.io</package>
+                <package>org.biopax.paxtools.io.gsea</package>
+                <package>org.biopax.paxtools.io.sbgn</package>
+                <package>org.biopax.paxtools.io.sbgn.idmapping</package>
+                <package>org.biopax.paxtools.io.sif</package>
+                <package>org.biopax.paxtools.io.sif.level2</package>
+                <package>org.biopax.paxtools.io.sif.level3</package>
+                <package>org.biopax.paxtools.model</package>
+                <package>org.biopax.paxtools.model.level2</package>
+                <package>org.biopax.paxtools.model.level3</package>
+                <package>org.biopax.paxtools.query</package>
+                <package>org.biopax.paxtools.query.algorithm</package>
+                <package>org.biopax.paxtools.query.model</package>
+                <package>org.biopax.paxtools.query.wrapperL3</package>
+                <package>org.biopax.paxtools.util</package>
+                <package>org.biopax.validator.jaxb</package>
                 <package>org.codehaus.stax2</package>
                 <package>org.codehaus.stax2.evt</package>
                 <package>org.codehaus.stax2.io</package>
@@ -141,32 +173,26 @@
                 <package>org.codehaus.staxmate.in</package>
                 <package>org.codehaus.staxmate.out</package>
                 <package>org.codehaus.staxmate.util</package>
-                <package>org.hamcrest</package>
-                <package>org.hamcrest.core</package>
-                <package>org.hamcrest.internal</package>
-                <package>org.junit</package>
-                <package>org.junit.experimental</package>
-                <package>org.junit.experimental.categories</package>
-                <package>org.junit.experimental.max</package>
-                <package>org.junit.experimental.results</package>
-                <package>org.junit.experimental.runners</package>
-                <package>org.junit.experimental.theories</package>
-                <package>org.junit.experimental.theories.internal</package>
-                <package>org.junit.experimental.theories.suppliers</package>
-                <package>org.junit.internal</package>
-                <package>org.junit.internal.builders</package>
-                <package>org.junit.internal.matchers</package>
-                <package>org.junit.internal.requests</package>
-                <package>org.junit.internal.runners</package>
-                <package>org.junit.internal.runners.model</package>
-                <package>org.junit.internal.runners.statements</package>
-                <package>org.junit.matchers</package>
-                <package>org.junit.rules</package>
-                <package>org.junit.runner</package>
-                <package>org.junit.runner.manipulation</package>
-                <package>org.junit.runner.notification</package>
-                <package>org.junit.runners</package>
-                <package>org.junit.runners.model</package>
+                <package>org.ivis.io.xml</package>
+                <package>org.ivis.io.xml.model</package>
+                <package>org.ivis.layout</package>
+                <package>org.ivis.layout.avsdf</package>
+                <package>org.ivis.layout.cise</package>
+                <package>org.ivis.layout.cluster</package>
+                <package>org.ivis.layout.cose</package>
+                <package>org.ivis.layout.fd</package>
+                <package>org.ivis.layout.sbgn</package>
+                <package>org.ivis.layout.sgym</package>
+                <package>org.ivis.layout.six</package>
+                <package>org.ivis.layout.spring</package>
+                <package>org.ivis.layout.util</package>
+                <package>org.ivis.util</package>
+                <package>org.ivis.util.alignment</package>
+                <package>org.mozilla.intl.chardet</package>
+                <package>org.mskcc.psibiopax.converter</package>
+                <package>org.sbgn</package>
+                <package>org.sbgn.bindings</package>
+                <package>org.sbgn.schematron</package>
                 <package>org.sbml.jsbml</package>
                 <package>org.sbml.jsbml.resources</package>
                 <package>org.sbml.jsbml.test</package>
@@ -183,7 +209,32 @@
                 <package>org.sbml.jsbml.xml.test</package>
                 <package>org.sbml.jsbml.xml.xstream.converter</package>
                 <package>org.w3c.util</package>
+                <package>psidev.psi.mi.xml</package>
+                <package>psidev.psi.mi.xml.converter</package>
+                <package>psidev.psi.mi.xml.converter.config</package>
+                <package>psidev.psi.mi.xml.converter.impl253</package>
+                <package>psidev.psi.mi.xml.converter.impl254</package>
+                <package>psidev.psi.mi.xml.dao</package>
+                <package>psidev.psi.mi.xml.dao.inMemory</package>
+                <package>psidev.psi.mi.xml.dao.lazy</package>
+                <package>psidev.psi.mi.xml.internal</package>
+                <package>psidev.psi.mi.xml.io</package>
+                <package>psidev.psi.mi.xml.io.impl</package>
+                <package>psidev.psi.mi.xml.model</package>
+                <package>psidev.psi.mi.xml.stylesheets</package>
+                <package>psidev.psi.mi.xml.tutorial</package>
+                <package>psidev.psi.mi.xml.util</package>
+                <package>psidev.psi.mi.xml.xmlindex</package>
+                <package>psidev.psi.mi.xml.xmlindex.impl</package>
+                <package>psidev.psi.mi.xml253.jaxb</package>
+                <package>psidev.psi.mi.xml254.jaxb</package>
+                <package>psidev.psi.tools.xxindex</package>
+                <package>psidev.psi.tools.xxindex.index</package>
             </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/paxtools-4.2.1-no-jena.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/paxtools-4.2.1-no-jena.jar</binary-origin>
+            </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/pToolsBinding.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/pToolsBinding.jar</binary-origin>

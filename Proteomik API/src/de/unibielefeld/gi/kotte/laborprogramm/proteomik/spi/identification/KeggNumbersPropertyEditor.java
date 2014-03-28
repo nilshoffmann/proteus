@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class KeggNumbersPropertyEditor extends PropertyEditorSupport {
 

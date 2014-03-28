@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * A group containing technical replications of 2D gels.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface ITechRepGelGroup extends IPropertyChangeSource, IUniqueObject {
 

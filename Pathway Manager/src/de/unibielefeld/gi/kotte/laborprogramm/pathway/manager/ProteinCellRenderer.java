@@ -10,7 +10,7 @@ import javax.swing.ListCellRenderer;
 /**
  * ListCellRenderer for Lists of Proteins.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class ProteinCellRenderer extends DefaultListCellRenderer implements ListCellRenderer<Object> {
 

@@ -24,7 +24,7 @@ import org.openide.util.lookup.ProxyLookup;
 /**
  * Node representing a 96 well microplate.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class Plate96Node extends AbstractNode implements PropertyChangeListener {
 

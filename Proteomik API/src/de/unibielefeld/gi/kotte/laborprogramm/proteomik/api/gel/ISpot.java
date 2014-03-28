@@ -9,7 +9,7 @@ import java.awt.Shape;
 /**
  * A spot on a 2D gel.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface ISpot extends IPropertyChangeSource, IUniqueObject {
 

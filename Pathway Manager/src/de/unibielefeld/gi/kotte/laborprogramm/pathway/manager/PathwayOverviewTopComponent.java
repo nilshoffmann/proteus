@@ -1,9 +1,10 @@
 package de.unibielefeld.gi.kotte.laborprogramm.pathway.manager;
 
-import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.CancellableRunnable;
+import de.unibielefeld.gi.kotte.laborprogramm.pathway.sbml.PathwayExplorerTopComponent;
+import net.sf.maltcms.chromaui.ui.support.api.CancellableRunnable;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.MetacycController;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.NameTools;
-import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.ResultListener;
+import net.sf.maltcms.chromaui.ui.support.api.ResultListener;
 import de.unibielefeld.gi.kotte.laborprogramm.pathway.utils.TypedListModel;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.CommonName;
 import de.unibielefeld.gi.omicsTools.biocyc.ptools.Compound;
@@ -35,17 +36,17 @@ import org.openide.windows.TopComponent;
  */
 @ConvertAsProperties(
     dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.pathways.overview//PathwayOverview//EN",
-autostore = false)
+    autostore = false)
 @TopComponent.Description(
     preferredID = "PathwayOverviewTopComponent",
-//iconBase="SET/PATH/TO/ICON/HERE", 
-persistenceType = TopComponent.PERSISTENCE_ALWAYS)
+    //iconBase="SET/PATH/TO/ICON/HERE",
+    persistenceType = TopComponent.PERSISTENCE_ALWAYS)
 @TopComponent.Registration(mode = "navigator", openAtStartup = false)
 @ActionID(category = "Window", id = "de.unibielefeld.gi.kotte.laborprogramm.pathways.overview.PathwayOverviewTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(
     displayName = "#CTL_PathwayOverviewAction",
-preferredID = "PathwayOverviewTopComponent")
+    preferredID = "PathwayOverviewTopComponent")
 @Messages({
     "CTL_PathwayOverviewAction=Pathway Overview",
     "CTL_PathwayOverviewTopComponent=Pathway Overview Window",
@@ -59,50 +60,50 @@ public final class PathwayOverviewTopComponent extends TopComponent {
     MetacycController mc = new MetacycController();
     TypedListModel<PGDB> organismListModel = new TypedListModel<PGDB>();
     TypedListModel<Pathway> pathwaysListModel = new TypedListModel<Pathway>();
-	TypedListModel<PGDB> selectedOrganismListModel = new TypedListModel<PGDB>();
+    TypedListModel<PGDB> selectedOrganismListModel = new TypedListModel<PGDB>();
     TypedListModel<Pathway> selectedPathwaysListModel = new TypedListModel<Pathway>();
     TypedListModel<Protein> enzymesListModel = new TypedListModel<Protein>();
     TypedListModel<Compound> compoundsListModel = new TypedListModel<Compound>();
 
     public PathwayOverviewTopComponent() {
         initComponents();
-		organismsFilter.getDocument().addDocumentListener(new DocumentListener() {
+        organismsFilter.getDocument().addDocumentListener(new DocumentListener() {
 
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				filterOrganisms(organismListModel);
-			}
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                filterOrganisms(organismListModel);
+            }
 
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				filterOrganisms(organismListModel);
-			}
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                filterOrganisms(organismListModel);
+            }
 
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				
-			}
-		});
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+        });
         organismList.addListSelectionListener(new OrganismListListener());
         organismList.setCellRenderer(new PGDBCellRenderer());
         organismList.setModel(organismListModel);
-		pathwaysFilter.getDocument().addDocumentListener(new DocumentListener() {
+        pathwaysFilter.getDocument().addDocumentListener(new DocumentListener() {
 
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				filterPathways(pathwaysListModel);
-			}
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                filterPathways(pathwaysListModel);
+            }
 
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				filterPathways(pathwaysListModel);
-			}
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                filterPathways(pathwaysListModel);
+            }
 
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				
-			}
-		});
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+        });
         pathwaysList.addListSelectionListener(new PathwayListListener());
         pathwaysList.setCellRenderer(new PathwayCellRenderer());
         pathwaysList.setModel(pathwaysListModel);
@@ -113,42 +114,42 @@ public final class PathwayOverviewTopComponent extends TopComponent {
         setName(Bundle.CTL_PathwayOverviewTopComponent());
         setToolTipText(Bundle.HINT_PathwayOverviewTopComponent());
     }
-	
-	public void filterOrganisms(TypedListModel<PGDB> organism) {
-		selectedOrganismListModel = new TypedListModel<PGDB>();
-		if(organismsFilter.getText().isEmpty()) {
-			selectedOrganismListModel.setList(organism.getList());
-		}else{
-			String filterText = organismsFilter.getText().toLowerCase();
-			selectedOrganismListModel = new TypedListModel<PGDB>();
-			ArrayList<PGDB> data = new ArrayList<PGDB>();
-			for(PGDB p : organism.getList()) {
-				if(NameTools.getSpeciesName(p).toLowerCase().startsWith(filterText) || NameTools.getSpeciesName(p).toLowerCase().contains(filterText)) {
-					data.add(p);
-				}
-			}
-			selectedOrganismListModel.setList(data);
-		}
-		organismList.setModel(selectedOrganismListModel);
-	}
-	
-	public void filterPathways(TypedListModel<Pathway> pathways) {
-		selectedPathwaysListModel = new TypedListModel<Pathway>();
-		if(pathwaysFilter.getText().isEmpty()) {
-			selectedPathwaysListModel.setList(pathways.getList());
-		}else{
-			String filterText = pathwaysFilter.getText().toLowerCase();
-			selectedPathwaysListModel = new TypedListModel<Pathway>();
-			ArrayList<Pathway> data = new ArrayList<Pathway>();
-			for(Pathway p : pathways.getList()) {
-				if(NameTools.getPathwayName(p).toLowerCase().startsWith(filterText) || NameTools.getPathwayName(p).toLowerCase().contains(filterText)) {
-					data.add(p);
-				}
-			}
-			selectedPathwaysListModel.setList(data);
-		}
-		pathwaysList.setModel(selectedPathwaysListModel);
-	}
+
+    public void filterOrganisms(TypedListModel<PGDB> organism) {
+        selectedOrganismListModel = new TypedListModel<PGDB>();
+        if (organismsFilter.getText().isEmpty()) {
+            selectedOrganismListModel.setList(organism.getList());
+        } else {
+            String filterText = organismsFilter.getText().toLowerCase();
+            selectedOrganismListModel = new TypedListModel<PGDB>();
+            ArrayList<PGDB> data = new ArrayList<PGDB>();
+            for (PGDB p : organism.getList()) {
+                if (NameTools.getSpeciesName(p).toLowerCase().startsWith(filterText) || NameTools.getSpeciesName(p).toLowerCase().contains(filterText)) {
+                    data.add(p);
+                }
+            }
+            selectedOrganismListModel.setList(data);
+        }
+        organismList.setModel(selectedOrganismListModel);
+    }
+
+    public void filterPathways(TypedListModel<Pathway> pathways) {
+        selectedPathwaysListModel = new TypedListModel<Pathway>();
+        if (pathwaysFilter.getText().isEmpty()) {
+            selectedPathwaysListModel.setList(pathways.getList());
+        } else {
+            String filterText = pathwaysFilter.getText().toLowerCase();
+            selectedPathwaysListModel = new TypedListModel<Pathway>();
+            ArrayList<Pathway> data = new ArrayList<Pathway>();
+            for (Pathway p : pathways.getList()) {
+                if (NameTools.getPathwayName(p).toLowerCase().startsWith(filterText) || NameTools.getPathwayName(p).toLowerCase().contains(filterText)) {
+                    data.add(p);
+                }
+            }
+            selectedPathwaysListModel.setList(data);
+        }
+        pathwaysList.setModel(selectedPathwaysListModel);
+    }
 
     class OrganismListListener implements ListSelectionListener {
 
@@ -184,9 +185,11 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                         break;
                     }
                 }
+                viewPathwayButton.setEnabled(true);
                 enzymesButton.setEnabled(true);
                 compoundsButton.setEnabled(true);
             } else {
+                viewPathwayButton.setEnabled(false);
                 enzymesButton.setEnabled(false);
                 compoundsButton.setEnabled(false);
             }
@@ -217,6 +220,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
         jScrollPane2 = new javax.swing.JScrollPane();
         pathwaysList = new javax.swing.JList();
         pathwaysFilter = new javax.swing.JTextField();
+        viewPathwayButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         enzymesList = new javax.swing.JList();
@@ -256,7 +260,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(organismsButton)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
                     .addComponent(organismsFilter))
                 .addContainerGap())
         );
@@ -268,7 +272,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(organismsFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -287,6 +291,13 @@ public final class PathwayOverviewTopComponent extends TopComponent {
 
         pathwaysFilter.setText(org.openide.util.NbBundle.getMessage(PathwayOverviewTopComponent.class, "PathwayOverviewTopComponent.pathwaysFilter.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(viewPathwayButton, org.openide.util.NbBundle.getMessage(PathwayOverviewTopComponent.class, "PathwayOverviewTopComponent.viewPathwayButton.text")); // NOI18N
+        viewPathwayButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewPathwayButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -294,20 +305,25 @@ public final class PathwayOverviewTopComponent extends TopComponent {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pathwaysButton)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(pathwaysButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(viewPathwayButton))
                     .addComponent(pathwaysFilter)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pathwaysButton)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(pathwaysButton)
+                    .addComponent(viewPathwayButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pathwaysFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -331,7 +347,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
                     .addComponent(enzymesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
@@ -341,7 +357,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                 .addContainerGap()
                 .addComponent(enzymesButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -366,7 +382,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(compoundsButton)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -375,7 +391,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                 .addContainerGap()
                 .addComponent(compoundsButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -417,7 +433,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
                     .addComponent(pathwayFixedLabel)
                     .addComponent(pathwayLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -499,7 +515,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
             @Override
             public void body() {
                 enzymesList.setEnabled(false);
-				enzymesListModel.setList(new LinkedList<Protein>());
+                enzymesListModel.setList(new LinkedList<Protein>());
                 this.handle.progress("Querying database");
                 List<Protein> proteins = mc.getEnzymesForPathway(pathway.getOrgid(), pathway.getFrameid());
                 this.handle.progress("Sorting results");
@@ -535,7 +551,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
             @Override
             public void body() {
                 compoundsList.setEnabled(false);
-				compoundsListModel.setList(new LinkedList<Compound>());
+                compoundsListModel.setList(new LinkedList<Compound>());
                 this.handle.progress("Querying database");
                 List<Compound> compounds = mc.getCompoundsForPathway(pathway.getOrgid(), pathway.getFrameid());
                 this.handle.progress("Sorting results");
@@ -565,6 +581,18 @@ public final class PathwayOverviewTopComponent extends TopComponent {
         RequestProcessor rp = new RequestProcessor(PathwayOverviewTopComponent.class);
         rp.post(cr);
     }//GEN-LAST:event_compoundsButtonActionPerformed
+
+    private void viewPathwayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewPathwayButtonActionPerformed
+        if (pathwaysList.getSelectedIndex() != -1) {
+            pathway = (Pathway) pathwaysList.getSelectedValue();
+            List<org.biopax.paxtools.model.level3.Pathway> pathways = mc.getBiopaxPathway(organism.getOrgid(), pathway.getFrameid());
+            for (org.biopax.paxtools.model.level3.Pathway pw : pathways) {
+                PathwayExplorerTopComponent petc = new PathwayExplorerTopComponent();
+                petc.openBioPaxPathway(pw);
+            }
+        }
+    }//GEN-LAST:event_viewPathwayButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton compoundsButton;
     private javax.swing.JList compoundsList;
@@ -590,6 +618,7 @@ public final class PathwayOverviewTopComponent extends TopComponent {
     private javax.swing.JButton pathwaysButton;
     private javax.swing.JTextField pathwaysFilter;
     private javax.swing.JList pathwaysList;
+    private javax.swing.JButton viewPathwayButton;
     // End of variables declaration//GEN-END:variables
 
     @Override

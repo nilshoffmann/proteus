@@ -3,7 +3,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.pathway.api.base;
 /**
  * Factory for creating compound annotations.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface ICompoundFactory {
 

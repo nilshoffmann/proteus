@@ -5,7 +5,7 @@ import java.io.File;
 
 /**
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface IProteomicProjectFactory {
     public IProteomicProject createProject(File projdir, IProject project);

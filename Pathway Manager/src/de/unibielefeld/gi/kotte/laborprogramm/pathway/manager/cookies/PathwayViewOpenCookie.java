@@ -11,7 +11,7 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * OpenCookie for opening IPathwayProjects
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 @ServiceProvider(service = IPathwayViewOpenCookie.class)
 public class PathwayViewOpenCookie implements IPathwayViewOpenCookie {

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * possible Identification of a protein.
  *
- * @author kotte, hoffmann
+ * @author Konstantin Otte, hoffmann
  */
 public interface IIdentification extends IPropertyChangeSource, IUniqueObject {
 

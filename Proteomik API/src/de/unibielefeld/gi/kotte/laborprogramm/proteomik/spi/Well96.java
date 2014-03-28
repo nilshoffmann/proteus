@@ -17,7 +17,7 @@ import java.util.UUID;
 /**
  * Default implementation for IWell96.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class Well96 implements IWell96, Activatable {
 

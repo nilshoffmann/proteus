@@ -24,7 +24,7 @@ import org.openide.windows.WindowManager;
 /**
  * Top component for the Plate384 Viewer.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 @ConvertAsProperties(dtd = "-//de.unibielefeld.gi.kotte.laborprogramm.plateViewer//Plate384Viewer//EN",
 autostore = false)

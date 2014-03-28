@@ -4,7 +4,7 @@ import org.openide.cookies.OpenCookie;
 
 /**
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface IPathwayViewOpenCookie extends OpenCookie {
 }

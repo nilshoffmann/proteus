@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Annotation of a reaction between molecules.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface IEnzymaticReaction extends IPropertyChangeSource, IUniqueObject {
 

@@ -5,7 +5,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.project.api.IProteomicProject;
 /**
  * Factory for creating new PathwayUIProjects.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface IPathwayUIProjectFactory {
 

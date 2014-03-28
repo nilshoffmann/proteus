@@ -18,7 +18,7 @@ import org.openide.util.HelpCtx;
 /**
  * Wizard Panel for the Spot Data Export.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class ExportOptionsWizardPanel1 implements WizardDescriptor.ValidatingPanel<WizardDescriptor>, PropertyChangeListener {
 

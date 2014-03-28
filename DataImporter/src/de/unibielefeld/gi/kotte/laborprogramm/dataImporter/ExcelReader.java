@@ -22,7 +22,7 @@ import org.apache.poi.ss.usermodel.*;
 /**
  * Reads spot informations from the Delta2D table output.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class ExcelReader {
 

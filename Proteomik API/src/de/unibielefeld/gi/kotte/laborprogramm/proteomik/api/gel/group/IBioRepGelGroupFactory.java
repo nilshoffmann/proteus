@@ -4,7 +4,7 @@ package de.unibielefeld.gi.kotte.laborprogramm.proteomik.api.gel.group;
  * Factory for creating new groups of biological replications of groups
  * of technical replications of 2D gels.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public interface IBioRepGelGroupFactory {
 

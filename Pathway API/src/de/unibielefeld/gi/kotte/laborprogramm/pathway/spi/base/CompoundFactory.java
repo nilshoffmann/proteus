@@ -5,7 +5,7 @@ import de.unibielefeld.gi.kotte.laborprogramm.pathway.api.base.ICompoundFactory;
 /**
  * Factory for creating compound annotations.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 @org.openide.util.lookup.ServiceProvider(service = ICompoundFactory.class)
 public class CompoundFactory implements ICompoundFactory {

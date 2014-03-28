@@ -6,7 +6,7 @@ import java.beans.PropertyEditorSupport;
 /**
  * Property Editor for IWell96.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class Well96PropertyEditor extends PropertyEditorSupport {
     

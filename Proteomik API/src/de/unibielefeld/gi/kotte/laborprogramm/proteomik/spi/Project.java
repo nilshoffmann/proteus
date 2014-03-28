@@ -18,7 +18,7 @@ import java.util.UUID;
 /**
  * Default implementation for IProject.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public class Project implements IProject, Activatable {
 

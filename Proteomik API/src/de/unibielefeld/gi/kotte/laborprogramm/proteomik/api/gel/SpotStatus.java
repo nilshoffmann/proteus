@@ -5,7 +5,7 @@ import java.awt.Color;
 /**
  * Represents the status of a gel spot.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 public enum SpotStatus {
 

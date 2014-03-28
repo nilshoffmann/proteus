@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 /**
  * Reads in gelImages/labelSpotRelations/<gelId>.xml files from Delta2D projects.
  * 
- * @author kotte
+ * @author Konstantin Otte
  */
 public class LabelSpotRelationsDataReader {
     public Map<String, String> parseLabelSpotRelations (File f) {

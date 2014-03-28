@@ -42,7 +42,7 @@ import org.openide.util.lookup.InstanceContent;
 /**
  * Default implementation of IPathwayUIProject.
  *
- * @author kotte
+ * @author Konstantin Otte
  */
 @org.openide.util.lookup.ServiceProvider(service = Project.class)
 public class PathwayUIProject implements IPathwayUIProject {

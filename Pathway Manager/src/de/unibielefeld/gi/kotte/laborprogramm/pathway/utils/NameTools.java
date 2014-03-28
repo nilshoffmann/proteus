@@ -10,7 +10,7 @@ import de.unibielefeld.gi.omicsTools.biocyc.ptools.Strain;
 /**
  * Provides static methods to extract names from domain objects.
  * 
- * @author kotte
+ * @author Konstantin Otte
  */
 public class NameTools {
 

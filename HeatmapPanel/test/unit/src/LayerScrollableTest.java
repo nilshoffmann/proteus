@@ -17,11 +17,8 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Maui.  If not, see <http://www.gnu.org/licenses/>.
  */
-import java.lang.reflect.InvocationTargetException;
-import javax.swing.SwingUtilities;
 import net.sf.maltcms.ui.plot.heatmap.HeatmapPanel;
 import org.junit.Test;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -53,25 +50,25 @@ public class LayerScrollableTest {// extends JLabel {
 //    }
     @Test
     public void testHeatmapPanel() {
-        try {
-            SwingUtilities.invokeAndWait(new Runnable() {
-
-                @Override
-                public void run() {
-                    HeatmapPanel.main(new String[]{});
-
-                }
-            });
-        } catch (InterruptedException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (InvocationTargetException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        try {
-            Thread.sleep(50000);
-        } catch (InterruptedException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+//        try {
+//            SwingUtilities.invokeAndWait(new Runnable() {
+//
+//                @Override
+//                public void run() {
+//                    HeatmapPanel.main(new String[]{});
+//
+//                }
+//            });
+//        } catch (InterruptedException ex) {
+//            Exceptions.printStackTrace(ex);
+//        } catch (InvocationTargetException ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
+//        try {
+//            Thread.sleep(50000);
+//        } catch (InterruptedException ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
 
     }
 

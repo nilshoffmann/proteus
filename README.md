@@ -14,26 +14,33 @@ submodule.
 
 ## Checking out (Read-Only)
 
-    git clone git://git.code.sf.net/p/maltcmsui/code maltcmsui-code
+    git clone git://git.code.sf.net/p/maltcmsproteus/code proteus-code
 
 ## Checking out (Read/Write)
 
-    git clone ssh://YOUR_SF_USERNAME@git.code.sf.net/p/maltcmsui/code maltcmsui-code
+    git clone ssh://YOUR_SF_USERNAME@git.code.sf.net/p/maltcmsproteus/code proteus-code
 or
-    git clone https://YOUR_SF_USERNAME@git.code.sf.net/p/maltcmsui/code maltcmsui-code
+    git clone https://YOUR_SF_USERNAME@git.code.sf.net/p/maltcmsproteus/code proteus-code
 
-## Initialize the Proteus submodule
+## Building proteus
 
-    git submodule init
-    git submodule update
+Within the proteus directory, run
 
-## Commiting and Pushing your work
+    ant build
 
-    git add YOURCHANGEDFILES
-    git commit -m "YOURCHANGEMESSAGE"
-    git push origin master
+to build proteus. On the first invocation, a number of dependencies will be downloaded to 
+the platform-8.0 directory within the top level of the checked out project.
 
-## Performing a release
+To run Proteus, run
+    
+    ant run
+
+To run the unit tests, run
+
+    ant test
+
+
+## Module Versioning 
 
 Make sure that implementation changes in modules are reflected in 
 updated micro version numbers! E.g. 1.0.0 -> 1.0.1
@@ -47,7 +54,7 @@ updated major version numbers! E.g. 1.0.0 -> 2.0.0
 Incompatible API changes usually involve restructuring of the module's
 public APIs, so that legacy code would no longer compile against/work at runtime.
 
-Increase the version within 'nbproject/project.properties'
+Increase the version within 'proteus/nbproject/project.properties'
 to indicate a new application version:
 
     app.version.major=1
@@ -59,23 +66,4 @@ Increase the minor version for new functionality.
 Increase the major number for major new functionality and/or incompatible API changes.
 
 Make sure that the 'site/' is updated to reflect the new release version (check paths).
-
-Commit all pending changes. 
-Create a release tag.
-
-Open an ssh connection to sourceforge:
-
-    >ssh -t SFUSERNAME,maltcms@shell.sourceforge.net create
-
-From the IDE, run 
-
-"Package As->Installers"
-
-to create the platform specific installers. This is currently not easily possible from ANT
-
-Run 
-
-    >ant release-and-deploy
-
-to build, test, and deploy the application.
 

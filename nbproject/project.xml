@@ -1,9 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://www.netbeans.org/ns/project/1">
-    <type>org.netbeans.modules.apisupport.project.suite</type>
+    <type>org.netbeans.modules.ant.freeform</type>
     <configuration>
-        <data xmlns="http://www.netbeans.org/ns/nb-module-suite-project/1">
-            <name>ProteomikLaborprogamm</name>
-        </data>
+        <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
+            <name>OmicsPlatform</name>
+        </general-data>
+        <general-data xmlns="http://www.netbeans.org/ns/freeform-project/2">
+            <!-- Do not use Project Properties customizer when editing this file manually. -->
+            <name>OmicsPlatform</name>
+            <properties/>
+            <folders>
+                <source-folder>
+                    <label>OmicsPlatform</label>
+                    <location>.</location>
+                    <encoding>UTF-8</encoding>
+                </source-folder>
+            </folders>
+            <ide-actions>
+                <action name="build">
+                    <target>build-all</target>
+                </action>
+                <action name="clean">
+                    <target>clean-all</target>
+                </action>
+                <action name="run">
+                    <target>run-maui</target>
+                </action>
+                <action name="rebuild">
+                    <target>clean-all</target>
+                    <target>build-all</target>
+                </action>
+                <action name="test">
+                    <target>test-all</target>
+                </action>
+            </ide-actions>
+            <view>
+                <items>
+                    <source-file>
+                        <location>build.xml</location>
+                    </source-file>
+                </items>
+                <context-menu>
+                    <ide-action name="build"/>
+                    <ide-action name="rebuild"/>
+                    <ide-action name="clean"/>
+                    <ide-action name="run"/>
+                    <ide-action name="test"/>
+                    <action>
+                        <label>Bootstrap</label>
+                        <target>bootstrap-build</target>
+                    </action>
+                    <action>
+                        <label>Delete Maltcms Snapshot</label>
+                        <target>delete-maltcms</target>
+                    </action>
+                </context-menu>
+            </view>
+            <subprojects/>
+        </general-data>
+        <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/1"/>
     </configuration>
 </project>

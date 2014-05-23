@@ -1,10 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- You may freely edit this file. See harness/README in the NetBeans platform -->
-<!-- for some information on what you could do (e.g. targets to override). -->
-<!-- If you delete this file and reopen the project it will be recreated. -->
-<project name="ProteomikLaborprogamm" basedir=".">
-    <description>Builds the module suite ProteomikLaborprogamm.</description>
-    <import file="${basedir}/../nbproject/platform-defaults.xml"/>
-    <import file="nbproject/build-impl.xml"/>
-    <import file="${basedir}/../nbproject/build-defaults.xml"/>
+<project basedir="." default="help" name="ProteusPlatform">
+
+    <property environment="env" />
+    <property name="proteus.dir" value="proteus"/>
+    <property name="platform.parentdir" value="${basedir}"/>
+    <property file="nbproject/platform-defaults.properties"/>
+
+    <target name="help" description="Prints usage info using -projecthelp">
+        <java classname="org.apache.tools.ant.Main">
+            <arg value="-buildfile" />
+            <arg value="${ant.file}" />
+            <arg value="-projecthelp" />
+        </java>
+    </target>
+	
+    <!-- build targets -->
+    <target name="bootstrap-build" description="Removes existing platform directory, then initializes the build system and fetches dependencies" depends="delete-platform,build-all">
+		
+    </target>
+	
+    <target name="build-all" description="Build All" depends="build-proteus"></target>
+	
+    <target name="build-proteus" description="Build Proteus" depends="check-proteus" if="proteus.present">
+        <ant antfile="${proteus.dir}/build.xml" target="build" inheritall="false" inheritrefs="false"/>
+    </target>
+	
+    <!-- clean targets -->
+    <target name="clean-proteus" description="Clean Proteus" depends="check-proteus" if="proteus.present">
+        <ant antfile="${proteus.dir}/build.xml" target="clean" inheritall="false" inheritrefs="false"/>
+    </target>
+	
+    <target name="clean-all" description="Clean all" depends="clean-proteus">
+		
+    </target>
+	
+    <target name="check-proteus">
+        <available file="${proteus.dir}/build.xml" property="proteus.present"/>
+        <echo>Proteus available: ${proteus.present}</echo>
+    </target>
+
+    <target name="check-platform">
+        <echo>Checking for platform directory</echo>
+        <condition property="platform.exists">
+            <available file="platform-${platform.version}" type="dir"/>
+        </condition>
+    </target>
+	
+    <target name="delete-platform" description="Remove downloaded platform files" depends="check-platform" if="platform.exists">
+        <echo>Deleting platform directory</echo>
+        <delete dir="platform-${platform.version}" failonerror="false"/> 
+    </target>
+	
+    <target name="delete-maltcms" description="Remove downloaded maltcms files" depends="check-platform" if="platform.exists">
+        <echo>Deleting maltcms directory</echo>
+        <delete dir="platform-${platform.version}/maltcms" failonerror="false"/> 
+        <delete file="platform-${platform.version}/platform.complete" failonerror="false"/>
+    </target>
+	
+    <!-- run targets -->
+    <target name="run-proteus" description="Run Proteus" depends="check-proteus,build-proteus" if="proteus.present">
+        <ant antfile="${proteus.dir}/build.xml" target="run" inheritall="false" inheritrefs="false"/>
+    </target>
+	
+    <!-- test targets -->
+    <target name="test-proteus" description="Test Proteus" depends="check-proteus,build-proteus" if="proteus.present">
+        <ant antfile="${proteus.dir}/build.xml" target="test" inheritall="false" inheritrefs="false"/>
+    </target>
+    <target name="test-all" depends="test-proteus">
+		
+    </target>
+
 </project>

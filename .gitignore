@@ -3,3 +3,9 @@
 dist/*
 /nbproject/private/
 /build/
+/tools/Delta2D/Delta2DGelData/nbproject/private/
+/tools/Delta2D/Delta2DLabelData/nbproject/private/
+/tools/Delta2D/Delta2DProjectData/nbproject/private/
+/tools/Delta2D/Delta2DQuantitationData/nbproject/private/
+/tools/pToolsBinding/nbproject/private/
+/tools/pToolsBindingTest/nbproject/private/
